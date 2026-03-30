@@ -1,0 +1,80 @@
+﻿@model HalkEgitimSistemi.Models.Course
+
+@{
+    ViewData["Title"] = Model.CourseName + " Detayları";
+}
+
+<div class="container mt-5">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-action="Index">Kurslar</a></li>
+            <li class="breadcrumb-item active" aria-current="page">@Model.CourseName</li>
+        </ol>
+    </nav>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card shadow-sm border-0 rounded-4 overflow-hidden mb-4">
+                <div class="bg-primary p-5 text-center text-white">
+                    <i class="bi bi-mortarboard display-1"></i>
+                    <h1 class="mt-3 fw-bold">@Model.CourseName</h1>
+                    <span class="badge bg-light text-primary fs-6">@Model.Category?.CategoryName</span>
+                </div>
+                <div class="card-body p-4">
+                    <h3 class="fw-bold border-bottom pb-2">Kurs Hakkında</h3>
+                    <p class="text-muted fs-5">
+                        Bu eğitim programı, @Model.Category?.CategoryName alanında uzmanlaşmak isteyen kursiyerler için
+                        özel olarak hazırlanmıştır. Milli Eğitim Bakanlığı müfredatına uygun olarak teorik ve
+                        uygulamalı dersleri içermektedir.
+                    </p>
+                    
+                    <div class="alert alert-info border-0 shadow-sm mt-4">
+                        <h5 class="fw-bold"><i class="bi bi-info-circle-fill"></i> Neden Bu Kurs?</h5>
+                        <ul class="mb-0">
+                            <li>Uzman eğitmenlerden canlı dersler</li>
+                            <li>Uygulamalı proje çalışmaları</li>
+                            <li>Kurs sonu katılım sertifikası</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow border-0 rounded-4 sticky-top" style="top: 20px;">
+                <div class="card-body p-4">
+                    <h4 class="fw-bold mb-4">Kurs Bilgileri</h4>
+                    
+                    <div class="d-flex justify-content-between mb-3 border-bottom pb-2">
+                        <span class="text-muted"><i class="bi bi-people-fill me-2"></i>Kontenjan</span>
+                        <span class="fw-bold text-dark">@Model.Quota Kişi</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between mb-3 border-bottom pb-2">
+                        <span class="text-muted"><i class="bi bi-tags-fill me-2"></i>Kategori</span>
+                        <span class="fw-bold text-primary">@Model.Category?.CategoryName</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between mb-4">
+                        <span class="text-muted"><i class="bi bi-cash-stack me-2"></i>Ücret</span>
+                        <span class="fw-bold text-success fs-4">@Model.Price.ToString("C2")</span>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-primary btn-lg fw-bold rounded-pill shadow">Hemen Başvur</button>
+                        <a asp-action="Index" class="btn btn-outline-secondary rounded-pill">Listeye Dön</a>
+                    </div>
+
+                    @if (User?.Identity?.IsAuthenticated == true)
+                    {
+                        <hr>
+                        <div class="d-flex gap-2">
+                            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning flex-fill fw-bold">Düzenle</a>
+                            <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger flex-fill fw-bold">Sil</a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

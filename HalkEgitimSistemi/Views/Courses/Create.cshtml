@@ -1,0 +1,54 @@
+﻿@model HalkEgitimSistemi.Models.Course
+
+@{
+    ViewData["Title"] = "Yeni Kurs Ekle";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0 rounded-4">
+                <div class="card-header bg-success text-white text-center py-3">
+                    <h4 class="mb-0">Yeni Kurs Oluştur</h4>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-action="Create">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Kurs Adı</label>
+                            <input asp-for="CourseName" class="form-control" placeholder="Örn: İngilizce A1" required />
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Kontenjan (Kişi)</label>
+                                <input asp-for="Quota" class="form-control" placeholder="Örn: 20" required />
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Kurs Ücreti (₺)</label>
+                                <input asp-for="Price" class="form-control" placeholder="Örn: 0 veya 500" required />
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Kategori</label>
+                            <select asp-for="CategoryId" class="form-select" asp-items="ViewBag.CategoryId" required>
+                                <option value="">-- Lütfen Kategori Seçiniz --</option>
+                            </select>
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a asp-action="Index" class="btn btn-outline-secondary px-4">Listeye Dön</a>
+                            <button type="submit" class="btn btn-success px-4">Kursu Kaydet</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

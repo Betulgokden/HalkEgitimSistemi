@@ -1,0 +1,37 @@
+﻿@{
+    ViewData["Title"] = "Ana Sayfa";
+}
+
+<div class="p-5 mb-4 bg-primary text-white rounded-3 shadow">
+    <div class="container-fluid py-5 text-center">
+        <h1 class="display-5 fw-bold">Halk Eğitim Merkezi'ne Hoş Geldiniz</h1>
+        <p class="col-md-12 fs-4">Kendinizi geliştirebileceğiniz onlarca farklı kurs ve uzman eğitmen kadromuzla yanınızdayız.</p>
+        <a asp-controller="Courses" asp-action="Index" class="btn btn-light btn-lg px-4 fw-bold">Tüm Kursları İncele</a>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row text-center mb-5">
+        <div class="col-md-4">
+            <div class="p-3 shadow-sm rounded bg-white h-100">
+                <i class="bi bi-mortarboard text-primary fs-1"></i>
+                <h4 class="mt-2">Sertifikalı Eğitim</h4>
+                <p class="text-muted">Kurs bitiminde Milli Eğitim onaylı sertifika alma imkanı.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="p-3 shadow-sm rounded bg-white h-100">
+                <i class="bi bi-person-workspace text-success fs-1"></i>
+                <h4 class="mt-2">Uzman Eğitmenler</h4>
+                <p class="text-muted">Alanında deneyimli ve profesyonel kadromuzdan ders alın.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="p-3 shadow-sm rounded bg-white h-100">
+                <i class="bi bi-calendar-check text-warning fs-1"></i>
+                <h4 class="mt-2">Esnek Program</h4>
+                <p class="text-muted">Hafta içi ve hafta sonu seçenekleriyle size uygun saatler.</p>
+            </div>
+        </div>
+    </div>
+</div>

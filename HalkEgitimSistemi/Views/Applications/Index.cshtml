@@ -1,0 +1,28 @@
+﻿@model IEnumerable<HalkEgitimSistemi.Models.Application>
+
+<div class="container mt-4">
+    <h2 class="fw-bold text-primary mb-4">Gelen Kurs Başvuruları</h2>
+    <table class="table table-hover shadow-sm rounded">
+        <thead class="table-dark">
+            <tr>
+                <th>Ad Soyad</th>
+                <th>Kurs</th>
+                <th>Telefon</th>
+                <th>Öğrenim</th>
+                <th>Tarih</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.FullName</td>
+                    <td><span class="badge bg-info text-dark">@item.Course?.CourseName</span></td>
+                    <td>@item.PhoneNumber</td>
+                    <td>@item.EducationStatus</td>
+                    <td>@item.ApplyDate.ToShortDateString()</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

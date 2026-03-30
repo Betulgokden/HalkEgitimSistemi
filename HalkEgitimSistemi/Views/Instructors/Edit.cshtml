@@ -1,0 +1,30 @@
+﻿@model HalkEgitimSistemi.Models.Instructor
+
+@{
+    ViewData["Title"] = "Eğitmen Düzenle";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0 rounded-4">
+                <div class="card-header bg-warning text-dark text-center py-3">
+                    <h4 class="mb-0">Eğitmen Düzenle</h4>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-action="Edit">
+                        <input type="hidden" asp-for="Id" />
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Eğitmen Adı Soyadı</label>
+                            <input asp-for="InstructorName" class="form-control" required />
+                        </div>
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-warning fw-bold">Güncelle</button>
+                            <a asp-action="Index" class="btn btn-outline-secondary">Listeye Dön</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,68 @@
+﻿@model IEnumerable<HalkEgitimSistemi.Models.News>
+
+@{
+    ViewData["Title"] = "Haberler & Duyurular";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold text-dark mb-0"><i class="bi bi-megaphone text-danger"></i> Güncel Haberler</h2>
+            <p class="text-muted">Merkezimizden son haberler ve önemli duyurular.</p>
+        </div>
+        @if (User?.Identity?.IsAuthenticated == true)
+        {
+            <a asp-action="Create" class="btn btn-danger fw-bold shadow-sm">
+                <i class="bi bi-plus-circle"></i> Yeni Haber Ekle
+            </a>
+        }
+    </div>
+
+    <div class="row g-4">
+        @foreach (var item in Model)
+        {
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
+                    <div class="bg-gradient bg-danger p-5 text-center text-white position-relative" style="height: 200px;">
+                        <i class="bi bi-newspaper display-3 opacity-50"></i>
+                        <span class="position-absolute top-0 end-0 m-3 badge bg-white text-danger fw-bold rounded-pill">
+                            @item.Date.ToString("dd MMM yyyy")
+                        </span>
+                    </div>
+
+                    <div class="card-body">
+                        <h5 class="card-title fw-bold">@item.Title</h5>
+                        <p class="card-text text-muted text-truncate-2">
+                            @item.Content
+                        </p>
+                    </div>
+
+                    <div class="card-footer bg-white border-0 p-3">
+                        <div class="d-grid gap-2">
+                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-outline-dark rounded-pill">Devamını Oku</a>
+                            
+                            @if (User?.Identity?.IsAuthenticated == true)
+                            {
+                                <div class="btn-group btn-group-sm w-100 mt-2">
+                                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning">Düzenle</a>
+                                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Sil</a>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<style>
+    .text-truncate-2 {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+    .card { transition: transform 0.3s ease; }
+    .card:hover { transform: translateY(-10px); }
+</style>

@@ -1,0 +1,35 @@
+﻿@model HalkEgitimSistemi.Models.News
+
+@{
+    ViewData["Title"] = "Yeni Haber Ekle";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow-sm border-0 rounded-lg">
+            <div class="card-header bg-primary text-white">
+                <h3 class="mb-0">Yeni Haber Oluştur</h3>
+            </div>
+            <div class="card-body p-4">
+                <form asp-action="Create">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Başlık</label>
+                        <input asp-for="Title" class="form-control" placeholder="Haber başlığını giriniz" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">İçerik</label>
+                        <textarea asp-for="Content" class="form-control" rows="4" placeholder="Haber içeriğini yazınız"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Görsel URL</label>
+                        <input asp-for="PosterUrl" class="form-control" placeholder="Haber görseli linkini yapıştırın" />
+                    </div>
+                    <div class="mt-4">
+                        <button type="submit" class="btn btn-primary px-4">Oluştur</button>
+                        <a asp-action="Index" class="btn btn-outline-secondary ms-2">Listeye Dön</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

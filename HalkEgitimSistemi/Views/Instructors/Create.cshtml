@@ -1,0 +1,52 @@
+﻿@model HalkEgitimSistemi.Models.Instructor
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow border-0 rounded-4">
+                <div class="card-header bg-info text-white text-center py-3">
+                    <h4 class="mb-0"><i class="bi bi-person-plus-fill me-2"></i>Eğitmen Kayıt Formu</h4>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-action="Create">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Ad</label>
+                                <input asp-for="FirstName" class="form-control" placeholder="Eğitmen adını girin" required />
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Soyad</label>
+                                <input asp-for="LastName" class="form-control" placeholder="Eğitmen soyadını girin" required />
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Uzmanlık Alanı</label>
+                            <input asp-for="Expertise" class="form-control" placeholder="Örn: İngilizce, Bilişim" required />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Telefon Numarası</label>
+                            <input asp-for="PhoneNumber" class="form-control" placeholder="05XX XXX XX XX" />
+                        </div>
+
+                        @* İŞTE SENİN EKLEDİĞİN KRİTİK KISIM BURADA OLMALI *@
+                        <div class="mb-4">
+                            <label class="form-label fw-bold text-primary">Bağlı Olduğu Yönetici</label>
+                            <select asp-for="ParentId" class="form-select border-primary" asp-items="ViewBag.ParentId">
+                                <option value="">-- Üst Yönetici Yok (Müdür) --</option>
+                                <option value="2">Mehmet Demir (Müdür Yrd.)</option>
+                            </select>
+                            <small class="text-muted">Eğitmenleri Mehmet Demir'in altına eklemek için onu seçin.</small>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-info text-white fw-bold py-2 shadow-sm">Eğitmeni Kaydet</button>
+                            <a asp-action="Index" class="btn btn-light border">Vazgeç / Listeye Dön</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,43 @@
+﻿@model HalkEgitimSistemi.Models.Application
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-lg border-0 rounded-4">
+                <div class="card-header bg-primary text-white text-center py-4">
+                    <h3 class="mb-0">Kurs Ön Kayıt Formu</h3>
+                    <p class="mb-0 opacity-75">Şu an <strong>@ViewBag.CourseName</strong> kursuna başvuruyorsunuz.</p>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-action="Create">
+                        <input type="hidden" asp-for="CourseId" />
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Adınız Soyadınız</label>
+                            <input asp-for="FullName" class="form-control form-control-lg" placeholder="Örn: Ahmet Yılmaz" required />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Telefon Numaranız</label>
+                            <input asp-for="PhoneNumber" class="form-control form-control-lg" placeholder="05xx xxx xx xx" required />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Öğrenim Durumu</label>
+                            <select asp-for="EducationStatus" class="form-select form-select-lg">
+                                <option value="İlkokul">İlkokul</option>
+                                <option value="Lise">Lise</option>
+                                <option value="Önlisans">Önlisans</option>
+                                <option value="Lisans">Lisans</option>
+                            </select>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Memleketiniz</label>
+                            <input asp-for="BirthPlace" class="form-control form-control-lg" placeholder="Örn: Ankara" />
+                        </div>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-success btn-lg rounded-pill shadow">Başvuruyu Tamamla</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
