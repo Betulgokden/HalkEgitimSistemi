@@ -1,42 +1,68 @@
-﻿@model HalkEgitimSistemi.Models.News
+@model HalkEgitimSistemi.Models.News
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Haber Detayları";
 }
 
-<h1>Details</h1>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10">
+            <div class="detail-card animate-scaleIn">
+                <!-- Hero Image Header -->
+                <div style="position: relative; overflow: hidden;">
+                    <img src="@(string.IsNullOrEmpty(Model.PosterUrl) ? "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=900&q=80" : Model.PosterUrl)"
+                         alt="@Model.Title"
+                         style="width: 100%; height: 300px; object-fit: cover; display: block;">
+                    <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(180deg, transparent 20%, rgba(15,15,35,0.95) 100%);"></div>
+                    <div style="position: absolute; bottom: 1.5rem; left: 2rem; right: 2rem;">
+                        <span class="badge-premium badge-success mb-2">
+                            <i class="bi bi-calendar3"></i> @Model.Date.ToShortDateString()
+                        </span>
+                        <h2 style="font-family: 'Outfit', sans-serif; font-weight: 800; color: white; margin: 0; font-size: 2rem;">
+                            @Model.Title
+                        </h2>
+                    </div>
+                </div>
 
-<div>
-    <h4>News</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Title)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Title)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Content)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Content)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.PosterUrl)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.PosterUrl)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.PublishDate)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.PublishDate)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+                <!-- Content -->
+                <div style="padding: 2rem;">
+                    <div style="background: var(--bg-glass); border: 1px solid var(--border-glass); border-radius: var(--radius-lg); padding: 1.5rem; margin-bottom: 1.5rem;">
+                        <h6 style="color: var(--text-muted); text-transform: uppercase; font-weight: 600; letter-spacing: 0.05em; font-size: 0.8rem; margin-bottom: 0.8rem;">
+                            <i class="bi bi-text-paragraph me-1"></i>Haber İçeriği
+                        </h6>
+                        <p style="color: var(--text-primary); line-height: 1.9; font-size: 1rem; margin: 0;">@Model.Content</p>
+                    </div>
+
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <div style="background: var(--bg-glass); border: 1px solid var(--border-glass); border-radius: var(--radius-md); padding: 1rem;">
+                                <small style="color: var(--text-muted); text-transform: uppercase; font-weight: 600;">Oluşturma Tarihi</small>
+                                <div style="color: var(--text-primary); font-weight: 600; margin-top: 0.3rem;">
+                                    <i class="bi bi-calendar3 me-1" style="color: var(--primary-light);"></i>@Model.Date.ToString("dd MMMM yyyy")
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div style="background: var(--bg-glass); border: 1px solid var(--border-glass); border-radius: var(--radius-md); padding: 1rem;">
+                                <small style="color: var(--text-muted); text-transform: uppercase; font-weight: 600;">Yayın Tarihi</small>
+                                <div style="color: var(--text-primary); font-weight: 600; margin-top: 0.3rem;">
+                                    <i class="bi bi-calendar-check me-1" style="color: var(--success);"></i>@Model.PublishDate.ToString("dd MMMM yyyy")
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div style="padding: 1.5rem 2rem; border-top: 1px solid var(--border-glass); display: flex; gap: 0.8rem;">
+                    <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-premium btn-primary-glow flex-fill justify-content-center">
+                        <i class="bi bi-pencil"></i> Düzenle
+                    </a>
+                    <a asp-action="Index" class="btn btn-premium btn-secondary-glass flex-fill justify-content-center">
+                        <i class="bi bi-arrow-left"></i> Listeye Dön
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

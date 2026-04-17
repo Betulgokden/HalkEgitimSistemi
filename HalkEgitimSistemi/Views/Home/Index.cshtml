@@ -1,37 +1,274 @@
-﻿@{
+@model IEnumerable<HalkEgitimSistemi.Models.News>
+
+@{
     ViewData["Title"] = "Ana Sayfa";
 }
 
-<div class="p-5 mb-4 bg-primary text-white rounded-3 shadow">
-    <div class="container-fluid py-5 text-center">
-        <h1 class="display-5 fw-bold">Halk Eğitim Merkezi'ne Hoş Geldiniz</h1>
-        <p class="col-md-12 fs-4">Kendinizi geliştirebileceğiniz onlarca farklı kurs ve uzman eğitmen kadromuzla yanınızdayız.</p>
-        <a asp-controller="Courses" asp-action="Index" class="btn btn-light btn-lg px-4 fw-bold">Tüm Kursları İncele</a>
+<!-- ===== HERO SECTION ===== -->
+<section class="hero-section" style="position: relative; overflow: hidden;">
+    <div class="hero-bg-image" style="background-image: url('https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=1920&q=80');"></div>
+    <div class="hero-overlay"></div>
+    
+    <!-- KURS ALETLERI YAGMURU -->
+    <div class="rain-container" id="rainContainer"></div>
+
+    <div class="hero-content animate-fadeInUp" style="position: relative; z-index: 10;">
+        <div class="d-inline-flex align-items-center gap-2 mb-4" style="background: var(--bg-glass); border: 1px solid var(--border-glass); padding: 0.5rem 1.2rem; border-radius: var(--radius-full);">
+            <span style="width: 8px; height: 8px; background: var(--success); border-radius: 50%; animation: pulse-border 2s infinite;"></span>
+            <span style="color: var(--text-secondary); font-size: 0.85rem; font-weight: 500;">2026 Kayıtları Açık</span>
+        </div>
+        <h1 class="hero-title">
+            Halk Eğitim Merkezine<br />Hoş Geldiniz
+        </h1>
+        <p class="hero-subtitle">
+            Kendinizi geliştirin, geleceğinize değer katın. Modern eğitim programlarımızla 
+            hayallerinize bir adım daha yaklaşın. <strong style="color: var(--primary-light);">Ücretsiz eğitim</strong> fırsatlarını kaçırmayın!
+        </p>
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
+            <a class="btn btn-premium btn-primary-glow btn-lg" asp-controller="Courses" asp-action="Index">
+                <i class="bi bi-rocket-takeoff"></i> Kursları Keşfet
+            </a>
+            <a class="btn btn-premium btn-secondary-glass btn-lg" asp-controller="Applications" asp-action="Create">
+                <i class="bi bi-send"></i> Hemen Başvur
+            </a>
+        </div>
+
+        <!-- Stats -->
+        <div class="hero-stats animate-fadeInUp delay-300">
+            <div class="hero-stat tilt-card">
+                <i class="bi bi-people-fill stat-icon" style="color: var(--primary-light);"></i>
+                <span class="hero-stat-number counter-animated" data-target="2500">0</span>
+                <span class="hero-stat-label">Kayıtlı Öğrenci</span>
+            </div>
+            <div class="hero-stat tilt-card">
+                <i class="bi bi-journal-bookmark-fill stat-icon" style="color: var(--secondary);"></i>
+                <span class="hero-stat-number counter-animated" data-target="85">0</span>
+                <span class="hero-stat-label">Aktif Kurs</span>
+            </div>
+            <div class="hero-stat tilt-card">
+                <i class="bi bi-trophy-fill stat-icon" style="color: var(--accent);"></i>
+                <span class="hero-stat-number counter-animated" data-target="150">0</span>
+                <span class="hero-stat-label">Uzman Eğitmen</span>
+            </div>
+            <div class="hero-stat tilt-card">
+                <i class="bi bi-award-fill stat-icon" style="color: var(--success);"></i>
+                <span class="hero-stat-number counter-animated" data-target="98">0</span>
+                <span class="hero-stat-label">Başarı Oranı %</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== FEATURES SECTION ===== -->
+<section class="container py-5">
+    <div class="text-center mb-5 reveal-on-scroll">
+        <span class="badge-premium badge-primary mb-3"><i class="bi bi-stars"></i> Neden Biz?</span>
+        <h2 class="section-title section-title-gradient">Eğitimde Fark Yaratıyoruz</h2>
+        <p style="color: var(--text-muted); max-width: 600px; margin: 0 auto;">
+            Alanında uzman kadromuz ve modern eğitim yöntemlerimizle geleceğinizi birlikte şekillendiriyoruz.
+        </p>
+    </div>
+
+    <div class="row g-4 stagger-children">
+        <div class="col-md-6 col-lg-3">
+            <div class="feature-card tilt-card h-100">
+                <div class="feature-icon" style="background: rgba(99,102,241,0.1); color: var(--primary-light);">
+                    <i class="bi bi-mortarboard-fill"></i>
+                </div>
+                <h5 style="font-weight: 700; color: var(--text-primary);">Sertifikalı Eğitim</h5>
+                <p style="font-size: 0.9rem; color: var(--text-muted);">MEB onaylı sertifika programları ile kariyerinize değer katın.</p>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+            <div class="feature-card tilt-card h-100">
+                <div class="feature-icon" style="background: rgba(236,72,153,0.1); color: var(--secondary);">
+                    <i class="bi bi-laptop"></i>
+                </div>
+                <h5 style="font-weight: 700; color: var(--text-primary);">Modern Atölyeler</h5>
+                <p style="font-size: 0.9rem; color: var(--text-muted);">Son teknoloji donanımlı derslikler ve atölyelerde uygulamalı eğitim.</p>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+            <div class="feature-card tilt-card h-100">
+                <div class="feature-icon" style="background: rgba(16,185,129,0.1); color: var(--success);">
+                    <i class="bi bi-people-fill"></i>
+                </div>
+                <h5 style="font-weight: 700; color: var(--text-primary);">Uzman Kadro</h5>
+                <p style="font-size: 0.9rem; color: var(--text-muted);">Alanında tecrübeli 150+ eğitmen ile birebir öğrenme fırsatı.</p>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+            <div class="feature-card tilt-card h-100">
+                <div class="feature-icon" style="background: rgba(245,158,11,0.1); color: var(--accent);">
+                    <i class="bi bi-gift-fill"></i>
+                </div>
+                <h5 style="font-weight: 700; color: var(--text-primary);">Ücretsiz Kurslar</h5>
+                <p style="font-size: 0.9rem; color: var(--text-muted);">Halk eğitim kurslarımız tamamen ücretsizdir. Herkese eşit fırsat!</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== NEWS / ANNOUNCEMENTS SECTION ===== -->
+<section class="container py-5" id="duyurular">
+    <div class="d-flex align-items-center mb-5 reveal-on-scroll">
+        <div class="section-icon section-icon-danger">
+            <i class="bi bi-megaphone-fill"></i>
+        </div>
+        <div>
+            <h2 class="section-title mb-0" style="color: var(--text-primary);">Güncel Duyurular</h2>
+            <p style="color: var(--text-muted); margin: 0; font-size: 0.9rem;">En son haberler ve duyurular</p>
+        </div>
+    </div>
+
+    @if (Model == null || !Model.Any())
+    {
+        <div class="empty-state glass-card-static p-5 reveal-on-scroll">
+            <div class="empty-state-icon">
+                <i class="bi bi-calendar2-x"></i>
+            </div>
+            <h3 style="color: var(--text-primary); font-weight: 700;">Henüz bir duyuru yayınlanmamış.</h3>
+            <p style="color: var(--text-muted);">Yöneticilerimiz haber eklediğinde burada en güncel bilgileri göreceksiniz.</p>
+        </div>
+    }
+    else
+    {
+        <div class="row g-4 stagger-children">
+            @foreach (var item in Model)
+            {
+                <div class="col-md-6 col-lg-4">
+                    <div class="news-card h-100 tilt-card">
+                        <div style="position: relative; overflow: hidden;">
+                            <img src="@(string.IsNullOrEmpty(item.PosterUrl) ? "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=600&q=80" : item.PosterUrl)" 
+                                 class="news-card-image" alt="@item.Title">
+                            <div class="news-card-date">
+                                <i class="bi bi-calendar3 me-1"></i>@item.Date.ToShortDateString()
+                            </div>
+                        </div>
+                        <div style="padding: 1.5rem;">
+                            <h4 style="font-weight: 700; color: var(--text-primary); margin-bottom: 0.8rem; font-size: 1.1rem;">@item.Title</h4>
+                            <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.7;">
+                                @(item.Content?.Length > 120 ? item.Content.Substring(0, 120) + "..." : item.Content)
+                            </p>
+                            <hr class="divider-premium" />
+                            <a asp-controller="News" asp-action="Details" asp-route-id="@item.Id" 
+                               class="btn btn-premium btn-primary-glow w-100">
+                                <i class="bi bi-arrow-right-circle"></i> Devamını Oku
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</section>
+<!-- ===== FAQ SECTION ===== -->
+<section class="container py-5" id="sss">
+    <div class="d-flex align-items-center mb-5 reveal-on-scroll">
+        <div class="section-icon section-icon-success">
+            <i class="bi bi-question-circle-fill"></i>
+        </div>
+        <div>
+            <h2 class="section-title mb-0" style="color: var(--text-primary);">Sıkça Sorulan Sorular</h2>
+            <p style="color: var(--text-muted); margin: 0; font-size: 0.9rem;">Aklınıza takılan soruların cevapları</p>
+        </div>
+    </div>
+
+    <div class="row justify-content-center reveal-on-scroll">
+        <div class="col-lg-10">
+            <div class="accordion" id="faqAccordion">
+                <!-- FAQ Item 1 -->
+                <div class="accordion-item mb-3" style="background: var(--bg-card); border: 1px solid var(--border-glass); border-radius: var(--radius-md); overflow: hidden;">
+                    <h2 class="accordion-header" id="headingOne">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne" style="background: transparent; color: var(--text-primary); font-family: 'Outfit'; font-weight: 700; box-shadow: none;">
+                            <i class="bi bi-patch-question me-2" style="color: var(--primary-light);"></i> Kurslar ücretli mi?
+                        </button>
+                    </h2>
+                    <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body" style="color: var(--text-secondary); border-top: 1px solid var(--border-glass); background: rgba(0,0,0,0.1);">
+                            Hayır, Halk Eğitim Merkezimiz bünyesinde açılan tüm kurslarımız vatandaşlarımıza tamamen <strong>ücretsiz</strong> olarak sunulmaktadır. (Sadece bazı el sanatları kurslarında kişisel malzeme temini gerekebilir.)
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 2 -->
+                <div class="accordion-item mb-3" style="background: var(--bg-card); border: 1px solid var(--border-glass); border-radius: var(--radius-md); overflow: hidden;">
+                    <h2 class="accordion-header" id="headingTwo">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo" style="background: transparent; color: var(--text-primary); font-family: 'Outfit'; font-weight: 700; box-shadow: none;">
+                            <i class="bi bi-patch-question me-2" style="color: var(--primary-light);"></i> Sertifikalar MEB Onaylı mı?
+                        </button>
+                    </h2>
+                    <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body" style="color: var(--text-secondary); border-top: 1px solid var(--border-glass); background: rgba(0,0,0,0.1);">
+                            Evet. Başvurup eğitime devam ettiğiniz ve başarıyla tamamladığınız tüm programların sonunda verilecek belgeler e-Devlet üzerinden sorgulanabilir ve %100 <strong>Milli Eğitim Bakanlığı onaylıdır.</strong> Ayrıca sitemizdeki "Sertifika Doğrulama" modülünden de kontrol edebilirsiniz.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 3 -->
+                <div class="accordion-item mb-3" style="background: var(--bg-card); border: 1px solid var(--border-glass); border-radius: var(--radius-md); overflow: hidden;">
+                    <h2 class="accordion-header" id="headingThree">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree" style="background: transparent; color: var(--text-primary); font-family: 'Outfit'; font-weight: 700; box-shadow: none;">
+                            <i class="bi bi-patch-question me-2" style="color: var(--primary-light);"></i> Kimler başvurabilir? Yaş sınırı var mı?
+                        </button>
+                    </h2>
+                    <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body" style="color: var(--text-secondary); border-top: 1px solid var(--border-glass); background: rgba(0,0,0,0.1);">
+                            Bütün vatandaşlarımız başvuru yapabilir. Genellikle kurslara katılım için alt sınır olarak zorunlu ilköğretim yaşını tamamlamış olmak yeterlidir. Ancak kursun türüne göre (Örn: Çocuklara Yönelik Kodlama) farklı yaş sınırları kurs detay sayfasında belirtilir.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== CTA SECTION ===== -->
+<section class="container py-5">
+    <div class="glass-card-static p-5 text-center reveal-on-scroll" style="background: linear-gradient(135deg, rgba(99,102,241,0.08) 0%, rgba(236,72,153,0.08) 100%);">
+        <h2 style="font-family: 'Outfit', sans-serif; font-size: 2.5rem; font-weight: 900; color: var(--text-primary); margin-bottom: 1rem;">
+            Hayalinizdeki Kursu <span class="section-title-gradient">Bulun!</span>
+        </h2>
+        <p style="color: var(--text-muted); max-width: 600px; margin: 0 auto 2rem; font-size: 1.05rem;">
+            85+ farklı kurs programımız arasından size uygun olanı seçin ve hemen başvurun. Eğitim hayatınıza yeni bir sayfa açın.
+        </p>
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
+            <a class="btn btn-premium btn-warning-glow btn-lg" asp-controller="Courses" asp-action="Index">
+                <i class="bi bi-search"></i> Kursları İncele
+            </a>
+            <a class="btn btn-premium btn-secondary-glass btn-lg" asp-controller="Instructors" asp-action="Index">
+                <i class="bi bi-person-badge"></i> Eğitmenleri Gör
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- ===== TOAST NOTIFICATION ===== -->
+<div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 1050;">
+    <div id="welcomeToast" class="toast align-items-center text-white bg-glass-strong border-0" role="alert" aria-live="assertive" aria-atomic="true" style="background: var(--gradient-hero); box-shadow: var(--shadow-lg); border-radius: var(--radius-md);">
+        <div class="d-flex">
+            <div class="toast-body d-flex align-items-center gap-3" style="font-family: 'Outfit'; font-size: 1.05rem;">
+                <i class="bi bi-bell-fill fs-4"></i>
+                <div>
+                    <strong>Yeni Kurs Kayıtları Başladı!</strong><br/>
+                    <span style="font-size: 0.85rem; opacity: 0.9;">Kontenjanlar dolmadan yerinizi ayırtın.</span>
+                </div>
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
     </div>
 </div>
 
-<div class="container">
-    <div class="row text-center mb-5">
-        <div class="col-md-4">
-            <div class="p-3 shadow-sm rounded bg-white h-100">
-                <i class="bi bi-mortarboard text-primary fs-1"></i>
-                <h4 class="mt-2">Sertifikalı Eğitim</h4>
-                <p class="text-muted">Kurs bitiminde Milli Eğitim onaylı sertifika alma imkanı.</p>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="p-3 shadow-sm rounded bg-white h-100">
-                <i class="bi bi-person-workspace text-success fs-1"></i>
-                <h4 class="mt-2">Uzman Eğitmenler</h4>
-                <p class="text-muted">Alanında deneyimli ve profesyonel kadromuzdan ders alın.</p>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="p-3 shadow-sm rounded bg-white h-100">
-                <i class="bi bi-calendar-check text-warning fs-1"></i>
-                <h4 class="mt-2">Esnek Program</h4>
-                <p class="text-muted">Hafta içi ve hafta sonu seçenekleriyle size uygun saatler.</p>
-            </div>
-        </div>
-    </div>
-</div>
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            setTimeout(function() {
+                var welcomeToast = new bootstrap.Toast(document.getElementById('welcomeToast'), {
+                    autohide: true,
+                    delay: 8000
+                });
+                welcomeToast.show();
+            }, 1500);
+        });
+    </script>
+}

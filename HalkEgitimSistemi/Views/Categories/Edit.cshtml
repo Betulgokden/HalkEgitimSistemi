@@ -1,37 +1,53 @@
-﻿@model HalkEgitimSistemi.Models.Category
+@model HalkEgitimSistemi.Models.Category
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Kategori Düzenle";
 }
 
-<h1>Edit</h1>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8">
+            <div class="glass-card-static animate-scaleIn overflow-hidden">
+                <!-- Header -->
+                <div style="padding: 2rem 2rem 1.5rem; border-bottom: 1px solid var(--border-glass); background: var(--gradient-card);">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="page-header-icon" style="width: 50px; height: 50px; font-size: 1.3rem; background: var(--gradient-info);">
+                            <i class="bi bi-pencil-square"></i>
+                        </div>
+                        <div>
+                            <h2 style="font-family: 'Outfit', sans-serif; font-weight: 800; margin: 0; color: var(--text-primary); font-size: 1.5rem;">Kategori Düzenle</h2>
+                            <p style="color: var(--text-muted); margin: 0; font-size: 0.85rem;">Mevcut kategori bilgilerini güncelleyin.</p>
+                        </div>
+                    </div>
+                </div>
 
-<h4>Category</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="CategoryName" class="control-label"></label>
-                <input asp-for="CategoryName" class="form-control" />
-                <span asp-validation-for="CategoryName" class="text-danger"></span>
+                <!-- Form -->
+                <div style="padding: 2rem;">
+                    <form asp-action="Edit">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                        <input type="hidden" asp-for="Id" />
+                        
+                        <div class="form-premium-group">
+                            <label asp-for="CategoryName" class="form-premium-label">
+                                <i class="bi bi-tag me-1"></i>Kategori Adı
+                            </label>
+                            <input asp-for="CategoryName" class="form-premium-control" />
+                            <span asp-validation-for="CategoryName" class="field-validation-error"></span>
+                        </div>
+
+                        <div class="d-flex gap-3 mt-4">
+                            <a asp-action="Index" class="btn btn-premium btn-secondary-glass flex-fill justify-content-center">
+                                <i class="bi bi-arrow-left"></i> Listeye Dön
+                            </a>
+                            <button type="submit" class="btn btn-premium btn-success-glow flex-fill justify-content-center">
+                                <i class="bi bi-check-lg"></i> Güncelle
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+        </div>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {

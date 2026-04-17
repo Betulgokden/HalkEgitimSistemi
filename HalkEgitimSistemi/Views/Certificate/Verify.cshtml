@@ -1,0 +1,55 @@
+@{
+    ViewData["Title"] = "Sertifika Doğrulama Sistemi";
+}
+
+<div class="container py-5" style="min-height: 75vh; display: flex; align-items: center; justify-content: center;">
+    <div class="row w-100 justify-content-center">
+        <div class="col-lg-6 col-md-8">
+            <div class="glass-card-static animate-fadeInUp p-5 text-center position-relative overflow-hidden">
+                <!-- Decorative element -->
+                <div style="position: absolute; top: -50px; right: -50px; width: 150px; height: 150px; background: radial-gradient(circle, var(--success) 0%, transparent 70%); opacity: 0.1; filter: blur(20px);"></div>
+                
+                <div class="section-icon mx-auto mb-4" style="width: 80px; height: 80px; font-size: 2.5rem; background: rgba(16,185,129,0.15); color: var(--success); border: 2px solid rgba(16,185,129,0.3);">
+                    <i class="bi bi-patch-check-fill"></i>
+                </div>
+                
+                <h2 style="font-family: 'Outfit', sans-serif; font-weight: 800; color: var(--text-primary); margin-bottom: 0.5rem;">
+                    Sertifika <span style="background: var(--gradient-success); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Doğrulama</span>
+                </h2>
+                <p style="color: var(--text-muted); margin-bottom: 2.5rem;">
+                    Kurumumuzdan aldığınız sertifikaların orijinalliğini e-Devlet benzeri altyapımızla ücretsiz sorgulayabilirsiniz.
+                </p>
+
+                @if (ViewBag.Error != null)
+                {
+                    <div style="background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3); border-radius: var(--radius-lg); padding: 1rem; margin-bottom: 2rem; color: var(--danger); animation: fadeInDown 0.3s ease;">
+                        <i class="bi bi-exclamation-triangle-fill me-2"></i>@ViewBag.Error
+                    </div>
+                }
+
+                <form asp-action="Verify" method="post">
+                    <div class="form-premium-group mb-4" style="text-align: left;">
+                        <label class="form-premium-label" style="text-align: center; display: block; margin-bottom: 1rem;">Sertifika Kodunu Giriniz</label>
+                        <div style="position: relative;">
+                            <i class="bi bi-qr-code position-absolute" style="top: 50%; left: 1.5rem; transform: translateY(-50%); color: var(--success); font-size: 1.5rem;"></i>
+                            <input type="text" name="certificateCode" class="form-premium-control text-center" style="padding-left: 4rem; font-size: 1.5rem; font-family: monospace; letter-spacing: 0.15rem; font-weight: 700; height: 70px; text-transform: uppercase;" placeholder="HE-2026-XXXX" required autofocus />
+                        </div>
+                        <div class="text-center mt-2" style="font-size: 0.8rem; color: var(--text-secondary);">Örnek format: HE-2026-0001</div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-premium btn-success-glow btn-lg w-100" style="height: 60px; font-size: 1.1rem; letter-spacing: 0.05em;">
+                        <i class="bi bi-shield-check me-2 fs-5"></i> Belgeyi Doğrula
+                    </button>
+                </form>
+            </div>
+            
+            <!-- Information Footer -->
+            <div class="text-center mt-4 p-3 animate-fadeInUp delay-200" style="background: var(--bg-glass); border-radius: var(--radius-md); border: 1px dashed var(--border-glass);">
+                <div class="d-flex align-items-center justify-content-center gap-2" style="color: var(--text-secondary); font-size: 0.85rem;">
+                    <i class="bi bi-info-circle-fill" style="color: var(--primary-light);"></i>
+                    Sertifikanızın altındaki barkodun altında yer alan kodu eksiksiz giriniz.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

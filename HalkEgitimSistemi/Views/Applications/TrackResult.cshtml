@@ -1,0 +1,78 @@
+@model IEnumerable<HalkEgitimSistemi.Models.Application>
+@{
+    ViewData["Title"] = "Başvuru Sonuçları";
+}
+
+<div class="container py-5">
+    <!-- Header -->
+    <div class="glass-card-static animate-fadeInDown" style="padding: 3rem; margin-bottom: 2rem; background: linear-gradient(135deg, rgba(16,185,129,0.08) 0%, rgba(5,150,105,0.05) 100%); text-align: center;">
+        <span class="badge-premium badge-primary mb-3"><i class="bi bi-person-vcard"></i> T.C. @ViewBag.TcNo</span>
+        <h1 style="font-family: 'Outfit', sans-serif; font-size: 2.5rem; font-weight: 900; margin-bottom: 0.8rem;">
+            Başvuru <span class="section-title-gradient">Sonuçları</span>
+        </h1>
+        <p style="color: var(--text-muted); max-width: 600px; margin: 0 auto; font-size: 1.05rem;">
+            Bu kimlik numarasına ait başvurular aşağıda listelenmiştir.
+        </p>
+    </div>
+
+    <div class="row g-4 stagger-children">
+        @foreach (var app in Model)
+        {
+            <div class="col-md-6">
+                <div class="glass-card-static p-4 h-100 animate-fadeInUp">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <span class="badge-premium badge-primary" style="font-size: 0.9rem;">
+                            <i class="bi bi-calendar3"></i> Başvuru: @app.ApplyDate.ToShortDateString()
+                        </span>
+                        @if (app.Status == HalkEgitimSistemi.Models.ApplicationStatus.Pending)
+                        {
+                            <span class="badge-premium badge-warning"><i class="bi bi-hourglass-split"></i> Bekliyor</span>
+                        }
+                        else if (app.Status == HalkEgitimSistemi.Models.ApplicationStatus.Approved)
+                        {
+                            <span class="badge-premium badge-success"><i class="bi bi-check-circle-fill"></i> Onaylandı</span>
+                        }
+                        else
+                        {
+                            <span class="badge-premium badge-danger"><i class="bi bi-x-circle-fill"></i> Reddedildi</span>
+                        }
+                    </div>
+
+                    <h4 style="font-family: 'Outfit', sans-serif; font-weight: 800; color: var(--text-primary); margin-bottom: 1rem;">
+                        @(app.Course?.CourseName ?? "Bilinmeyen Kurs")
+                    </h4>
+
+                    @if (app.Course != null)
+                    {
+                        <div class="d-flex align-items-center gap-3 mb-3" style="color: var(--text-muted); font-size: 0.9rem;">
+                            <span><i class="bi bi-clock-history" style="color: var(--primary-light);"></i> @app.Course.DurationHours Saat</span>
+                            <span><i class="bi bi-calendar-range" style="color: var(--primary-light);"></i> @app.Course.StartDate.ToShortDateString() Başlangıç</span>
+                        </div>
+                    }
+
+                    @if (app.Status == HalkEgitimSistemi.Models.ApplicationStatus.Rejected && !string.IsNullOrEmpty(app.AdminNote))
+                    {
+                        <div style="background: rgba(239,68,68,0.1); border-left: 4px solid var(--danger); padding: 1rem; border-radius: 0 var(--radius-md) var(--radius-md) 0;">
+                            <div style="font-weight: 700; color: var(--danger); font-size: 0.85rem; text-transform: uppercase; margin-bottom: 0.3rem;">Ret Nedeni</div>
+                            <div style="color: var(--text-secondary); font-size: 0.9rem;">@app.AdminNote</div>
+                        </div>
+                    }
+                    
+                    @if (app.Status == HalkEgitimSistemi.Models.ApplicationStatus.Approved)
+                    {
+                        <div style="background: rgba(16,185,129,0.1); border-left: 4px solid var(--success); padding: 1rem; border-radius: 0 var(--radius-md) var(--radius-md) 0;">
+                            <div style="font-weight: 700; color: var(--success); font-size: 0.85rem; text-transform: uppercase; margin-bottom: 0.3rem;">Onaylandı</div>
+                            <div style="color: var(--text-secondary); font-size: 0.9rem;">Kursumuzla ilgili detaylı bilgilendirme (saat, derslik) SMS veya e-posta yoluyla iletilecektir. Lütfen iletişim kanallarınızı takip edin.</div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+    
+    <div class="text-center mt-5">
+        <a asp-action="Track" class="btn btn-premium btn-secondary-glass">
+            <i class="bi bi-arrow-left"></i> Yeni Sorgulama
+        </a>
+    </div>
+</div>

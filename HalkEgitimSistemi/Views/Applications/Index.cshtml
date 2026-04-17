@@ -1,28 +1,146 @@
-﻿@model IEnumerable<HalkEgitimSistemi.Models.Application>
+@model IEnumerable<HalkEgitimSistemi.Models.Application>
 
-<div class="container mt-4">
-    <h2 class="fw-bold text-primary mb-4">Gelen Kurs Başvuruları</h2>
-    <table class="table table-hover shadow-sm rounded">
-        <thead class="table-dark">
-            <tr>
-                <th>Ad Soyad</th>
-                <th>Kurs</th>
-                <th>Telefon</th>
-                <th>Öğrenim</th>
-                <th>Tarih</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td>@item.FullName</td>
-                    <td><span class="badge bg-info text-dark">@item.Course?.CourseName</span></td>
-                    <td>@item.PhoneNumber</td>
-                    <td>@item.EducationStatus</td>
-                    <td>@item.ApplyDate.ToShortDateString()</td>
-                </tr>
-            }
-        </tbody>
-    </table>
+@{
+    ViewData["Title"] = "Başvuru Yönetimi";
+}
+
+<div class="container py-5">
+    <!-- Page Header -->
+    <div class="page-header animate-fadeInDown">
+        <div class="page-header-content">
+            <div class="d-flex align-items-center">
+                <div class="page-header-icon" style="background: var(--gradient-warm);">
+                    <i class="bi bi-clipboard-check-fill"></i>
+                </div>
+                <div>
+                    <h1 class="page-header-title">Başvuru Yönetimi</h1>
+                    <p class="page-header-subtitle">Başvuruları inceleyin, onaylayın veya reddedin.</p>
+                </div>
+            </div>
+            <a asp-controller="Admin" asp-action="Dashboard" class="btn btn-premium btn-primary-glow">
+                <i class="bi bi-speedometer2"></i> Dashboard
+            </a>
+        </div>
+    </div>
+
+    <!-- Status Filter Tabs -->
+    <div class="d-flex gap-2 mb-4 flex-wrap animate-fadeInUp delay-100">
+        <a asp-action="Index" class="btn btn-premium @(ViewBag.CurrentFilter == null ? "btn-primary-glow" : "btn-secondary-glass")">
+            <i class="bi bi-list-ul"></i> Tümü <span class="badge-premium badge-secondary ms-1">@ViewBag.TotalCount</span>
+        </a>
+        <a asp-action="Index" asp-route-status="Pending" class="btn btn-premium @(ViewBag.CurrentFilter == "Pending" ? "btn-warning-glow" : "btn-secondary-glass")">
+            <i class="bi bi-hourglass-split"></i> Bekleyen <span class="badge-premium badge-warning ms-1">@ViewBag.PendingCount</span>
+        </a>
+        <a asp-action="Index" asp-route-status="Approved" class="btn btn-premium @(ViewBag.CurrentFilter == "Approved" ? "btn-success-glow" : "btn-secondary-glass")">
+            <i class="bi bi-check-circle"></i> Onaylanan <span class="badge-premium badge-success ms-1">@ViewBag.ApprovedCount</span>
+        </a>
+        <a asp-action="Index" asp-route-status="Rejected" class="btn btn-premium @(ViewBag.CurrentFilter == "Rejected" ? "btn-danger-glow" : "btn-secondary-glass")">
+            <i class="bi bi-x-circle"></i> Reddedilen <span class="badge-premium badge-danger ms-1">@ViewBag.RejectedCount</span>
+        </a>
+    </div>
+
+    <!-- Messages -->
+    @if (TempData["Success"] != null)
+    {
+        <div style="background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.3); border-radius: var(--radius-lg); padding: 1rem 1.5rem; margin-bottom: 1.5rem; color: var(--success); animation: fadeInDown 0.3s ease;">
+            <i class="bi bi-check-circle-fill me-2"></i>@TempData["Success"]
+        </div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div style="background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3); border-radius: var(--radius-lg); padding: 1rem 1.5rem; margin-bottom: 1.5rem; color: var(--danger); animation: fadeInDown 0.3s ease;">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>@TempData["Error"]
+        </div>
+    }
+
+    <!-- Table Card -->
+    <div class="glass-card-static animate-fadeInUp delay-200" style="padding: 1.5rem;">
+        <div class="table-responsive">
+            <table class="table-premium w-100">
+                <thead>
+                    <tr>
+                        <th style="padding-left: 1.5rem;">Başvuran</th>
+                        <th>İletişim</th>
+                        <th>Kurs</th>
+                        <th>Tarih</th>
+                        <th>Durum</th>
+                        <th class="text-end" style="padding-right: 1.5rem;">İşlemler</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td style="padding-left: 1.5rem;">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="section-icon section-icon-primary" style="width: 42px; height: 42px; font-size: 1.1rem;">
+                                        <i class="bi bi-person-fill"></i>
+                                    </div>
+                                    <div>
+                                        <div style="font-weight: 600; color: var(--text-primary);">@item.FirstName @item.LastName</div>
+                                        <small style="color: var(--text-muted);">TC: @(item.TcNo ?? "Belirtilmedi")</small>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div style="font-size: 0.85rem;">
+                                    <div style="color: var(--text-secondary);"><i class="bi bi-telephone me-1" style="color: var(--primary-light);"></i>@item.PhoneNumber</div>
+                                    <div style="color: var(--text-muted);"><i class="bi bi-envelope me-1" style="color: var(--primary-light);"></i>@item.Email</div>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="badge-premium badge-primary">
+                                    <i class="bi bi-journal-bookmark"></i> @(item.Course?.CourseName ?? "?")
+                                </span>
+                            </td>
+                            <td>
+                                <span style="color: var(--text-muted); font-size: 0.85rem;">
+                                    <i class="bi bi-calendar3 me-1"></i>@item.ApplyDate.ToShortDateString()
+                                </span>
+                            </td>
+                            <td>
+                                @if (item.Status == HalkEgitimSistemi.Models.ApplicationStatus.Pending)
+                                {
+                                    <span class="badge-premium badge-warning"><i class="bi bi-hourglass-split"></i> Bekliyor</span>
+                                }
+                                else if (item.Status == HalkEgitimSistemi.Models.ApplicationStatus.Approved)
+                                {
+                                    <span class="badge-premium badge-success"><i class="bi bi-check-circle-fill"></i> Onaylandı</span>
+                                }
+                                else
+                                {
+                                    <span class="badge-premium badge-danger"><i class="bi bi-x-circle-fill"></i> Reddedildi</span>
+                                }
+                            </td>
+                            <td class="text-end" style="padding-right: 1.5rem;">
+                                @if (item.Status == HalkEgitimSistemi.Models.ApplicationStatus.Pending)
+                                {
+                                    <div class="d-inline-flex gap-2">
+                                        <form asp-action="Approve" asp-route-id="@item.Id" method="post" style="display:inline;">
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit" class="btn-icon btn-icon-success" data-tooltip="Onayla" title="Onayla">
+                                                <i class="bi bi-check-lg"></i>
+                                            </button>
+                                        </form>
+                                        <form asp-action="Reject" asp-route-id="@item.Id" method="post" style="display:inline;">
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit" class="btn-icon btn-icon-danger" data-tooltip="Reddet" title="Reddet">
+                                                <i class="bi bi-x-lg"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <a asp-action="Details" asp-route-id="@item.Id" class="btn-icon btn-icon-info" data-tooltip="Detay">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>

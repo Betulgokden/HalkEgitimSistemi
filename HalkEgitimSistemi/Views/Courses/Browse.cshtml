@@ -1,0 +1,160 @@
+@model IEnumerable<HalkEgitimSistemi.Models.Course>
+
+@{
+    ViewData["Title"] = "Kurs Kataloğu";
+}
+
+<!-- Hero Section -->
+<section class="hero-section" style="min-height: 45vh; padding-top: 140px; position: relative; overflow: hidden;">
+    <div class="hero-bg-image" style="background-image: url('https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=1920&q=80'); filter: blur(3px);"></div>
+    <div class="hero-overlay"></div>
+    
+    <!-- KURS ALETLERI YAGMURU -->
+    <div class="rain-container" id="rainContainer"></div>
+
+    <div class="hero-content animate-fadeInUp text-center" style="max-width: 800px; padding: 0 1rem; position: relative; z-index: 10;">
+        <span class="badge-premium badge-primary mb-3"><i class="bi bi-stars"></i> Geleceğini Şekillendir</span>
+        <h1 class="hero-title">
+            Eğitim <span class="section-title-gradient">Kataloğu</span>
+        </h1>
+        <p class="hero-subtitle">
+            Kendinize yatırım yapın. Yüzlerce ücretsiz kurs arasından size uygun olanı seçin ve hemen başlayın.
+        </p>
+
+        <!-- Search Form -->
+        <form asp-action="Browse" method="get" class="hero-search-form animate-fadeInUp delay-300">
+            <div class="hero-search-input-wrapper">
+                <i class="bi bi-search hero-search-icon"></i>
+                <input type="text" name="search" value="@ViewBag.CurrentSearch" class="form-control hero-search-input" placeholder="Ne öğrenmek istersiniz? (Örn: İngilizce, Web Tasarım)" />
+            </div>
+            <button type="submit" class="btn btn-premium btn-primary-glow" style="border-radius: var(--radius-full); padding: 0 2rem;">
+                Ara
+            </button>
+        </form>
+    </div>
+</section>
+
+<div class="container py-5">
+    <div class="row g-4">
+        <!-- Sidebar Filters -->
+        <div class="col-lg-3">
+            <div class="glass-card-static p-4 sticky-top" style="top: 100px; z-index: 10;">
+                <h5 style="color: var(--text-primary); font-family: 'Outfit'; font-weight: 800; margin-bottom: 1.5rem;">
+                    <i class="bi bi-funnel-fill me-2" style="color: var(--primary-light);"></i>Kategoriler
+                </h5>
+                <div class="d-flex flex-column gap-2">
+                    <a asp-action="Browse" asp-route-search="@ViewBag.CurrentSearch" class="btn text-start @((ViewBag.CurrentCategory == null || ViewBag.CurrentCategory == 0) ? "btn-premium btn-primary-glow" : "btn-premium btn-secondary-glass")" style="padding: 0.8rem 1.2rem;">
+                        <i class="bi bi-grid-fill me-2"></i>Tüm Kurslar <span class="badge bg-glass ms-auto" style="float: right; color: var(--text-primary); border: 1px solid var(--border-glass);">@ViewBag.TotalCourses</span>
+                    </a>
+                    
+                    @if (ViewBag.Categories != null)
+                    {
+                        @foreach (var cat in (IEnumerable<HalkEgitimSistemi.Models.Category>)ViewBag.Categories)
+                        {
+                            var isActive = ViewBag.CurrentCategory == cat.Id;
+                            <a asp-action="Browse" asp-route-categoryId="@cat.Id" asp-route-search="@ViewBag.CurrentSearch" class="btn text-start @(isActive ? "btn-premium btn-primary-glow" : "btn-premium btn-secondary-glass")" style="padding: 0.8rem 1.2rem;">
+                                <i class="bi @(cat.IconClass ?? "bi-tag") me-2"></i>@cat.CategoryName 
+                                <span class="badge @(isActive ? "bg-white text-primary" : "bg-glass") ms-auto" style="float: right; @(isActive ? "" : "color: var(--text-primary); border: 1px solid var(--border-glass);")">
+                                    @(cat.Courses?.Count(c => c.IsActive) ?? 0)
+                                </span>
+                            </a>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Course Grid -->
+        <div class="col-lg-9">
+            <!-- Results Header -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h4 style="color: var(--text-primary); font-weight: 700; margin: 0;">
+                    @if (Model.Any())
+                    {
+                        <span><span style="color: var(--primary-light);">@Model.Count()</span> sonuç bulundu</span>
+                    }
+                    else
+                    {
+                        <span>Sonuç bulunamadı</span>
+                    }
+                </h4>
+            </div>
+
+            @if (!Model.Any())
+            {
+                <div class="empty-state glass-card-static p-5 text-center">
+                    <div class="empty-state-icon mx-auto mb-4" style="width: 80px; height: 80px; background: rgba(239,68,68,0.1); color: var(--danger); display: flex; align-items: center; justify-content: center; border-radius: 50%; border: 1px solid rgba(239,68,68,0.3); font-size: 2rem;">
+                        <i class="bi bi-search"></i>
+                    </div>
+                    <h3 style="color: var(--text-primary); font-family: 'Outfit'; font-weight: 800;">Arama kriterlerine uygun kurs bulunamadı.</h3>
+                    <p style="color: var(--text-muted); font-size: 1.1rem; margin-top: 0.5rem;">Farklı kelimelerle veya farklı kategorilerde arama yapmayı deneyin.</p>
+                    <a asp-action="Browse" class="btn btn-premium btn-primary-glow mt-3">Aramayı Temizle</a>
+                </div>
+            }
+            else
+            {
+                <div class="row g-4 stagger-children">
+                    @foreach (var item in Model)
+                    {
+                        <div class="col-md-6 col-xl-4">
+                            <div class="course-card glass-card-static h-100 animate-fadeInUp" style="padding: 0; overflow: hidden; display: flex; flex-direction: column;">
+                                <!-- Image -->
+                                <div style="position: relative; height: 180px; overflow: hidden;">
+                                    <img src="@(string.IsNullOrEmpty(item.ImageUrl) ? "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=600" : item.ImageUrl)" alt="@item.CourseName" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease;" class="course-img" />
+                                    <div style="position: absolute; top: 1rem; left: 1rem;">
+                                        <span class="badge-premium badge-primary" style="background: rgba(15,15,35,0.8); backdrop-filter: blur(5px);">
+                                            <i class="bi @(item.Category?.IconClass ?? "bi-tag")"></i> @(item.Category?.CategoryName)
+                                        </span>
+                                    </div>
+                                    <div style="position: absolute; bottom: 0; left: 0; right: 0; height: 50%; background: linear-gradient(to top, var(--bg-dark), transparent);"></div>
+                                </div>
+
+                                <!-- Content -->
+                                <div style="padding: 1.5rem; flex: 1; display: flex; flex-direction: column;">
+                                    <h5 style="font-family: 'Outfit'; font-weight: 800; color: var(--text-primary); margin-bottom: 0.8rem; font-size: 1.1rem; line-height: 1.4;">@item.CourseName</h5>
+                                    
+                                    <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1.5rem; line-height: 1.6; flex: 1;">
+                                        @(item.Description?.Length > 90 ? item.Description.Substring(0, 90) + "..." : item.Description)
+                                    </p>
+
+                                    <!-- Meta -->
+                                    <div class="d-flex justify-content-between align-items-center mb-4" style="font-size: 0.8rem; color: var(--text-secondary); border-top: 1px solid var(--border-glass); padding-top: 1rem;">
+                                        <div class="d-flex align-items-center gap-1" data-tooltip="Süre">
+                                            <i class="bi bi-clock-fill" style="color: var(--primary-light);"></i> @item.DurationHours sa
+                                        </div>
+                                        <div class="d-flex align-items-center gap-1" data-tooltip="Tarih">
+                                            <i class="bi bi-calendar-event-fill" style="color: var(--secondary);"></i> @item.StartDate.ToString("MMM")
+                                        </div>
+                                        <div class="d-flex align-items-center gap-1" data-tooltip="Kontenjan">
+                                            <i class="bi bi-people-fill" style="color: var(--success);"></i> @item.Quota
+                                        </div>
+                                    </div>
+
+                                    <!-- Action -->
+                                    <a asp-action="CourseDetail" asp-route-id="@item.Id" class="btn btn-premium btn-secondary-glass w-100" style="transition: all 0.3s ease;">
+                                        İncele ve Başvur <i class="bi bi-arrow-right ms-1"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<style>
+    .course-card:hover .course-img {
+        transform: scale(1.1);
+    }
+    .course-card .btn-premium {
+        border-color: rgba(99,102,241,0.2) !important;
+    }
+    .course-card:hover .btn-premium {
+        background: var(--gradient-card);
+        border-color: var(--primary-light) !important;
+        box-shadow: 0 0 15px rgba(99,102,241,0.4);
+        color: white !important;
+    }
+</style>

@@ -1,95 +1,77 @@
-﻿@model IEnumerable<HalkEgitimSistemi.Models.Instructor>
+@model IEnumerable<HalkEgitimSistemi.Models.Instructor>
 
 @{
-    ViewData["Title"] = "Teşkilat Şeması";
+    ViewData["Title"] = "Eğitmen Kadromuz";
 }
 
-<style>
-    /* Dev Soy Ağacı (Teşkilat Şeması) Tasarımı */
-    .org-chart-container { 
-        overflow-x: auto; 
-        padding: 20px 20px 50px 20px; 
-        text-align: center;
-        background-color: #fcfcfc;
-        border-radius: 15px;
-        box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
-    }
-    .org-tree { display: inline-block; white-space: nowrap; }
-    .org-tree ul { padding-top: 20px; position: relative; display: flex; justify-content: center; padding-left: 0; margin-bottom: 0; }
-    .org-tree li { text-align: center; list-style-type: none; position: relative; padding: 20px 4px 0 4px; }
-    
-    /* Bağlantı Çizgileri */
-    .org-tree li::before, .org-tree li::after {
-        content: ''; position: absolute; top: 0; right: 50%;
-        border-top: 2px solid #adb5bd; width: 50%; height: 20px;
-    }
-    .org-tree li::after { right: auto; left: 50%; border-left: 2px solid #adb5bd; }
-    .org-tree li:only-child::after, .org-tree li:only-child::before { display: none; }
-    .org-tree li:only-child { padding-top: 0; }
-    .org-tree li:first-child::before, .org-tree li:last-child::after { border: 0 none; }
-    .org-tree li:last-child::before { border-right: 2px solid #adb5bd; border-radius: 0 5px 0 0; }
-    .org-tree li:first-child::after { border-radius: 5px 0 0 0; }
-    .org-tree ul::before {
-        content: ''; position: absolute; top: 0; left: 50%;
-        border-left: 2px solid #adb5bd; width: 0; height: 20px;
-    }
+<!-- KURS ALETLERI YAGMURU -->
+<div class="rain-container" id="rainContainer"></div>
 
-    /* Daha Kibar Personel Kartı Tasarımı */
-    .org-node {
-        background: #fff; border: 2px solid #e9ecef; padding: 12px 8px;
-        border-radius: 12px; display: inline-block; box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-        width: 130px; transition: transform 0.3s, box-shadow 0.3s; position: relative;
-        white-space: normal;
-    }
-    .org-node:hover { transform: translateY(-8px); border-color: #0d6efd; box-shadow: 0 10px 20px rgba(13,110,253,0.15); z-index: 10;}
-    .org-node img {
-        width: 65px; height: 65px; object-fit: cover; 
-        border-radius: 50%; 
-        margin-bottom: 8px; border: 3px solid #f8f9fa;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
-    .org-node .name { font-weight: bold; font-size: 13px; color: #212529; line-height: 1.2; margin-bottom: 4px; }
-    .org-node .title { font-size: 11px; font-weight: 600; color: #6c757d; line-height: 1.1; }
-    
-    .border-mudur { border-color: #0d6efd; }
-    .border-muduryrd { border-color: #6610f2; }
-    .border-idari { border-color: #fd7e14; }
-    .border-egitim { border-color: #198754; }
-</style>
-
-<div class="container-fluid mt-4 mb-5">
-    <div class="text-center mb-4">
-        <h2 class="fw-bold text-primary">Halk Eğitim Merkezi Teşkilat Şeması</h2>
-        <p class="text-muted">Kurumumuzun geniş idari ve uzman eğitim kadrosu</p>
+<div class="container py-5" style="position: relative; z-index: 10;">
+    <!-- Hero Header -->
+    <div class="glass-card-static animate-fadeInDown" style="padding: 3rem; margin-bottom: 3rem; background: linear-gradient(135deg, rgba(139,92,246,0.1) 0%, rgba(99,102,241,0.05) 100%); text-align: center;">
+        <span class="badge-premium badge-primary mb-3"><i class="bi bi-stars"></i> Uzman Kadro</span>
+        <h1 style="font-family: 'Outfit', sans-serif; font-size: 2.8rem; font-weight: 900; margin-bottom: 0.8rem;">
+            <span class="section-title-gradient">Uzman Eğitmenlerimiz</span>
+        </h1>
+        <p style="color: var(--text-muted); max-width: 600px; margin: 0 auto 1.5rem; font-size: 1.05rem;">
+            Geleceği şekillendiren, alanında uzman eğitim kadromuzla tanışın. Her biri alanının en iyisi!
+        </p>
+        @if (User.Identity != null && User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+        {
+            <a asp-action="Create" class="btn btn-premium btn-warning-glow">
+                <i class="bi bi-person-plus-fill"></i> Yeni Eğitmen Ekle
+            </a>
+        }
     </div>
 
-    @if (User?.Identity?.IsAuthenticated == true)
+    @if (Model == null || !Model.Any())
     {
-        <div class="mb-4 text-center">
-            <a asp-action="Create" class="btn btn-primary shadow-sm rounded-pill px-4">
-                <i class="bi bi-person-plus-fill me-2"></i> Yeni Eğitmen Ekle
-            </a>
+        <div class="empty-state glass-card-static p-5 reveal-on-scroll">
+            <div class="empty-state-icon">
+                <i class="bi bi-people"></i>
+            </div>
+            <h3 style="color: var(--text-primary); font-weight: 700;">Henüz bir eğitmen kaydı bulunamadı.</h3>
+            <p style="color: var(--text-muted);">Yöneticilerimiz eğitmen eklediğinde burada en güncel bilgileri göreceksiniz.</p>
         </div>
     }
+    else
+    {
+        <div class="row g-4 stagger-children">
+            @foreach (var item in Model) {
+                <div class="col-md-6 col-lg-4">
+                    <div class="instructor-card tilt-card h-100">
+                        <!-- Avatar -->
+                        <div class="instructor-avatar">
+                            <i class="bi bi-person-hearts"></i>
+                        </div>
 
-    <div class="org-chart-container">
-        <div class="org-tree">
-            <ul>
-                <li>
-                    <div class="org-node border-mudur">
-                        <img src="https://ui-avatars.com/api/?name=Ahmet+Yılmaz&background=0D6EFD&color=fff&size=128&rounded=true" alt="Müdür">
-                        <div class="name">Ahmet Yılmaz</div>
-                        <div class="title text-primary">Kurum Müdürü</div>
-                    </div>
-                    
-                    <ul>
-                        <li>
-                            <div class="org-node border-muduryrd">
-                                <img src="https://ui-avatars.com/api/?name=Mehmet+Demir&background=6610f2&color=fff&size=128&rounded=true" alt="Müdür Yrd">
-                                <div class="name">Mehmet Demir</div>
-                                <div class="title" style="color:#6610f2;">Müdür Yrd. (İdari)</div>
+                        <h4 style="font-weight: 700; color: var(--text-primary); margin-bottom: 0.3rem;">@item.FullName</h4>
+                        <p style="color: var(--primary-light); font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 1.5rem;">@item.Title</p>
+
+                        <hr class="divider-premium" />
+
+                        <div style="margin-bottom: 1.5rem;">
+                            <span class="badge-premium badge-secondary" style="font-size: 0.82rem; padding: 0.5rem 1rem;">
+                                <i class="bi bi-book-fill me-1" style="color: var(--primary-light);"></i>
+                                @(item.Course?.CourseName ?? "Genel İdare / Branş Belirtilmedi")
+                            </span>
+                        </div>
+
+                        @if (User.Identity != null && User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                        {
+                            <div class="d-flex gap-2 justify-content-center">
+                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn-icon btn-icon-primary" data-tooltip="Düzenle">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <a asp-action="Delete" asp-route-id="@item.Id" class="btn-icon btn-icon-danger" data-tooltip="Sil">
+                                    <i class="bi bi-trash3"></i>
+                                </a>
                             </div>
-                            <ul>
-                                <li>
-                                    <div class="org-node border-idari">
-                                        <img src="
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

@@ -1,0 +1,94 @@
+@model HalkEgitimSistemi.Models.Application
+
+@{
+    ViewData["Title"] = "Doğrulanmış Sertifika";
+}
+
+<div class="container py-5 text-center">
+    <div class="animate-fadeInDown mb-4">
+        <div class="d-inline-flex align-items-center gap-2 p-3" style="background: rgba(16,185,129,0.15); border: 1px solid rgba(16,185,129,0.3); border-radius: var(--radius-full); color: var(--success);">
+            <i class="bi bi-shield-fill-check fs-4"></i>
+            <span style="font-family: 'Outfit'; font-weight: 700; font-size: 1.1rem; text-transform: uppercase;">Belge Doğrulandı - Orijinal</span>
+        </div>
+    </div>
+
+    <!-- Certificate Card Layout (Printable styled) -->
+    <div class="mx-auto animate-scaleIn" style="max-width: 900px; position: relative;">
+        <!-- Download Button Wrapper -->
+        <div class="text-end mb-3">
+             <button onclick="window.print()" class="btn btn-premium btn-secondary-glass">
+                 <i class="bi bi-printer"></i> Yazdır / PDF Kaydet
+             </button>
+        </div>
+
+        <div id="printable-certificate" style="background: #fff; border-radius: 4px; border: 15px solid #1a202c; padding: 3rem 4rem; position: relative; overflow: hidden; box-shadow: var(--shadow-xl); color: #1a202c; text-align: center;">
+            
+            <!-- Watermark -->
+            <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-30deg); font-size: 15rem; font-weight: 900; color: rgba(0,0,0,0.02); z-index: 0; pointer-events: none; font-family: 'Outfit';">MEB</div>
+
+            <!-- Content -->
+            <div style="position: relative; z-index: 1;">
+                <div class="mb-4">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cc/Ministry_of_National_Education_Turkey_logo.svg/1200px-Ministry_of_National_Education_Turkey_logo.svg.png" alt="MEB Lojosu" style="height: 100px; opacity: 0.9;" />
+                </div>
+                
+                <h1 style="font-family: 'Outfit', serif; font-size: 3rem; font-weight: 900; color: #1e293b; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 2rem;">
+                    B A Ş A R I &nbsp;&nbsp;B E L G E S İ
+                </h1>
+
+                <p style="font-size: 1.3rem; color: #475569; margin-bottom: 1rem; font-style: italic;">
+                    Bu belge, aşağıdaki bilgileri bulunan katılımcıya verilmiştir:
+                </p>
+
+                <div style="font-size: 2.5rem; font-weight: 800; color: #0f172a; margin-bottom: 1rem; border-bottom: 2px solid #cbd5e1; display: inline-block; padding: 0 2rem 0.5rem; font-family: 'Outfit';">
+                    @Model.FirstName @Model.LastName
+                </div>
+
+                <p style="font-size: 1.2rem; color: #475569; margin-bottom: 1rem; max-width: 600px; mx-auto;">
+                    T.C Kimlik No: <strong style="color: #1e293b;">@Model.TcNo</strong>
+                </p>
+
+                <p style="font-size: 1.3rem; color: #475569; margin: 3rem 0 1rem; line-height: 1.6;">
+                    Kurumumuz tarafından düzenlenen <br/>
+                    <strong style="color: #2563eb; font-size: 1.8rem; display: block; margin-top: 0.5rem;">@Model.Course?.CourseName</strong><br/>
+                    adlı eğitimi, @Model.Course?.DurationHours saatlik programı başarıyla tamamlayarak bu sertifikayı almaya hak kazanmıştır.
+                </p>
+
+                <div class="row align-items-end mt-5 pt-4">
+                    <div class="col-4 text-center">
+                        <div style="font-size: 0.9rem; color: #64748b; margin-bottom: 0.5rem; text-transform: uppercase;">Belge Tarihi</div>
+                        <div style="font-weight: 700; font-size: 1.2rem;">@Model.Course?.EndDate.ToString("dd MMMM yyyy")</div>
+                        <div style="border-top: 1px solid #94a3b8; margin-top: 0.5rem;"></div>
+                    </div>
+                    <div class="col-4 text-center">
+                        <!-- QR Code Placeholder -->
+                        <div style="width: 100px; height: 100px; margin: 0 auto; border: 2px solid #cbd5e1; padding: 5px;">
+                            <img src='https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=@(Model.CertificateCode)' width="100%" />
+                        </div>
+                        <div style="font-size: 0.8rem; font-family: monospace; font-weight: 700; margin-top: 0.5rem; color: #1e293b;">@Model.CertificateCode</div>
+                    </div>
+                    <div class="col-4 text-center">
+                        <div style="font-size: 0.9rem; color: #64748b; margin-bottom: 0.5rem; text-transform: uppercase;">Kurum Müdürü</div>
+                        <div style="font-family: 'Brush Script MT', cursive; font-size: 2.5rem; color: #0f172a; line-height: 1;">A. Yılmaz</div>
+                        <div style="border-top: 1px solid #94a3b8; margin-top: 0.5rem;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="mt-5">
+        <a asp-action="Verify" class="btn btn-premium btn-secondary-glass">
+            <i class="bi bi-arrow-left"></i> Yeni Sorgulama
+        </a>
+    </div>
+</div>
+
+<style>
+    @@media print {
+        body * { visibility: hidden; }
+        #printable-certificate, #printable-certificate * { visibility: visible; }
+        #printable-certificate { position: absolute; left: 0; top: 0; width: 100%; height: auto; box-shadow: none !important; border: 5px solid #1a202c !important; }
+        .navbar-premium, .footer-premium { display: none !important; }
+    }
+</style>

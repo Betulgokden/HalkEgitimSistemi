@@ -1,0 +1,43 @@
+@model HalkEgitimSistemi.Models.Application
+@{
+    ViewData["Title"] = "Başvuru Takip";
+}
+
+<div class="container py-5" style="min-height: 70vh; display: flex; align-items: center; justify-content: center;">
+    <div class="row w-100 justify-content-center">
+        <div class="col-lg-6 col-md-8">
+            <div class="glass-card-static animate-scaleIn overflow-hidden p-5 text-center">
+                <div class="section-icon section-icon-primary mx-auto mb-4" style="width: 70px; height: 70px; font-size: 2rem;">
+                    <i class="bi bi-search"></i>
+                </div>
+                
+                <h2 style="font-family: 'Outfit', sans-serif; font-weight: 800; color: var(--text-primary); margin-bottom: 0.5rem;">
+                    Başvuru <span class="section-title-gradient">Sorgula</span>
+                </h2>
+                <p style="color: var(--text-muted); margin-bottom: 2rem;">
+                    Başvuru durumunuzu öğrenmek için lütfen T.C. Kimlik Numaranızı giriniz.
+                </p>
+
+                @if (ViewBag.Error != null)
+                {
+                    <div style="background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3); border-radius: var(--radius-lg); padding: 1rem; margin-bottom: 1.5rem; color: var(--danger);">
+                        <i class="bi bi-exclamation-triangle-fill me-2"></i>@ViewBag.Error
+                    </div>
+                }
+
+                <form asp-action="Track" method="post">
+                    <div class="form-premium-group mb-4">
+                        <div style="position: relative;">
+                            <i class="bi bi-person-vcard position-absolute" style="top: 50%; left: 1.2rem; transform: translateY(-50%); color: var(--primary-light); font-size: 1.2rem;"></i>
+                            <input type="text" name="tcNo" class="form-premium-control text-center" style="padding-left: 3rem; font-size: 1.2rem; letter-spacing: 0.2rem;" placeholder="11 Haneli T.C. Kimlik No" maxlength="11" required />
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-premium btn-primary-glow btn-lg w-100">
+                        <i class="bi bi-search"></i> Sorgula
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

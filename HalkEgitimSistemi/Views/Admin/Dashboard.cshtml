@@ -1,0 +1,221 @@
+@{
+    ViewData["Title"] = "Yönetim Paneli";
+}
+
+<div class="container py-5">
+    <!-- Page Header -->
+    <div class="page-header animate-fadeInDown">
+        <div class="page-header-content">
+            <div class="d-flex align-items-center">
+                <div class="page-header-icon" style="background: var(--gradient-hero);">
+                    <i class="bi bi-speedometer2"></i>
+                </div>
+                <div>
+                    <h1 class="page-header-title">Yönetim Paneli</h1>
+                    <p class="page-header-subtitle">Sistem istatistikleri ve raporlama</p>
+                </div>
+            </div>
+            <div class="d-flex gap-2">
+                <a asp-controller="Applications" asp-action="Index" class="btn btn-premium btn-warning-glow">
+                    <i class="bi bi-clipboard-check"></i> Başvurular (@ViewBag.PendingCount bekliyor)
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success/Error Messages -->
+    @if (TempData["Success"] != null)
+    {
+        <div style="background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.3); border-radius: var(--radius-lg); padding: 1rem 1.5rem; margin-bottom: 1.5rem; color: var(--success);">
+            <i class="bi bi-check-circle-fill me-2"></i>@TempData["Success"]
+        </div>
+    }
+
+    <!-- Stats Cards Row -->
+    <div class="row g-4 mb-4 stagger-children">
+        <div class="col-6 col-md-4 col-lg-2">
+            <div class="glass-card-static p-3 text-center h-100">
+                <div class="section-icon section-icon-primary mx-auto mb-2" style="width: 45px; height: 45px;">
+                    <i class="bi bi-people-fill"></i>
+                </div>
+                <div style="font-family: 'Outfit'; font-size: 2rem; font-weight: 900; color: var(--primary-light);">@ViewBag.TotalStudents</div>
+                <small style="color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; font-size: 0.7rem;">Öğrenci</small>
+            </div>
+        </div>
+        <div class="col-6 col-md-4 col-lg-2">
+            <div class="glass-card-static p-3 text-center h-100">
+                <div class="section-icon mx-auto mb-2" style="width: 45px; height: 45px; background: rgba(236,72,153,0.15); color: var(--secondary);">
+                    <i class="bi bi-journal-bookmark-fill"></i>
+                </div>
+                <div style="font-family: 'Outfit'; font-size: 2rem; font-weight: 900; color: var(--secondary);">@ViewBag.TotalCourses</div>
+                <small style="color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; font-size: 0.7rem;">Kurs</small>
+            </div>
+        </div>
+        <div class="col-6 col-md-4 col-lg-2">
+            <div class="glass-card-static p-3 text-center h-100">
+                <div class="section-icon section-icon-success mx-auto mb-2" style="width: 45px; height: 45px;">
+                    <i class="bi bi-person-badge-fill"></i>
+                </div>
+                <div style="font-family: 'Outfit'; font-size: 2rem; font-weight: 900; color: var(--success);">@ViewBag.TotalInstructors</div>
+                <small style="color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; font-size: 0.7rem;">Eğitmen</small>
+            </div>
+        </div>
+        <div class="col-6 col-md-4 col-lg-2">
+            <div class="glass-card-static p-3 text-center h-100">
+                <div class="section-icon section-icon-warning mx-auto mb-2" style="width: 45px; height: 45px;">
+                    <i class="bi bi-hourglass-split"></i>
+                </div>
+                <div style="font-family: 'Outfit'; font-size: 2rem; font-weight: 900; color: var(--accent);">@ViewBag.PendingCount</div>
+                <small style="color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; font-size: 0.7rem;">Bekleyen</small>
+            </div>
+        </div>
+        <div class="col-6 col-md-4 col-lg-2">
+            <div class="glass-card-static p-3 text-center h-100">
+                <div class="section-icon mx-auto mb-2" style="width: 45px; height: 45px; background: rgba(16,185,129,0.15); color: var(--success);">
+                    <i class="bi bi-check-circle-fill"></i>
+                </div>
+                <div style="font-family: 'Outfit'; font-size: 2rem; font-weight: 900; color: var(--success);">@ViewBag.ApprovedCount</div>
+                <small style="color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; font-size: 0.7rem;">Onaylı</small>
+            </div>
+        </div>
+        <div class="col-6 col-md-4 col-lg-2">
+            <div class="glass-card-static p-3 text-center h-100">
+                <div class="section-icon section-icon-danger mx-auto mb-2" style="width: 45px; height: 45px;">
+                    <i class="bi bi-x-circle-fill"></i>
+                </div>
+                <div style="font-family: 'Outfit'; font-size: 2rem; font-weight: 900; color: var(--danger);">@ViewBag.RejectedCount</div>
+                <small style="color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; font-size: 0.7rem;">Reddedilen</small>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Kurs Bazında Başvuru İstatistikleri -->
+        <div class="col-lg-8">
+            <div class="glass-card-static p-4 animate-fadeInUp delay-200">
+                <h5 style="color: var(--text-primary); font-weight: 700; margin-bottom: 1.5rem;">
+                    <i class="bi bi-bar-chart-fill me-2" style="color: var(--primary-light);"></i>Kurs Bazında Başvuru Durumu
+                </h5>
+                @if (ViewBag.CourseStats != null)
+                {
+                    @foreach (var stat in (dynamic)ViewBag.CourseStats)
+                    {
+                        <div style="margin-bottom: 1.2rem;">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <span style="color: var(--text-primary); font-weight: 600; font-size: 0.9rem;">@stat.CourseName</span>
+                                <span style="color: var(--text-muted); font-size: 0.8rem;">
+                                    @stat.ApprovedCount / @stat.Quota kayıt
+                                </span>
+                            </div>
+                            <div style="background: var(--bg-glass); border-radius: var(--radius-full); height: 10px; overflow: hidden; border: 1px solid var(--border-glass);">
+                                @{
+                                    var pct = stat.Quota > 0 ? (int)((double)stat.ApprovedCount / stat.Quota * 100) : 0;
+                                    var barColor = pct >= 80 ? "var(--danger)" : pct >= 50 ? "var(--accent)" : "var(--primary)";
+                                }
+                                <div style="width: @(pct)%; height: 100%; background: @barColor; border-radius: var(--radius-full); transition: width 1s ease-out;"></div>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+
+        <!-- Kategori İstatistikleri -->
+        <div class="col-lg-4">
+            <div class="glass-card-static p-4 animate-fadeInUp delay-300">
+                <h5 style="color: var(--text-primary); font-weight: 700; margin-bottom: 1.5rem;">
+                    <i class="bi bi-grid-3x3-gap-fill me-2" style="color: var(--secondary);"></i>Kategoriler
+                </h5>
+                @if (ViewBag.CategoryStats != null)
+                {
+                    @foreach (var cat in (dynamic)ViewBag.CategoryStats)
+                    {
+                        <div class="d-flex align-items-center justify-content-between" style="padding: 0.7rem 0; border-bottom: 1px solid var(--border-glass);">
+                            <div class="d-flex align-items-center gap-2">
+                                <i class="bi @cat.IconClass" style="color: var(--primary-light); font-size: 1.1rem;"></i>
+                                <span style="color: var(--text-primary); font-weight: 500; font-size: 0.9rem;">@cat.CategoryName</span>
+                            </div>
+                            <span class="badge-premium badge-primary">@cat.CourseCount Kurs</span>
+                        </div>
+                    }
+                }
+            </div>
+
+            <!-- Hızlı Erişim -->
+            <div class="glass-card-static p-4 mt-4 animate-fadeInUp delay-400">
+                <h5 style="color: var(--text-primary); font-weight: 700; margin-bottom: 1rem;">
+                    <i class="bi bi-lightning-fill me-2" style="color: var(--accent);"></i>Hızlı Erişim
+                </h5>
+                <div class="d-grid gap-2">
+                    <a asp-controller="Applications" asp-action="Index" asp-route-status="Pending" class="btn btn-premium btn-secondary-glass justify-content-start">
+                        <i class="bi bi-hourglass-split" style="color: var(--accent);"></i> Bekleyen Başvurular
+                    </a>
+                    <a asp-controller="Courses" asp-action="Create" class="btn btn-premium btn-secondary-glass justify-content-start">
+                        <i class="bi bi-plus-circle" style="color: var(--success);"></i> Yeni Kurs Ekle
+                    </a>
+                    <a asp-controller="News" asp-action="Create" class="btn btn-premium btn-secondary-glass justify-content-start">
+                        <i class="bi bi-newspaper" style="color: var(--info);"></i> Haber Ekle
+                    </a>
+                    <a asp-controller="Instructors" asp-action="Create" class="btn btn-premium btn-secondary-glass justify-content-start">
+                        <i class="bi bi-person-plus" style="color: var(--secondary);"></i> Eğitmen Ekle
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Son Başvurular -->
+    <div class="glass-card-static p-4 mt-4 animate-fadeInUp delay-500">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 style="color: var(--text-primary); font-weight: 700; margin: 0;">
+                <i class="bi bi-clock-history me-2" style="color: var(--info);"></i>Son Başvurular
+            </h5>
+            <a asp-controller="Applications" asp-action="Index" class="btn-ghost" style="font-size: 0.85rem;">
+                Tümünü Gör <i class="bi bi-arrow-right"></i>
+            </a>
+        </div>
+        <div class="table-responsive">
+            <table class="table-premium w-100">
+                <thead>
+                    <tr>
+                        <th>Başvuran</th>
+                        <th>Kurs</th>
+                        <th>Tarih</th>
+                        <th>Durum</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (ViewBag.RecentApplications != null)
+                    {
+                        @foreach (var app in (IEnumerable<HalkEgitimSistemi.Models.Application>)ViewBag.RecentApplications)
+                        {
+                            <tr>
+                                <td>
+                                    <span style="font-weight: 600;">@app.FirstName @app.LastName</span>
+                                </td>
+                                <td>
+                                    <span class="badge-premium badge-primary">@(app.Course?.CourseName ?? "?")</span>
+                                </td>
+                                <td style="color: var(--text-muted);">@app.ApplyDate.ToShortDateString()</td>
+                                <td>
+                                    @if (app.Status == HalkEgitimSistemi.Models.ApplicationStatus.Pending)
+                                    {
+                                        <span class="badge-premium badge-warning"><i class="bi bi-hourglass-split"></i> Bekliyor</span>
+                                    }
+                                    else if (app.Status == HalkEgitimSistemi.Models.ApplicationStatus.Approved)
+                                    {
+                                        <span class="badge-premium badge-success"><i class="bi bi-check-circle-fill"></i> Onaylandı</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge-premium badge-danger"><i class="bi bi-x-circle-fill"></i> Reddedildi</span>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

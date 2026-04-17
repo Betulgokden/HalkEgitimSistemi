@@ -21,6 +21,19 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 
 var app = builder.Build();
 
+// --- VERİ TABANI GÜNCELLEME VE SEED (Sunum Hazırlığı) ---
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var context = services.GetRequiredService<HalkEgitimSistemi.Data.AppDbContext>();
+    
+    // Eksik şifreleri tamamla
+    await HalkEgitimSistemi.DataSeeder.SeedInstructorPasswords(context);
+    
+    // Veritabanındaki bozuk karakterleri ve bilimsel TC formatlarını düzelt
+    await HalkEgitimSistemi.DataSeeder.FixDatabaseEncoding(context);
+}
+
 // 4. HTTP İstek Hattı Yapılandırması
 if (!app.Environment.IsDevelopment())
 {

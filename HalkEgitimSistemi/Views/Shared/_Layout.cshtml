@@ -1,53 +1,123 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="tr">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Halk Eğitim Merkezi</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" />
-    <style>
-        body { background-color: #f8f9fa; }
-        .navbar { box-shadow: 0 2px 4px rgba(0,0,0,.1); } /* CSS uyarısı için box-shadow eklendi */
-        .nav-link { font-weight: 500; transition: 0.3s; }
-        .nav-link:hover { color: #0d6efd !important; }
-    </style>
+    <!-- Theme Initialization Script (Prevents white flicker) -->
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        })();
+    </script>
+    <meta name="description" content="Halk Eğitim Sistemi - Modern eğitim programları, kurslar ve başvurular. Kendinizi geliştirin, geleceğinize değer katın." />
+    <meta name="theme-color" content="#0f0f23" />
+    <title>@ViewData["Title"] - Halk Eğitim Sistemi</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand fw-bold text-primary" asp-controller="Home" asp-action="Index">
-                    <i class="bi bi-mortarboard-fill"></i> HalkEgitimSistemi
-                </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item"><a class="nav-link text-dark" asp-controller="Home" asp-action="Index">Ana Sayfa</a></li>
-                        <li class="nav-item"><a class="nav-link text-dark" asp-controller="Categories" asp-action="Index">Kategoriler</a></li>
-                        <li class="nav-item"><a class="nav-link text-dark" asp-controller="Courses" asp-action="Index">Kurslar</a></li>
-                        <li class="nav-item"><a class="nav-link text-dark" asp-controller="Instructors" asp-action="Index">Eğitmenler</a></li>
-                        <li class="nav-item"><a class="nav-link text-dark" asp-controller="News" asp-action="Index">Haberler</a></li>
-                    </ul>
+    <!-- Arka plan animasyonları performans sorunu nedeniyle kaldırıldı -->
 
-                    <ul class="navbar-nav ms-auto">
-                        @if (User?.Identity != null && User.Identity.IsAuthenticated)
+    <!-- Premium Navbar -->
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-premium fixed-top">
+            <div class="container">
+                <a class="navbar-brand navbar-brand-premium" asp-area="" asp-controller="Home" asp-action="Index">
+                    <i class="bi bi-mortarboard-fill me-2"></i>HalkEğitim
+                </a>
+                <button class="navbar-toggler navbar-toggler-premium" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                        aria-controls="navbarNav" aria-expanded="false" aria-label="Menüyü aç">
+                    <i class="bi bi-list"></i>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto gap-1">
+                        <!-- GENEL (TÜM GÖRÜNÜM) -->
+                        <li class="nav-item">
+                            <a class="nav-link nav-link-premium" asp-area="" asp-controller="Home" asp-action="Index">
+                                <i class="bi bi-house-heart me-1"></i>Ana Sayfa
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link nav-link-premium" asp-area="" asp-controller="Courses" asp-action="Browse">
+                                <i class="bi bi-grid-3x3-gap me-1"></i>Kurslar
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link nav-link-premium" asp-area="" asp-controller="Instructors" asp-action="Index">
+                                <i class="bi bi-people me-1"></i>Eğitmenler
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link nav-link-premium" asp-area="" asp-controller="News" asp-action="Index">
+                                <i class="bi bi-newspaper me-1"></i>Haberler
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link nav-link-premium" asp-area="" asp-controller="Gallery" asp-action="Index">
+                                <i class="bi bi-images me-1"></i>Galeri
+                            </a>
+                        </li>
+                        
+                        <!-- Tema Değiştirici -->
+                        <li class="nav-item ms-lg-2 d-flex align-items-center">
+                            <button id="themeToggleBtn" class="btn-icon" data-tooltip="Tema Değiştir" style="border:none;">
+                                <i class="bi bi-moon-stars-fill" id="themeIcon"></i>
+                            </button>
+                        </li>
+
+                        <!-- ZİYARETÇİ İŞLEMLERİ -->
+                        @if (!User.Identity!.IsAuthenticated)
                         {
-                            <li class="nav-item d-flex align-items-center">
-                                <span class="nav-link text-success fw-bold me-2">
-                                    <i class="bi bi-person-check-fill"></i> Hoş geldin, Admin
-                                </span>
-                                <a class="btn btn-sm btn-outline-danger fw-bold" asp-controller="Account" asp-action="Logout">Çıkış Yap</a>
+                            <li class="nav-item ms-lg-2">
+                                <a class="btn btn-premium btn-secondary-glass btn-sm px-3 py-2" asp-controller="Applications" asp-action="Track">
+                                    <i class="bi bi-search"></i> Başvuru Sorgula
+                                </a>
                             </li>
-                        }
-                        else
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link text-primary fw-bold" asp-controller="Account" asp-action="Login">
+                            <li class="nav-item ms-lg-2">
+                                <a class="btn btn-premium btn-warning-glow btn-sm px-3 py-2" asp-controller="Applications" asp-action="Create">
+                                    <i class="bi bi-rocket-takeoff text-dark"></i> Yeni Başvuru
+                                </a>
+                            </li>
+                            <li class="nav-item ms-lg-2">
+                                <a class="btn btn-premium btn-primary-glow btn-sm px-3 py-2" asp-controller="Account" asp-action="Login">
                                     <i class="bi bi-shield-lock"></i> Yönetici Girişi
                                 </a>
+                            </li>
+                        }
+                        
+                        <!-- YÖNETİCİ VEYA EĞİTMEN ARAYÜZÜ -->
+                        @if (User.Identity!.IsAuthenticated)
+                        {
+                            var isAdmin = User.IsInRole("Admin");
+                            <li class="nav-item dropdown ms-lg-2">
+                                <a class="btn btn-premium btn-success-glow btn-sm px-3 py-2 dropdown-toggle" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="bi @(isAdmin ? "bi-speedometer2" : "bi-mortarboard")"></i> @(isAdmin ? "Yönetim Paneli" : "Eğitmen Paneli")
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end dropdown-premium shadow" aria-labelledby="adminDropdown">
+                                    @if (isAdmin)
+                                    {
+                                        <li><a class="dropdown-item py-2" asp-controller="Admin" asp-action="Dashboard"><i class="bi bi-graph-up text-primary me-2"></i>Dashboard</a></li>
+                                        <li><a class="dropdown-item py-2" asp-controller="Applications" asp-action="Index"><i class="bi bi-clipboard-check text-warning me-2"></i>Başvurular</a></li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li><h6 class="dropdown-header">Modüller</h6></li>
+                                        <li><a class="dropdown-item py-2" asp-controller="Courses" asp-action="Index"><i class="bi bi-journal-bookmark text-primary me-2"></i>Kurs Yönetimi</a></li>
+                                        <li><a class="dropdown-item py-2" asp-controller="Categories" asp-action="Index"><i class="bi bi-tags text-success me-2"></i>Kategori Yönetimi</a></li>
+                                        <li><a class="dropdown-item py-2" asp-controller="Instructors" asp-action="Index"><i class="bi bi-people text-info me-2"></i>Eğitmen Listesi</a></li>
+                                    }
+                                    else
+                                    {
+                                        <li><a class="dropdown-item py-2" asp-controller="Teacher" asp-action="Dashboard"><i class="bi bi-speedometer2 text-primary me-2"></i>Öğrencilerim</a></li>
+                                        <li><a class="dropdown-item py-2" asp-controller="Teacher" asp-action="EditCourse"><i class="bi bi-journal-bookmark text-warning me-2"></i>Kurs Bilgilerini Düzenle</a></li>
+                                        <li><a class="dropdown-item py-2" asp-controller="Teacher" asp-action="MyProfile"><i class="bi bi-person-circle text-info me-2"></i>Profilimi Düzenle</a></li>
+                                    }
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item py-2 text-danger" asp-controller="Account" asp-action="Logout"><i class="bi bi-box-arrow-right me-2"></i>Güvenli Çıkış</a></li>
+                                </ul>
                             </li>
                         }
                     </ul>
@@ -56,20 +126,73 @@
         </nav>
     </header>
 
-    <div class="container">
-        <main role="main" class="pb-3">
+    <!-- Main Content -->
+    <div style="padding-top: 80px; min-height: calc(100vh - 200px);">
+        <main role="main">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted bg-white py-3 mt-5">
-        <div class="container text-center">
-            &copy; 2026 - HalkEgitimSistemi - <a asp-controller="Home" asp-action="Privacy">Gizlilik</a>
+    <!-- Premium Footer -->
+    <footer class="footer-premium">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-lg-4">
+                    <div class="footer-brand mb-3">
+                        <i class="bi bi-mortarboard-fill me-2"></i>HalkEğitim
+                    </div>
+                    <p class="text-muted-premium" style="font-size: 0.9rem; line-height: 1.8; color: var(--text-muted);">
+                        Halk Eğitim Merkezi olarak, toplumun her kesimine kaliteli ve erişilebilir eğitim hizmeti sunmayı hedefliyoruz. 
+                        Geleceğe birlikte yürüyoruz.
+                    </p>
+                    <div class="d-flex gap-2 mt-3">
+                        <a href="#" class="footer-social"><i class="bi bi-facebook"></i></a>
+                        <a href="#" class="footer-social"><i class="bi bi-twitter-x"></i></a>
+                        <a href="#" class="footer-social"><i class="bi bi-instagram"></i></a>
+                        <a href="#" class="footer-social"><i class="bi bi-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-4">
+                    <h6 style="color: var(--text-primary); font-weight: 700; margin-bottom: 1rem;">Hızlı Erişim</h6>
+                    <ul class="list-unstyled" style="line-height: 2.2;">
+                        <li><a asp-controller="Home" asp-action="Index" class="footer-link"><i class="bi bi-chevron-right me-1" style="font-size: 0.7rem;"></i>Ana Sayfa</a></li>
+                        <li><a asp-controller="Courses" asp-action="Index" class="footer-link"><i class="bi bi-chevron-right me-1" style="font-size: 0.7rem;"></i>Kurslar</a></li>
+                        <li><a asp-controller="Instructors" asp-action="Index" class="footer-link"><i class="bi bi-chevron-right me-1" style="font-size: 0.7rem;"></i>Eğitmenler</a></li>
+                        <li><a asp-controller="Applications" asp-action="Create" class="footer-link"><i class="bi bi-chevron-right me-1" style="font-size: 0.7rem;"></i>Başvuru</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-4">
+                    <h6 style="color: var(--text-primary); font-weight: 700; margin-bottom: 1rem;">Kurumsal</h6>
+                    <ul class="list-unstyled" style="line-height: 2.2;">
+                        <li><a asp-controller="News" asp-action="Index" class="footer-link"><i class="bi bi-chevron-right me-1" style="font-size: 0.7rem;"></i>Haberler</a></li>
+                        <li><a asp-controller="Categories" asp-action="Index" class="footer-link"><i class="bi bi-chevron-right me-1" style="font-size: 0.7rem;"></i>Kategoriler</a></li>
+                        <li><a asp-controller="Home" asp-action="Privacy" class="footer-link"><i class="bi bi-chevron-right me-1" style="font-size: 0.7rem;"></i>Gizlilik Politikası</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-4">
+                    <h6 style="color: var(--text-primary); font-weight: 700; margin-bottom: 1rem;">İletişim</h6>
+                    <ul class="list-unstyled" style="line-height: 2.5; color: var(--text-muted); font-size: 0.9rem;">
+                        <li><i class="bi bi-geo-alt me-2" style="color: var(--primary-light);"></i>Merkez Mah. Eğitim Cad. No:1</li>
+                        <li><i class="bi bi-telephone me-2" style="color: var(--primary-light);"></i>(0312) 123 45 67</li>
+                        <li><i class="bi bi-envelope me-2" style="color: var(--primary-light);"></i>info@halkegitim.gov.tr</li>
+                    </ul>
+                </div>
+            </div>
+            <hr style="border-color: var(--border-glass); margin: 2rem 0 1.5rem;" />
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                <p style="color: var(--text-muted); font-size: 0.82rem; margin: 0;">
+                    &copy; 2026 Halk Eğitim Sistemi. Tüm hakları saklıdır.
+                </p>
+                <p style="color: var(--text-muted); font-size: 0.82rem; margin: 0;">
+                    <i class="bi bi-heart-fill me-1" style="color: var(--secondary);"></i> ile tasarlandı
+                </p>
+            </div>
         </div>
     </footer>
-
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

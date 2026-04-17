@@ -1,0 +1,306 @@
+@model IEnumerable<HalkEgitimSistemi.Models.Application>
+@using HalkEgitimSistemi.Models
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Eğitmen Paneli";
+    var course = ViewBag.Course as Course;
+}
+
+<div class="container py-4">
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert animate-fadeIn mb-4" style="background: rgba(16,185,129,0.1); color: var(--success); border: 1px solid rgba(16,185,129,0.2); border-radius: var(--radius-md); padding: 1rem 1.5rem;">
+            <i class="bi bi-check-circle-fill me-2"></i> @TempData["Success"]
+        </div>
+    }
+
+    <!-- Header -->
+    <div class="glass-card-static p-4 mb-4 animate-fadeInUp">
+        <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+            <div>
+                <h2 class="section-title mb-1" style="font-family: 'Outfit';">
+                    <i class="bi bi-mortarboard-fill me-2" style="color: var(--primary-light);"></i>Hoş Geldiniz, @User.Identity?.Name
+                </h2>
+                <p class="mb-0" style="color: var(--text-muted);">
+                    <i class="bi bi-book me-1"></i>Sorumlu kursunuz:
+                    <span class="badge-premium badge-primary" style="font-size: 0.95rem;">@ViewBag.CourseName</span>
+                </p>
+            </div>
+            <div class="d-flex gap-2 flex-wrap">
+                <a asp-action="EditCourse" class="btn btn-premium btn-secondary-glass">
+                    <i class="bi bi-gear"></i> Kurs Düzenle
+                </a>
+                <a asp-action="MyProfile" class="btn btn-premium btn-secondary-glass">
+                    <i class="bi bi-person-circle"></i> Profilim
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Kurs Bilgi Kartı -->
+    @if (course != null)
+    {
+        <div class="glass-card-static p-4 mb-4 animate-fadeInUp" style="animation-delay: 0.1s;">
+            <div class="row align-items-center">
+                <div class="col-md-3 text-center mb-3 mb-md-0">
+                    <img src="@(string.IsNullOrEmpty(course.ImageUrl) ? "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=300" : course.ImageUrl)"
+                         alt="@course.CourseName"
+                         style="width: 100%; max-width: 200px; border-radius: var(--radius-lg); border: 2px solid var(--border-glass);" />
+                </div>
+                <div class="col-md-9">
+                    <h4 style="font-family: 'Outfit'; font-weight: 800; color: var(--text-primary);">@course.CourseName</h4>
+                    <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.7;">@course.Description</p>
+                    <div class="d-flex flex-wrap gap-3" style="font-size: 0.85rem; color: var(--text-secondary);">
+                        <span><i class="bi bi-clock-fill me-1" style="color: var(--primary-light);"></i>@course.DurationHours saat</span>
+                        <span><i class="bi bi-people-fill me-1" style="color: var(--success);"></i>Kontenjan: @course.Quota</span>
+                        <span><i class="bi bi-calendar-event-fill me-1" style="color: var(--secondary);"></i>@course.StartDate.ToString("dd MMM") - @course.EndDate.ToString("dd MMM yyyy")</span>
+                        @if (course.IsActive)
+                        {
+                            <span class="badge-premium badge-success"><i class="bi bi-check-circle me-1"></i>Aktif</span>
+                        }
+                        else
+                        {
+                            <span class="badge-premium badge-danger"><i class="bi bi-x-circle me-1"></i>Pasif</span>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    <!-- İstatistikler -->
+    <div class="row g-4 mb-4">
+        <div class="col-6 col-md-3">
+            <div class="hero-stat animate-scaleIn">
+                <span class="hero-stat-number" style="font-size: 2rem;">@Model.Count()</span>
+                <span class="hero-stat-label">Toplam</span>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="hero-stat animate-scaleIn" style="animation-delay: 0.1s;">
+                <span class="hero-stat-number" style="font-size: 2rem; background: linear-gradient(135deg, #f59e0b, #ef4444); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">@Model.Count(a => a.Status == ApplicationStatus.Pending)</span>
+                <span class="hero-stat-label">Bekleyen</span>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="hero-stat animate-scaleIn" style="animation-delay: 0.2s;">
+                <span class="hero-stat-number" style="font-size: 2rem; background: linear-gradient(135deg, #10b981, #059669); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">@Model.Count(a => a.Status == ApplicationStatus.Approved)</span>
+                <span class="hero-stat-label">Onaylanan</span>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="hero-stat animate-scaleIn" style="animation-delay: 0.3s;">
+                <span class="hero-stat-number" style="font-size: 2rem; background: linear-gradient(135deg, #ef4444, #dc2626); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">@Model.Count(a => a.Status == ApplicationStatus.Rejected)</span>
+                <span class="hero-stat-label">Reddedilen</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Öğrenci Listesi -->
+    <div class="glass-card-static p-0 overflow-hidden animate-fadeInUp" style="animation-delay: 0.4s;">
+        <div class="p-4 border-bottom" style="border-color: var(--border-glass) !important;">
+            <h4 class="mb-0" style="font-family: 'Outfit'; font-weight: 800;">
+                <i class="bi bi-people-fill me-2" style="color: var(--primary-light);"></i>Kursa Başvuran Öğrenciler
+            </h4>
+        </div>
+
+        @if (!Model.Any())
+        {
+            <div class="p-5 text-center">
+                <div style="width: 80px; height: 80px; margin: 0 auto 1rem; background: rgba(99,102,241,0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                    <i class="bi bi-inbox" style="font-size: 2rem; color: var(--primary-light);"></i>
+                </div>
+                <h5 style="color: var(--text-primary); font-family: 'Outfit';">Henüz başvuru yok</h5>
+                <p style="color: var(--text-muted);">Bu kursa henüz kimse başvurmamış.</p>
+            </div>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table class="table table-premium mb-0">
+                    <thead>
+                        <tr>
+                            <th>Öğrenci</th>
+                            <th>T.C. No</th>
+                            <th>Telefon</th>
+                            <th>Tarih</th>
+                            <th>Durum</th>
+                            <th class="text-end">İşlem</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <div style="width:36px;height:36px;background:var(--gradient-card);border:1px solid var(--border-glass);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--primary-light);flex-shrink:0;">
+                                            <i class="bi bi-person-fill"></i>
+                                        </div>
+                                        <div>
+                                            <div style="font-weight:700;color:var(--text-primary);">@item.FirstName @item.LastName</div>
+                                            <div style="font-size:0.75rem;color:var(--text-muted);">@item.Email</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td style="color:var(--text-secondary);font-size:0.85rem;">@item.TcNo</td>
+                                <td style="color:var(--text-secondary);font-size:0.85rem;">@item.PhoneNumber</td>
+                                <td style="color:var(--text-secondary);font-size:0.85rem;">@item.ApplyDate.ToString("dd.MM.yyyy")</td>
+                                <td>
+                                    @if (item.Status == ApplicationStatus.Pending)
+                                    {
+                                        <span class="badge-premium badge-warning"><i class="bi bi-clock me-1"></i>Bekliyor</span>
+                                    }
+                                    else if (item.Status == ApplicationStatus.Approved)
+                                    {
+                                        <span class="badge-premium badge-success"><i class="bi bi-check-circle me-1"></i>Onaylandı</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge-premium badge-danger"><i class="bi bi-x-circle me-1"></i>Reddedildi</span>
+                                    }
+                                </td>
+                                <td class="text-end">
+                                    <button type="button" class="btn btn-sm btn-premium btn-secondary-glass"
+                                            data-bs-toggle="modal" data-bs-target="#modal-@item.Id">
+                                        <i class="bi bi-pencil-square me-1"></i>Düzenle
+                                    </button>
+                                </td>
+                            </tr>
+
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div><!-- ===== BÜTÜN MODALLAR BURADA (DOM EN DIŞI) ===== -->
+@if (Model != null && Model.Any())
+{
+    foreach (var item in Model)
+    {
+        <div class="modal fade" id="modal-@item.Id" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content" style="background:var(--bg-card);border:1px solid var(--border-glass);border-radius:var(--radius-lg);box-shadow:0 25px 60px rgba(0,0,0,0.5);">
+                    
+                    <div class="modal-header" style="border-bottom:1px solid var(--border-glass);flex-shrink:0;padding:1rem 1.5rem;">
+                        <h5 class="modal-title" style="font-family:'Outfit';font-weight:800;color:var(--text-primary);font-size:1.15rem;">
+                            <i class="bi bi-person-fill me-2" style="color:var(--primary-light);"></i>
+                            @item.FirstName @item.LastName — Öğrenci Yönetimi
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+
+                    <form method="post" action="/Teacher/UpdateStudentStatus">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="id" value="@item.Id" />
+
+                        <div class="modal-body p-4" style="overflow-y:auto; overflow-x:hidden;">
+                            <!-- KİŞİSEL BİLGİLER -->
+                            <div class="mb-3">
+                                <div class="d-flex align-items-center gap-2 mb-2">
+                                    <i class="bi bi-person-vcard-fill" style="color:var(--primary-light);font-size:1.1rem;"></i>
+                                    <strong style="color:var(--text-primary);font-size:0.95rem;font-family:'Outfit';">Kişisel Bilgiler</strong>
+                                </div>
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label class="info-label mb-1">Ad</label>
+                                        <input type="text" name="firstName" value="@item.FirstName" class="form-premium-control" placeholder="Ad" />
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="info-label mb-1">Soyad</label>
+                                        <input type="text" name="lastName" value="@item.LastName" class="form-premium-control" placeholder="Soyad" />
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="info-label mb-1">E-Posta</label>
+                                        <input type="email" name="email" value="@item.Email" class="form-premium-control" placeholder="E-posta" />
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="info-label mb-1">Telefon</label>
+                                        <input type="text" name="phoneNumber" value="@item.PhoneNumber" class="form-premium-control" placeholder="05XX XXX XX XX" />
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="info-label mb-1">T.C. Kimlik No</label>
+                                        <input type="text" name="tcNo" value="@item.TcNo" class="form-premium-control" placeholder="11 haneli T.C. No" maxlength="11" />
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="info-label mb-1">Doğum Yeri</label>
+                                        <input type="text" name="birthPlace" value="@item.BirthPlace" class="form-premium-control" placeholder="Doğum yeri" />
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <hr style="border-color:var(--border-glass);margin:1rem 0;" />
+                            
+                            <!-- BAŞVURU DURUMU -->
+                            <div class="mb-3">
+                                <div class="d-flex align-items-center gap-2 mb-2">
+                                    <i class="bi bi-flag-fill" style="color:var(--primary-light);font-size:1.1rem;"></i>
+                                    <strong style="color:var(--text-primary);font-size:0.95rem;font-family:'Outfit';">Başvuru Durumu</strong>
+                                </div>
+                                <div class="d-flex gap-2 flex-wrap">
+                                    @if (item.Status == ApplicationStatus.Approved)
+                                    {
+                                        <label class="status-choice-btn active-approve"><input type="radio" name="status" value="Approved" checked> ✅ Onayla</label>
+                                        <label class="status-choice-btn"><input type="radio" name="status" value="Pending"> ⏳ Beklet</label>
+                                        <label class="status-choice-btn"><input type="radio" name="status" value="Rejected"> ❌ Reddet</label>
+                                    }
+                                    else if (item.Status == ApplicationStatus.Pending)
+                                    {
+                                        <label class="status-choice-btn"><input type="radio" name="status" value="Approved"> ✅ Onayla</label>
+                                        <label class="status-choice-btn active-pending"><input type="radio" name="status" value="Pending" checked> ⏳ Beklet</label>
+                                        <label class="status-choice-btn"><input type="radio" name="status" value="Rejected"> ❌ Reddet</label>
+                                    }
+                                    else
+                                    {
+                                        <label class="status-choice-btn"><input type="radio" name="status" value="Approved"> ✅ Onayla</label>
+                                        <label class="status-choice-btn"><input type="radio" name="status" value="Pending"> ⏳ Beklet</label>
+                                        <label class="status-choice-btn active-reject"><input type="radio" name="status" value="Rejected" checked> ❌ Reddet</label>
+                                    }
+                                </div>
+                            </div>
+                            
+                            <!-- ÖĞRENCIYE NOT -->
+                            <div>
+                                <div class="d-flex align-items-center gap-2 mb-1">
+                                    <i class="bi bi-chat-dots-fill" style="color:var(--primary-light);font-size:1.1rem;"></i>
+                                    <strong style="color:var(--text-primary);font-size:0.95rem;font-family:'Outfit';">Öğrenciye Not</strong>
+                                    <span style="font-size:0.75rem;color:var(--text-muted);">(Öğrenci bu notu görecek)</span>
+                                </div>
+                                <textarea name="adminNote" class="form-premium-control" rows="2" placeholder="Not ekleyin...">@item.AdminNote</textarea>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer" style="border-top:1px solid var(--border-glass);flex-shrink:0;gap:0.75rem;padding:1rem 1.5rem;">
+                            <button type="button" class="btn btn-premium btn-secondary-glass" data-bs-dismiss="modal">
+                                <i class="bi bi-x-lg me-1"></i>Vazgeç
+                            </button>
+                            <button type="submit" class="btn btn-premium btn-primary-glow">
+                                <i class="bi bi-floppy-fill me-1"></i>Kaydet ve Güncelle
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    }
+}
+
+@section Scripts {
+<script>
+document.querySelectorAll('.status-choice-btn input[type="radio"]').forEach(function(radio) {
+    radio.addEventListener('change', function() {
+        var group = this.closest('.d-flex');
+        group.querySelectorAll('.status-choice-btn').forEach(function(btn) {
+            btn.classList.remove('active-approve', 'active-pending', 'active-reject');
+        });
+        var val = this.value;
+        var parent = this.closest('.status-choice-btn');
+        if (val === 'Approved') parent.classList.add('active-approve');
+        else if (val === 'Pending') parent.classList.add('active-pending');
+        else if (val === 'Rejected') parent.classList.add('active-reject');
+    });
+});
+</script>
+}

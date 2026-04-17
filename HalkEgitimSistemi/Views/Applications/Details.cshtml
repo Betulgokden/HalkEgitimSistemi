@@ -1,54 +1,121 @@
-﻿@model HalkEgitimSistemi.Models.Application
+@model HalkEgitimSistemi.Models.Application
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Başvuru Detayları";
 }
 
-<h1>Details</h1>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10">
+            <div class="detail-card animate-scaleIn overflow-hidden">
+                <!-- Header -->
+                <div class="d-flex justify-content-between align-items-center" style="padding: 2rem; border-bottom: 1px solid var(--border-glass); background: var(--gradient-card);">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="section-icon section-icon-primary" style="width: 50px; height: 50px; font-size: 1.3rem;">
+                            <i class="bi bi-file-earmark-person-fill"></i>
+                        </div>
+                        <div>
+                            <h2 style="font-family: 'Outfit', sans-serif; font-weight: 800; margin: 0; color: var(--text-primary); font-size: 1.5rem;">Başvuru Detayları</h2>
+                            <p style="color: var(--text-muted); margin: 0; font-size: 0.85rem;">@Model.ApplyDate.ToShortDateString() Tarihli Başvuru</p>
+                        </div>
+                    </div>
+                    <div>
+                        @if (Model.Status == HalkEgitimSistemi.Models.ApplicationStatus.Pending)
+                        {
+                            <span class="badge-premium badge-warning bg-opacity-75 fs-6"><i class="bi bi-hourglass-split"></i> Bekliyor</span>
+                        }
+                        else if (Model.Status == HalkEgitimSistemi.Models.ApplicationStatus.Approved)
+                        {
+                            <span class="badge-premium badge-success bg-opacity-75 fs-6"><i class="bi bi-check-circle-fill"></i> Onaylandı</span>
+                        }
+                        else
+                        {
+                            <span class="badge-premium badge-danger bg-opacity-75 fs-6"><i class="bi bi-x-circle-fill"></i> Reddedildi</span>
+                        }
+                    </div>
+                </div>
 
-<div>
-    <h4>Application</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.FullName)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.FullName)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.PhoneNumber)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.PhoneNumber)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.EducationStatus)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.EducationStatus)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.BirthPlace)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.BirthPlace)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ApplyDate)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ApplyDate)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Course)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Course.Id)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+                <!-- Info Grid -->
+                <div style="padding: 2rem;">
+                    <h5 style="color: var(--text-primary); font-weight: 700; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px dashed var(--border-glass);">
+                        <i class="bi bi-person-lines-fill me-2" style="color: var(--primary-light);"></i>Kişisel Bilgiler
+                    </h5>
+                    
+                    <div class="row g-4 mb-5">
+                        <div class="col-md-6">
+                            <div class="detail-label"><i class="bi bi-person me-1"></i>Ad Soyad</div>
+                            <div class="detail-value" style="font-size: 1.1rem; color: var(--text-primary);">@Model.FirstName @Model.LastName</div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="detail-label"><i class="bi bi-person-vcard me-1"></i>T.C. Kimlik No</div>
+                            <div class="detail-value" style="font-family: monospace; font-size: 1.1rem; color: var(--text-primary);">@(Model.TcNo ?? "Belirtilmedi")</div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="detail-label"><i class="bi bi-telephone me-1"></i>Telefon</div>
+                            <div class="detail-value text-secondary">@Model.PhoneNumber</div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="detail-label"><i class="bi bi-envelope me-1"></i>E-posta</div>
+                            <div class="detail-value text-secondary">@(string.IsNullOrEmpty(Model.Email) ? "Belirtilmedi" : Model.Email)</div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="detail-label"><i class="bi bi-geo-alt me-1"></i>Doğum Yeri</div>
+                            <div class="detail-value text-secondary">@(Model.BirthPlace ?? "Belirtilmedi")</div>
+                        </div>
+                    </div>
+
+                    <h5 style="color: var(--text-primary); font-weight: 700; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px dashed var(--border-glass);">
+                        <i class="bi bi-journal-bookmark-fill me-2" style="color: var(--secondary);"></i>Eğitim Bilgisi
+                    </h5>
+                    
+                    <div class="p-3 mb-4" style="background: rgba(255,255,255,0.03); border: 1px solid var(--border-glass); border-radius: var(--radius-md);">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div>
+                                <div class="detail-label mb-1">Başvurulan Kurs</div>
+                                <div style="font-weight: 700; color: var(--text-primary); font-size: 1.1rem;">
+                                    @(Model.Course?.CourseName ?? "Bilinmeyen Kurs")
+                                </div>
+                            </div>
+                            <a asp-controller="Courses" asp-action="CourseDetail" asp-route-id="@Model.CourseId" class="btn btn-sm btn-premium btn-secondary-glass" target="_blank" data-tooltip="Kurs Detayını Gör">
+                                <i class="bi bi-box-arrow-up-right"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    @if (Model.Status == HalkEgitimSistemi.Models.ApplicationStatus.Rejected && !string.IsNullOrEmpty(Model.AdminNote))
+                    {
+                        <div class="p-3" style="background: rgba(239,68,68,0.1); border-left: 4px solid var(--danger); border-radius: 0 var(--radius-md) var(--radius-md) 0;">
+                            <div class="detail-label" style="color: var(--danger); font-weight: 700;">Red Nedeni / Yönetici Notu</div>
+                            <div style="color: var(--text-secondary); margin-top: 0.3rem;">@Model.AdminNote</div>
+                        </div>
+                    }
+                </div>
+
+                <!-- Admin Action Footer -->
+                <div style="padding: 1.5rem 2rem; border-top: 1px solid var(--border-glass); background: rgba(0,0,0,0.2);">
+                    <div class="d-flex flex-wrap gap-3">
+                        <a asp-action="Index" class="btn btn-premium btn-secondary-glass flex-fill justify-content-center">
+                            <i class="bi bi-arrow-left"></i> Listeye Dön
+                        </a>
+                        
+                        @if (Model.Status == HalkEgitimSistemi.Models.ApplicationStatus.Pending)
+                        {
+                            <form asp-action="Reject" asp-route-id="@Model.Id" method="post" class="flex-fill d-flex">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-premium btn-danger-glow w-100 justify-content-center">
+                                    <i class="bi bi-x-lg"></i> Reddet
+                                </button>
+                            </form>
+                            <form asp-action="Approve" asp-route-id="@Model.Id" method="post" class="flex-fill d-flex">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-premium btn-success-glow w-100 justify-content-center">
+                                    <i class="bi bi-check-lg"></i> Onayla
+                                </button>
+                            </form>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

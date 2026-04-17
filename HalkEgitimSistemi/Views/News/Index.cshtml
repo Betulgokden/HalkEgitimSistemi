@@ -1,68 +1,91 @@
-﻿@model IEnumerable<HalkEgitimSistemi.Models.News>
+@model IEnumerable<HalkEgitimSistemi.Models.News>
 
 @{
-    ViewData["Title"] = "Haberler & Duyurular";
+    ViewData["Title"] = "Haber Yönetimi";
 }
 
-<div class="container mt-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h2 class="fw-bold text-dark mb-0"><i class="bi bi-megaphone text-danger"></i> Güncel Haberler</h2>
-            <p class="text-muted">Merkezimizden son haberler ve önemli duyurular.</p>
-        </div>
-        @if (User?.Identity?.IsAuthenticated == true)
-        {
-            <a asp-action="Create" class="btn btn-danger fw-bold shadow-sm">
-                <i class="bi bi-plus-circle"></i> Yeni Haber Ekle
-            </a>
-        }
-    </div>
+<!-- KURS ALETLERI YAGMURU -->
+<div class="rain-container" id="rainContainer"></div>
 
-    <div class="row g-4">
-        @foreach (var item in Model)
-        {
-            <div class="col-md-6 col-lg-4">
-                <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
-                    <div class="bg-gradient bg-danger p-5 text-center text-white position-relative" style="height: 200px;">
-                        <i class="bi bi-newspaper display-3 opacity-50"></i>
-                        <span class="position-absolute top-0 end-0 m-3 badge bg-white text-danger fw-bold rounded-pill">
-                            @item.Date.ToString("dd MMM yyyy")
-                        </span>
-                    </div>
-
-                    <div class="card-body">
-                        <h5 class="card-title fw-bold">@item.Title</h5>
-                        <p class="card-text text-muted text-truncate-2">
-                            @item.Content
-                        </p>
-                    </div>
-
-                    <div class="card-footer bg-white border-0 p-3">
-                        <div class="d-grid gap-2">
-                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-outline-dark rounded-pill">Devamını Oku</a>
-                            
-                            @if (User?.Identity?.IsAuthenticated == true)
-                            {
-                                <div class="btn-group btn-group-sm w-100 mt-2">
-                                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning">Düzenle</a>
-                                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Sil</a>
-                                </div>
-                            }
-                        </div>
-                    </div>
+<div class="container py-5" style="position: relative; z-index: 10;">
+    <!-- Page Header -->
+    <div class="page-header animate-fadeInDown">
+        <div class="page-header-content">
+            <div class="d-flex align-items-center">
+                <div class="page-header-icon" style="background: var(--gradient-success);">
+                    <i class="bi bi-newspaper"></i>
+                </div>
+                <div>
+                    <h1 class="page-header-title">Haber &amp; Duyuru Yönetimi</h1>
+                    <p class="page-header-subtitle">Haberleri ve duyuruları ekleyin, düzenleyin veya silin.</p>
                 </div>
             </div>
-        }
+            @if (User.Identity != null && User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+            {
+                <a asp-action="Create" class="btn btn-premium btn-success-glow">
+                    <i class="bi bi-plus-lg"></i> Yeni Haber Ekle
+                </a>
+            }
+        </div>
+    </div>
+
+    <!-- Table Card -->
+    <div class="glass-card-static animate-fadeInUp delay-200" style="padding: 1.5rem;">
+        <div class="table-responsive">
+            <table class="table-premium w-100">
+                <thead>
+                    <tr>
+                        <th style="padding-left: 1.5rem;">Haber Başlığı</th>
+                        <th>Tarih</th>
+                        <th>Durum</th>
+                        <th class="text-end" style="padding-right: 1.5rem;">İşlemler</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td style="padding-left: 1.5rem;">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="section-icon section-icon-success" style="width: 42px; height: 42px; font-size: 1.1rem;">
+                                        <i class="bi bi-megaphone-fill"></i>
+                                    </div>
+                                    <div>
+                                        <div style="font-weight: 600; color: var(--text-primary);">@item.Title</div>
+                                        <small style="color: var(--text-muted);">@(item.Content?.Length > 60 ? item.Content.Substring(0, 60) + "..." : item.Content)</small>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="badge-premium badge-secondary">
+                                    <i class="bi bi-calendar3"></i> @item.Date.ToShortDateString()
+                                </span>
+                            </td>
+                            <td>
+                                <span class="badge-premium badge-success">
+                                    <i class="bi bi-broadcast"></i> Yayında
+                                </span>
+                            </td>
+                            <td class="text-end" style="padding-right: 1.5rem;">
+                                <div class="d-inline-flex gap-2">
+                                    <a asp-action="Details" asp-route-id="@item.Id" class="btn-icon btn-icon-info" data-tooltip="Detay">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                    @if (User.Identity != null && User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                                    {
+                                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn-icon btn-icon-primary" data-tooltip="Düzenle">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn-icon btn-icon-danger" data-tooltip="Sil">
+                                            <i class="bi bi-trash3"></i>
+                                        </a>
+                                    }
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
-
-<style>
-    .text-truncate-2 {
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-    }
-    .card { transition: transform 0.3s ease; }
-    .card:hover { transform: translateY(-10px); }
-</style>

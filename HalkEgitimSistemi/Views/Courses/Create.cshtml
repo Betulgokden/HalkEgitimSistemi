@@ -1,46 +1,86 @@
-﻿@model HalkEgitimSistemi.Models.Course
+@model HalkEgitimSistemi.Models.Course
 
 @{
-    ViewData["Title"] = "Yeni Kurs Ekle";
+    ViewData["Title"] = "Yeni Kurs Tanımla";
 }
 
-<div class="container mt-5">
+<div class="container py-5">
     <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card shadow-sm border-0 rounded-4">
-                <div class="card-header bg-success text-white text-center py-3">
-                    <h4 class="mb-0">Yeni Kurs Oluştur</h4>
+        <div class="col-lg-8 col-md-10">
+            <div class="glass-card-static animate-scaleIn overflow-hidden">
+                <!-- Header -->
+                <div style="padding: 2rem 2rem 1.5rem; border-bottom: 1px solid var(--border-glass); background: var(--gradient-card);">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="page-header-icon" style="width: 50px; height: 50px; font-size: 1.3rem; background: var(--gradient-purple);">
+                            <i class="bi bi-plus-circle-fill"></i>
+                        </div>
+                        <div>
+                            <h2 style="font-family: 'Outfit', sans-serif; font-weight: 800; margin: 0; color: var(--text-primary); font-size: 1.5rem;">Yeni Kurs Oluştur</h2>
+                            <p style="color: var(--text-muted); margin: 0; font-size: 0.85rem;">Eğitim kataloğuna yeni bir kurs ekleyin.</p>
+                        </div>
+                    </div>
                 </div>
-                <div class="card-body p-4">
+
+                <!-- Form -->
+                <div style="padding: 2rem;">
                     <form asp-action="Create">
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">Kurs Adı</label>
-                            <input asp-for="CourseName" class="form-control" placeholder="Örn: İngilizce A1" required />
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                        <div class="form-premium-group">
+                            <label asp-for="CourseName" class="form-premium-label">
+                                <i class="bi bi-mortarboard me-1"></i>Kurs Adı
+                            </label>
+                            <input asp-for="CourseName" class="form-premium-control" placeholder="Örn: Python Programlama" />
+                            <span asp-validation-for="CourseName" class="field-validation-error"></span>
                         </div>
-                        
-                        <div class="row mb-3">
+
+                        <div class="form-premium-group">
+                            <label asp-for="Description" class="form-premium-label">
+                                <i class="bi bi-text-paragraph me-1"></i>Açıklama
+                            </label>
+                            <textarea asp-for="Description" class="form-premium-control" rows="4" placeholder="Kurs hakkında detaylı bilgi veriniz..."></textarea>
+                            <span asp-validation-for="Description" class="field-validation-error"></span>
+                        </div>
+
+                        <div class="row">
                             <div class="col-md-6">
-                                <label class="form-label fw-bold">Kontenjan (Kişi)</label>
-                                <input asp-for="Quota" class="form-control" placeholder="Örn: 20" required />
+                                <div class="form-premium-group">
+                                    <label asp-for="ImageUrl" class="form-premium-label">
+                                        <i class="bi bi-image me-1"></i>Görsel (URL)
+                                    </label>
+                                    <input asp-for="ImageUrl" class="form-premium-control" placeholder="https://..." />
+                                </div>
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label fw-bold">Kurs Ücreti (₺)</label>
-                                <input asp-for="Price" class="form-control" placeholder="Örn: 0 veya 500" required />
+                                <div class="form-premium-group">
+                                    <label asp-for="CategoryId" class="form-premium-label">
+                                        <i class="bi bi-tag me-1"></i>Kurs Kategorisi
+                                    </label>
+                                    <select asp-for="CategoryId" class="form-premium-control" asp-items="ViewBag.CategoryId">
+                                        <option value="">Lütfen Kategori Seçiniz</option>
+                                    </select>
+                                    <span asp-validation-for="CategoryId" class="field-validation-error"></span>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="mb-4">
-                            <label class="form-label fw-bold">Kategori</label>
-                            <select asp-for="CategoryId" class="form-select" asp-items="ViewBag.CategoryId" required>
-                                <option value="">-- Lütfen Kategori Seçiniz --</option>
-                            </select>
-                        </div>
-
-                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                            <a asp-action="Index" class="btn btn-outline-secondary px-4">Listeye Dön</a>
-                            <button type="submit" class="btn btn-success px-4">Kursu Kaydet</button>
+                        <div class="d-flex gap-3 mt-4">
+                            <a asp-action="Index" class="btn btn-premium btn-secondary-glass flex-fill justify-content-center">
+                                <i class="bi bi-arrow-left"></i> Listeye Geri Dön
+                            </a>
+                            <button type="submit" class="btn btn-premium btn-primary-glow flex-fill justify-content-center">
+                                <i class="bi bi-rocket-takeoff"></i> Kursu Yayınla
+                            </button>
                         </div>
                     </form>
+                </div>
+
+                <!-- Footer -->
+                <div style="padding: 1rem 2rem; border-top: 1px solid var(--border-glass); text-align: center;">
+                    <p style="color: var(--text-muted); font-size: 0.82rem; margin: 0;">
+                        <i class="bi bi-info-circle me-1" style="color: var(--info);"></i>
+                        Kurs eklendikten sonra ana sayfada görünür hale gelecektir.
+                    </p>
                 </div>
             </div>
         </div>
@@ -48,7 +88,5 @@
 </div>
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }

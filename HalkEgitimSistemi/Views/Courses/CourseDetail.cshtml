@@ -1,0 +1,163 @@
+@model HalkEgitimSistemi.Models.Course
+
+@{
+    ViewData["Title"] = Model.CourseName;
+    int remainingQuota = ViewBag.RemainingQuota;
+    bool isFull = remainingQuota <= 0;
+}
+
+<!-- Hero Section -->
+<section style="position: relative; min-height: 50vh; display: flex; align-items: flex-end; padding-bottom: 4rem;">
+    <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; z-index: -2;">
+        <img src="@(string.IsNullOrEmpty(Model.ImageUrl) ? "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1920&q=80" : Model.ImageUrl)" alt="@Model.CourseName" style="width: 100%; height: 100%; object-fit: cover;" />
+    </div>
+    <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; z-index: -1; background: linear-gradient(180deg, rgba(15,15,35,0.4) 0%, rgba(15,15,35,1) 100%);"></div>
+
+    <div class="container animate-fadeInUp">
+        <div class="row">
+            <div class="col-lg-8">
+                <span class="badge-premium badge-primary mb-3" style="font-size: 0.9rem; padding: 0.5rem 1rem;">
+                    <i class="bi @(Model.Category?.IconClass ?? "bi-tag")"></i> @Model.Category?.CategoryName
+                </span>
+                <h1 style="font-family: 'Outfit', sans-serif; font-size: 3.5rem; font-weight: 900; color: white; margin-bottom: 1rem; line-height: 1.2;">
+                    @Model.CourseName
+                </h1>
+                
+                <div class="d-flex flex-wrap gap-4 mt-4" style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1.5rem;">
+                    <div class="d-flex align-items-center gap-3">
+                        <div style="width: 45px; height: 45px; border-radius: 50%; background: rgba(99,102,241,0.2); display: flex; align-items: center; justify-content: center; color: var(--primary-light); font-size: 1.2rem;">
+                            <i class="bi bi-clock-fill"></i>
+                        </div>
+                        <div>
+                            <div style="color: rgba(255,255,255,0.7); font-size: 0.8rem; text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em;">Süre</div>
+                            <div style="color: white; font-weight: 600;">@Model.DurationHours Saat</div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex align-items-center gap-3">
+                        <div style="width: 45px; height: 45px; border-radius: 50%; background: rgba(236,72,153,0.2); display: flex; align-items: center; justify-content: center; color: var(--secondary); font-size: 1.2rem;">
+                            <i class="bi bi-calendar-event-fill"></i>
+                        </div>
+                        <div>
+                            <div style="color: rgba(255,255,255,0.7); font-size: 0.8rem; text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em;">Başlangıç</div>
+                            <div style="color: white; font-weight: 600;">@Model.StartDate.ToString("dd MMMM yyyy")</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="container" style="margin-top: -2rem; padding-bottom: 5rem;">
+    <div class="row g-5">
+        <!-- Content -->
+        <div class="col-lg-8">
+            <div class="glass-card-static p-4 p-md-5 animate-fadeInUp delay-200" style="margin-bottom: 2rem;">
+                <h3 style="font-family: 'Outfit'; font-weight: 800; color: var(--text-primary); margin-bottom: 1.5rem;">
+                    Kurs Hakkında
+                </h3>
+                <div style="color: var(--text-secondary); font-size: 1.1rem; line-height: 1.8;">
+                    @Html.Raw(Model.Description.Replace("\n", "<br/>"))
+                </div>
+
+                <hr class="divider-premium my-4" />
+
+                <h4 style="font-family: 'Outfit'; font-weight: 700; color: var(--text-primary); margin-bottom: 1.5rem;">
+                    <i class="bi bi-person-video3 me-2" style="color: var(--primary-light);"></i>Eğitmen
+                </h4>
+                
+                @if (ViewBag.Instructor != null)
+                {
+                    <div class="d-flex align-items-center gap-4 p-4" style="background: var(--bg-glass); border: 1px solid var(--border-glass); border-radius: var(--radius-lg);">
+                        <div style="width: 80px; height: 80px; border-radius: 50%; background: var(--gradient-card); border: 2px solid var(--primary-light); display: flex; align-items: center; justify-content: center; font-size: 2.5rem; color: white;">
+                            <i class="bi bi-person-fill"></i>
+                        </div>
+                        <div>
+                            <h5 style="color: var(--text-primary); font-weight: 700; margin-bottom: 0.3rem;">@ViewBag.Instructor.FullName</h5>
+                            <div style="color: var(--text-muted); font-size: 0.95rem;">@ViewBag.Instructor.Title</div>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="p-3" style="background: rgba(255,255,255,0.02); border: 1px dashed var(--border-glass); border-radius: var(--radius-md); color: var(--text-muted);">
+                        Eğitmen ataması süreci devam etmektedir.
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- Sticky Sidebar -->
+        <div class="col-lg-4">
+            <div class="glass-card-static p-4 sticky-top animate-fadeInUp delay-300" style="top: 100px;">
+                <div class="text-center mb-4">
+                    <div style="font-size: 0.9rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em; margin-bottom: 0.5rem;">Kontenjan Durumu</div>
+                    
+                    <div style="position: relative; width: 120px; height: 120px; margin: 0 auto; display: flex; align-items: center; justify-content: center;">
+                        <!-- Simple visual circle -->
+                        <svg class="w-100 h-100" viewBox="0 0 36 36" style="position: absolute; top:0; left:0; transform: rotate(-90deg);">
+                            <path class="circle-bg"
+                                  d="M18 2.0845
+                                      a 15.9155 15.9155 0 0 1 0 31.831
+                                      a 15.9155 15.9155 0 0 1 0 -31.831"
+                                  fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="3" />
+                            @{
+                                var dashVal = Model.Quota > 0 ? (int)(((double)ViewBag.ApprovedCount / Model.Quota) * 100) : 0;
+                            }
+                            <path class="circle"
+                                  stroke-dasharray="@dashVal, 100"
+                                  d="M18 2.0845
+                                      a 15.9155 15.9155 0 0 1 0 31.831
+                                      a 15.9155 15.9155 0 0 1 0 -31.831"
+                                  fill="none" stroke="@(isFull ? "var(--danger)" : "var(--success)")" stroke-width="3" style="transition: stroke-dasharray 1s ease-out; stroke-linecap: round;" />
+                        </svg>
+                        <div class="text-center">
+                            <div style="font-family: 'Outfit'; font-weight: 900; font-size: 1.8rem; line-height: 1; color: @(isFull ? "var(--danger)" : "var(--text-primary)");">
+                                @remainingQuota
+                            </div>
+                            <div style="font-size: 0.75rem; color: var(--text-muted);">Boş Yer</div>
+                        </div>
+                    </div>
+                    
+                    <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 1rem;">
+                        Toplam <strong>@Model.Quota</strong> Kişilik Sınıf
+                    </div>
+                </div>
+
+                <hr class="divider-premium mb-4" />
+
+                <div class="d-flex flex-column gap-3 mb-4">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span style="color: var(--text-muted);"><i class="bi bi-calendar-check me-2"></i>Bitiş</span>
+                        <strong style="color: var(--text-primary);">@Model.EndDate.ToString("dd MMM yyyy")</strong>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span style="color: var(--text-muted);"><i class="bi bi-shield-check me-2"></i>Sertifika</span>
+                        <strong style="color: var(--success);">MEB Onaylı</strong>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span style="color: var(--text-muted);"><i class="bi bi-tag me-2"></i>Ücret</span>
+                        <span class="badge-premium badge-success" style="font-size: 0.8rem; padding: 0.3rem 0.8rem;">Tamamen Ücretsiz</span>
+                    </div>
+                </div>
+
+                @if (isFull)
+                {
+                    <button class="btn btn-premium btn-secondary-glass btn-lg w-100 mb-2" disabled style="opacity: 0.5; cursor: not-allowed;">
+                        <i class="bi bi-slash-circle me-1"></i> Kontenjan Dolu
+                    </button>
+                    <p class="text-center font-size-sm" style="color: var(--danger); font-size: 0.8rem; margin:0;">
+                        Bu kurs için yeni kayıt alamıyoruz.
+                    </p>
+                }
+                else
+                {
+                    <a asp-controller="Applications" asp-action="Create" asp-route-courseId="@Model.Id" class="btn btn-premium btn-warning-glow btn-lg w-100" style="box-shadow: 0 5px 20px rgba(245,158,11,0.4);">
+                        <i class="bi bi-rocket-takeoff flex-shrink-0"></i> Hemen Başvur
+                    </a>
+                }
+            </div>
+        </div>
+    </div>
+</div>

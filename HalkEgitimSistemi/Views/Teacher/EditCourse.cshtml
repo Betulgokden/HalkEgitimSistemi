@@ -1,0 +1,138 @@
+@model HalkEgitimSistemi.Models.Course
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Kurs Bilgilerini Düzenle";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="glass-card-static animate-scaleIn overflow-hidden">
+                <!-- Header -->
+                <div style="padding: 2rem 2rem 1.5rem; border-bottom: 1px solid var(--border-glass); background: linear-gradient(135deg, rgba(99,102,241,0.1) 0%, rgba(236,72,153,0.05) 100%); text-align: center;">
+                    <div style="width: 70px; height: 70px; display: inline-flex; align-items: center; justify-content: center; background: var(--gradient-hero); border-radius: var(--radius-xl); margin-bottom: 1rem;">
+                        <i class="bi bi-journal-bookmark" style="font-size: 1.8rem; color: white;"></i>
+                    </div>
+                    <h2 style="font-family: 'Outfit', sans-serif; font-weight: 800; margin: 0; color: var(--text-primary); font-size: 1.5rem;">Kurs Bilgilerini Düzenle</h2>
+                    <p style="color: var(--text-muted); margin: 0.3rem 0 0; font-size: 0.85rem;">Sorumlu olduğunuz kursun tüm özelliklerini güncelleyebilirsiniz.</p>
+                </div>
+
+                <!-- Form -->
+                <div style="padding: 2rem;">
+                    <form asp-action="EditCourse" method="post">
+                        <input type="hidden" asp-for="Id" />
+
+                        <div class="row g-3">
+                            <!-- Kurs Adı -->
+                            <div class="col-md-8">
+                                <div class="form-premium-group">
+                                    <label asp-for="CourseName" class="form-premium-label">
+                                        <i class="bi bi-bookmark me-1"></i>Kurs Adı
+                                    </label>
+                                    <input asp-for="CourseName" class="form-premium-control" placeholder="Kurs adını girin" required />
+                                    <span asp-validation-for="CourseName" class="field-validation-error" style="color: var(--danger); font-size: 0.8rem;"></span>
+                                </div>
+                            </div>
+
+                            <!-- Kategori -->
+                            <div class="col-md-4">
+                                <div class="form-premium-group">
+                                    <label asp-for="CategoryId" class="form-premium-label">
+                                        <i class="bi bi-tags me-1"></i>Kategori
+                                    </label>
+                                    <select asp-for="CategoryId" class="form-premium-control" asp-items="ViewBag.CategoryId">
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Açıklama -->
+                            <div class="col-12">
+                                <div class="form-premium-group">
+                                    <label asp-for="Description" class="form-premium-label">
+                                        <i class="bi bi-text-paragraph me-1"></i>Kurs Açıklaması
+                                    </label>
+                                    <textarea asp-for="Description" class="form-premium-control" rows="4" placeholder="Kurs hakkında detaylı bilgi yazın..."></textarea>
+                                </div>
+                            </div>
+
+                            <!-- Görsel URL -->
+                            <div class="col-12">
+                                <div class="form-premium-group">
+                                    <label asp-for="ImageUrl" class="form-premium-label">
+                                        <i class="bi bi-image me-1"></i>Kurs Görseli (URL)
+                                    </label>
+                                    <input asp-for="ImageUrl" class="form-premium-control" placeholder="https://..." />
+                                </div>
+                            </div>
+
+                            <div class="col-12 mt-2">
+                                <div class="divider-premium"></div>
+                            </div>
+
+                            <!-- Kontenjan & Süre -->
+                            <div class="col-md-4">
+                                <div class="form-premium-group">
+                                    <label asp-for="Quota" class="form-premium-label">
+                                        <i class="bi bi-people me-1"></i>Kontenjan
+                                    </label>
+                                    <input asp-for="Quota" type="number" class="form-premium-control" min="1" />
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-premium-group">
+                                    <label asp-for="DurationHours" class="form-premium-label">
+                                        <i class="bi bi-clock me-1"></i>Süre (Saat)
+                                    </label>
+                                    <input asp-for="DurationHours" type="number" class="form-premium-control" min="1" />
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-premium-group">
+                                    <label asp-for="IsActive" class="form-premium-label">
+                                        <i class="bi bi-toggle-on me-1"></i>Durum
+                                    </label>
+                                    <select asp-for="IsActive" class="form-premium-control">
+                                        <option value="true">Aktif</option>
+                                        <option value="false">Pasif</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Tarihler -->
+                            <div class="col-md-6">
+                                <div class="form-premium-group">
+                                    <label asp-for="StartDate" class="form-premium-label">
+                                        <i class="bi bi-calendar-plus me-1"></i>Başlangıç Tarihi
+                                    </label>
+                                    <input asp-for="StartDate" type="date" class="form-premium-control" />
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-premium-group">
+                                    <label asp-for="EndDate" class="form-premium-label">
+                                        <i class="bi bi-calendar-check me-1"></i>Bitiş Tarihi
+                                    </label>
+                                    <input asp-for="EndDate" type="date" class="form-premium-control" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Buttons -->
+                        <div class="d-flex gap-3 mt-4">
+                            <a asp-action="Dashboard" class="btn btn-premium btn-secondary-glass flex-fill justify-content-center">
+                                <i class="bi bi-arrow-left"></i> Panele Dön
+                            </a>
+                            <button type="submit" class="btn btn-premium btn-primary-glow flex-fill justify-content-center">
+                                <i class="bi bi-save"></i> Değişiklikleri Kaydet
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

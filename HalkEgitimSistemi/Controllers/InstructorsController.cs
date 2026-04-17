@@ -1,15 +1,16 @@
-﻿using HalkEgitimSistemi.Data;
+using HalkEgitimSistemi.Data;
 using HalkEgitimSistemi.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace HalkEgitimSistemi.Controllers
 {
     // BÜTÜN SAYFAYI ADMİNE KİLİTLİYORUZ
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     public class InstructorsController : Controller
     {
         private readonly AppDbContext _context;
@@ -23,7 +24,7 @@ namespace HalkEgitimSistemi.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Instructors.ToListAsync());
+            return View(await _context.Instructors.Include(i => i.Course).ToListAsync());
         }
 
         // 🟢 ZİYARETÇİLERE AÇIK: Eğitmen Detayları
@@ -39,6 +40,7 @@ namespace HalkEgitimSistemi.Controllers
         // 🔴 SADECE ADMİN 
         public IActionResult Create()
         {
+            ViewData["CourseId"] = new SelectList(_context.Courses, "Id", "CourseName");
             return View();
         }
 
@@ -52,6 +54,7 @@ namespace HalkEgitimSistemi.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["CourseId"] = new SelectList(_context.Courses, "Id", "CourseName", instructor.CourseId);
             return View(instructor);
         }
 
@@ -60,6 +63,7 @@ namespace HalkEgitimSistemi.Controllers
             if (id == null) return NotFound();
             var instructor = await _context.Instructors.FindAsync(id);
             if (instructor == null) return NotFound();
+            ViewData["CourseId"] = new SelectList(_context.Courses, "Id", "CourseName", instructor.CourseId);
             return View(instructor);
         }
 
@@ -83,6 +87,7 @@ namespace HalkEgitimSistemi.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["CourseId"] = new SelectList(_context.Courses, "Id", "CourseName", instructor.CourseId);
             return View(instructor);
         }
 

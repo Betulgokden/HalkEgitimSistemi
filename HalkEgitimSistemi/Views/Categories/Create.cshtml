@@ -1,31 +1,56 @@
-﻿@model HalkEgitimSistemi.Models.Category
+@model HalkEgitimSistemi.Models.Category
 
 @{
     ViewData["Title"] = "Yeni Kategori Ekle";
 }
 
-<div class="container mt-5">
+<div class="container py-5">
     <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card shadow-sm border-0 rounded-4">
-                <div class="card-header bg-primary text-white text-center py-3">
-                    <h4 class="mb-0">Yeni Eğitim Kategorisi Ekle</h4>
+        <div class="col-lg-6 col-md-8">
+            <div class="glass-card-static animate-scaleIn overflow-hidden">
+                <!-- Header -->
+                <div style="padding: 2rem 2rem 1.5rem; border-bottom: 1px solid var(--border-glass); background: var(--gradient-card);">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="page-header-icon" style="width: 50px; height: 50px; font-size: 1.3rem;">
+                            <i class="bi bi-plus-circle-fill"></i>
+                        </div>
+                        <div>
+                            <h2 style="font-family: 'Outfit', sans-serif; font-weight: 800; margin: 0; color: var(--text-primary); font-size: 1.5rem;">Yeni Kategori Ekle</h2>
+                            <p style="color: var(--text-muted); margin: 0; font-size: 0.85rem;">Eğitim kataloğu için yeni bir branş tanımlayın.</p>
+                        </div>
+                    </div>
                 </div>
-                <div class="card-body p-4">
+
+                <!-- Form -->
+                <div style="padding: 2rem;">
                     <form asp-action="Create">
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">Kategori Adı</label>
-                            <input asp-for="CategoryName" class="form-control" placeholder="Örn: Bilişim Teknolojileri" required />
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                        
+                        <div class="form-premium-group">
+                            <label asp-for="CategoryName" class="form-premium-label">
+                                <i class="bi bi-tag me-1"></i>Kategori Adı
+                            </label>
+                            <input asp-for="CategoryName" class="form-premium-control" placeholder="Örn: Bilişim Teknolojileri" />
+                            <span asp-validation-for="CategoryName" class="field-validation-error"></span>
                         </div>
-                        <div class="mb-4">
-                            <label class="form-label fw-bold">Açıklama</label>
-                            <textarea asp-for="Description" class="form-control" rows="3" placeholder="Bu kategori altındaki kurslar hakkında kısa bilgi..." required></textarea>
-                        </div>
-                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                            <a asp-action="Index" class="btn btn-outline-secondary px-4">Listeye Dön</a>
-                            <button type="submit" class="btn btn-primary px-4">Kategoriyi Kaydet</button>
+
+                        <div class="d-flex gap-3 mt-4">
+                            <a asp-action="Index" class="btn btn-premium btn-secondary-glass flex-fill justify-content-center">
+                                <i class="bi bi-arrow-left"></i> İptal
+                            </a>
+                            <button type="submit" class="btn btn-premium btn-primary-glow flex-fill justify-content-center">
+                                <i class="bi bi-check2-circle"></i> Kaydet
+                            </button>
                         </div>
                     </form>
+                </div>
+
+                <!-- Footer -->
+                <div style="padding: 1rem 2rem; border-top: 1px solid var(--border-glass); text-align: center;">
+                    <p style="color: var(--text-muted); font-size: 0.82rem; margin: 0;">
+                        <i class="bi bi-shield-check me-1" style="color: var(--success);"></i>
+                        Veriler güvenli bir şekilde kaydedilecektir.
+                    </p>
                 </div>
             </div>
         </div>
@@ -33,7 +58,5 @@
 </div>
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }

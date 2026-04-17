@@ -1,30 +1,127 @@
-﻿@model dynamic
+@model dynamic
 @{
     Layout = "_Layout";
-    ViewData["Title"] = "Yönetici Girişi";
+    ViewData["Title"] = "Sisteme Giriş";
 }
 
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-5">
-            <div class="card shadow-lg border-0 rounded-4">
-                <div class="card-header bg-primary text-white text-center py-4 rounded-top-4">
-                    <h4 class="mb-0 fw-bold">Yönetici Paneli</h4>
-                </div>
-                <div class="card-body p-5">
-                    <form asp-action="Login" asp-controller="Account" method="post">
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">Kullanıcı Adı</label>
-                            <input type="text" name="username" class="form-control" placeholder="admin" required />
-                        </div>
-                        <div class="mb-4">
-                            <label class="form-label fw-bold">Şifre</label>
-                            <input type="password" name="password" class="form-control" placeholder="123" required />
-                        </div>
-                        <button type="submit" class="btn btn-primary w-100 py-2">Giriş Yap</button>
-                    </form>
-                </div>
+<div class="container py-5" style="min-height: 80vh; display: flex; align-items: center; justify-content: center;">
+    <div class="login-card animate-scaleIn" style="width: 100%; max-width: 500px;">
+        <!-- Login Header -->
+        <div class="login-header">
+            <div class="login-avatar">
+                <i class="bi bi-shield-lock-fill" id="headerIcon"></i>
             </div>
+            <h3 id="loginTitle" style="color: white; font-family: 'Outfit', sans-serif; font-weight: 800; margin: 0;">Yönetici Paneli</h3>
+            <p style="color: rgba(255,255,255,0.6); font-size: 0.9rem; margin: 0.5rem 0 0;">Sisteme giriş yapın</p>
+        </div>
+
+        <!-- Login Body -->
+        <div style="padding: 2.5rem 2rem;">
+            @if (ViewBag.Error != null)
+            {
+                <div class="alert" style="background: rgba(239,68,68,0.1); color: var(--danger); border: 1px solid rgba(239,68,68,0.3); border-radius: var(--radius-md); padding: 0.8rem 1.2rem; margin-bottom: 1.5rem; font-size: 0.9rem;">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>@ViewBag.Error
+                </div>
+            }
+
+            <form asp-action="Login" asp-controller="Account" method="post">
+                <!-- Role Selection -->
+                <div class="role-selector mb-4">
+                    <input type="radio" id="roleAdmin" name="role" value="Admin" checked class="d-none">
+                    <input type="radio" id="roleTeacher" name="role" value="Instructor" class="d-none">
+                    
+                    <div class="d-flex gap-2">
+                        <label for="roleAdmin" class="role-btn active" id="labelAdmin">
+                            <i class="bi bi-person-badge me-1"></i> Yönetici
+                        </label>
+                        <label for="roleTeacher" class="role-btn" id="labelTeacher">
+                            <i class="bi bi-mortarboard me-1"></i> Öğretmen
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Kurs Seçimi (Sadece Öğretmen modunda) -->
+                <div class="form-premium-group" id="courseSelectGroup" style="display: none;">
+                    <label class="form-premium-label">
+                        <i class="bi bi-book me-1"></i>Hangi Kursun Hocasısınız?
+                    </label>
+                    <select name="instructorCourseId" id="courseSelect" class="form-premium-control">
+                        <option value="">--- Kurs Seçiniz ---</option>
+                        @if (ViewBag.InstructorCourses != null)
+                        {
+                            @foreach (var c in ViewBag.InstructorCourses)
+                            {
+                                <option value="@c.Id">@c.CourseName</option>
+                            }
+                        }
+                    </select>
+                </div>
+
+                <div class="form-premium-group">
+                    <label class="form-premium-label" id="usernameLabel">
+                        <i class="bi bi-person me-1"></i>Kullanıcı Adı
+                    </label>
+                    <input type="text" name="username" id="usernameInput" class="form-premium-control" placeholder="Kullanıcı adınızı girin" required autofocus />
+                </div>
+                <div class="form-premium-group">
+                    <label class="form-premium-label">
+                        <i class="bi bi-key me-1"></i>Şifre
+                    </label>
+                    <input type="password" name="password" class="form-premium-control" placeholder="••••••••" required />
+                </div>
+                <button type="submit" class="btn btn-premium btn-primary-glow w-100 py-3 mt-3" style="font-size: 1rem;">
+                    <i class="bi bi-box-arrow-in-right"></i> Giriş Yap
+                </button>
+            </form>
+        </div>
+
+        <!-- Footer -->
+        <div style="padding: 1rem 2rem; text-align: center; border-top: 1px solid var(--border-glass);">
+            <p style="color: var(--text-muted); font-size: 0.82rem; margin: 0;">
+                <i class="bi bi-shield-check me-1" style="color: var(--success);"></i>
+                Güvenli bağlantı ile korunmaktadır
+            </p>
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const labelAdmin = document.getElementById('labelAdmin');
+            const labelTeacher = document.getElementById('labelTeacher');
+            const roleAdmin = document.getElementById('roleAdmin');
+            const roleTeacher = document.getElementById('roleTeacher');
+            const loginTitle = document.getElementById('loginTitle');
+            const headerIcon = document.getElementById('headerIcon');
+            const courseGroup = document.getElementById('courseSelectGroup');
+            const usernameLabel = document.getElementById('usernameLabel');
+            const usernameInput = document.getElementById('usernameInput');
+
+            function switchToAdmin() {
+                labelAdmin.classList.add('active');
+                labelTeacher.classList.remove('active');
+                roleAdmin.checked = true;
+                loginTitle.textContent = 'Yönetici Paneli';
+                headerIcon.className = 'bi bi-shield-lock-fill';
+                courseGroup.style.display = 'none';
+                usernameLabel.innerHTML = '<i class="bi bi-person me-1"></i>Kullanıcı Adı';
+                usernameInput.placeholder = 'Kullanıcı adınızı girin';
+            }
+
+            function switchToTeacher() {
+                labelTeacher.classList.add('active');
+                labelAdmin.classList.remove('active');
+                roleTeacher.checked = true;
+                loginTitle.textContent = 'Eğitmen Paneli';
+                headerIcon.className = 'bi bi-mortarboard-fill';
+                courseGroup.style.display = 'block';
+                usernameLabel.innerHTML = '<i class="bi bi-person me-1"></i>Ad Soyad';
+                usernameInput.placeholder = 'Örn: Dr. Ahmet Yılmaz';
+            }
+
+            labelAdmin.addEventListener('click', switchToAdmin);
+            labelTeacher.addEventListener('click', switchToTeacher);
+        });
+    </script>
+}

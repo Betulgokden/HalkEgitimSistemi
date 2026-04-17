@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
 namespace HalkEgitimSistemi.Models
 {
@@ -6,21 +6,25 @@ namespace HalkEgitimSistemi.Models
     {
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "Ad alanı zorunludur")]
-        public string FirstName { get; set; } = string.Empty;
+        [Display(Name = "Ad Soyad")]
+        public string FullName { get; set; } = string.Empty;
 
-        [Required(ErrorMessage = "Soyad alanı zorunludur")]
-        public string LastName { get; set; } = string.Empty;
+        [Display(Name = "Ünvan / Pozisyon")]
+        public string Title { get; set; } = string.Empty;
 
-        [Required(ErrorMessage = "Uzmanlık alanı zorunludur")]
-        public string Expertise { get; set; } = string.Empty;
+        [Display(Name = "Profil Fotoğrafı (URL)")]
+        public string? ImageUrl { get; set; }
 
-        public string PhoneNumber { get; set; } = string.Empty;
-        public string Email { get; set; } = string.Empty;
+        // --- GİRİŞ BİLGİLERİ ---
+        [Display(Name = "Kullanıcı Adı")]
+        public string? Username { get; set; }
 
-        // Karmaşık ilişkiler yerine sadece ID tutuyoruz (Hata riskini sıfırlar)
-        public int? ParentId { get; set; }
+        [Display(Name = "Şifre")]
+        public string? Password { get; set; }
 
-        public string InstructorName => $"{FirstName} {LastName}";
+        // Hangi kursun hocası? (İlişki)
+        [Display(Name = "Uzmanlık Alanı (Kurs)")]
+        public int? CourseId { get; set; }
+        public Course? Course { get; set; }
     }
 }

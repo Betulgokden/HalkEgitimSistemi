@@ -1,15 +1,17 @@
-﻿using HalkEgitimSistemi.Data;
-using HalkEgitimSistemi.Models;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using HalkEgitimSistemi.Data;
+using HalkEgitimSistemi.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace HalkEgitimSistemi.Controllers
 {
-    // BÜTÜN SAYFAYI ADMİNE KİLİTLİYORUZ
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     public class NewsController : Controller
     {
         private readonly AppDbContext _context;
@@ -19,33 +21,44 @@ namespace HalkEgitimSistemi.Controllers
             _context = context;
         }
 
-        // 🟢 ZİYARETÇİLERE AÇIK: Haber Listesini Herkes Görebilir
+        // GET: News
         [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
             return View(await _context.News.ToListAsync());
         }
 
-        // 🟢 ZİYARETÇİLERE AÇIK: Haber Detayını Herkes Okuyabilir
+        // GET: News/Details/5
         [AllowAnonymous]
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null) return NotFound();
-            var news = await _context.News.FirstOrDefaultAsync(m => m.Id == id);
-            if (news == null) return NotFound();
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var news = await _context.News
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (news == null)
+            {
+                return NotFound();
+            }
+
             return View(news);
         }
 
-        // 🔴 SADECE ADMİN: Yeni Haber Ekleme Ekranı
+        // GET: News/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // 🔴 SADECE ADMİN: Yeni Haberi Veritabanına Kaydetme
+        // POST: News/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(News news)
+        public async Task<IActionResult> Create([Bind("Id,Title,Content,Date,PosterUrl,PublishDate")] News news)
         {
             if (ModelState.IsValid)
             {
@@ -56,21 +69,33 @@ namespace HalkEgitimSistemi.Controllers
             return View(news);
         }
 
-        // 🔴 SADECE ADMİN: Haber Düzenleme Ekranı
+        // GET: News/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null) return NotFound();
+            if (id == null)
+            {
+                return NotFound();
+            }
+
             var news = await _context.News.FindAsync(id);
-            if (news == null) return NotFound();
+            if (news == null)
+            {
+                return NotFound();
+            }
             return View(news);
         }
 
-        // 🔴 SADECE ADMİN: Düzenlenen Haberi Veritabanında Güncelleme
+        // POST: News/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, News news)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Content,Date,PosterUrl,PublishDate")] News news)
         {
-            if (id != news.Id) return NotFound();
+            if (id != news.Id)
+            {
+                return NotFound();
+            }
 
             if (ModelState.IsValid)
             {
@@ -81,30 +106,49 @@ namespace HalkEgitimSistemi.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!NewsExists(news.Id)) return NotFound();
-                    else throw;
+                    if (!NewsExists(news.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
                 }
                 return RedirectToAction(nameof(Index));
             }
             return View(news);
         }
 
-        // 🔴 SADECE ADMİN: Haber Silme Onay Ekranı
+        // GET: News/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null) return NotFound();
-            var news = await _context.News.FirstOrDefaultAsync(m => m.Id == id);
-            if (news == null) return NotFound();
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var news = await _context.News
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (news == null)
+            {
+                return NotFound();
+            }
+
             return View(news);
         }
 
-        // 🔴 SADECE ADMİN: Haberi Veritabanından Tamamen Silme
+        // POST: News/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var news = await _context.News.FindAsync(id);
-            if (news != null) _context.News.Remove(news);
+            if (news != null)
+            {
+                _context.News.Remove(news);
+            }
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }

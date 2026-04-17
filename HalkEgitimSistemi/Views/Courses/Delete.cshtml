@@ -1,78 +1,50 @@
-﻿@model HalkEgitimSistemi.Models.Course
+@model HalkEgitimSistemi.Models.Course
 
 @{
-    ViewData["Title"] = Model.CourseName + " Detayları";
+    ViewData["Title"] = "Kurs Sil";
 }
 
-<div class="container mt-5">
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a asp-action="Index">Kurslar</a></li>
-            <li class="breadcrumb-item active" aria-current="page">@Model.CourseName</li>
-        </ol>
-    </nav>
-
-    <div class="row">
-        <div class="col-md-8">
-            <div class="card shadow-sm border-0 rounded-4 overflow-hidden mb-4">
-                <div class="bg-primary p-5 text-center text-white">
-                    <i class="bi bi-mortarboard display-1"></i>
-                    <h1 class="mt-3 fw-bold">@Model.CourseName</h1>
-                    <span class="badge bg-light text-primary fs-6">@Model.Category?.CategoryName</span>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-5 col-md-7">
+            <div class="delete-card animate-scaleIn">
+                <!-- Header -->
+                <div class="delete-header">
+                    <div class="delete-icon">
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+                    </div>
+                    <h3 style="color: var(--danger); font-family: 'Outfit', sans-serif; font-weight: 800; margin: 0;">Kursu Silmek İstiyor Musunuz?</h3>
+                    <p style="color: var(--text-muted); font-size: 0.9rem; margin: 0.5rem 0 0;">Bu işlem geri alınamaz!</p>
                 </div>
-                <div class="card-body p-4">
-                    <h3 class="fw-bold border-bottom pb-2">Kurs Hakkında</h3>
-                    <p class="text-muted fs-5">
-                        Bu eğitim programı, @Model.Category?.CategoryName alanında uzmanlaşmak isteyen kursiyerler için
-                        özel olarak hazırlanmıştır. Milli Eğitim Bakanlığı müfredatına uygun olarak teorik ve
-                        uygulamalı dersleri içermektedir.
-                    </p>
-                    
-                    <div class="alert alert-info border-0 shadow-sm mt-4">
-                        <h5 class="fw-bold"><i class="bi bi-info-circle-fill"></i> Neden Bu Kurs?</h5>
-                        <ul class="mb-0">
-                            <li>Uzman eğitmenlerden canlı dersler</li>
-                            <li>Uygulamalı proje çalışmaları</li>
-                            <li>Kurs sonu katılım sertifikası</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
 
-        <div class="col-md-4">
-            <div class="card shadow border-0 rounded-4 sticky-top" style="top: 20px;">
-                <div class="card-body p-4">
-                    <h4 class="fw-bold mb-4">Kurs Bilgileri</h4>
-                    
-                    <div class="d-flex justify-content-between mb-3 border-bottom pb-2">
-                        <span class="text-muted"><i class="bi bi-people-fill me-2"></i>Kontenjan</span>
-                        <span class="fw-bold text-dark">@Model.Quota Kişi</span>
-                    </div>
-
-                    <div class="d-flex justify-content-between mb-3 border-bottom pb-2">
-                        <span class="text-muted"><i class="bi bi-tags-fill me-2"></i>Kategori</span>
-                        <span class="fw-bold text-primary">@Model.Category?.CategoryName</span>
-                    </div>
-
-                    <div class="d-flex justify-content-between mb-4">
-                        <span class="text-muted"><i class="bi bi-cash-stack me-2"></i>Ücret</span>
-                        <span class="fw-bold text-success fs-4">@Model.Price.ToString("C2")</span>
-                    </div>
-
-                    <div class="d-grid gap-2">
-                        <button class="btn btn-primary btn-lg fw-bold rounded-pill shadow">Hemen Başvur</button>
-                        <a asp-action="Index" class="btn btn-outline-secondary rounded-pill">Listeye Dön</a>
-                    </div>
-
-                    @if (User?.Identity?.IsAuthenticated == true)
-                    {
-                        <hr>
-                        <div class="d-flex gap-2">
-                            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning flex-fill fw-bold">Düzenle</a>
-                            <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger flex-fill fw-bold">Sil</a>
+                <!-- Details -->
+                <div style="padding: 1.5rem 2rem;">
+                    <div style="background: var(--bg-glass); border: 1px solid var(--border-glass); border-radius: var(--radius-lg); padding: 1.2rem; margin-bottom: 1.5rem;">
+                        <div style="margin-bottom: 0.8rem;">
+                            <small style="color: var(--text-muted); text-transform: uppercase; font-weight: 600; letter-spacing: 0.05em;">Kurs Adı</small>
+                            <div style="color: var(--text-primary); font-weight: 700; font-size: 1.1rem;">@Html.DisplayFor(model => model.CourseName)</div>
                         </div>
-                    }
+                        <div style="margin-bottom: 0.8rem;">
+                            <small style="color: var(--text-muted); text-transform: uppercase; font-weight: 600; letter-spacing: 0.05em;">Açıklama</small>
+                            <div style="color: var(--text-secondary);">@Html.DisplayFor(model => model.Description)</div>
+                        </div>
+                        <div>
+                            <small style="color: var(--text-muted); text-transform: uppercase; font-weight: 600; letter-spacing: 0.05em;">Kategori</small>
+                            <div><span class="badge-premium badge-primary">@Html.DisplayFor(model => model.Category.CategoryName)</span></div>
+                        </div>
+                    </div>
+
+                    <form asp-action="Delete">
+                        <input type="hidden" asp-for="Id" />
+                        <div class="d-flex gap-3">
+                            <a asp-action="Index" class="btn btn-premium btn-secondary-glass flex-fill justify-content-center">
+                                <i class="bi bi-x-lg"></i> Vazgeç
+                            </a>
+                            <button type="submit" class="btn btn-premium btn-danger-glow flex-fill justify-content-center">
+                                <i class="bi bi-trash3"></i> Evet, Sil
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
