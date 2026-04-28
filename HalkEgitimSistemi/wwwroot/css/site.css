@@ -1052,13 +1052,6 @@ p {
 }
 
 .table-premium tbody tr {
-    --text-primary: #0f172a !important;
-    --text-secondary: #334155 !important;
-    --text-muted: #475569 !important;
-    --border-glass: rgba(15, 23, 42, 0.15) !important;
-    --bg-card: rgba(255, 255, 255, 0.95);
-    --bg-card-hover: rgba(255, 255, 255, 1);
-    
     background: var(--bg-card) !important;
     transition: all var(--transition-base);
     border-radius: var(--radius-lg);
@@ -1066,8 +1059,8 @@ p {
 
 .table-premium tbody tr:hover {
     background: var(--bg-card-hover) !important;
-    transform: scale(1.005);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    transform: scale(1.01) translateY(-2px);
+    box-shadow: 0 8px 25px rgba(99, 102, 241, 0.15);
 }
 
 .table-premium tbody td {
