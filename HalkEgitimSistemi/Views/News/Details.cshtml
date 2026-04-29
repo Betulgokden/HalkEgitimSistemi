@@ -10,7 +10,12 @@
             <div class="detail-card animate-scaleIn">
                 <!-- Hero Image Header -->
                 <div style="position: relative; overflow: hidden;">
-                    <img src="@(string.IsNullOrEmpty(Model.PosterUrl) ? "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=900&q=80" : Model.PosterUrl)"
+                    @{
+                        var heroImage = !string.IsNullOrEmpty(Model.ImageUrl) ? Model.ImageUrl : 
+                                      (!string.IsNullOrEmpty(Model.PosterUrl) ? Model.PosterUrl : 
+                                      "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=900&q=80");
+                    }
+                    <img src="@heroImage"
                          alt="@Model.Title"
                          style="width: 100%; height: 300px; object-fit: cover; display: block;">
                     <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(180deg, transparent 20%, rgba(15,15,35,0.95) 100%);"></div>
@@ -55,9 +60,12 @@
 
                 <!-- Actions -->
                 <div style="padding: 1.5rem 2rem; border-top: 1px solid var(--border-glass); display: flex; gap: 0.8rem;">
-                    <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-premium btn-primary-glow flex-fill justify-content-center">
-                        <i class="bi bi-pencil"></i> Düzenle
-                    </a>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-premium btn-primary-glow flex-fill justify-content-center">
+                            <i class="bi bi-pencil"></i> Düzenle
+                        </a>
+                    }
                     <a asp-action="Index" class="btn btn-premium btn-secondary-glass flex-fill justify-content-center">
                         <i class="bi bi-arrow-left"></i> Listeye Dön
                     </a>

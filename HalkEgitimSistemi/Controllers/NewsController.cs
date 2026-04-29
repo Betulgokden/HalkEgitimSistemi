@@ -15,10 +15,12 @@ namespace HalkEgitimSistemi.Controllers
     public class NewsController : Controller
     {
         private readonly AppDbContext _context;
+        private readonly IWebHostEnvironment _env;
 
-        public NewsController(AppDbContext context)
+        public NewsController(AppDbContext context, IWebHostEnvironment env)
         {
             _context = context;
+            _env = env;
         }
 
         // GET: News
@@ -58,10 +60,27 @@ namespace HalkEgitimSistemi.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,Content,Date,PosterUrl,PublishDate")] News news)
+        public async Task<IActionResult> Create([Bind("Id,Title,Content,Date,PosterUrl,PublishDate")] News news, IFormFile? imageFile)
         {
             if (ModelState.IsValid)
             {
+                if (imageFile != null && imageFile.Length > 0)
+                {
+                    var uploadsFolder = Path.Combine(_env.WebRootPath, "images", "news");
+                    if (!Directory.Exists(uploadsFolder))
+                        Directory.CreateDirectory(uploadsFolder);
+                        
+                    var uniqueFileName = Guid.NewGuid().ToString() + "_" + imageFile.FileName;
+                    var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+                    
+                    using (var fileStream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await imageFile.CopyToAsync(fileStream);
+                    }
+                    
+                    news.ImageUrl = "/images/news/" + uniqueFileName;
+                }
+
                 _context.Add(news);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -90,7 +109,7 @@ namespace HalkEgitimSistemi.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Content,Date,PosterUrl,PublishDate")] News news)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Content,Date,PosterUrl,PublishDate,ImageUrl")] News news, IFormFile? imageFile)
         {
             if (id != news.Id)
             {
@@ -101,6 +120,32 @@ namespace HalkEgitimSistemi.Controllers
             {
                 try
                 {
+                    if (imageFile != null && imageFile.Length > 0)
+                    {
+                        var uploadsFolder = Path.Combine(_env.WebRootPath, "images", "news");
+                        if (!Directory.Exists(uploadsFolder))
+                            Directory.CreateDirectory(uploadsFolder);
+                            
+                        var uniqueFileName = Guid.NewGuid().ToString() + "_" + imageFile.FileName;
+                        var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+                        
+                        using (var fileStream = new FileStream(filePath, FileMode.Create))
+                        {
+                            await imageFile.CopyToAsync(fileStream);
+                        }
+                        
+                        news.ImageUrl = "/images/news/" + uniqueFileName;
+                    }
+                    else
+                    {
+                        // Preserve existing image URL if not updated
+                        var existingNews = await _context.News.AsNoTracking().FirstOrDefaultAsync(n => n.Id == id);
+                        if (existingNews != null)
+                        {
+                            news.ImageUrl = existingNews.ImageUrl;
+                        }
+                    }
+
                     _context.Update(news);
                     await _context.SaveChangesAsync();
                 }

@@ -21,6 +21,8 @@ namespace HalkEgitimSistemi.Controllers
             return View(haberler);
         }
 
+
+
         public IActionResult Privacy()
         {
             return View();

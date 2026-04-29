@@ -182,7 +182,7 @@
     {
         <div class="modal fade" id="modal-@item.Id" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-lg">
-                <div class="modal-content" style="background:var(--bg-card);border:1px solid var(--border-glass);border-radius:var(--radius-lg);box-shadow:0 25px 60px rgba(0,0,0,0.5);">
+                <div class="modal-content" style="background:var(--bg-dark);border:1px solid var(--border-glass);border-radius:var(--radius-lg);box-shadow:0 25px 60px rgba(0,0,0,0.5);">
                     
                     <div class="modal-header" style="border-bottom:1px solid var(--border-glass);flex-shrink:0;padding:1rem 1.5rem;">
                         <h5 class="modal-title" style="font-family:'Outfit';font-weight:800;color:var(--text-primary);font-size:1.15rem;">
@@ -227,6 +227,14 @@
                                     <div class="col-md-6">
                                         <label class="info-label mb-1">Doğum Yeri</label>
                                         <input type="text" name="birthPlace" value="@item.BirthPlace" class="form-premium-control" placeholder="Doğum yeri" />
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="info-label mb-1">Doğum Tarihi</label>
+                                        <input type="date" name="dateOfBirth" value="@item.DateOfBirth.ToString("yyyy-MM-dd")" class="form-premium-control" />
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="info-label mb-1">Eğitim Durumu</label>
+                                        <input type="text" name="educationLevel" value="@item.EducationLevel" class="form-premium-control" placeholder="Eğitim Durumu" />
                                     </div>
                                 </div>
                             </div>

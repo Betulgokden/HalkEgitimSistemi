@@ -62,6 +62,14 @@
                             <div class="detail-label"><i class="bi bi-geo-alt me-1"></i>Doğum Yeri</div>
                             <div class="detail-value text-secondary">@(Model.BirthPlace ?? "Belirtilmedi")</div>
                         </div>
+                        <div class="col-md-6">
+                            <div class="detail-label"><i class="bi bi-calendar-date me-1"></i>Doğum Tarihi</div>
+                            <div class="detail-value text-secondary">@Model.DateOfBirth.ToShortDateString()</div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="detail-label"><i class="bi bi-mortarboard me-1"></i>Eğitim Durumu</div>
+                            <div class="detail-value text-secondary">@Model.EducationLevel</div>
+                        </div>
                     </div>
 
                     <h5 style="color: var(--text-primary); font-weight: 700; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px dashed var(--border-glass);">

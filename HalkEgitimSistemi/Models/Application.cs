@@ -42,6 +42,15 @@ namespace HalkEgitimSistemi.Models
         [Display(Name = "Başvuru Tarihi")]
         public DateTime ApplyDate { get; set; } = DateTime.Now;
 
+        [Display(Name = "Doğum Tarihi")]
+        [Required(ErrorMessage = "Doğum tarihi zorunludur.")]
+        [DataType(DataType.Date)]
+        public DateTime DateOfBirth { get; set; }
+
+        [Display(Name = "Eğitim Durumu")]
+        [Required(ErrorMessage = "Eğitim durumu zorunludur.")]
+        public string EducationLevel { get; set; } = string.Empty;
+
         [Display(Name = "Başvuru Durumu")]
         public ApplicationStatus Status { get; set; } = ApplicationStatus.Pending;
 

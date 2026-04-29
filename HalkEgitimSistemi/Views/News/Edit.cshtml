@@ -23,9 +23,10 @@
 
                 <!-- Form -->
                 <div style="padding: 2rem;">
-                    <form asp-action="Edit">
+                    <form asp-action="Edit" enctype="multipart/form-data">
                         <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
                         <input type="hidden" asp-for="Id" />
+                        <input type="hidden" asp-for="ImageUrl" />
 
                         <div class="form-premium-group">
                             <label asp-for="Title" class="form-premium-label">
@@ -65,11 +66,29 @@
                         </div>
 
                         <div class="form-premium-group">
-                            <label asp-for="PosterUrl" class="form-premium-label">
-                                <i class="bi bi-image me-1"></i>Poster / Görsel URL
+                            <label class="form-premium-label">
+                                <i class="bi bi-image me-1"></i>Mevcut Görsel
                             </label>
-                            <input asp-for="PosterUrl" class="form-premium-control" />
-                            <span asp-validation-for="PosterUrl" class="field-validation-error"></span>
+                            @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                            {
+                                <div class="mb-2">
+                                    <img src="@Model.ImageUrl" alt="Current Image" style="max-height: 100px; border-radius: 8px;" />
+                                </div>
+                            }
+                            else if (!string.IsNullOrEmpty(Model.PosterUrl))
+                            {
+                                <div class="mb-2">
+                                    <img src="@Model.PosterUrl" alt="Current Image (URL)" style="max-height: 100px; border-radius: 8px;" />
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="text-muted mb-2">Görsel yok.</div>
+                            }
+                            <label class="form-premium-label mt-2">
+                                <i class="bi bi-upload me-1"></i>Yeni Görsel Yükle (Değiştirmek için seçin)
+                            </label>
+                            <input type="file" name="imageFile" class="form-premium-control" accept="image/*" />
                         </div>
 
                         <div class="d-flex gap-3 mt-4">

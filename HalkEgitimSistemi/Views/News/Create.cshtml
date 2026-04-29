@@ -23,7 +23,7 @@
 
                 <!-- Form -->
                 <div style="padding: 2rem;">
-                    <form asp-action="Create">
+                    <form asp-action="Create" enctype="multipart/form-data">
                         <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
                         <div class="form-premium-group">
@@ -64,11 +64,10 @@
                         </div>
 
                         <div class="form-premium-group">
-                            <label asp-for="PosterUrl" class="form-premium-label">
-                                <i class="bi bi-image me-1"></i>Poster / Görsel URL
+                            <label class="form-premium-label">
+                                <i class="bi bi-image me-1"></i>Görsel Yükle (Bilgisayardan)
                             </label>
-                            <input asp-for="PosterUrl" class="form-premium-control" placeholder="https://..." />
-                            <span asp-validation-for="PosterUrl" class="field-validation-error"></span>
+                            <input type="file" name="imageFile" class="form-premium-control" accept="image/*" />
                         </div>
 
                         <div class="d-flex gap-3 mt-4">

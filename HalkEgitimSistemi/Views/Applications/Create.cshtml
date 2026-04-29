@@ -89,6 +89,32 @@
                             </div>
                         </div>
 
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-premium-group">
+                                    <label asp-for="DateOfBirth" class="form-premium-label"><i class="bi bi-calendar-date me-1"></i>Doğum Tarihi</label>
+                                    <input asp-for="DateOfBirth" type="date" class="form-premium-control" required />
+                                    <span asp-validation-for="DateOfBirth" class="field-validation-error"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-premium-group">
+                                    <label asp-for="EducationLevel" class="form-premium-label"><i class="bi bi-mortarboard me-1"></i>Eğitim Durumu</label>
+                                    <select asp-for="EducationLevel" class="form-premium-control" required>
+                                        <option value="">-- Seçiniz --</option>
+                                        <option value="İlkokul">İlkokul</option>
+                                        <option value="Ortaokul">Ortaokul</option>
+                                        <option value="Lise">Lise</option>
+                                        <option value="Ön Lisans">Ön Lisans</option>
+                                        <option value="Lisans">Lisans</option>
+                                        <option value="Yüksek Lisans">Yüksek Lisans</option>
+                                        <option value="Doktora">Doktora</option>
+                                    </select>
+                                    <span asp-validation-for="EducationLevel" class="field-validation-error"></span>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="form-premium-group">
                             <label asp-for="CourseId" class="form-premium-label">
                                 <i class="bi bi-journal-bookmark me-1"></i>Kurs Seçimi

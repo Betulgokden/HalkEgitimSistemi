@@ -244,20 +244,45 @@
 </section>
 
 <!-- ===== TOAST NOTIFICATION ===== -->
-<div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 1050;">
-    <div id="welcomeToast" class="toast align-items-center text-white bg-glass-strong border-0" role="alert" aria-live="assertive" aria-atomic="true" style="background: var(--gradient-hero); box-shadow: var(--shadow-lg); border-radius: var(--radius-md);">
-        <div class="d-flex">
-            <div class="toast-body d-flex align-items-center gap-3" style="font-family: 'Outfit'; font-size: 1.05rem;">
-                <i class="bi bi-bell-fill fs-4"></i>
-                <div>
-                    <strong>Yeni Kurs Kayıtları Başladı!</strong><br/>
-                    <span style="font-size: 0.85rem; opacity: 0.9;">Kontenjanlar dolmadan yerinizi ayırtın.</span>
+@{
+    var latestNews = Model.OrderByDescending(n => n.PublishDate).FirstOrDefault();
+    bool showNewsToast = latestNews != null && latestNews.PublishDate >= DateTime.Now.AddDays(-7);
+}
+
+@if (showNewsToast)
+{
+    <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 1050;">
+        <div id="welcomeToast" class="toast align-items-center text-white bg-glass-strong border-0" role="alert" aria-live="assertive" aria-atomic="true" style="background: var(--gradient-hero); box-shadow: var(--shadow-lg); border-radius: var(--radius-md); cursor: pointer;" onclick="window.location.href='/News/Details/@latestNews.Id'">
+            <div class="d-flex">
+                <div class="toast-body d-flex align-items-center gap-3" style="font-family: 'Outfit'; font-size: 1.05rem;">
+                    <i class="bi bi-megaphone-fill fs-4"></i>
+                    <div>
+                        <strong>Yeni Duyurumuz Var!</strong><br/>
+                        <span style="font-size: 0.85rem; opacity: 0.9;">@latestNews.Title</span>
+                    </div>
                 </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
             </div>
-            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
         </div>
     </div>
-</div>
+}
+else
+{
+    <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 1050;">
+        <div id="welcomeToast" class="toast align-items-center text-white bg-glass-strong border-0" role="alert" aria-live="assertive" aria-atomic="true" style="background: var(--gradient-hero); box-shadow: var(--shadow-lg); border-radius: var(--radius-md);">
+            <div class="d-flex">
+                <div class="toast-body d-flex align-items-center gap-3" style="font-family: 'Outfit'; font-size: 1.05rem;">
+                    <i class="bi bi-bell-fill fs-4"></i>
+                    <div>
+                        <strong>Yeni Kurs Kayıtları Başladı!</strong><br/>
+                        <span style="font-size: 0.85rem; opacity: 0.9;">Kontenjanlar dolmadan yerinizi ayırtın.</span>
+                    </div>
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+}
 
 @section Scripts {
     <script>

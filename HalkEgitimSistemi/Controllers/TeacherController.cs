@@ -129,7 +129,9 @@ namespace HalkEgitimSistemi.Controllers
             string? email,
             string? phoneNumber,
             string? tcNo,
-            string? birthPlace)
+            string? birthPlace,
+            DateTime? dateOfBirth,
+            string? educationLevel)
         {
             var application = await _context.Applications.FindAsync(id);
             if (application == null) return NotFound();
@@ -147,6 +149,8 @@ namespace HalkEgitimSistemi.Controllers
             if (!string.IsNullOrWhiteSpace(phoneNumber)) application.PhoneNumber = phoneNumber;
             if (!string.IsNullOrWhiteSpace(tcNo))        application.TcNo        = tcNo;
             if (!string.IsNullOrWhiteSpace(birthPlace))  application.BirthPlace  = birthPlace;
+            if (dateOfBirth.HasValue)                    application.DateOfBirth = dateOfBirth.Value;
+            if (!string.IsNullOrWhiteSpace(educationLevel)) application.EducationLevel = educationLevel;
 
             await _context.SaveChangesAsync();
             TempData["Success"] = $"{application.FirstName} {application.LastName} bilgileri güncellendi.";

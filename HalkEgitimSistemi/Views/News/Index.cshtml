@@ -47,9 +47,22 @@
                         <tr>
                             <td style="padding-left: 1.5rem;">
                                 <div class="d-flex align-items-center gap-3">
-                                    <div class="section-icon section-icon-success" style="width: 42px; height: 42px; font-size: 1.1rem;">
-                                        <i class="bi bi-megaphone-fill"></i>
-                                    </div>
+                                    @{
+                                        var thumbUrl = !string.IsNullOrEmpty(item.ImageUrl) ? item.ImageUrl : 
+                                                       (!string.IsNullOrEmpty(item.PosterUrl) ? item.PosterUrl : null);
+                                    }
+                                    @if (thumbUrl != null)
+                                    {
+                                        <div style="width: 42px; height: 42px; border-radius: 8px; overflow: hidden; flex-shrink: 0;">
+                                            <img src="@thumbUrl" alt="Thumbnail" style="width: 100%; height: 100%; object-fit: cover;" />
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="section-icon section-icon-success" style="width: 42px; height: 42px; font-size: 1.1rem; flex-shrink: 0;">
+                                            <i class="bi bi-megaphone-fill"></i>
+                                        </div>
+                                    }
                                     <div>
                                         <div style="font-weight: 600; color: var(--text-primary);">@item.Title</div>
                                         <small style="color: var(--text-muted);">@(item.Content?.Length > 60 ? item.Content.Substring(0, 60) + "..." : item.Content)</small>
