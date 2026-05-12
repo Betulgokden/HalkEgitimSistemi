@@ -1,0 +1,19 @@
+﻿@{
+    ViewData["Title"] = "Bağlantı Geçersiz";
+}
+
+<div class="container py-5" style="min-height: 70vh; display: flex; align-items: center; justify-content: center;">
+    <div class="text-center animate-fadeInUp">
+        <div class="section-icon mx-auto mb-4" style="width: 100px; height: 100px; font-size: 3rem; background: rgba(239,68,68,0.1); color: var(--danger); border: 2px solid rgba(239,68,68,0.3);">
+            <i class="bi bi-clock-history"></i>
+        </div>
+        <h2 class="fw-bold text-white mb-3">Bağlantı Süresi Doldu</h2>
+        <p class="text-white-50 max-w-500 mx-auto mb-5">
+            Bu paylaşılan bağlantının 24 saatlik geçerlilik süresi dolmuştur veya bağlantı imha edilmiştir. 
+            Güvenliğiniz için sertifika sahibinden yeni bir bağlantı talep ediniz veya resmi sorgulama sayfasını kullanınız.
+        </p>
+        <a asp-action="Inquiry" class="btn btn-premium btn-primary-glow px-5 py-3">
+            <i class="bi bi-search me-2"></i> Resmi Sorgulama Sayfasına Git
+        </a>
+    </div>
+</div>

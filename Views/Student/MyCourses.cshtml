@@ -1,0 +1,114 @@
+﻿@model List<HalkEgitimSistemi.Models.Application>
+@using HalkEgitimSistemi.Models
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Aktif Kurslarım";
+}
+
+<div class="container py-4">
+    <div class="glass-card-static p-4 mb-4 animate-fadeInUp">
+        <h2 style="font-family:'Outfit';font-weight:800;margin:0;">
+            <i class="bi bi-book-half me-2" style="color:var(--primary-light);"></i>Aktif Kurslarım
+        </h2>
+        <p class="mb-0" style="color:var(--text-muted);">Kayıtlı olduğunuz tüm kurslar</p>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="glass-card-static p-5 text-center animate-scaleIn">
+            <div style="width:80px;height:80px;margin:0 auto 1rem;background:rgba(99,102,241,0.1);border-radius:50%;display:flex;align-items:center;justify-content:center;">
+                <i class="bi bi-book" style="font-size:2rem;color:var(--primary-light);"></i>
+            </div>
+            <h5 style="font-family:'Outfit';color:var(--text-primary);">Henüz kurs kaydınız yok</h5>
+            <p style="color:var(--text-muted);">Kurslar sayfasından ilgilendiğiniz kursa başvurabilirsiniz.</p>
+            <a asp-controller="Courses" asp-action="Browse" class="btn btn-premium btn-primary-glow">
+                <i class="bi bi-grid-3x3-gap me-1"></i>Kurslara Göz At
+            </a>
+        </div>
+    }
+    else
+    {
+        <div class="row g-4">
+            @foreach (var app in Model)
+            {
+                var absCount = app.Attendances?.Count(a => !a.IsPresent) ?? 0;
+                var maxAbs = app.Course?.MaxAbsenceLimit ?? 4;
+                string statusColor = app.Status == ApplicationStatus.Approved ? "success" :
+                                     app.Status == ApplicationStatus.Pending ? "warning" : "danger";
+                string statusText = app.Status == ApplicationStatus.Approved ? "Onaylandı" :
+                                    app.Status == ApplicationStatus.Pending ? "Bekliyor" : "Reddedildi";
+                <div class="col-md-6 col-lg-4">
+                    <div class="glass-card-static h-100 overflow-hidden animate-fadeInUp" style="border-radius:var(--radius-xl);">
+                        @if (!string.IsNullOrEmpty(app.Course?.ImageUrl))
+                        {
+                            <img src="@app.Course.ImageUrl" alt="@app.Course.CourseName"
+                                 style="width:100%;height:140px;object-fit:cover;" />
+                        }
+                        else
+                        {
+                            <div style="width:100%;height:140px;background:var(--gradient-hero);display:flex;align-items:center;justify-content:center;">
+                                <i class="bi bi-book-half" style="font-size:3rem;color:white;opacity:0.7;"></i>
+                            </div>
+                        }
+                        <div class="p-4">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <h5 style="font-family:'Outfit';font-weight:700;margin:0;font-size:1rem;">@app.Course?.CourseName</h5>
+                                <span class="badge bg-@statusColor ms-2">@statusText</span>
+                            </div>
+                            <p style="color:var(--text-muted);font-size:0.8rem;margin-bottom:1rem;">
+                                <i class="bi bi-calendar3 me-1"></i>@app.Course?.StartDate.ToString("dd.MM.yyyy") - @app.Course?.EndDate.ToString("dd.MM.yyyy")
+                            </p>
+                            @if (app.Status == ApplicationStatus.Approved)
+                            {
+                                <div class="mb-2">
+                                    <div class="d-flex justify-content-between mb-1" style="font-size:0.75rem;color:var(--text-muted);">
+                                        <span>Devamsızlık</span>
+                                        <span style="color:@(absCount >= maxAbs ? "var(--danger)" : "var(--success)");">@absCount / @maxAbs saat</span>
+                                    </div>
+                                    <div class="progress" style="height:5px;background:rgba(255,255,255,0.08);border-radius:3px;">
+                                        <div class="progress-bar @(absCount >= maxAbs ? "bg-danger" : "bg-success")"
+                                             style="width:@(Math.Min(100, absCount * 100 / (maxAbs > 0 ? maxAbs : 1)))%"></div>
+                                    </div>
+                                </div>
+                                @if (app.ExamGrade.HasValue)
+                                {
+                                    <div class="d-flex justify-content-between align-items-center mt-2">
+                                        <span style="font-size:0.8rem;color:var(--text-muted);">Sınav Notu</span>
+                                        <strong style="color:@(app.ExamGrade >= 50 ? "var(--success)" : "var(--danger)");">@app.ExamGrade / 100</strong>
+                                    </div>
+                                }
+                            }
+                                @if (app.Status == ApplicationStatus.Approved && !app.IsPaid)
+                                {
+                                    <a asp-controller="Applications" asp-action="Payment" asp-route-id="@app.Id"
+                                       class="btn btn-premium btn-warning-glow w-100 mt-2 py-2" style="font-size:0.82rem; background: var(--gradient-warm); color: white;">
+                                         <i class="bi bi-credit-card-fill me-1"></i> Kurs Ücretini Öde
+                                    </a>
+                                }
+                                else if (app.IsCompleted)
+                                {
+                                    <a asp-controller="Student" asp-action="Certificate" asp-route-id="@app.Id"
+                                       class="btn btn-premium btn-success-glow w-100 mt-2 py-2" style="font-size:0.82rem;">
+                                         <i class="bi bi-patch-check-fill me-1"></i>Sertifika Görüntüle
+                                    </a>
+                                }
+                                else if (app.Status == ApplicationStatus.Approved && app.IsPaid)
+                                {
+                                    <a asp-controller="LiveLesson" asp-action="Room" asp-route-roomId="Course_@app.CourseId"
+                                       class="btn btn-premium btn-danger-glow w-100 mt-2 py-2 pulse-animation" style="font-size:0.82rem;">
+                                         <i class="bi bi-broadcast me-1"></i>Canlı Derse Katıl
+                                    </a>
+                                }
+                                else
+                                {
+                                    <button disabled class="btn btn-premium btn-secondary-glass w-100 mt-2 py-2" style="font-size:0.82rem; opacity: 0.6;">
+                                        <i class="bi bi-hourglass-split me-1"></i> İşlem Bekleniyor
+                                    </button>
+                                }
+                            </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

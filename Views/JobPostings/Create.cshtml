@@ -1,0 +1,100 @@
+@model HalkEgitimSistemi.Models.JobPosting
+@{
+    ViewData["Title"] = "Yeni İlan Yayınla";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="glass-card p-5 animate-slide-in" style="border-radius: 35px; border: 2px solid var(--theme-card-border);">
+                <div class="text-center mb-5">
+                    <div class="icon-box-lg bg-maroon-theme mx-auto mb-4" style="width: 80px; height: 80px; border-radius: 20px; display: flex; align-items: center; justify-content: center; border: 2px solid var(--gold);">
+                        <i class="bi bi-megaphone-fill gold-text fs-1"></i>
+                    </div>
+                    <h2 class="fw-900 text-white mb-2" style="font-family: 'Outfit';">İş İlanı Yayınla</h2>
+                    <p class="text-white-50">Kurumunuz için en doğru yeteneklere ulaşın.</p>
+                </div>
+
+                <form asp-action="Create" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-4"></div>
+
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <div class="form-group mb-4">
+                                <label asp-for="CompanyName" class="form-label gold-text fw-700 small ms-2 mb-2"></label>
+                                <input asp-for="CompanyName" class="form-control modern-control py-3" placeholder="Örn: Borçka Teknoloji A.Ş.">
+                                <span asp-validation-for="CompanyName" class="text-danger small"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group mb-4">
+                                <label asp-for="Title" class="form-label gold-text fw-700 small ms-2 mb-2"></label>
+                                <input asp-for="Title" class="form-control modern-control py-3" placeholder="Örn: Senior Python Developer">
+                                <span asp-validation-for="Title" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <div class="form-group mb-4">
+                                <label asp-for="Description" class="form-label gold-text fw-700 small ms-2 mb-2"></label>
+                                <textarea asp-for="Description" class="form-control modern-control" rows="5" placeholder="İş tanımı ve detayları..."></textarea>
+                                <span asp-validation-for="Description" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <div class="form-group mb-4">
+                                <label asp-for="Requirements" class="form-label gold-text fw-700 small ms-2 mb-2"></label>
+                                <textarea asp-for="Requirements" class="form-control modern-control" rows="3" placeholder="Gerekli tecrübe, yetkinlikler..."></textarea>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-group mb-4">
+                                <label asp-for="JobType" class="form-label gold-text fw-700 small ms-2 mb-2"></label>
+                                <select asp-for="JobType" class="form-control modern-control">
+                                    <option value="Tam Zamanlı">Tam Zamanlı</option>
+                                    <option value="Yarı Zamanlı">Yarı Zamanlı</option>
+                                    <option value="Sözleşmeli">Sözleşmeli</option>
+                                    <option value="Uzaktan">Uzaktan</option>
+                                    <option value="Staj">Staj</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group mb-4">
+                                <label asp-for="Location" class="form-label gold-text fw-700 small ms-2 mb-2"></label>
+                                <input asp-for="Location" class="form-control modern-control" placeholder="Borçka / Artvin">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group mb-4">
+                                <label asp-for="SalaryRange" class="form-label gold-text fw-700 small ms-2 mb-2"></label>
+                                <input asp-for="SalaryRange" class="form-control modern-control" placeholder="Örn: 40.000 - 60.000 TL">
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group mb-4">
+                                <label asp-for="ContactEmail" class="form-label gold-text fw-700 small ms-2 mb-2"></label>
+                                <input asp-for="ContactEmail" class="form-control modern-control" placeholder="ik@sirket.com">
+                                <span asp-validation-for="ContactEmail" class="text-danger small"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group mb-4">
+                                <label asp-for="Deadline" class="form-label gold-text fw-700 small ms-2 mb-2"></label>
+                                <input asp-for="Deadline" type="date" class="form-control modern-control">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-5 d-flex gap-3">
+                        <button type="submit" class="btn btn-premium flex-grow-1 py-3 fw-900">İLAN YAYINLA</button>
+                        <a asp-action="Index" class="btn btn-outline-white px-5 py-3 rounded-4">İPTAL</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,350 @@
+@model List<HalkEgitimSistemi.Models.CourseChatMessage>
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Kurs Sohbet Odası";
+}
+
+<div class="course-chat-wrapper">
+    <div class="container h-100 py-4">
+        <div class="row h-100 justify-content-center">
+            <div class="col-lg-11 h-100">
+                <div class="glass-card-main h-100 d-flex flex-column overflow-hidden border-glass shadow-2xl">
+                    <!-- Chat Header -->
+                    <div class="chat-header p-4 border-bottom border-white-10 d-flex align-items-center justify-content-between bg-glass-vibrant">
+                        <div class="d-flex align-items-center">
+                            <div class="course-icon-glow me-3" style="border: 1px solid var(--gold);">
+                                <i class="bi bi-mortarboard-fill fs-3 gold-text"></i>
+                            </div>
+                            <div>
+                                <h4 class="mb-0 fw-900 gold-text letter-spacing-tight">@ViewBag.CourseName</h4>
+                                <div class="d-flex align-items-center mt-1">
+                                    <span class="status-pulse me-2"></span>
+                                    <small class="gold-text fw-700" style="font-size: 0.7rem; letter-spacing: 1px;">CANLI ETKİLEŞİM</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="header-actions d-flex gap-2">
+                            <button class="btn btn-icon-glass" title="Kurs Bilgisi"><i class="bi bi-info-circle"></i></button>
+                            <a asp-controller="Teacher" asp-action="Dashboard" class="btn btn-vibrant-glow btn-sm rounded-pill px-4">
+                                <i class="bi bi-grid-fill me-2"></i>Panel
+                            </a>
+                        </div>
+                    </di                    <!-- Chat Messages -->
+                    <div class="chat-messages-area flex-grow-1 p-4 overflow-auto custom-scrollbar" id="courseChatMessages">
+                        @foreach (var msg in Model)
+                        {
+                            bool isMe = msg.SenderName == ViewBag.SenderName;
+                            bool isInstructor = msg.SenderRole == "Instructor" || msg.SenderRole == "Admin";
+
+                            <div class="message-wrapper @(isMe ? "me" : "others") mb-4 animate-slide-in">
+                                <div class="d-flex @(isMe ? "flex-row-reverse" : "flex-row") align-items-end gap-2">
+                                    <div class="msg-avatar">
+                                        <div class="avatar-circle" style="width: 32px; height: 32px; background: var(--maroon); color: var(--gold); border: 1px solid var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.8rem;">
+                                            @msg.SenderName.Substring(0, 1)
+                                        </div>
+                                    </div>
+                                    <div class="message-bubble @(isMe ? "bubble-me" : "bubble-others") @(isInstructor ? "bubble-instructor" : "") shadow-lg">
+                                        @if (!isMe)
+                                        {
+                                            <div class="message-sender @(isInstructor ? "gold-text" : "text-primary-light")">
+                                                <i class="bi @(isInstructor ? "bi-shield-check" : "bi-person-circle") me-1"></i>
+                                                @msg.SenderName 
+                                                @if(isInstructor) { <span class="badge bg-maroon-theme text-gold ms-1 x-small fw-900" style="background: var(--maroon); color: var(--gold); border: 1px solid var(--gold);">EÄžİTMEN</span> }
+                                            </div>
+                                        }
+                                        <div class="message-text">@msg.Message</div>
+                                        <div class="message-time">@msg.SentAt.ToString("HH:mm")</div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div> </div>
+
+                    <!-- Chat Input -->
+                    <div class="chat-input-area p-4 border-top border-white-10 bg-glass-strong">
+                        <form id="courseChatForm" class="d-flex gap-3 align-items-center">
+                            <input type="hidden" id="courseId" value="@ViewBag.CourseId" />
+                            <input type="hidden" id="currentUserName" value="@ViewBag.SenderName" />
+                            
+                            <div class="flex-grow-1 position-relative">
+                                <input type="text" id="courseMessageInput" class="form-control chat-input-premium" 
+                                       placeholder="Kursiyerlerinize ilham verici bir mesaj yazın..." autocomplete="off">
+                                <div class="input-tools d-none d-md-flex">
+                                    <button type="button" class="tool-btn"><i class="bi bi-emoji-smile-fill"></i></button>
+                                    <button type="button" class="tool-btn"><i class="bi bi-image-fill"></i></button>
+                                </div>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-send-vibrant shadow-glow">
+                                <i class="bi bi-send-fill fs-5"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    :root {
+        --chat-bg: #0a0a1a;
+        --glass-vibrant: rgba(30, 30, 60, 0.4);
+        --instructor-gradient: linear-gradient(135deg, #C5A059 0%, #C5A059 100%);
+        --me-gradient: linear-gradient(135deg, #581C1C 0%, #C5A059 100%);
+        --others-bg: rgba(255, 255, 255, 0.05);
+        --chat-text: #f1f5f9;
+        --chat-text-rgb: 241, 245, 249;
+        --chat-card-bg: rgba(15, 15, 30, 0.7);
+    }
+
+    [data-theme="light"] {
+        --chat-bg: #f8fafc;
+        --glass-vibrant: rgba(255, 255, 255, 0.8);
+        --others-bg: rgba(0, 0, 0, 0.05);
+        --chat-text: #1e293b;
+        --chat-text-rgb: 30, 41, 59;
+        --chat-card-bg: rgba(255, 255, 255, 0.9);
+    }
+
+    .course-chat-wrapper {
+        height: calc(100vh - 120px);
+        background: radial-gradient(circle at 0% 0%, rgba(197, 160, 89, 0.05) 0%, transparent 40%),
+                    radial-gradient(circle at 100% 100%, rgba(88, 28, 28, 0.05) 0%, transparent 40%),
+                    var(--bg-dark);
+        margin: -1.5rem;
+        padding: 1.5rem;
+        transition: background 0.3s ease;
+    }
+
+    .glass-card-main {
+        background: var(--theme-card-bg);
+        backdrop-filter: blur(30px);
+        -webkit-backdrop-filter: blur(30px);
+        border-radius: 30px;
+        border: 2px solid var(--theme-card-border) !important;
+    }
+
+    .bg-glass-vibrant {
+        background: rgba(197, 160, 89, 0.05);
+        backdrop-filter: blur(10px);
+    }
+
+
+    .course-icon-glow {
+        width: 50px;
+        height: 50px;
+        background: rgba(255,255,255,0.05);
+        border-radius: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 0 20px rgba(88, 28, 28, 0.2);
+    }
+
+    .chat-messages-area {
+        background-image: 
+            radial-gradient(circle at 2px 2px, rgba(255,255,255,0.02) 1px, transparent 0);
+        background-size: 40px 40px;
+    }
+
+    .message-bubble {
+        max-width: 80%;
+        padding: 16px 22px;
+        border-radius: 22px;
+        position: relative;
+        border: 1px solid rgba(255,255,255,0.08);
+        transition: transform 0.2s;
+    }
+
+    .bubble-me {
+        background: var(--me-gradient);
+        color: white;
+        border-bottom-right-radius: 4px;
+        box-shadow: 0 10px 25px rgba(88, 28, 28, 0.3);
+    }
+
+    .bubble-others {
+        background: var(--others-bg);
+        color: var(--chat-text);
+        border-bottom-left-radius: 4px;
+        backdrop-filter: blur(5px);
+    }
+
+    .bubble-instructor {
+        background: var(--instructor-gradient);
+        color: white;
+        border-bottom-left-radius: 4px;
+        box-shadow: 0 10px 25px rgba(16, 185, 129, 0.2);
+    }
+
+    .message-sender {
+        font-size: 0.75rem;
+        font-weight: 800;
+        margin-bottom: 6px;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+    }
+
+    .message-text {
+        font-size: 0.95rem;
+        line-height: 1.6;
+        font-weight: 500;
+        word-break: break-word;
+    }
+
+    .message-time {
+        font-size: 0.65rem;
+        opacity: 0.7;
+        margin-top: 8px;
+        text-align: right;
+        font-family: 'Outfit';
+    }
+
+    .chat-input-premium {
+        background: rgba(var(--chat-text-rgb), 0.03) !important;
+        border: 2px solid rgba(var(--chat-text-rgb), 0.07) !important;
+        color: var(--chat-text) !important;
+        border-radius: 20px !important;
+        padding: 18px 30px !important;
+        font-size: 1rem;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .chat-input-premium:focus {
+        background: rgba(255,255,255,0.07) !important;
+        border-color: var(--primary) !important;
+        box-shadow: 0 0 30px rgba(88, 28, 28, 0.25);
+        transform: translateY(-2px);
+    }
+
+    .btn-send-vibrant {
+        width: 60px;
+        height: 60px;
+        border-radius: 18px;
+        background: var(--me-gradient);
+        color: white;
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s;
+    }
+
+    .btn-send-vibrant:hover {
+        transform: scale(1.1) rotate(5deg);
+        box-shadow: 0 0 30px rgba(88, 28, 28, 0.5);
+    }
+
+    .input-tools {
+        position: absolute;
+        right: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        gap: 15px;
+    }
+
+    .tool-btn {
+        background: none;
+        border: none;
+        color: var(--text-muted);
+        font-size: 1.2rem;
+        transition: color 0.2s, transform 0.2s;
+    }
+
+    .tool-btn:hover {
+        color: white;
+        transform: scale(1.2);
+    }
+
+    .status-pulse {
+        width: 10px;
+        height: 10px;
+        background: #C5A059;
+        border-radius: 50%;
+        box-shadow: 0 0 10px #C5A059;
+        animation: pulse-green 2s infinite;
+    }
+
+    @@keyframes pulse-green {
+        0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+        70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
+        100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+    }
+
+    .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+    .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
+
+    .animate-slide-in {
+        animation: slideIn 0.4s cubic-bezier(0.23, 1, 0.32, 1) both;
+    }
+
+    @@keyframes slideIn {
+        from { opacity: 0; transform: translateY(20px) scale(0.95); }
+        to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+</style>
+
+@section Scripts {
+    <script>
+        const chatArea = document.getElementById('courseChatMessages');
+        const chatForm = document.getElementById('courseChatForm');
+        const msgInput = document.getElementById('courseMessageInput');
+        const courseId = parseInt(document.getElementById('courseId').value);
+        const currentUser = document.getElementById('currentUserName').value;
+
+        chatArea.scrollTop = chatArea.scrollHeight;
+
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/courseChatHub")
+            .withAutomaticReconnect()
+            .build();
+
+        connection.on("ReceiveCourseMessage", (senderName, role, message, time, censored, cid) => {
+            if (cid == courseId) {
+                appendMessage({
+                    senderName: senderName,
+                    senderRole: role,
+                    message: message,
+                    sentAt: time
+                });
+            }
+        });
+
+        connection.start().then(() => {
+            connection.invoke("JoinCourse", courseId).catch(err => console.error(err));
+        });
+
+        chatForm.onsubmit = (e) => {
+            e.preventDefault();
+            const text = msgInput.value.trim();
+            if(!text) return;
+            msgInput.value = '';
+            connection.invoke("SendMessageToCourse", courseId, text);
+        };
+
+        function appendMessage(msg) {
+            const isMe = msg.senderName === currentUser;
+            const isInst = msg.senderRole === "Instructor" || msg.senderRole === "Admin";
+            
+            const html = `
+                <div class="message-wrapper ${isMe ? 'me' : 'others'} mb-4 animate-slide-in">
+                    <div class="message-bubble ${isMe ? 'bubble-me' : 'bubble-others'} ${isInst ? 'bubble-instructor' : ''} shadow-lg">
+                        <div class="message-sender ${isMe ? 'text-white-50' : (isInst ? 'text-warning' : 'text-primary-light')}">
+                            <i class="bi ${isMe ? 'bi-person-fill' : (isInst ? 'bi-shield-check' : 'bi-person-circle')} me-1"></i>
+                            ${isMe ? 'Siz' : msg.senderName + (isInst ? ' <span class="badge bg-warning-soft text-warning ms-1 x-small fw-900">EÄİTMEN</span>' : '')}
+                        </div>
+                        <div class="message-text">${msg.message}</div>
+                        <div class="message-time">${msg.sentAt}</div>
+                    </div>
+                </div>
+            `;
+            chatArea.insertAdjacentHTML('beforeend', html);
+            chatArea.scrollTop = chatArea.scrollHeight;
+        }
+    </script>
+}
+
+

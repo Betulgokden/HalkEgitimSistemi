@@ -1,0 +1,113 @@
+﻿@model IEnumerable<HalkEgitimSistemi.Models.Message>
+
+@{
+    ViewData["Title"] = "Eğitmen Özel Mesaj Takibi";
+}
+
+<div class="page-header">
+    <div class="container-fluid px-4">
+        <div class="page-header-content">
+            <div>
+                <h1 class="page-header-title"><i class="bi bi-shield-lock-fill me-2"></i> Eğitmen Özel Mesajları</h1>
+                <p class="page-header-subtitle">Yönetici yetkisiyle eğitmenler arasındaki tüm özel yazışmaları izleyin.</p>
+            </div>
+            <div class="live-indicator">
+                <span class="pulse-dot"></span> Tam Erişim Modu
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid px-4 py-4">
+    <div class="glass-card-static p-0 overflow-hidden shadow-lg border-0">
+        <div class="table-responsive">
+            <table class="table table-hover table-premium mb-0">
+                <thead>
+                    <tr class="bg-glass-sm">
+                        <th class="ps-4">Gönderen</th>
+                        <th>Alıcı (Eğitmen)</th>
+                        <th>Mesaj İçeriği</th>
+                        <th>Tarih & Saat</th>
+                        <th class="text-center">Durum</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="ps-4">
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="avatar-circle-sm bg-primary-glow">@item.SenderUsername.Substring(0, 1)</div>
+                                    <span class="fw-bold">@item.SenderUsername</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="avatar-circle-sm bg-info-glow">@(item.ReceiverInstructor?.FullName?.Substring(0, 1) ?? "?")</div>
+                                    <span class="text-info-glow fw-bold">@(item.ReceiverInstructor?.FullName ?? "Bilinmiyor")</span>
+                                </div>
+                            </td>
+                            <td style="max-width: 400px;">
+                                <div class="message-preview p-2 rounded bg-glass-sm border-glass text-white-75 small">
+                                    @item.Content
+                                </div>
+                            </td>
+                            <td>
+                                <span class="badge bg-glass border-glass text-white-50">
+                                    <i class="bi bi-calendar3 me-1"></i> @item.Date.ToString("dd.MM.yyyy HH:mm")
+                                </span>
+                            </td>
+                            <td class="text-center">
+                                @if (item.IsRead)
+                                {
+                                    <span class="badge bg-success-glow"><i class="bi bi-check-all"></i> Okundu</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-warning-glow"><i class="bi bi-check"></i> İletildi</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<style>
+    .avatar-circle-sm {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        font-size: 0.8rem;
+        color: white;
+    }
+    .message-preview {
+        word-wrap: break-word;
+        white-space: pre-wrap;
+    }
+    .table-premium {
+        --bs-table-bg: transparent;
+        --bs-table-hover-bg: rgba(255,255,255,0.03);
+        color: white;
+    }
+    .table-premium thead th {
+        border-bottom: 2px solid rgba(255,255,255,0.1);
+        padding: 1.2rem 1rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-size: 0.75rem;
+        color: var(--primary-light);
+    }
+    .table-premium tbody td {
+        padding: 1rem;
+        vertical-align: middle;
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+</style>
+

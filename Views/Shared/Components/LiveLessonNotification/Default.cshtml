@@ -1,0 +1,37 @@
+﻿@model List<HalkEgitimSistemi.Models.Course>
+
+<div class="live-notifications-wrapper" style="position: fixed; bottom: 20px; right: 20px; z-index: 1050; display: flex; flex-direction: column; gap: 10px;">
+    @foreach (var course in Model)
+    {
+        <div class="glass-card-static animate__animated animate__bounceInRight" style="width: 320px; padding: 15px; border-left: 5px solid #ef4444; background: rgba(15, 23, 42, 0.9); backdrop-filter: blur(20px); border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+            <div class="d-flex align-items-center gap-3 mb-2">
+                <div class="live-pulse"></div>
+                <h6 class="m-0 fw-bold text-white" style="font-family: 'Outfit';">CANLI DERS BAÅLADI!</h6>
+            </div>
+            <p class="small text-white-50 mb-3">@course.CourseName dersi şu an yayında. Hemen katılın!</p>
+            <div class="d-flex gap-2">
+                <a href="/LiveLesson/Room?roomId=@course.LiveRoomId" target="_blank" class="btn btn-sm btn-danger-glow w-100 fw-bold">
+                    <i class="bi bi-broadcast me-1"></i> DERSE KATIL
+                </a>
+            </div>
+        </div>
+    }
+</div>
+
+<style>
+    .live-pulse {
+        width: 12px;
+        height: 12px;
+        background: #ef4444;
+        border-radius: 50%;
+        box-shadow: 0 0 0 rgba(239, 68, 68, 0.4);
+        animation: pulse 2s infinite;
+    }
+
+    @@keyframes pulse {
+        0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+        70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+    }
+</style>
+

@@ -1,0 +1,2003 @@
+@using HalkEgitimSistemi.Services
+@inject ISiteSettingsService Settings
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/HalkEgitimSistemi.styles.css" asp-append-version="true" />
+    @RenderSection("Styles", required: false)
+    <!-- Theme Initialization Script (Prevents white flicker) -->
+    <script>
+        const translations = {
+            'TR': {
+                'brand_name': 'Artvin / Borçka Halk Eğitim Merkezi',
+                'active_text': 'Aktif',
+                'login_btn': 'Giriş',
+                'login_student': 'Öğrenci Girişi',
+                'login_instructor': 'Eğitmen Girişi',
+                'login_employer': 'İşveren Girişi',
+                'login_admin': 'Yönetici Paneli',
+                'nav_home': 'Ana Sayfa',
+                'nav_courses': 'Kurslar',
+                'nav_instructors': 'Eğitmenler',
+                'nav_instructor_apply': 'Eğitmen Başvurusu',
+                'nav_academic': 'Akademik Portal',
+                'nav_inquiries': 'Talep / Başvuru',
+                'nav_future': 'Gelecek & Etki',
+                'nav_digital_campus': 'Dijital Kampüs',
+                'nav_media': 'Medya & Haber',
+                'nav_track_application': 'Başvuru Takibi',
+                'nav_cert': 'Sertifika Sorgulama',
+                'nav_exhibition': 'Metaverse Kampüs',
+                'nav_library': 'Ders Notu Kütüphanesi',
+                'nav_gallery': 'Galeri',
+                'nav_events': 'Etkinlik Takvimi',
+                'nav_workshop': 'Gelecek Atölyesi',
+                'nav_ideabank': 'Fikir Kumbarası',
+                'nav_impact': 'Toplumsal Etki',
+                'nav_quiz': 'Bilgi Yarışması',
+                'nav_notes': 'Konu Anlatımı',
+                'nav_tests': 'Test Soruları',
+                'nav_corporate': 'Kurumsal',
+                'nav_contact': 'İletişim',
+                'logout': 'Güvenli Çıkış',
+                'bot_title': 'HalkBot Pro',
+                'bot_subtitle': 'Yapay Zeka Asistanı',
+                'bot_welcome': 'Merhaba! Ben <strong>HalkBot Pro</strong>. Borçka\'daki eğitimler, sertifikalar veya kariyer fırsatları hakkında size yardımcı olabilirim!',
+                'bot_placeholder': 'Bana her şeyi sorabilirsiniz...',
+                'footer_text': 'Artvin Borçka Halk Eğitim Merkezi olarak toplumun her kesimine kaliteli ve erişilebilir eğitim hizmeti sunmayı amaçlıyoruz.',
+                'quick_access': 'Hızlı Erişim',
+                'corporate': 'Kurumsal',
+                'contact': 'İletişim',
+                'hero_badge': '✅ MEB Onaylı Sertifika • 🛡️ %100 Kurumsal Güvence',
+                'hero_title_1': 'Potansiyelini Keşfet,',
+                'hero_title_2': 'Kendi Geleceğinin Mimarı Ol',
+                'hero_subtitle': 'Eğitim sürecinizi resmi ve geçerli bir kariyere bağlayın. Gelecek Atölyesi ve Fikir Bankası ile vizyonunuzu profesyonel hayata taşıyın, geleceğin mimarı olun.',
+                'hero_btn_start': 'Hemen Başla',
+                'hero_btn_about': 'Kurumsal Güvence',
+                'home_announcements': 'Son Duyurular',
+                'home_view_all': 'Tümünü Gör',
+                'home_read': 'Devamını Oku',
+                'home_new_gen': 'YENİ NESİL ÖĞRENME',
+                'home_quiz_title': 'Bilgini Göster, Ücretsiz Kurs Kazan!',
+                'home_quiz_text': 'Yarışmaya katılın, puanları toplayın ve dilediğiniz kursa ücretsiz kayıt olma şansı yakalayın.',
+                'home_points_target': 'Hedef Puan',
+                'home_join_quiz': 'Yarışmaya Katıl',
+                'ticker_1': 'Gündoğdu Mahallesi bu hafta Python kursunda lider! 🏆',
+                'ticker_2': 'Karagöl fidan hedefi: 342 / 500 Tamamlandı! 🌲',
+                'ticker_3': 'Merkez Mahallesi en çok \'Ders Notu\' paylaşan mahalle oldu! ⚡',
+                'ticker_4': 'Aksu Mahallesi dijital okuryazarlıkta %15 artış Gösterdi! 📈',
+                'ticker_5': 'Borçka HEM: Hükümet Caddesi üzerinde vizyoner eğitim! 📍',
+                'home_visionary_title': 'BORÇKA\'NIN <span class="gold-text">VİZYONER YÜZÜ</span>',
+                'home_visionary_text': 'Eğitimin her alanında görsel bir şölen ve siber gelişim.',
+                'home_showcase_1_title': 'Modern Kampüs',
+                'home_showcase_1_text': 'Artvin\'in Kalbinde Eğitim',
+                'home_showcase_2_title': 'Siber Laboratuvar',
+                'home_showcase_2_text': 'Yazılım ve Yapay Zeka',
+                'home_showcase_3_title': 'Geleneksel Sanatlar',
+                'home_showcase_3_text': 'Ustaların İzinden',
+                'home_vault_title': 'BİLGİ KİLİDİ: <span class="gold-text">Hazineyi Açın!</span>',
+                'home_vault_text': 'Her onaylı ders notu, bu dijital kasanın kilidini biraz daha açar. Topluluk olarak %100\'e ulaştığımızda, ayın en popüler kursu herkese <span class="text-warning fw-bold">ücretsiz</span> olacak!',
+                'home_vault_hint': 'Not yükle ve kasanın kilidini aç!',
+                'home_vault_btn': 'NOT YÜKLE',
+                'home_freelance_title': 'FREELANCE KÖPRÜSÜ',
+                'home_employer_panel': 'İŞVEREN PANELİ',
+                'home_employer_text': 'Borçka\'nın sertifikalı yeteneklerine ulaşın.',
+                'home_employer_register': 'KAYIT OL',
+                'home_employer_login': 'GİRİŞ YAP',
+                'home_spotlight_title': 'HAFTANIN <span class="gold-text">YETENEKLERİ</span>',
+                'home_spotlight_text': 'Üstün başarı gösteren ve işverenlerin radarındaki kursiyerlerimiz.',
+                'home_masters_title': 'BORÇKA\'NIN <span class="gold-text">USTALARI</span>',
+                'home_masters_text': 'Mezun olup kendi işini kuran gurur tablolarımız.',
+                'home_value_title': 'BORÇKA\'YA DEĞER: <span class="text-danger">Karagöl\'ü Yeşertiyoruz!</span>',
+                'home_gallery_title': 'DİJİTAL <span class="gold-text">GALERİ</span>',
+                'home_gallery_text': 'Kampüsümüzden anlık kesitler ve görsel başarılar.',
+                'home_map_title': 'BORÇKA <span class="gold-text">3D EARTH</span>',
+                'home_map_text': 'Borçka\'nın mahallelerini 3D uydu teknolojisiyle keşfedin.',
+                'home_jobs_title': 'BORÇKA <span class="gold-text">İş İlanları</span>',
+                'home_jobs_text': 'Sertifikalı kursiyerlerimiz için en güncel kariyer fırsatları.',
+                'nav_jobs': 'İş İlanları',
+                'job_examine': 'İncele',
+                'job_apply': 'Başvuru Yap',
+                'job_requirements': 'Şartlar',
+                'job_salary': 'Maaş Aralığı',
+                'job_location': 'Konum',
+                'form_full_name': 'Ad Soyad',
+                'form_email': 'E-Posta',
+                'form_phone': 'Telefon',
+                'form_experience': 'Deneyim Özeti',
+                'form_signature': 'Dijital İmza',
+                'form_clear_signature': 'İmzayı Temizle',
+                'form_submit': 'Başvuruyu Tamamla & PDF Al',
+                'login_title_admin': 'Yönetici Paneli',
+                'login_title_teacher': 'Eğitmen Paneli',
+                'login_title_student': 'Kursiyer Paneli',
+                'login_title_employer': 'İşveren Paneli',
+                'login_header_text': 'Sisteme erişmek için kimliğinizi doğrulayın',
+                'login_role_admin': 'Yönetici',
+                'login_role_teacher': 'Eğitmen',
+                'login_role_student': 'Kursiyer',
+                'login_role_employer': 'İşveren',
+                'login_label_identity': 'Kimlik',
+                'login_label_username': 'Kullanıcı Adı',
+                'login_label_fullname': 'Ad Soyad',
+                'login_label_email': 'E-Posta veya Ad Soyad',
+                'login_label_employer_email': 'Kurumsal E-Posta',
+                'login_label_branch': 'Branş',
+                'login_label_password': 'Şifre',
+                'login_forgot_password': 'Şifremi Unuttum',
+                'login_btn_submit': 'Oturum Aç',
+                'login_btn_loading': 'Sisteme Giriş Yapılıyor...',
+                'login_jet_title': 'JET HIZINDA GİRİŞ',
+                'login_ql_admin': 'ADMIN',
+                'login_ql_teacher': 'EĞİTMEN',
+                'login_ql_student': 'KURSİYER',
+                'login_ql_register': 'KAYIT OL'
+            },
+            'EN': {
+                'brand_name': 'Borcka Public Education Center',
+                'active_text': 'Active',
+                'login_btn': 'Login',
+                'login_student': 'Student Login',
+                'login_instructor': 'Instructor Login',
+                'login_employer': 'Employer Login',
+                'login_admin': 'Admin Panel',
+                'nav_home': 'Home',
+                'nav_courses': 'Courses',
+                'nav_instructors': 'Instructors',
+                'nav_instructor_apply': 'Instructor Application',
+                'nav_academic': 'Academic Portal',
+                'nav_jobs': 'Career Center',
+                'nav_inquiries': 'Inquiries',
+                'nav_future': 'Future & Impact',
+                'nav_digital_campus': 'Digital Campus',
+                'nav_media': 'Media',
+                'nav_track_application': 'Track Application',
+                'nav_cert': 'Certificate Inquiry',
+                'nav_exhibition': 'Metaverse Campus',
+                'nav_library': 'Library',
+                'nav_gallery': 'Gallery',
+                'nav_events': 'Event Calendar',
+                'nav_workshop': 'Future Workshop',
+                'nav_ideabank': 'Idea Bank',
+                'nav_impact': 'Social Impact',
+                'nav_quiz': 'Quiz Bowl',
+                'nav_notes': 'Lecture Notes',
+                'nav_tests': 'Test Questions',
+                'nav_corporate': 'Corporate',
+                'nav_contact': 'Contact',
+                'logout': 'Secure Logout',
+                'bot_title': 'HalkBot Pro',
+                'bot_subtitle': 'AI Assistant',
+                'bot_welcome': 'Hello! I am <strong>HalkBot Pro</strong>. I can help you with courses, certificates, or career opportunities in Borcka!',
+                'bot_placeholder': 'Ask me anything...',
+                'footer_text': 'As Borcka Public Education Center, we aim to provide quality and accessible education services to all segments of society.',
+                'quick_access': 'Quick Access',
+                'corporate': 'Corporate',
+                'contact': 'Contact',
+                'hero_badge': '✅ MEB Approved Certificate • 🛡️ 100% Institutional Assurance',
+                'hero_title_1': 'Discover Your Potential,',
+                'hero_title_2': 'Be the Architect of Your Own Future',
+                'hero_subtitle': 'Connect your educational process to an official and valid career. Carry your vision to professional life with Future Workshop and Idea Bank.',
+                'hero_btn_start': 'Start Now',
+                'hero_btn_about': 'Institutional Assurance',
+                'home_announcements': 'Latest Announcements',
+                'home_view_all': 'View All',
+                'home_read': 'Read More',
+                'home_new_gen': 'NEW GEN LEARNING',
+                'home_quiz_title': 'Show Your Knowledge, Win Free Course!',
+                'home_quiz_text': 'Join the quiz, collect points, and get a chance to register for any course for free.',
+                'home_points_target': 'Target Points',
+                'home_join_quiz': 'Join Quiz',
+                'ticker_1': 'Gündoğdu Neighborhood leads the Python course this week! 🏆',
+                'ticker_2': 'Karagöl tree goal: 342 / 500 Completed! 🌲',
+                'ticker_3': 'Merkez Neighborhood is the most active in \'Course Notes\' sharing! ⚡',
+                'ticker_4': 'Aksu Neighborhood showed 15% increase in digital literacy! 📈',
+                'ticker_5': 'Borçka PEC: Visionary education on Government Street! 📍',
+                'home_visionary_title': 'BORCKA\'S <span class="gold-text">VISIONARY FACE</span>',
+                'home_visionary_text': 'A visual feast and cyber development in every field of education.',
+                'home_showcase_1_title': 'Modern Campus',
+                'home_showcase_1_text': 'Education in the Heart of Artvin',
+                'home_showcase_2_title': 'Cyber Laboratory',
+                'home_showcase_2_text': 'Software and Artificial Intelligence',
+                'home_showcase_3_title': 'Traditional Arts',
+                'home_showcase_3_text': 'In the Footsteps of Masters',
+                'home_vault_title': 'KNOWLEDGE LOCK: <span class="gold-text">Open the Treasure!</span>',
+                'home_vault_text': 'Each approved lecture note opens this digital vault a bit more. When we reach 100% as a community, the most popular course of the month will be <span class="text-warning fw-bold">free</span> for everyone!',
+                'home_vault_hint': 'Upload notes and unlock the vault!',
+                'home_vault_btn': 'UPLOAD NOTES',
+                'home_freelance_title': 'FREELANCE BRIDGE',
+                'home_employer_panel': 'EMPLOYER PANEL',
+                'home_employer_text': 'Reach out to Borcka\'s certified talents.',
+                'home_employer_register': 'REGISTER',
+                'home_employer_login': 'LOGIN',
+                'home_spotlight_title': 'TALENTS OF THE <span class="gold-text">WEEK</span>',
+                'home_spotlight_text': 'Our students who show outstanding success and are on the radar of employers.',
+                'home_masters_title': 'BORCKA\'S <span class="gold-text">MASTERS</span>',
+                'home_masters_text': 'Our pride tables who graduated and started their own businesses.',
+                'home_value_title': 'VALUE FOR BORCKA: <span class="text-danger">Greening Karagol!</span>',
+                'home_gallery_title': 'DIGITAL <span class="gold-text">GALLERY</span>',
+                'home_gallery_text': 'Instant slices and visual successes from our campus.',
+                'home_map_title': 'BORCKA <span class="gold-text">3D EARTH</span>',
+                'home_map_text': 'Discover Borcka\'s neighborhoods with 3D satellite technology.',
+                'home_jobs_title': 'BORCKA <span class="gold-text">JOB POSTINGS</span>',
+                'home_jobs_text': 'Latest career opportunities for our certified students.',
+                'job_examine': 'Examine',
+                'job_apply': 'Apply Now',
+                'job_requirements': 'Requirements',
+                'job_salary': 'Salary Range',
+                'job_location': 'Location',
+                'form_full_name': 'Full Name',
+                'form_email': 'Email',
+                'form_phone': 'Phone',
+                'form_experience': 'Experience Summary',
+                'form_signature': 'Digital Signature',
+                'form_clear_signature': 'Clear Signature',
+                'form_submit': 'Complete Application & Get PDF',
+                'login_title_admin': 'Admin Panel',
+                'login_title_teacher': 'Instructor Panel',
+                'login_title_student': 'Student Panel',
+                'login_title_employer': 'Employer Panel',
+                'login_header_text': 'Verify your identity to access the system',
+                'login_role_admin': 'Admin',
+                'login_role_teacher': 'Instructor',
+                'login_role_student': 'Student',
+                'login_role_employer': 'Employer',
+                'login_label_identity': 'Identity',
+                'login_label_username': 'Username',
+                'login_label_fullname': 'Full Name',
+                'login_label_email': 'Email or Full Name',
+                'login_label_employer_email': 'Corporate Email',
+                'login_label_branch': 'Branch',
+                'login_label_password': 'Password',
+                'login_forgot_password': 'Forgot Password',
+                'login_btn_submit': 'Sign In',
+                'login_btn_loading': 'Logging into System...',
+                'login_jet_title': 'JET-SPEED LOGIN',
+                'login_ql_admin': 'ADMIN',
+                'login_ql_teacher': 'INSTRUCTOR',
+                'login_ql_student': 'STUDENT',
+                'login_ql_register': 'REGISTER'
+            }
+        };
+
+        (function() {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            if (savedTheme === 'dark') {
+                document.documentElement.style.backgroundColor = '#030308';
+            } else {
+                document.documentElement.style.backgroundColor = '#ffffff';
+            }
+        })();
+    </script>
+    <style>
+        :root {
+            /* Default Dark Mode (Cyber-Vibrant) */
+            --bg-main: #030308;
+            --bg-card: rgba(15, 23, 42, 0.8);
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.7);
+            --accent-gold: #C5A059;
+            --accent-maroon: #581C1C;
+            --border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        [data-theme='light'] {
+            --bg-dark: #FDFCFB;
+            --bg-glass: rgba(245, 240, 225, 0.7);
+            --bg-glass-strong: rgba(245, 240, 225, 0.9);
+            --border-glass: rgba(88, 28, 28, 0.1);
+            --text-primary: #581C1C;
+            --text-secondary: #712D2D;
+            --text-muted: #8E5A5A;
+            --primary-light: #581C1C;
+            --border-color: rgba(88, 28, 28, 0.1);
+            --bg-page: #FDFCFB;
+        }
+
+        [data-theme='light'] .navbar-vibrant {
+            background: rgba(253, 252, 251, 0.8) !important;
+            border-bottom: 1px solid rgba(88, 28, 28, 0.1) !important;
+        }
+
+        [data-theme='light'] .footer-vibrant {
+            background: #F5F0E1 !important;
+            border-top: 2px solid #C5A059 !important;
+            color: #581C1C !important;
+        }
+
+        [data-theme='light'] .footer-bottom {
+            background: #581C1C !important;
+            color: var(--accent-gold) !important;
+        }
+
+        /* Gündüz Modu Modern Dokunuşlar */
+        [data-theme="light"] body {
+            color: var(--text-primary);
+            background-color: var(--bg-page) !important;
+        }
+
+        [data-theme="light"] .glass-card, 
+        [data-theme="light"] .glass-card-static {
+            background: var(--bg-glass-strong) !important;
+            border: 1px solid var(--border-color) !important;
+            box-shadow: 0 10px 40px rgba(88, 28, 28, 0.08) !important;
+            backdrop-filter: blur(10px) !important;
+        }
+
+        [data-theme="light"] h1, [data-theme="light"] h2, [data-theme="light"] h3, 
+        [data-theme="light"] h4, [data-theme="light"] h5, [data-theme="light"] h6 {
+            color: var(--text-primary) !important;
+            font-weight: 800 !important;
+        }
+
+        [data-theme="light"] p, [data-theme="light"] span:not(.badge) {
+            color: var(--text-secondary) !important;
+        }
+
+        [data-theme="light"] .gold-text {
+            color: var(--accent-gold) !important;
+        }
+
+        [data-theme="light"] .nav-premium {
+            background: rgba(253, 252, 251, 0.95) !important;
+            border-bottom: 2px solid var(--accent-gold) !important;
+            box-shadow: 0 5px 20px rgba(88, 28, 28, 0.05) !important;
+        }
+
+        [data-theme="light"] .footer-premium {
+            background: #F5F0E1 !important;
+            border-top: 2px solid var(--accent-gold) !important;
+        }
+
+        [data-theme="light"] .ticker-label {
+            background: #581C1C !important;
+            color: var(--accent-gold) !important;
+        }
+
+        /* Butonlar Gündüz Modunda Daha Belirgin */
+        [data-theme="light"] .btn-primary {
+            background: #581C1C !important;
+            border: 1px solid var(--accent-gold) !important;
+            color: var(--accent-gold) !important;
+            box-shadow: 0 5px 15px rgba(88, 28, 28, 0.2) !important;
+        }
+
+        [data-theme="light"] .btn-outline-light {
+            border-color: #581C1C !important;
+            color: #581C1C !important;
+        }
+        
+        [data-theme="light"] .btn-outline-light:hover {
+            background: #581C1C !important;
+            color: #ffffff !important;
+        }
+
+        html { background-color: var(--bg-page) !important; }
+        body { background-color: var(--bg-page) !important; margin: 0; }
+    </style>
+            
+    <script>
+        (function() {
+            const savedLang = localStorage.getItem('language') || 'TR'; 
+            document.documentElement.setAttribute('data-lang', savedLang);
+
+            // Persistent Accessibility Modes
+            if (localStorage.getItem('highContrast') === 'true') document.documentElement.classList.add('high-contrast');
+            if (localStorage.getItem('dyslexiaMode') === 'true') document.documentElement.classList.add('dyslexia-mode');
+        })();
+
+        window.toggleContrast = function() {
+            const isEnabled = document.documentElement.classList.toggle('high-contrast');
+            localStorage.setItem('highContrast', isEnabled);
+        }
+        window.toggleDyslexia = function() {
+            const isEnabled = document.documentElement.classList.toggle('dyslexia-mode');
+            localStorage.setItem('dyslexiaMode', isEnabled);
+        }
+        window.openSoon = function(moduleName) {
+            alert(moduleName + " modülü şu an geliştirme aşamasındadır. En kısa sürede aktif edilecektir.");
+        }
+        window.changeLanguage = function(lang) {
+            const loader = document.getElementById('globalLoader');
+            if (loader) {
+                loader.style.opacity = '1';
+                loader.style.width = '0%';
+                setTimeout(() => { loader.style.width = '100%'; }, 10);
+            }
+            localStorage.setItem('language', lang);
+            setTimeout(() => { location.reload(); }, 300);
+        }
+    </script>
+    <script>
+        function applyLanguage(lang) {
+            localStorage.setItem('language', lang);
+            document.documentElement.setAttribute('data-lang', lang);
+            
+            const dict = translations[lang];
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (dict[key]) {
+                    el.innerHTML = dict[key];
+                }
+            });
+
+            // Update Active Language Indicator
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active-lang'));
+            document.getElementById('lang-btn-' + lang)?.classList.add('active-lang');
+
+            // Update Placeholder
+            const robotInput = document.getElementById('robotInput');
+            if (robotInput) robotInput.placeholder = dict['bot_placeholder'];
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedLang = localStorage.getItem('language') || 'TR';
+            applyLanguage(savedLang);
+        });
+    </script>
+    <meta name="description" content="Halk Eğitim Sistemi - Modern eğitim programları, kurslar ve başvurular. Kendinizi geliştirin, geleceğinize değer katın." />
+    <meta name="theme-color" content="#0f0f23" />
+    <title>@ViewData["Title"] - Halk Eğitim Sistemi</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <style>
+        .nav-link-premium, .nav-link-premium-sm {
+            color: #ffffff !important;
+            opacity: 0.9 !important;
+            font-size: 0.88rem !important; /* Reduced for better horizontal fit */
+            font-weight: 700 !important;
+            font-family: 'Outfit', sans-serif !important;
+            padding: 10px 20px !important; /* Generous, professional padding */
+            transition: opacity 0.2s ease !important;
+            position: relative !important;
+            white-space: nowrap !important;
+            letter-spacing: 0.5px !important;
+        }
+        
+        .nav-link-premium:hover {
+            opacity: 1 !important;
+            transform: translateY(-5px) scale(1.1) !important;
+            color: #C5A059 !important;
+            text-shadow: 0 0 20px rgba(197, 160, 89, 0.4) !important;
+        }
+
+        /* Cyber Branding Animation */
+        .header-logo h1 {
+            background: none;
+            -webkit-background-clip: initial;
+            -webkit-text-fill-color: initial;
+        }
+
+        @@keyframes cyber-text {
+            0% { background-position: 0% center; }
+            100% { background-position: 200% center; }
+        }
+
+        .float-slow {
+            display: inline-block;
+            animation: float-icon 4s ease-in-out infinite;
+        }
+
+        @@keyframes float-icon {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        /* Stable Navbar Item Transitions */
+        .navbar-nav .nav-item {
+            opacity: 1 !important;
+            transition: transform 0.3s ease;
+        }
+
+        .nav-link-premium::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 3px;
+            background: #C5A059;
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(197, 160, 89, 0.4);
+        }
+
+        .nav-link-premium:hover::after {
+            width: 80%;
+        }
+
+        .nav-link-premium.active {
+            color: var(--primary-light) !important;
+            opacity: 1 !important;
+        }
+        
+        .nav-link-premium.active::after {
+            width: 90%;
+            background: var(--primary-light);
+        }
+
+        /* Dropdown vibrancy and Hover-Open */
+        .navbar .dropdown-menu {
+            background: rgba(10, 10, 10, 0.98) !important;
+            backdrop-filter: blur(10px) !important;
+            border: 1px solid rgba(197,160,89,0.2) !important;
+            border-top: 3px solid #C5A059 !important;
+            border-radius: 18px !important;
+            padding: 12px !important;
+            box-shadow: 0 25px 80px rgba(0,0,0,0.9) !important;
+            z-index: 3000 !important;
+            transition: opacity 0.2s ease !important;
+            margin-top: 15px !important;
+            overflow: hidden;
+        }
+
+        /* Hover-Open Feature for Premium Feel */
+        @@media (min-width: 992px) {
+            .nav-item.dropdown:hover .dropdown-menu {
+                display: block !important;
+                opacity: 1 !important;
+                visibility: visible !important;
+                transform: translateY(0) !important;
+            }
+            .nav-item.dropdown .dropdown-menu {
+                display: block !important;
+                opacity: 0;
+                visibility: hidden;
+                transform: translateY(15px);
+                transition: all 0.15s ease-out;
+            }
+        }
+        
+        .navbar .dropdown-item {
+            color: rgba(255,255,255,0.95) !important;
+            font-size: 1.15rem !important;
+            font-weight: 800 !important;
+            border-radius: 12px !important;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+            padding: 14px 22px !important;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border-left: 4px solid transparent;
+            text-shadow: 0 0 10px rgba(255,255,255,0.1);
+        }
+        
+        .navbar .dropdown-item:hover {
+            background: rgba(197, 160, 89, 0.1) !important;
+            color: #C5A059 !important;
+            transform: translateX(8px) !important;
+            border-left-color: #C5A059 !important;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+        .navbar .dropdown-item i {
+            font-size: 1.4rem;
+            font-weight: 900 !important;
+            transition: transform 0.3s ease;
+        }
+        .navbar .dropdown-item:hover i {
+            transform: scale(1.2) rotate(5deg);
+        }
+
+        /* Rain effects visibility fix */
+        [data-theme="light"] .rain-icon {
+            color: rgba(88, 28, 28, 0.2) !important;
+            opacity: 1 !important;
+        }
+        body {
+            padding-top: 170px !important;
+            overflow-x: hidden !important; /* Prevents layout skew */
+            width: 100%;
+        }
+        main {
+            overflow-x: hidden !important;
+            width: 100%;
+        }
+        [data-theme="dark"] .rain-icon {
+            color: rgba(255, 255, 255, 0.2) !important;
+            opacity: 1 !important;
+            font-size: 1.5rem !important; /* Larger icons as requested */
+            pointer-events: none;
+            position: fixed;
+            z-index: -1;
+        }
+        [data-theme="light"] .rain-icon {
+            color: rgba(88, 28, 28, 0.1) !important;
+            opacity: 1 !important;
+            font-size: 1.5rem !important;
+            pointer-events: none;
+            position: fixed;
+            z-index: -1;
+        }
+
+        /* Theme overrides for visibility */
+        [data-theme="light"] .nav-link-premium, 
+        [data-theme="light"] .nav-link-premium-sm {
+            color: #581C1C !important;
+        }
+        [data-theme="light"] .nav-link-premium:hover {
+            color: #C5A059 !important;
+        }
+        [data-theme="light"] .main-header {
+            background: rgba(253, 252, 251, 0.95) !important;
+            border-bottom: 1px solid rgba(88, 28, 28, 0.1) !important;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05) !important;
+        }
+        [data-theme="light"] .header-logo h1 {
+            background: none;
+            -webkit-background-clip: initial;
+            -webkit-text-fill-color: initial;
+        }
+        [data-theme="light"] .cyber-ticker-wrapper {
+            background: #581C1C !important;
+            border-bottom: 1px solid rgba(197, 160, 89, 0.2) !important;
+        }
+        /* Standard visibility overrides for light mode */
+        [data-theme="light"] .text-white:not(.btn .text-white):not(.dropdown-menu-dark *), 
+        [data-theme="light"] .text-white-70:not(.dropdown-menu-dark *) { 
+            color: #581C1C !important; 
+        }
+        [data-theme="light"] .text-white-50:not(.dropdown-menu-dark *) { 
+            color: #8E5A5A !important; /* Stronger contrast for light mode */
+        }
+        [data-theme="light"] .vr {
+            background-color: #581C1C !important;
+            opacity: 0.2 !important;
+        }
+        [data-theme="light"] .bg-glass-strong, [data-theme="light"] .bg-dark-glass { 
+            background: #F5F0E1 !important; 
+            color: #581C1C !important;
+            border-color: rgba(197, 160, 89, 0.3) !important;
+        }
+        [data-theme="light"] .ticker-item {
+            color: var(--accent-gold) !important;
+            text-shadow: none !important;
+        }
+        }
+        [data-theme="light"] .text-white-25 {
+            color: rgba(88, 28, 28, 0.3) !important;
+        }
+        [data-theme="light"] .glass-card, 
+        [data-theme="light"] .glass-card-static,
+        [data-theme="light"] .glass-card-main {
+            background: #FDFCFB !important;
+            border: 1px solid rgba(197, 160, 89, 0.25) !important;
+            color: #581C1C !important;
+            box-shadow: 0 10px 30px rgba(197, 160, 89, 0.08) !important;
+        }
+        [data-theme="light"] .bg-glass,
+        [data-theme="light"] .bg-glass-strong,
+        [data-theme="light"] .bg-glass-vibrant {
+            background: #F5F0E1 !important;
+            border-color: rgba(197, 160, 89, 0.3) !important;
+            color: #581C1C !important;
+        }
+        [data-theme="light"] .footer-premium {
+            background: #F5F0E1 !important;
+            border-top: 2px solid #C5A059 !important;
+            color: #581C1C !important;
+        }
+        [data-theme="light"] .footer-link,
+        [data-theme="light"] .footer-brand {
+            color: #581C1C !important;
+        }
+        [data-theme="light"] .footer-link:hover {
+            color: #C5A059 !important;
+        }
+        [data-theme="light"] .border-glass {
+            border-color: rgba(88, 28, 28, 0.1) !important;
+        }
+        [data-theme="light"] .bg-glass-sm {
+            background: rgba(88, 28, 28, 0.05) !important;
+            border-color: rgba(88, 28, 28, 0.1) !important;
+        }
+        [data-theme="light"] .btn-icon-sm {
+            color: #581C1C !important;
+        }
+        [data-theme="light"] .accessibility-bar {
+            background: rgba(253, 252, 251, 0.8) !important;
+            border-color: rgba(197, 160, 89, 0.3) !important;
+        }
+        [data-theme="light"] .live-counter-header #liveCounterTextLayout {
+            color: #581C1C !important;
+        }
+        [data-theme="light"] .dropdown-menu {
+            background: #FDFCFB !important;
+            border-color: #581C1C !important;
+        }
+        [data-theme="light"] .dropdown-header {
+            color: #C5A059 !important;
+            opacity: 0.8;
+        }
+        [data-theme="light"] .dropdown-item {
+            color: #581C1C !important;
+            text-shadow: none !important;
+        }
+        [data-theme="light"] .dropdown-item:hover {
+            background: rgba(197, 160, 89, 0.1) !important;
+            color: #C5A059 !important;
+        }
+        [data-theme="light"] .dropdown-header {
+            color: #C5A059 !important;
+            opacity: 0.7;
+        }
+
+        /* Login Card Light Mode Enhancement - BORDO ŞEFFAF */
+        [data-theme="light"] .modern-login-box {
+            background: #FDFCFB !important;
+            border: 1px solid #581C1C !important;
+            box-shadow: 0 40px 100px rgba(128, 0, 0, 0.1) !important;
+        }
+        [data-theme="light"] .modern-login-header h2,
+        [data-theme="light"] .modern-login-header p,
+        [data-theme="light"] .modern-label {
+            color: #581C1C !important;
+        }
+        [data-theme="light"] .modern-control {
+            background: #ffffff !important;
+            border: 2px solid var(--accent-gold) !important; /* Gold çerçeve */
+            color: #581C1C !important;           /* Bordo yazı */
+        }
+        [data-theme="light"] .modern-control::placeholder {
+            color: rgba(128, 0, 0, 0.5) !important;          /* Bordo transparan placeholder */
+        }
+        [data-theme="light"] .m-role-item {
+            color: #712D2D !important;
+        }
+        [data-theme="light"] .ql-item {
+            background: rgba(128, 0, 0, 0.03) !important;
+            border: 1px solid #581C1C !important;
+            color: #581C1C !important;
+        }
+        
+        [data-theme="light"] .btn-warning, 
+        [data-theme="light"] .btn-premium {
+            background: var(--accent-gold) !important;
+            border: 1px solid #581C1C !important;
+            color: #ffffff !important;
+        }
+
+        /* Homepage Light Mode Specifics */
+        [data-theme="light"] .hero-vibrant {
+            background: radial-gradient(circle at 50% 50%, rgba(197, 160, 89, 0.05) 0%, rgba(253, 252, 251, 1) 100%) !important;
+        }
+        [data-theme="light"] .hero-title .text-white {
+            color: #581C1C !important;
+        }
+        [data-theme="light"] .hero-subtitle {
+            color: #712D2D !important;
+        }
+        [data-theme="light"] .hero-huge .status-badge {
+            background: white !important;
+            border-color: #581C1C !important;
+        }
+        [data-theme="light"] .glass-card-static[style*="background: linear-gradient"] {
+            background: linear-gradient(145deg, #FDFCFB, #F5F0E1) !important;
+            border-color: rgba(197, 160, 89, 0.2) !important;
+        }
+        [data-theme="light"] .bg-dark-glass {
+            background: rgba(88, 28, 28, 0.03) !important;
+            border-color: rgba(88, 28, 28, 0.08) !important;
+        }
+        [data-theme="light"] .bg-dark-glass .text-white {
+            color: #581C1C !important;
+        }
+        [data-theme="light"] #heatmap-container {
+            background: #FDFCFB !important;
+            border-color: #581C1C !important;
+        }
+        [data-theme="light"] .map-overlay-badge,
+        [data-theme="light"] .map-legend {
+            background: rgba(253, 252, 251, 0.9) !important;
+            color: #581C1C !important;
+            border-color: #581C1C !important;
+        }
+
+        /* Active Language Indicator */
+        .lang-btn {
+            border: 1px solid transparent !important;
+            padding: 4px !important;
+            transition: all 0.3s ease !important;
+            border-radius: 6px !important;
+        }
+        .lang-btn.active-lang {
+            border-color: #C5A059 !important;
+            background: rgba(197, 160, 89, 0.2) !important;
+            box-shadow: 0 0 10px rgba(197, 160, 89, 0.3) !important;
+        }
+        .lang-btn img {
+            border-radius: 2px;
+        }
+    </style>
+    <link rel="stylesheet" href="~/HalkEgitimSistemi.styles.css" asp-append-version="true" />
+    
+    <style>
+        /* GLOBAL RAIN STYLES */
+
+
+        /* HalkBot Global Styles */
+        .ai-robot-floating {
+            position: fixed !important;
+            bottom: 30px !important;
+            right: 30px !important;
+            z-index: 99999 !important;
+            display: block !important;
+            animation: bot-float-premium 6s ease-in-out infinite !important;
+            animation-play-state: running !important;
+        }
+        /* Sohbet aÃƒÂ§Ã„Â±kken hareketi durdur */
+        .ai-robot-floating.focused {
+            animation-play-state: paused !important;
+            transform: translateY(0) !important;
+        }
+        @@keyframes bot-float-cyber {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(8deg); }
+        }
+        .robot-body {
+            cursor: pointer !important;
+            width: 75px !important;
+            height: 75px !important;
+            background: linear-gradient(135deg, #C5A059, #581C1C) !important;
+            border-radius: 50% !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            box-shadow: 0 10px 40px rgba(197, 160, 89, 0.6), 0 0 20px rgba(88, 28, 28, 0.4) !important;
+            border: 2px solid rgba(255,255,255,0.4) !important;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+        }
+        .robot-body::after {
+            content: ''; position: absolute; width: 110%; height: 110%; border-radius: 50%;
+            background: inherit; filter: blur(15px); opacity: 0.3; z-index: -1;
+            animation: pulse-aura 3s infinite;
+        }
+        @@keyframes pulse-aura {
+            0% { transform: scale(1); opacity: 0.3; }
+            50% { transform: scale(1.4); opacity: 0.1; }
+            100% { transform: scale(1); opacity: 0.3; }
+        }
+        .robot-chat-bubble {
+            position: absolute !important;
+            bottom: 100px !important;
+            right: 0 !important;
+            width: 400px !important; /* Enlarged from 320px */
+            background: rgba(15, 17, 26, 0.98) !important;
+            backdrop-filter: blur(35px) !important;
+            border: 1px solid rgba(255,255,255,0.2) !important;
+            border-radius: 25px !important;
+            padding: 20px !important;
+            box-shadow: 0 30px 80px rgba(0,0,0,1) !important;
+            opacity: 0;
+            transform: translateY(30px) scale(0.9);
+            transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+            display: none;
+            pointer-events: none;
+            cursor: default !important;
+        }
+        .robot-chat-bubble.open {
+            display: block;
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            pointer-events: all !important;
+        }
+        .ai-robot-floating.focused .robot-body {
+            transform: scale(0.9);
+            box-shadow: 0 0 50px var(--secondary) !important;
+        }
+        #robotInput {
+            width: 100% !important;
+            background: rgba(255,255,255,0.1) !important;
+            border: 1px solid rgba(255,255,255,0.2) !important;
+            color: white !important;
+            border-radius: 15px !important;
+            padding: 12px 15px !important;
+            outline: none !important;
+            transition: all 0.3s;
+            font-size: 0.95rem;
+            margin-top: 15px !important;
+            display: block !important;
+            pointer-events: all !important;
+        }
+        #robotInput:focus {
+            background: rgba(255,255,255,0.15) !important;
+            border-color: var(--primary) !important;
+            box-shadow: 0 0 15px var(--primary-glow) !important;
+        }
+        /* Fix for native dropdown (select option) visibility */
+        select option {
+            background-color: #1a1c24 !important;
+            color: white !important;
+        }
+        .form-select:focus {
+            box-shadow: 0 0 15px var(--primary-glow) !important;
+            border-color: var(--primary) !important;
+        }
+
+        .rain-container {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            overflow: hidden !important;
+            z-index: 0 !important; /* Behind content */
+            pointer-events: none !important;
+        }
+        .rain-icon {
+            position: absolute !important;
+            color: rgba(255, 255, 255, 0.4) !important; /* Maksimum gÃƒÂ¶rÃƒÂ¼nÃƒÂ¼rlÃƒÂ¼k */
+            pointer-events: none !important;
+            will-change: transform;
+        }
+        
+        .content-wrapper {
+            position: relative !important;
+            z-index: 10 !important; /* Above rain */
+        }
+        .bg-vibrant-dark {
+            background-color: var(--bg-dark) !important;
+            color: var(--text-primary) !important;
+            transition: background-color 0.4s ease, color 0.3s ease;
+        }
+        [data-theme="light"] body {
+            background-color: #FDFCFB !important;
+            color: #581C1C !important;
+        }
+
+        /* Visionary Component Styles */
+        .btn-glow-premium {
+            background: linear-gradient(135deg, #C5A059, #581C1C) !important;
+            color: white !important;
+            border: none !important;
+            font-weight: 800 !important;
+            box-shadow: 0 0 20px rgba(197, 160, 89, 0.4) !important;
+            transition: all 0.3s ease !important;
+            animation: pulse-glow-cyber 2s infinite !important;
+        }
+        .btn-glow-premium:hover {
+            transform: scale(1.05) !important;
+            box-shadow: 0 0 30px rgba(197, 160, 89, 0.6) !important;
+        }
+        @@keyframes pulse-glow-cyber {
+            0% { box-shadow: 0 0 10px rgba(197, 160, 89, 0.4); }
+            50% { box-shadow: 0 0 25px rgba(88, 28, 28, 0.7); }
+            100% { box-shadow: 0 0 10px rgba(197, 160, 89, 0.4); }
+        }
+        @@keyframes pulse-active {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+            70% { transform: scale(1.2); box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+        }
+        .login-item-student i { color: #581C1C; transition: 0.3s; }
+        .login-item-instructor i { color: #581C1C; transition: 0.3s; }
+        .login-item-admin i { color: #f59e0b; transition: 0.3s; }
+        
+        .login-item-student:hover { background: rgba(88, 28, 28, 0.15) !important; color: white !important; }
+        .login-item-instructor:hover { background: rgba(88, 28, 28, 0.15) !important; color: white !important; }
+        .login-item-admin:hover { background: rgba(245, 158, 11, 0.15) !important; color: white !important; }
+        
+        .login-item-student:hover i, .login-item-instructor:hover i, .login-item-admin:hover i { transform: scale(1.2); }
+
+        .bg-glass-sm { background: rgba(255,255,255,0.05); backdrop-filter: blur(10px); }
+        .btn-icon-sm { background: transparent; border: none; color: white; opacity: 0.8; transition: 0.3s; padding: 2px 5px; }
+        .btn-icon-sm:hover { opacity: 1; transform: scale(1.2); color: #C5A059 !important; }
+
+
+    </style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body class="bg-vibrant-dark @ViewData["BodyClass"]">
+    <!-- GLOBAL ICON RAIN -->
+    <div class="rain-container" id="globalRainContainer"></div>
+    <!-- Background icons removed for cleaner institutional look -->
+
+    <!-- Jet Speed Loading Indicator -->
+    <div id="globalLoader" style="position:fixed; top:0; left:0; width:0%; height:3px; background:linear-gradient(90deg, #C5A059, #581C1C); z-index:9999; transition: width 0.3s ease;"></div>
+
+    <!-- Premium Header & Navbar -->
+    <!-- Ultra-Premium Compact Header -->
+    <header class="main-header fixed-top" style="z-index: 2000 !important; background: var(--theme-card-bg); backdrop-filter: blur(15px); border-bottom: 1px solid var(--theme-card-border) !important; transition: all 0.3s ease;">
+        <div class="container-fluid">
+            <div class="row align-items-center py-2">
+                <!-- Left: Theme Toggle Centered -->
+                <div class="col-4 col-lg-3 d-flex align-items-center justify-content-center">
+                    <button id="themeToggleBtn" class="btn-icon-glass" data-tooltip="Switch Theme" style="transform: scale(1.1); border: 1px solid var(--theme-card-border);">
+                        <i class="bi bi-moon-stars-fill gold-text" id="themeIcon"></i>
+                    </button>
+                </div>
+
+                <!-- Center: Branding -->
+                <div class="col-4 col-lg-6 text-center">
+                    <a class="header-logo" asp-controller="Home" asp-action="Index" style="text-decoration: none;">
+                        <h1 class="m-0" style="font-family: 'Outfit', sans-serif; font-weight: 900; letter-spacing: 2px; font-size: 1.8rem; display: flex; align-items: center; justify-content: center;">
+                            <i class="bi bi-mortarboard-fill me-2 float-slow gold-text"></i>
+                            <span class="gold-text">Artvin / Borçka Halk Eğitim Merkezi</span>
+                        </h1>
+                    </a>
+                </div>
+
+                <!-- Right: Auth & Counter -->
+                <div class="col-4 col-lg-3 text-end d-flex align-items-center justify-content-end gap-3">
+                    <div class="live-counter-header d-none d-md-flex align-items-center gap-2 px-3 py-1 bg-glass-sm rounded-pill border-glass" style="margin-right: 15px; border-color: var(--theme-card-border) !important;">
+                        <span class="pulse-dot-green" style="width: 8px; height: 8px; background: var(--gold); border-radius: 50%; display: inline-block; box-shadow: 0 0 10px var(--gold); animation: pulse-active 2s infinite;"></span>
+                        <span id="liveCounterTextLayout" class="small" style="font-weight: 700; color: var(--theme-text); white-space: nowrap;">
+                            <span id="liveActiveCount" class="gold-text">144</span> <span data-i18n="active_text">Active</span>
+                        </span>
+                    </div>
+
+                    <!-- Accessibility & Language Bar -->
+                    <div class="accessibility-bar d-flex align-items-center gap-2 px-3 py-1 bg-glass-sm rounded-pill border-glass">
+                        <button class="btn-icon-sm lang-btn" id="lang-btn-EN" title="English" onclick="changeLanguage('EN')"><img src="https://flagcdn.com/w20/gb.png" width="16" alt="EN"></button>
+                        <button class="btn-icon-sm lang-btn" id="lang-btn-TR" title="Turkish" onclick="changeLanguage('TR')"><img src="https://flagcdn.com/w20/tr.png" width="16" alt="TR"></button>
+                        <div class="vr mx-1 opacity-25"></div>
+                        <button class="btn-icon-sm" title="High Contrast" onclick="toggleContrast()"><i class="bi bi-eye"></i></button>
+                        <button class="btn-icon-sm" title="Dyslexia Mode" onclick="toggleDyslexia()"><i class="bi bi-fonts"></i></button>
+                    </div>
+                    <div class="login-wrapper">
+                        @if (!User.Identity!.IsAuthenticated)
+                        {
+                            <div class="dropdown d-inline-block">
+                                <button class="btn btn-premium-sm" type="button" data-bs-toggle="dropdown" style="background: #581C1C !important; color: #C5A059 !important; border: 1px solid #C5A059 !important; border-radius: 8px !important; padding: 10px 22px !important; font-weight: 800 !important; box-shadow: 0 4px 15px rgba(88, 28, 28, 0.4) !important;">
+                                    <i class="bi bi-person-lock me-1"></i> <span style="color: #C5A059 !important;" data-i18n="login_btn">Giriş Yap</span>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end shadow-2xl p-2" style="border-radius: 20px; background: #581C1C !important; border: 1px solid #C5A059 !important; box-shadow: 0 15px 50px rgba(0,0,0,0.6) !important;">
+                                    <li><a class="dropdown-item py-3 rounded-12 mb-1 login-item-student" style="color: #C5A059 !important; font-weight: 800;" asp-controller="Account" asp-action="Login" asp-route-role="Student"><i class="bi bi-mortarboard me-2" style="color: #C5A059 !important;"></i> <span style="color: #C5A059 !important;" data-i18n="login_student">Öğrenci Girişi</span></a></li>
+                                    <li><a class="dropdown-item py-3 rounded-12 mb-1 login-item-instructor" style="color: #C5A059 !important; font-weight: 800;" asp-controller="Account" asp-action="Login" asp-route-role="Instructor"><i class="bi bi-person-workspace me-2" style="color: #C5A059 !important;"></i> <span style="color: #C5A059 !important;" data-i18n="login_instructor">Eğitmen Girişi</span></a></li>
+                                    <li><a class="dropdown-item py-3 rounded-12 mb-1 login-item-employer" style="color: #C5A059 !important; font-weight: 800;" asp-controller="Account" asp-action="Login" asp-route-role="Employer"><i class="bi bi-buildings me-2" style="color: #C5A059 !important;"></i> <span style="color: #C5A059 !important;" data-i18n="login_employer">İşveren Girişi</span></a></li>
+                                    <li><a class="dropdown-item py-3 rounded-12 login-item-admin" style="color: #C5A059 !important; font-weight: 800;" asp-controller="Account" asp-action="Login" asp-route-role="Admin"><i class="bi bi-shield-lock me-2" style="color: #C5A059 !important;"></i> <span style="color: #C5A059 !important;" data-i18n="login_admin">Yönetici Paneli</span></a></li>
+                                </ul>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="dropdown d-inline-block">
+                                @if (User.IsInRole("Admin"))
+                                {
+                                    <button class="btn btn-premium btn-success-glow dropdown-toggle d-flex align-items-center gap-2" type="button" data-bs-toggle="dropdown" style="background: linear-gradient(135deg, #C5A059, #581C1C) !important; border: none !important; font-weight: 800 !important; border-radius: 12px; padding: 8px 18px;">
+                                        <i class="bi bi-shield-lock-fill"></i> <span style="font-family: 'Outfit';">Yönetici</span>
+                                    </button>
+                                }
+                                else
+                                {
+                                    <button class="btn btn-premium dropdown-toggle d-flex align-items-center gap-2" type="button" data-bs-toggle="dropdown" style="background: rgba(255,255,255,0.05); border: 1.5px solid rgba(197, 160, 89, 0.4); border-radius: 12px; padding: 8px 16px;">
+                                        <i class="bi bi-person-circle" style="background: linear-gradient(135deg, #C5A059, #581C1C); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 1.2rem;"></i>
+                                        <span style="background: linear-gradient(135deg, #C5A059, #581C1C); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 800; font-family: 'Outfit';">
+                                            @(User.IsInRole("Admin") ? "Yönetici" : (User.IsInRole("Instructor") ? "Eğitmen" : "Kursiyer"))
+                                        </span>
+                                    </button>
+                                }
+                                
+                                <ul class="dropdown-menu dropdown-menu-end animate-fadeIn border-glass bg-glass-strong shadow-2xl p-2" style="min-width: 280px; border-radius: 20px; backdrop-filter: blur(10px);">
+                                    <li><h6 class="dropdown-header text-white-50 small fw-bold px-3 pt-2 mb-2" style="letter-spacing: 1px;">HESAP YÖNETİMİ</h6></li>
+                                    <li>
+                                        <a class="dropdown-item rounded-12 p-2 d-flex align-items-center gap-3" asp-controller="@(User.IsInRole("Admin") ? "Admin" : (User.IsInRole("Instructor") ? "Teacher" : "Student"))" asp-action="Dashboard">
+                                            <div class="icon-box-sm bg-primary-glow" style="width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center; background: rgba(197, 160, 89, 0.2); color: #C5A059;"><i class="bi bi-grid-1x2-fill"></i></div>
+                                            <span class="fw-bold">Kontrol Paneli</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item rounded-12 p-2 d-flex align-items-center gap-3" 
+                                           asp-controller="@(User.IsInRole("Admin") ? "Admin" : (User.IsInRole("Instructor") ? "Teacher" : "Student"))" 
+                                           asp-action="@(User.IsInRole("Student") ? "Profile" : "MyProfile")">
+                                            <div class="icon-box-sm" style="width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center; background: rgba(197, 160, 89, 0.2); color: #C5A059;"><i class="bi bi-person-gear"></i></div>
+                                            <span class="fw-bold">Profil Ayarları</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item rounded-12 p-2 d-flex align-items-center gap-3" asp-controller="Messages" asp-action="Index">
+                                            <div class="icon-box-sm" style="width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center; background: rgba(197, 160, 89, 0.2); color: #C5A059;"><i class="bi bi-envelope-at-fill"></i></div>
+                                            <span class="fw-bold">Mesaj Kutusu</span>
+                                        </a>
+                                    </li>
+                                    
+                                    @if (User.IsInRole("Admin"))
+                                    {
+                                        <li><hr class="dropdown-divider border-white-10 my-2"></li>
+                                        <li><h6 class="dropdown-header text-white-50 small fw-bold px-3 pt-1 mb-2" style="letter-spacing: 1px;">YÖNETİCİ YETKİLERİ</h6></li>
+                                        <li>
+                                            <a class="dropdown-item rounded-12 p-2 d-flex align-items-center gap-3" asp-controller="Applications" asp-action="Index">
+                                                <div class="icon-box-sm" style="color: #f59e0b; width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center; background: rgba(245, 158, 11, 0.1);"><i class="bi bi-file-earmark-plus"></i></div>
+                                                <span class="fw-bold">Başvuruları Yönet</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item rounded-12 p-2 d-flex align-items-center gap-3" asp-controller="JobPostings" asp-action="Manage">
+                                                <div class="icon-box-sm" style="color: #C5A059; width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center; background: rgba(197,160,89,0.1);"><i class="bi bi-briefcase-fill"></i></div>
+                                                <span class="fw-bold">İş İlanlarını Yönet</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item rounded-12 p-2 d-flex align-items-center gap-3" asp-controller="Admin" asp-action="InstructorApplications">
+                                                <div class="icon-box-sm" style="color: #0ea5e9; width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center; background: rgba(14, 165, 233, 0.1);"><i class="bi bi-shield-check"></i></div>
+                                                <span>Panel Onayları</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item rounded-12 p-2 d-flex align-items-center gap-3" asp-controller="Admin" asp-action="MessageLog">
+                                                <div class="icon-box-sm" style="color: #C5A059; width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center; background: rgba(197, 160, 89, 0.1);"><i class="bi bi-archive-fill"></i></div>
+                                                <span>Sohbet Arşivi</span>
+                                            </a>
+                                        </li>
+
+                                        <li><hr class="dropdown-divider border-white-10 my-2"></li>
+                                        <li><h6 class="dropdown-header text-white-50 small fw-bold px-3 pt-1 mb-2" style="letter-spacing: 1px;">HIZLI ERİŞİM (KISAYOLLAR)</h6></li>
+                                        <li>
+                                            <a class="dropdown-item rounded-12 p-2 d-flex align-items-center gap-3" asp-controller="Admin" asp-action="StudentChat">
+                                                <div class="icon-box-sm" style="color: #581C1C; width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center; background: rgba(88, 28, 28, 0.1);"><i class="bi bi-chat-dots"></i></div>
+                                                <span>Kursiyer Chat</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item rounded-12 p-2 d-flex align-items-center gap-3" asp-controller="Admin" asp-action="TeacherRoom">
+                                                <div class="icon-box-sm" style="color: #581C1C; width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center; background: rgba(88, 28, 28, 0.1);"><i class="bi bi-person-workspace"></i></div>
+                                                <span>Öğretmen Odası</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item rounded-12 p-2 d-flex align-items-center gap-3" asp-controller="Admin" asp-action="LiveLessons">
+                                                <div class="icon-box-sm" style="color: #ef4444; width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center; background: rgba(239, 68, 68, 0.1);"><i class="bi bi-broadcast"></i></div>
+                                                <span>Canlı Ders Denetimi</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item rounded-12 p-2 d-flex align-items-center gap-3" asp-controller="Attendances" asp-action="Index">
+                                                <div class="icon-box-sm" style="color: #C5A059; width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center; background: rgba(16, 185, 129, 0.1);"><i class="bi bi-calendar-check"></i></div>
+                                                <span>Yoklama Yönetimi</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item rounded-12 p-2 d-flex align-items-center gap-3" asp-controller="Courses" asp-action="Create">
+                                                <div class="icon-box-sm" style="color: #f59e0b; width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center; background: rgba(245, 158, 11, 0.1);"><i class="bi bi-plus-circle"></i></div>
+                                                <span>Yeni Kurs</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item rounded-12 p-2 d-flex align-items-center gap-3" asp-controller="RecycleBin" asp-action="Index">
+                                                <div class="icon-box-sm" style="color: #64748b; width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center; background: rgba(100, 116, 139, 0.1);"><i class="bi bi-trash3"></i></div>
+                                                <span>Geri Dönüşüm</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    else if (User.IsInRole("Instructor"))
+                                    {
+                                        <li><hr class="dropdown-divider border-white-10 my-2"></li>
+                                        <li><h6 class="dropdown-header text-white-50 small fw-bold px-3 pt-1 mb-2" style="letter-spacing: 1px;">EĞİTMEN YETKİLERİ</h6></li>
+                                        <li>
+                                            <a class="dropdown-item rounded-12 p-2 d-flex align-items-center gap-3" asp-controller="TeacherChat" asp-action="Index">
+                                                <div class="icon-box-sm" style="color: #C5A059; background: rgba(197, 160, 89, 0.1);"><i class="bi bi-people-fill"></i></div>
+                                                <span class="fw-bold">Öğretmenler Odası</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item rounded-12 p-2 d-flex align-items-center gap-3" asp-controller="Attendances" asp-action="Index">
+                                                <div class="icon-box-sm" style="color: #f59e0b;"><i class="bi bi-calendar2-check-fill"></i></div>
+                                                <span>Yoklama İşlemleri</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item rounded-12 p-2 d-flex align-items-center gap-3" asp-controller="Teacher" asp-action="Grading">
+                                                <div class="icon-box-sm" style="color: #C5A059;"><i class="bi bi-journal-check"></i></div>
+                                                <span>Not Giriş Sistemi</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item rounded-12 p-2 d-flex align-items-center gap-3" asp-controller="Teacher" asp-action="Materials">
+                                                <div class="icon-box-sm" style="color: #38bdf8;"><i class="bi bi-folder-fill"></i></div>
+                                                <span>Ders Materyalleri</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            @{
+                                                var teacherCourseId = User.Claims.FirstOrDefault(c => c.Type == "CourseId")?.Value;
+                                            }
+                                            <a class="dropdown-item rounded-12 p-2 d-flex align-items-center gap-3" asp-controller="CourseChat" asp-action="Index" asp-route-courseId="@teacherCourseId">
+                                                <div class="icon-box-sm" style="color: #f472b6; background: rgba(244, 114, 182, 0.1);"><i class="bi bi-chat-heart-fill"></i></div>
+                                                <span class="fw-bold">Sınıf Sohbeti</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    else if (User.IsInRole("Employer"))
+                                    {
+                                        <li><hr class="dropdown-divider border-white-10 my-2"></li>
+                                        <li><h6 class="dropdown-header text-white-50 small fw-bold px-3 pt-1 mb-2" style="letter-spacing: 1px;">İŞVEREN YETKİLERİ</h6></li>
+                                        <li>
+                                            <a class="dropdown-item rounded-12 p-2 d-flex align-items-center gap-3" asp-controller="JobPostings" asp-action="Manage">
+                                                <div class="icon-box-sm" style="color: #C5A059; background: rgba(197, 160, 89, 0.1);"><i class="bi bi-briefcase-fill"></i></div>
+                                                <span class="fw-bold">İlanlarımı Yönet</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item rounded-12 p-2 d-flex align-items-center gap-3" asp-controller="JobPostings" asp-action="Create">
+                                                <div class="icon-box-sm" style="color: #10b981; background: rgba(16, 185, 129, 0.1);"><i class="bi bi-plus-circle-fill"></i></div>
+                                                <span class="fw-bold">Yeni İlan Yayınla</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    else if (User.IsInRole("Student"))
+                                    {
+                                        <li><hr class="dropdown-divider border-white-10 my-2"></li>
+                                        <li><h6 class="dropdown-header text-white-50 small fw-bold px-3 pt-1 mb-2" style="letter-spacing: 1px;">HIZLI ERİŞİM</h6></li>
+                                        <li>
+                                            <a class="dropdown-item rounded-12 p-2 d-flex align-items-center gap-3" asp-controller="Student" asp-action="Dashboard">
+                                                <div class="icon-box-sm" style="color: #581C1C;"><i class="bi bi-grid-fill"></i></div>
+                                                <span>Kursiyer Paneli</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item rounded-12 p-2 d-flex align-items-center gap-3" asp-controller="Student" asp-action="MyCourses">
+                                                <div class="icon-box-sm" style="color: #C5A059;"><i class="bi bi-play-circle-fill"></i></div>
+                                                <span>Kurslarım</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item rounded-12 p-2 d-flex align-items-center gap-3" asp-controller="Student" asp-action="HalkPoints">
+                                                <div class="icon-box-sm" style="color: #f59e0b;"><i class="bi bi-stars"></i></div>
+                                                <span class="fw-bold">Halk Pointlerim</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    
+                                    <li><hr class="dropdown-divider border-white-10 my-2"></li>
+                                    <li>
+                                        <form asp-controller="Account" asp-action="Logout" method="post">
+                                            <button class="dropdown-item rounded-12 p-2 d-flex align-items-center gap-3 text-danger">
+                                                <div class="icon-box-sm" style="color: #ef4444;"><i class="bi bi-box-arrow-right"></i></div>
+                                                <span class="fw-bold">Güvenli Çıkış</span>
+                                            </button>
+                                        </form>
+                                    </li>
+                                </ul>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <!-- Compact Navigation Row -->
+            <nav class="navbar navbar-expand-lg py-2">
+                <div class="container-fluid">
+                    <ul class="navbar-nav mx-auto align-items-center gap-2 gap-lg-3">
+
+                        
+                        <!-- 1. Ana Sayfa -->
+                        <li class="nav-item"><a class="nav-link nav-link-premium active" asp-controller="Home" asp-action="Index" data-i18n="nav_home">Ana Sayfa</a></li>
+                        
+                        <!-- 2. Kurslar -->
+                        <li class="nav-item"><a class="nav-link nav-link-premium" asp-controller="Courses" asp-action="Browse" data-i18n="nav_courses">Kurslar</a></li>
+                        
+                        <!-- 3. Eğitmenler (Dropdown: Listesi & Başvuru) -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link nav-link-premium dropdown-toggle" href="#" id="instructorDropdown" data-bs-toggle="dropdown" data-i18n="nav_instructors">Eğitmenler</a>
+                            <ul class="dropdown-menu dropdown-menu-dark bg-glass border-glass shadow-lg">
+                                <li><a class="dropdown-item py-2" asp-controller="Instructors" asp-action="Index"><i class="bi bi-people-fill text-info"></i> <span data-i18n="nav_instructors">Eğitmen Listesi</span></a></li>
+                                <li><a class="dropdown-item py-2" asp-controller="InstructorApplications" asp-action="Apply"><i class="bi bi-person-plus-fill text-success"></i> <span data-i18n="nav_instructor_apply">Eğitmen Başvurusu</span></a></li>
+                            </ul>
+                        </li>
+                        
+                        <!-- 4. Akademik Portal -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link nav-link-premium dropdown-toggle" href="#" id="academicDropdown" data-bs-toggle="dropdown" data-i18n="nav_academic">Akademik Portal</a>
+                            <ul class="dropdown-menu dropdown-menu-dark bg-glass border-glass shadow-lg">
+                                <li><a class="dropdown-item py-2" asp-controller="Quiz" asp-action="Index"><i class="bi bi-trophy-fill text-warning"></i><span data-i18n="nav_quiz">Bilgi Yarışması</span></a></li>
+                                <li><a class="dropdown-item py-2" asp-controller="Academic" asp-action="Notes"><i class="bi bi-journal-bookmark-fill text-info"></i><span data-i18n="nav_notes">Konu Anlatımı</span></a></li>
+                                <li><a class="dropdown-item py-2" asp-controller="Academic" asp-action="Tests"><i class="bi bi-pencil-square text-success"></i><span data-i18n="nav_tests">Test Soruları</span></a></li>
+                            </ul>
+                        </li>
+
+                        <!-- 5. Sorgulamalar -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link nav-link-premium dropdown-toggle" href="#" id="inquiryDropdown" data-bs-toggle="dropdown" data-i18n="nav_inquiries">Talep / Başvuru</a>
+                            <ul class="dropdown-menu dropdown-menu-dark bg-glass border-glass shadow-lg">
+                                <li><a class="dropdown-item py-2" asp-controller="Applications" asp-action="Track" data-i18n="nav_track_application">Başvuru Takibi</a></li>
+                                <li><a class="dropdown-item py-2" asp-controller="Certificates" asp-action="Inquiry" data-i18n="nav_cert">Sertifika Sorgulama</a></li>
+                            </ul>
+                        </li>
+
+                        <!-- 5. Gelecek & Etki -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link nav-link-premium dropdown-toggle" href="#" id="visionDropdown" data-bs-toggle="dropdown" data-i18n="nav_future">Gelecek & Etki</a>
+                            <ul class="dropdown-menu dropdown-menu-dark bg-glass border-glass shadow-lg">
+                                <li><a class="dropdown-item py-2" asp-controller="Workshop" asp-action="Index" data-i18n="nav_workshop">Gelecek Atölyesi</a></li>
+                                <li><a class="dropdown-item py-2" asp-controller="IdeaBank" asp-action="Index" data-i18n="nav_ideabank">Fikir Kumbarası</a></li>
+                                <li><a class="dropdown-item py-2" asp-controller="SuccessStories" asp-action="Index" data-i18n="nav_impact">Toplumsal Etki</a></li>
+                            </ul>
+                        </li>
+
+                        <!-- 6. Eğitim Materyalleri -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link nav-link-premium dropdown-toggle" href="#" id="digitalDropdown" data-bs-toggle="dropdown" data-i18n="nav_digital_campus">Dijital Kampüs</a>
+                            <ul class="dropdown-menu dropdown-menu-dark bg-glass border-glass shadow-lg">
+                                <li><a class="dropdown-item py-2" asp-controller="Exhibition" asp-action="Index" data-i18n="nav_exhibition"><i class="bi bi-vr me-1"></i> Metaverse Kampüs</a></li>
+                                <li><a class="dropdown-item py-2" asp-controller="Library" asp-action="Virtual" data-i18n="nav_library">Ders Notu Kütüphanesi</a></li>
+                            </ul>
+                        </li>
+
+                        <!-- 7. İş İlanları -->
+                        <li class="nav-item"><a class="nav-link nav-link-premium" asp-controller="JobPostings" asp-action="Index" data-i18n="nav_jobs">İş İlanları</a></li>
+
+                        <!-- 8. Medya (Dropdown: Haber, Galeri, Etkinlik) -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link nav-link-premium dropdown-toggle" href="#" id="mediaDropdown" data-bs-toggle="dropdown" data-i18n="nav_media">Medya</a>
+                            <ul class="dropdown-menu dropdown-menu-dark bg-glass border-glass shadow-lg">
+                                <li><a class="dropdown-item py-2" asp-controller="News" asp-action="Index" data-i18n="nav_media">Haberler</a></li>
+                                <li><a class="dropdown-item py-2" asp-controller="Gallery" asp-action="Index" data-i18n="nav_gallery">Galeri</a></li>
+                                <li><a class="dropdown-item py-2" asp-controller="Events" asp-action="Index" data-i18n="nav_events">Etkinlik Takvimi</a></li>
+                            </ul>
+                        </li>
+                        
+                    </ul>
+                </div>
+            </nav>
+            <!-- Full-width Decorative Line with Moving Gradient -->
+            <div class="nav-decorative-line"></div>
+        </div>
+    </header>
+
+    <!-- DYNAMIC CYBER-TICKER: Real-time Job & Neighborhood Pulse -->
+    @if (ViewData["Title"]?.ToString() == "Ana Sayfa")
+    {
+        <div class="cyber-ticker-wrapper" style="position: sticky; top: 0; left: 0; width: 100%; z-index: 1000; background: #581C1C; backdrop-filter: blur(15px); border-bottom: 2px solid #C5A059; height: 45px; display: flex; align-items: center; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
+            <div class="ticker-label" style="background: #C5A059; color: #581C1C; height: 100%; display: flex; align-items: center; padding: 0 20px; font-weight: 900; font-size: 0.75rem; z-index: 10; clip-path: polygon(0 0, 85% 0, 100% 100%, 0% 100%); letter-spacing: 1px;">
+                <i class="bi bi-broadcast-pin me-2 animate-pulse"></i> CANLI AKIŞ
+            </div>
+            <div class="ticker-content" style="display: flex; white-space: nowrap; animation: ticker-scroll 45s linear infinite; align-items: center;">
+                @if (ViewBag.JobPostings != null)
+                {
+                    @foreach (var job in (List<HalkEgitimSistemi.Models.JobPosting>)ViewBag.JobPostings)
+                    {
+                        <span class="ticker-item" style="color: #ffffff; font-weight: 700; font-size: 0.85rem; padding: 0 60px; font-family: 'Outfit';">
+                            <i class="bi bi-briefcase-fill text-warning me-2"></i> YENİ İLAN: <span style="color: #C5A059;">@job.Title</span> - @job.Location - @job.SalaryRange 💼
+                        </span>
+                    }
+                }
+                @if (ViewBag.NewestCourses != null)
+                {
+                    @foreach (var course in (List<HalkEgitimSistemi.Models.Course>)ViewBag.NewestCourses)
+                    {
+                        <span class="ticker-item" style="color: #ffffff; font-weight: 700; font-size: 0.85rem; padding: 0 60px; font-family: 'Outfit';">
+                            <i class="bi bi-mortarboard-fill text-info me-2"></i> YENİ KURS: <span style="color: #C5A059;">@course.CourseName</span> kayıtları başladı! ⚡
+                        </span>
+                    }
+                }
+                <span class="ticker-item" style="color: #ffffff; font-weight: 700; font-size: 0.85rem; padding: 0 60px; font-family: 'Outfit';">
+                    <i class="bi bi-pin-map-fill text-danger me-2"></i> GÜNDOĞDU MAHALLESİ: <span style="color: #C5A059;">Siber Güvenlik</span> zirvede! 📍
+                </span>
+                <span class="ticker-item" style="color: #ffffff; font-weight: 700; font-size: 0.85rem; padding: 0 60px; font-family: 'Outfit';">
+                    <i class="bi bi-tree-fill text-success me-2"></i> KARAGÖL PROJESİ: <span style="color: #C5A059;">342 / 500</span> Fidan Hedefi! 🌲
+                </span>
+            </div>
+        </div>
+
+        <style>
+            @@keyframes ticker-scroll {
+                0% { transform: translateX(0); }
+                100% { transform: translateX(-100%); }
+            }
+            .cyber-ticker-wrapper:hover .ticker-content { animation-play-state: paused; }
+        </style>
+    }
+
+    <!-- Ticker moved to Home/Index for dynamic data integration -->
+
+    <style>
+        .nav-decorative-line {
+            height: 3px;
+            width: 100%;
+            background: linear-gradient(90deg, #581C1C, #C5A059, #581C1C);
+            background-size: 300% 100%;
+            animation: move-gradient 5s linear infinite;
+            box-shadow: 0 0 20px rgba(197, 160, 89, 0.3);
+        }
+        @@keyframes move-gradient {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 300% 0%; }
+        }
+    </style>
+
+    <div class="content-wrapper">
+        <main role="main">
+            @await Component.InvokeAsync("LiveLessonNotification")
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="footer-premium">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-lg-4">
+                    <div class="footer-brand mb-3">
+                        <i class="bi bi-mortarboard-fill me-2" style="color: #C5A059;"></i><span data-i18n="brand_name" style="color: #C5A059;">Artvin / Borçka Halk Eğitim Merkezi</span>
+                    </div>
+                    <p class="text-muted-premium" style="font-size: 0.9rem; line-height: 1.8; color: var(--text-muted);" data-i18n="footer_text">
+                        Artvin Borçka Halk Eğitim Merkezi olarak toplumun her kesimine kaliteli ve erişilebilir eğitim hizmeti sunmayı amaçlıyoruz. 
+                        Geleceğe birlikte yürüyoruz.
+                    </p>
+                    <div class="d-flex gap-2 mt-3">
+                        <a href="#" class="footer-social"><i class="bi bi-facebook"></i></a>
+                        <a href="#" class="footer-social"><i class="bi bi-twitter-x"></i></a>
+                        <a href="#" class="footer-social"><i class="bi bi-instagram"></i></a>
+                        <a href="#" class="footer-social"><i class="bi bi-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-4">
+                    <h6 style="color: var(--theme-text); font-weight: 700; margin-bottom: 1rem;" data-i18n="quick_access">Hızlı Erişim</h6>
+                    <ul class="list-unstyled" style="line-height: 2.2;">
+                        <li><a asp-controller="Home" asp-action="Index" class="footer-link"><i class="bi bi-chevron-right me-1" style="font-size: 0.7rem;"></i><span data-i18n="nav_home">Ana Sayfa</span></a></li>
+                        <li><a asp-controller="Courses" asp-action="Browse" class="footer-link"><i class="bi bi-chevron-right me-1" style="font-size: 0.7rem;"></i><span data-i18n="nav_courses">Kurslar</span></a></li>
+                        <li><a asp-controller="Instructors" asp-action="Index" class="footer-link"><i class="bi bi-chevron-right me-1" style="font-size: 0.7rem;"></i><span data-i18n="nav_instructors">Eğitmenler</span></a></li>
+                        <li><a asp-controller="InstructorApplications" asp-action="Apply" class="footer-link"><i class="bi bi-chevron-right me-1" style="font-size: 0.7rem;"></i><span data-i18n="nav_instructor_apply">Başvuru</span></a></li>
+                        <li><a asp-controller="Library" asp-action="Virtual" class="footer-link"><i class="bi bi-chevron-right me-1" style="font-size: 0.7rem;"></i><span data-i18n="nav_library">Kütüphane</span></a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-4">
+                    <h6 style="color: var(--theme-text); font-weight: 700; margin-bottom: 1rem;" data-i18n="corporate">Kurumsal</h6>
+                    <ul class="list-unstyled" style="line-height: 2.2;">
+                        <li><a asp-controller="News" asp-action="Index" class="footer-link"><i class="bi bi-chevron-right me-1" style="font-size: 0.7rem;"></i><span data-i18n="nav_media">Haberler</span></a></li>
+                        <li><a asp-controller="Categories" asp-action="Index" class="footer-link"><i class="bi bi-chevron-right me-1" style="font-size: 0.7rem;"></i><span data-i18n="nav_courses">Kategoriler</span></a></li>
+                        <li><a asp-controller="Home" asp-action="Privacy" class="footer-link"><i class="bi bi-chevron-right me-1" style="font-size: 0.7rem;"></i><span>Gizlilik Politikası</span></a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-4">
+                    <h6 style="color: var(--text-primary); font-weight: 700; margin-bottom: 1rem;" data-i18n="contact">Contact</h6>
+                    <ul class="list-unstyled" style="line-height: 2.5; font-size: 0.9rem;">
+                        <li><i class="bi bi-geo-alt me-2" style="color: var(--primary-light);"></i>Center St. Education Ave. No:1</li>
+                        <li><i class="bi bi-telephone me-2" style="color: var(--primary-light);"></i>(0312) 123 45 67</li>
+                        <li><i class="bi bi-envelope me-2" style="color: var(--primary-light);"></i>info@publiceducation.gov.tr</li>
+                    </ul>
+                </div>
+            </div>
+            <hr style="border-color: var(--border-glass); margin: 2rem 0 1.5rem;" />
+            <!-- 🏛️ KURUMSAL LİDERLİK VE DESTEK -->
+            @{
+                var govName = await Settings.GetSettingAsync("Gov_Name", "Betül Büyükkılıç");
+                var govTitle = await Settings.GetSettingAsync("Gov_Title", "BORÇKA KAYMAKAMI");
+                var govImg = await Settings.GetSettingAsync("Gov_Img", "/images/governor.png");
+                var govLogo = await Settings.GetSettingAsync("Gov_Logo", "/images/governor_logo.png");
+
+                var mayorName = await Settings.GetSettingAsync("Mayor_Name", "Ercan Orhan");
+                var mayorTitle = await Settings.GetSettingAsync("Mayor_Title", "BELEDİYE BAŞKANI");
+                var mayorImg = await Settings.GetSettingAsync("Mayor_Img", "/images/mayor.png");
+                var mayorLogo = await Settings.GetSettingAsync("Mayor_Logo", "/images/borcka_logo.png");
+            }
+            <div class="row mt-5 mb-4 g-4 justify-content-center align-items-center">
+                <div class="col-12 text-center mb-4">
+                    <span class="text-white-50 x-small fw-bold letter-spacing-2" style="font-size: 0.8rem;">YEREL YÖNETİM VE KURUMSAL PAYDAŞLAR</span>
+                </div>
+                
+                <div class="col-lg-12">
+                    <div class="d-flex flex-wrap justify-content-center align-items-center gap-4 gap-md-5">
+
+                        <!-- KAYMAKAM LOGO -->
+                        <div class="text-center px-3 border-start border-glass">
+                            <img src="@govLogo" height="75" alt="Kaymakamlık Logo" class="mb-2 hover-scale transition-all">
+                            <div class="text-white-50 x-small fw-bold">KAYMAKAMLIĞI</div>
+                        </div>
+
+                        <!-- KAYMAKAM PORTRE -->
+                        <div class="text-center px-4 border-end border-glass">
+                            <img src="@govImg" class="rounded-circle border border-3 border-primary shadow-gold hover-glow-gold transition-all" style="height: 115px; width: 115px; object-fit: cover; margin-bottom: 12px;">
+                            <div class="text-white fw-bold uppercase" style="font-size: 1rem; letter-spacing: 0.5px;">@govName</div>
+                            <div class="gold-text x-small fw-bold mt-1">@govTitle</div>
+                        </div>
+
+                        <!-- BELEDİYE BAŞKANI PORTRE -->
+                        <div class="text-center px-4 border-start border-glass">
+                            <img src="@mayorImg" class="rounded-circle border border-3 border-secondary shadow-gold hover-glow-maroon transition-all" style="height: 115px; width: 115px; object-fit: cover; margin-bottom: 12px;">
+                            <div class="text-white fw-bold uppercase" style="font-size: 1rem; letter-spacing: 0.5px;">@mayorName</div>
+                            <div class="maroon-text x-small fw-bold mt-1">@mayorTitle</div>
+                        </div>
+
+                        <!-- BELEDİYE LOGO -->
+                        <div class="text-center px-3 border-start border-glass">
+                            <img src="@mayorLogo" height="85" alt="Belediye Logo" class="mb-2 hover-scale transition-all">
+                            <div class="text-white-50 x-small fw-bold">BELEDİYESİ</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <hr style="border-color: var(--border-glass); margin: 2rem 0 1.5rem;" />
+
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                <div class="d-flex flex-column">
+                    <p style="color: var(--text-muted); font-size: 0.82rem; margin: 0;">
+                        &copy; 2026 <span data-i18n="brand_name">Artvin / Borçka Halk Eğitim Merkezi</span>. Tüm hakları saklıdır.
+                    </p>
+                    <div class="mt-1">
+                        <span class="badge border text-white x-small" style="font-size: 0.65rem; background: #581C1C; color: #C5A059 !important; border-color: #C5A059 !important;">
+                            <i class="bi bi-shield-lock-fill me-1" style="color: #C5A059;"></i> SSL SECURE
+                        </span>
+                        <span class="badge border text-white x-small ms-1" style="font-size: 0.65rem; background: #581C1C; color: #C5A059 !important; border-color: #C5A059 !important;">
+                            <i class="bi bi-check-circle-fill me-1" style="color: #C5A059;"></i> E-DEVLET ENTEGRASYONU
+                        </span>
+                    </div>
+                </div>
+                <p style="color: var(--text-muted); font-size: 0.82rem; margin: 0;">
+                    Designed with <i class="bi bi-heart-fill me-1" style="color: #C5A059;"></i> Artvin'den Dünyaya
+                </p>
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        function updateClock() {
+            const clockElement = document.getElementById('digitalClock');
+            if (clockElement) {
+                const now = new Date();
+                const timeString = now.toLocaleTimeString('tr-TR');
+                clockElement.textContent = timeString;
+            }
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+    </script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.12/signalr.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script>
+        // Jet Speed Loader Logic
+        window.addEventListener('beforeunload', () => {
+            document.getElementById('globalLoader').style.width = '30%';
+        });
+        window.addEventListener('load', () => {
+            const loader = document.getElementById('globalLoader');
+            loader.style.width = '100%';
+            setTimeout(() => { loader.style.opacity = '0'; }, 400);
+        });
+
+        // Professional Fade-in for Main Content
+        document.querySelector('main').classList.add('animate-fadeIn');
+
+        // Visionary Module Functions
+        window.openAIVizard = function() {
+            // Interactive Course Wizard Simulation
+            const wizardHtml = `
+                <div id="aiWizard" class="bg-glass-strong position-fixed top-50 start-50 translate-middle rounded-4 p-5 text-center animate-scaleIn" style="z-index: 3000; border: 1px solid #C5A059; max-width: 500px; width: 90%;">
+                    <h2 class="section-title-gradient mb-4">Let's Find the Best Course for You</h2>
+                    <p class="text-white-50 mb-4">Let's build your future together. Our first question:</p>
+                    <h4 class="text-white mb-4">In which area would you like to develop yourself?</h4>
+                    <div class="d-grid gap-3">
+                        <button class="btn btn-outline-light rounded-pill py-3" onclick="closeWizard()">Digital World & Software</button>
+                        <button class="btn btn-outline-light rounded-pill py-3" onclick="closeWizard()">Handicrafts & Design</button>
+                        <button class="btn btn-outline-light rounded-pill py-3" onclick="closeWizard()">Gastronomy & Kitchen</button>
+                    </div>
+                    <button class="btn btn-link text-muted mt-4" onclick="closeWizard()">Cancel</button>
+                </div>
+                <div id="wizardOverlay" class="position-fixed top-0 start-0 w-100 h-100 bg-dark opacity-75" style="z-index: 2999;" onclick="closeWizard()"></div>
+            `;
+            document.body.insertAdjacentHTML('beforeend', wizardHtml);
+        }
+
+        window.closeWizard = function() {
+            document.getElementById('aiWizard')?.remove();
+            document.getElementById('wizardOverlay')?.remove();
+        }
+
+        // Professional Theme Engine
+        function applyTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+            
+            const icon = document.getElementById('themeIcon');
+            if (icon) {
+                if (theme === 'light') {
+                    icon.className = 'bi bi-sun-fill';
+                    icon.style.color = '#f59e0b';
+                } else {
+                    icon.className = 'bi bi-moon-stars-fill';
+                    icon.style.color = '#C5A059';
+                }
+            }
+            
+            // Adjust body background immediately to prevent flicker
+            if (theme === 'dark') {
+                document.body.style.backgroundColor = '#030308';
+            } else {
+                document.body.style.backgroundColor = '#FDFCFB';
+            }
+        }
+
+        document.getElementById('themeToggleBtn')?.addEventListener('click', () => {
+            const current = document.documentElement.getAttribute('data-theme') || 'dark';
+            applyTheme(current === 'dark' ? 'light' : 'dark');
+        });
+
+        // Initialize theme properly
+        (function() {
+            const saved = localStorage.getItem('theme') || 'dark';
+            applyTheme(saved);
+        })();
+    </script>
+    <style>
+        :root {
+            --gold: #C5A059;
+            --maroon: #581C1C;
+            --theme-text: #ffffff;
+            --theme-text-muted: rgba(255,255,255,0.7);
+            --theme-card-bg: rgba(255,255,255,0.03);
+            --theme-card-border: rgba(197, 160, 89, 0.2);
+            --theme-gold-text: #C5A059;
+        }
+
+        [data-theme="light"] {
+            --theme-text: #581C1C;
+            --theme-text-muted: rgba(88, 28, 28, 0.8);
+            --theme-card-bg: rgba(245, 240, 225, 0.9);
+            --theme-card-border: #C5A059;
+            --theme-gold-text: #C5A059;
+            --bg-page: #FDFCFB;
+        }
+
+        body { color: var(--theme-text) !important; background-color: var(--bg-page) !important; transition: background 0.4s, color 0.4s; }
+        .gold-text { color: var(--theme-gold-text) !important; transition: color 0.4s; }
+        .maroon-text { color: var(--maroon) !important; transition: color 0.4s; }
+        
+        /* Dark Mode Visibility Fixes */
+        [data-theme="dark"] .maroon-text { color: #ff8a8a !important; }
+        [data-theme="dark"] .text-danger { color: #ff6b6b !important; }
+        [data-theme="dark"] .text-muted-premium { color: rgba(255,255,255,0.5) !important; }
+        
+        /* Force visibility for common classes in light mode */
+        [data-theme="light"] .text-white { color: var(--theme-text) !important; }
+        [data-theme="light"] .text-white-50 { color: var(--theme-text-muted) !important; }
+        [data-theme="light"] .text-light { color: var(--theme-text) !important; }
+        [data-theme="light"] .bg-dark { background-color: var(--theme-card-bg) !important; color: var(--theme-text) !important; }
+        [data-theme="light"] .rain-icon { color: var(--maroon) !important; opacity: 0.15 !important; }
+        [data-theme="light"] .btn-outline-light { border-color: var(--maroon) !important; color: var(--maroon) !important; }
+        [data-theme="light"] .btn-outline-light:hover { background: var(--maroon) !important; color: white !important; }
+
+        .glass-card, .glass-card-static {
+            background: var(--theme-card-bg) !important;
+            border: 1px solid var(--theme-card-border) !important;
+            backdrop-filter: blur(10px);
+            transition: all 0.4s;
+        }
+
+        .high-contrast { filter: contrast(1.2); }
+        .high-contrast body { background: var(--bg-dark) !important; }
+        .high-contrast .glass-card-static, .high-contrast .card { border-width: 2px !important; border-color: white !important; }
+        .dyslexia-mode { font-family: 'OpenDyslexic', 'Arial', sans-serif !important; }
+        .dyslexia-mode * { font-family: 'OpenDyslexic', 'Arial', sans-serif !important; }
+        @@font-face { font-family: 'OpenDyslexic'; src: url('https://opendyslexic.org/fonts/OpenDyslexic-Regular.otf'); }
+
+        /* Global Modern Controls */
+        .modern-control {
+            background: rgba(88, 28, 28, 0.05) !important;
+            border: 2px solid var(--theme-card-border) !important;
+            border-radius: 15px !important;
+            color: var(--theme-text) !important;
+            padding: 12px 20px !important;
+            transition: all 0.3s ease !important;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.05) !important;
+            width: 100%;
+            font-weight: 600;
+        }
+        .modern-control:focus {
+            background: rgba(197, 160, 89, 0.1) !important;
+            border-color: var(--theme-text) !important;
+            box-shadow: 0 0 20px rgba(197, 160, 89, 0.2) !important;
+            outline: none !important;
+            transform: translateY(-1px);
+        }
+        .modern-control::placeholder {
+            color: var(--theme-text) !important;
+            opacity: 0.5;
+            font-weight: 500;
+        }
+    </style>
+
+    @if (ViewContext.RouteData.Values["controller"]?.ToString() != "Exhibition")
+    {
+        <!-- AI Robot Bot (HalkBot) Global -->
+        <div id="aiRobotContainer" class="ai-robot-floating">
+            <div class="robot-body" style="background: #C5A059 !important; box-shadow: 0 0 30px rgba(197, 160, 89, 0.5) !important;">
+                <div class="robot-head" style="width:45px; height:32px; background:#581C1C; border-radius:18px; display:flex; align-items:center; justify-content:center; box-shadow: inset 0 -3px 0 rgba(0,0,0,0.2);">
+                    <div class="robot-eyes" style="display:flex; gap:10px;">
+                        <div class="eye" style="width:10px; height:10px; background:#0f172a; border-radius:50%; position:relative;">
+                            <div style="width:3px; height:3px; background:white; border-radius:50%; position:absolute; top:2px; right:2px;"></div>
+                        </div>
+                        <div class="eye" style="width:10px; height:10px; background:#0f172a; border-radius:50%; position:relative;">
+                            <div style="width:3px; height:3px; background:white; border-radius:50%; position:absolute; top:2px; right:2px;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="robot-chat-bubble">
+                <div class="d-flex justify-content-between align-items-center border-bottom border-white-10 pb-3 mb-3">
+                    <div>
+                        <h5 style="color: #C5A059; font-weight: 800; margin: 0; font-family: 'Outfit', sans-serif;" data-i18n="bot_title">HalkBot Pro</h5>
+                        <div class="d-flex align-items-center gap-1">
+                            <span class="status-dot"></span>
+                            <small class="text-white-50" data-i18n="bot_subtitle">AI Assistant</small>
+                        </div>
+                    </div>
+                    <div id="typingIndicator" class="typing-indicator d-none">
+                        <span></span><span></span><span></span>
+                    </div>
+                </div>
+                <div id="chatHistory" class="chat-history mb-3" style="max-height: 250px; overflow-y: auto;">
+                    <p id="robotMessage" class="text-premium" style="margin:0; line-height: 1.5; font-size: 1.15rem; font-weight: 500;" data-i18n="bot_welcome">Merhaba! Ben <strong>HalkBot Pro</strong>. Borçka'daki eğitimler, sertifikalar, Isı Haritası veya Karagöl projemiz hakkında size her şeyi anlatabilirim!</p>
+                </div>
+                <div class="input-wrapper position-relative d-flex gap-2">
+                    <div class="flex-grow-1 position-relative">
+                        <input type="text" id="robotInput" placeholder="Bana her şeyi sorabilirsiniz..." class="w-100" />
+                        <button id="micBtn" class="mic-btn">
+                            <i class="bi bi-mic-fill"></i>
+                        </button>
+                    </div>
+                    <button id="sendRobotBtn" class="btn btn-premium btn-circle-sm" style="background: #581C1C; color: #C5A059; border: 1px solid #C5A059; border-radius: 50%; width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                        <i class="bi bi-send-fill" style="font-size: 1.2rem;"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    }
+
+        <style>
+            .status-dot { width: 10px; height: 10px; background: #C5A059; border-radius: 50%; display: inline-block; animation: pulse-gold-bot 2s infinite; }
+            @@keyframes pulse-gold-bot { 0% { box-shadow: 0 0 0 0 rgba(197, 160, 89, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(197, 160, 89, 0); } 100% { box-shadow: 0 0 0 0 rgba(197, 160, 89, 0); } }
+            
+            .typing-indicator { display: flex; gap: 4px; }
+            .typing-indicator span { width: 8px; height: 8px; background: #C5A059; border-radius: 50%; animation: bounce 1.4s infinite ease-in-out both; }
+            .typing-indicator span:nth-child(1) { animation-delay: -0.32s; }
+            .typing-indicator span:nth-child(2) { animation-delay: -0.16s; }
+            @@keyframes bounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
+
+            .input-wrapper input { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 12px 45px 12px 15px; color: white; transition: all 0.3s; width: 100%; font-size: 1.1rem; }
+            .input-wrapper input:focus { background: rgba(255,255,255,0.1); border-color: #C5A059; outline: none; box-shadow: 0 0 15px rgba(197, 160, 89, 0.3); }
+            
+            .btn-circle-sm { transition: transform 0.2s; cursor: pointer; }
+            .btn-circle-sm:hover { transform: scale(1.1); }
+            
+            .mic-btn { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; color: rgba(255,255,255,0.5); font-size: 1.2rem; cursor: pointer; transition: all 0.3s; }
+            .mic-btn.active { color: #C5A059; animation: pulse-gold-mic 1.5s infinite; }
+            @@keyframes pulse-red-mic { 0% { transform: translateY(-50%) scale(1); } 50% { transform: translateY(-50%) scale(1.2); } 100% { transform: translateY(-50%) scale(1); } }
+            
+            .chat-history::-webkit-scrollbar { width: 4px; }
+            .chat-history::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
+
+            /* Floating Go Back Button */
+            .btn-floating-back {
+                position: fixed;
+                bottom: 30px;
+                left: 30px;
+                z-index: 9998;
+                width: 50px;
+                height: 50px;
+                border-radius: 15px;
+                background: rgba(15, 23, 42, 0.8);
+                backdrop-filter: blur(10px);
+                border: 1px solid rgba(255,255,255,0.1);
+                color: white;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 1.2rem;
+                cursor: pointer;
+                transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+                box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            }
+            .btn-floating-back:hover {
+                transform: scale(1.1) rotate(-5deg);
+                background: var(--gradient-premium);
+                border-color: transparent;
+                box-shadow: 0 15px 40px rgba(88, 28, 28, 0.4);
+            }
+            .btn-floating-back i { transition: transform 0.3s; }
+            .btn-floating-back:hover i { transform: translateX(-3px); }
+        </style>
+
+        <!-- Floating Action Elements -->
+        <div class="btn-floating-back" onclick="goBack()" title="Geri Dön">
+            <i class="bi bi-arrow-left"></i>
+        </div>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const robotInput = document.getElementById('robotInput');
+                const chatHistory = document.getElementById('chatHistory');
+                const aiRobotContainer = document.getElementById('aiRobotContainer');
+                const micBtn = document.getElementById('micBtn');
+                const typingIndicator = document.getElementById('typingIndicator');
+                const sendRobotBtn = document.getElementById('sendRobotBtn');
+                const chatBubbleEl = aiRobotContainer.querySelector('.robot-chat-bubble');
+                const robotBody = aiRobotContainer.querySelector('.robot-body');
+
+                let botOpen = false;
+
+                function openBot() {
+                    botOpen = true;
+                    chatBubbleEl.style.display = 'block';
+                    chatBubbleEl.getBoundingClientRect();
+                    chatBubbleEl.classList.add('open');
+                    aiRobotContainer.classList.add('focused');
+                    setTimeout(() => robotInput.focus(), 300);
+                }
+
+                function closeBot() {
+                    botOpen = false;
+                    chatBubbleEl.classList.remove('open');
+                    aiRobotContainer.classList.remove('focused');
+                    setTimeout(() => { if (!botOpen) chatBubbleEl.style.display = 'none'; }, 400);
+                }
+
+                if (robotBody) {
+                    robotBody.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        botOpen ? closeBot() : openBot();
+                    });
+                }
+
+                // Global Go Back logic
+                window.goBack = function() {
+                    if (window.history.length > 1) {
+                        window.history.back();
+                    } else {
+                        window.location.href = '/';
+                    }
+                };
+
+                // AI Response
+                window.processCommand = async function(val) {
+                    val = val ? val.trim() : robotInput.value.trim();
+                    if (!val) return;
+
+                    const userMsg = document.createElement('div');
+                    userMsg.className = "mt-2 text-end animate-fadeIn";
+                    const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+                    const innerBubble = document.createElement('div');
+                    innerBubble.style.cssText = `display:inline-block; background:${isLight ? 'rgba(0,0,0,0.05)' : 'rgba(255,255,255,0.05)'}; color:${isLight ? '#1e293b' : 'rgba(255,255,255,0.7)'}; padding:8px 15px; border-radius:15px; font-size:0.9rem; border:1px solid ${isLight ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.1)'};`;
+                    innerBubble.textContent = val;
+                    userMsg.appendChild(innerBubble);
+                    chatHistory.appendChild(userMsg);
+                    chatHistory.scrollTop = chatHistory.scrollHeight;
+
+                    robotInput.value = '';
+                    typingIndicator.classList.remove('d-none');
+
+                    try {
+                        const response = await fetch('/api/HalkBot/chat', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ message: val })
+                        });
+                        const data = await response.json();
+                        
+                        typingIndicator.classList.add('d-none');
+                        
+                        const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+                        const botMsg = document.createElement('div');
+                        botMsg.className = "mt-3 animate-fadeIn";
+                        botMsg.innerHTML = `
+                            <div style="background:${isLight ? 'rgba(0,0,0,0.02)' : 'rgba(255,255,255,0.03)'}; color:${isLight ? '#1e293b' : 'white'}; padding:12px 18px; border-radius:15px; border-left:3px solid #C5A059; font-size:0.95rem; line-height:1.6;">
+                                ${data.response}
+                            </div>
+                        `;
+                        chatHistory.appendChild(botMsg);
+                        
+                        if (window.isVoiceEnabled && window.speechSynthesis) {
+                            const utterance = new SpeechSynthesisUtterance(data.response);
+                            utterance.lang = 'tr-TR';
+                            window.speechSynthesis.speak(utterance);
+                        }
+                    } catch (error) {
+                        console.error("Bot error:", error);
+                        typingIndicator.classList.add('d-none');
+                        const botMsg = document.createElement('div');
+                        botMsg.className = "mt-3 animate-fadeIn";
+                        botMsg.innerHTML = `<div class="alert alert-danger-glass p-2 small">Bağlantı hatası oluştu.</div>`;
+                        chatHistory.appendChild(botMsg);
+                    }
+                    chatHistory.scrollTop = chatHistory.scrollHeight;
+                };
+
+
+                robotInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') processCommand();
+                });
+
+                if (sendRobotBtn) {
+                    sendRobotBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        processCommand();
+                    });
+                }
+
+                if ('webkitSpeechRecognition' in window) {
+                    const recognition = new webkitSpeechRecognition();
+                    recognition.lang = 'tr-TR';
+                    micBtn.addEventListener('click', () => {
+                        recognition.start();
+                        micBtn.classList.add('active');
+                    });
+                    recognition.onresult = (e) => {
+                        const transcript = e.results[0][0].transcript;
+                        robotInput.value = transcript;
+                        processCommand(transcript);
+                    };
+                    recognition.onend = () => micBtn.classList.remove('active');
+                }
+            });
+
+            // Global Icon Rain
+            document.addEventListener('DOMContentLoaded', function() {
+
+                const rainContainer = document.getElementById('globalRainContainer');
+                if (!rainContainer) return;
+
+                const iconTypes = ['bi-book', 'bi-pencil', 'bi-mortarboard', 'bi-palette', 'bi-laptop', 'bi-globe', 'bi-stars', 'bi-cpu'];
+                const icons = [];
+                const iconCount = 200; // Increased for widespread effect
+
+
+                for (let i = 0; i < iconCount; i++) {
+                    const iconEl = document.createElement('i');
+                    iconEl.className = `bi ${iconTypes[Math.floor(Math.random() * iconTypes.length)]} rain-icon`;
+                    iconEl.style.color = '#C5A059';
+                    iconEl.style.textShadow = '0 0 10px rgba(197, 160, 89, 0.6)';
+                    iconEl.style.opacity = '0.4';
+                    
+                    const iconObj = { 
+                        el: iconEl, 
+                        x: Math.random() * 100, 
+                        y: Math.random() * -2000, // More spread out vertically
+                        speed: 0.8 + Math.random() * 1.5, 
+                        rotation: Math.random() * 360,
+                        sway: Math.random() * 2, // Horizontal sway factor
+                        swaySpeed: 0.02 + Math.random() * 0.05
+                    };
+                    
+                    iconEl.style.willChange = 'transform';
+                    iconEl.style.left = iconObj.x + '%';
+                    rainContainer.appendChild(iconEl);
+                    icons.push(iconObj);
+                }
+
+                let time = 0;
+                let isTabVisible = true;
+                document.addEventListener('visibilitychange', () => { isTabVisible = !document.hidden; });
+
+                function updateRain() {
+                    if (!isTabVisible) {
+                        requestAnimationFrame(updateRain);
+                        return;
+                    }
+                    time += 0.05;
+                    icons.forEach(icon => {
+                        icon.y += icon.speed;
+                        
+                        // Horizontal sway for "yaygın" (widespread) effect
+                        const currentSway = Math.sin(time * icon.swaySpeed + icon.x) * 15; 
+                        
+                        if (icon.y > window.innerHeight + 100) {
+                            icon.y = -150;
+                            icon.x = Math.random() * 100; // Randomize horizontal position on reset
+                            icon.el.style.left = icon.x + '%';
+                        }
+                        
+                        icon.el.style.transform = `translate3d(${currentSway}px, ${icon.y}px, 0) rotate(${icon.rotation + icon.y/5}deg)`;
+                    });
+                    requestAnimationFrame(updateRain);
+                }
+                updateRain();
+            });
+        </script>
+    @await RenderSectionAsync("Scripts", required: false)
+    </body>
+</html>
+
+
+

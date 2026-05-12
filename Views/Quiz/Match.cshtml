@@ -1,0 +1,283 @@
+﻿@model List<HalkEgitimSistemi.Models.QuizQuestion>
+@{
+    ViewData["Title"] = "Düello Başlıyor!";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="match-arena position-fixed top-0 start-0 w-100 h-100 bg-dark" style="z-index: 9999; display: flex; flex-direction: column;">
+    
+    <!-- Cinematic VS Entrance -->
+    <div id="vsEntrance" class="vs-container animate-fadeIn">
+        <div class="vs-side left-side">
+            <div class="player-profile text-center">
+                <img src="https://ui-avatars.com/api/?name=Betul+Gokden&background=8b5cf6&color=fff&size=200" class="rounded-circle shadow-glow-primary mb-4" />
+                <h2 class="fw-bold text-white">Betül Gökden</h2>
+                <div class="badge bg-primary px-3">LEVEL 12</div>
+            </div>
+        </div>
+        <div class="vs-center">
+            <div class="vs-logo animate-pulse">VS</div>
+        </div>
+        <div class="vs-side right-side">
+            <div class="player-profile text-center">
+                <img src="https://ui-avatars.com/api/?name=Halk+Bot&background=ec4899&color=fff&size=200" class="rounded-circle shadow-glow-secondary mb-4" />
+                <h2 class="fw-bold text-white">HalkBot Pro</h2>
+                <div class="badge bg-secondary px-3">AI MASTERY</div>
+            </div>
+        </div>
+        <div class="vs-overlay-text">DÜELLO BAÅLIYOR...</div>
+    </div>
+
+    <!-- Main Quiz Interface (Hidden at start) -->
+    <div id="quizInterface" class="container py-5 d-none flex-grow-1 d-flex flex-column justify-content-center">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <!-- Header: Progress & Score -->
+                <div class="d-flex justify-content-between align-items-center mb-5">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="quiz-progress-circle" id="timerCircle">
+                            <span id="timerText">15</span>
+                        </div>
+                        <div>
+                            <h5 class="text-white mb-0 fw-bold">Soru <span id="currentQuestionNum">1</span>/5</h5>
+                            <small class="text-muted-premium" id="categoryText">Yazılım</small>
+                        </div>
+                    </div>
+                    <div class="text-end">
+                        <div class="text-primary-light fw-bold fs-3" id="scoreText">0000</div>
+                        <small class="text-muted">GÜNCEL PUAN</small>
+                    </div>
+                </div>
+
+                <!-- Question Card -->
+                <div class="glass-card-static p-5 border-glass shadow-2xl mb-4 animate-fadeInUp" id="questionCard">
+                    <h2 class="text-white fw-bold mb-5" id="questionTitle">Python'da liste sonuna eleman eklemek için hangi metod kullanılır?</h2>
+                    
+                    <div class="options-grid">
+                        <button class="option-btn animate-fadeInRight" style="animation-delay: 0.1s;" onclick="checkAnswer('A')">
+                            <span class="option-label">A</span> <span id="optA">add()</span>
+                        </button>
+                        <button class="option-btn animate-fadeInRight" style="animation-delay: 0.2s;" onclick="checkAnswer('B')">
+                            <span class="option-label">B</span> <span id="optB">insert()</span>
+                        </button>
+                        <button class="option-btn animate-fadeInRight" style="animation-delay: 0.3s;" onclick="checkAnswer('C')">
+                            <span class="option-label">C</span> <span id="optC">append()</span>
+                        </button>
+                        <button class="option-btn animate-fadeInRight" style="animation-delay: 0.4s;" onclick="checkAnswer('D')">
+                            <span class="option-label">D</span> <span id="optD">push()</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Footer: Warnings -->
+                <div id="cheatWarning" class="alert bg-danger-soft text-danger d-none animate-shake">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i> <strong>DİKKAT!</strong> Sekme değiştirdiğiniz algılandı. Bu bir hile koruma uyarısıdır!
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Result Modal -->
+<div id="resultModal" class="match-arena position-fixed top-0 start-0 w-100 h-100 bg-dark d-none" style="z-index: 10000; justify-content: center; align-items: center;">
+    <div class="text-center animate-scaleIn">
+        <div id="resultIcon" class="mb-4">
+            <i class="bi bi-trophy-fill text-warning display-1"></i>
+        </div>
+        <h1 class="display-3 fw-bold text-white mb-2" id="resultTitle">TEBRİKLER!</h1>
+        <p class="lead text-white-50 mb-5" id="resultDesc">Muazzam bir performans sergilediniz.</p>
+        
+        <div class="glass-card p-4 d-inline-block mb-5">
+            <div class="row g-5">
+                <div class="col">
+                    <div class="h3 fw-bold text-primary-light" id="finalScore">450</div>
+                    <small class="text-muted">TOPLAM PUAN</small>
+                </div>
+                <div class="col border-start border-white-10">
+                    <div class="h3 fw-bold text-success" id="finalCorrect">5</div>
+                    <small class="text-muted">DOÄRU</small>
+                </div>
+                <div class="col border-start border-white-10">
+                    <div class="h3 fw-bold text-danger" id="finalWrong">0</div>
+                    <small class="text-muted">YANLIÅ</small>
+                </div>
+            </div>
+        </div>
+        
+        <div id="aiAnalysis" class="bg-glass-strong p-4 rounded-4 mb-5 mx-auto" style="max-width: 600px; border: 1px solid var(--secondary);">
+            <div class="d-flex align-items-center gap-3 mb-3">
+                <div class="badge bg-secondary">HALKBOT ANALİZİ</div>
+                <div class="text-white-50 small">Zayıf Alan Analizi: <span class="text-white fw-bold" id="weakAreaText">Yok</span></div>
+            </div>
+            <p class="text-white mb-0 italic" id="aiFeedbackText">Harika gidiyorsun! Bilgi seviyen kurum standartlarımızın oldukça üstünde.</p>
+        </div>
+
+        <div class="d-flex justify-content-center gap-3">
+            <a asp-action="Index" class="btn btn-outline-light btn-lg rounded-pill px-5">Hub'a Dön</a>
+            <button class="btn btn-vibrant-glow btn-lg rounded-pill px-5" onclick="location.reload()">Yeniden Yarış</button>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+<style>
+    .match-arena { background: radial-gradient(circle at center, #0f172a 0%, #000 100%) !important; color: white; }
+    
+    /* VS ENTRANCE */
+    .vs-container { display: flex; width: 100%; height: 100%; align-items: center; justify-content: center; position: relative; }
+    .vs-side { flex: 1; height: 100%; display: flex; align-items: center; justify-content: center; transition: all 1s ease; }
+    .left-side { background: linear-gradient(135deg, rgba(197, 160, 89, 0.2) 0%, transparent 100%); transform: translateX(-100%); }
+    .right-side { background: linear-gradient(-135deg, rgba(88, 28, 28, 0.2) 0%, transparent 100%); transform: translateX(100%); }
+    .vs-center { position: absolute; z-index: 10; font-size: 8rem; font-weight: 900; font-style: italic; color: #fff; text-shadow: 0 0 50px var(--primary); transform: scale(0); opacity: 0; }
+    .vs-overlay-text { position: absolute; bottom: 10%; font-size: 1.5rem; letter-spacing: 5px; opacity: 0; }
+
+    .entrance-active .left-side { transform: translateX(0); }
+    .entrance-active .right-side { transform: translateX(0); }
+    .entrance-active .vs-center { transform: scale(1); opacity: 1; transition: all 0.5s 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+    .entrance-active .vs-overlay-text { opacity: 0.5; transition: all 1s 1s; }
+
+    .shadow-glow-primary { box-shadow: 0 0 50px rgba(197, 160, 89, 0.4); }
+    .shadow-glow-secondary { box-shadow: 0 0 50px rgba(88, 28, 28, 0.4); }
+
+    /* QUIZ UI */
+    .quiz-progress-circle { width: 60px; height: 60px; border-radius: 50%; border: 4px solid var(--primary); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1.2rem; }
+    .option-btn { width: 100%; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 15px; padding: 20px; text-align: left; color: #fff; margin-bottom: 15px; transition: all 0.2s; display: flex; align-items: center; gap: 20px; }
+    .option-btn:hover { background: rgba(255,255,255,0.08); border-color: var(--secondary); transform: translateX(10px); }
+    .option-btn.correct { background: rgba(16, 185, 129, 0.2) !important; border-color: #C5A059 !important; box-shadow: 0 0 30px rgba(16, 185, 129, 0.3); }
+    .option-btn.wrong { background: rgba(239, 68, 68, 0.2) !important; border-color: #ef4444 !important; animation: shake 0.5s; }
+    .option-label { width: 40px; height: 40px; background: rgba(255,255,255,0.1); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 900; }
+
+    @@keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-10px); } 75% { transform: translateX(10px); } }
+</style>
+
+<script>
+    const questions = @Html.Raw(Json.Serialize(Model));
+    let currentIndex = 0;
+    let score = 0;
+    let correctCount = 0;
+    let wrongCount = 0;
+    let timer = 15;
+    let timerInterval;
+    let cheatCount = 0;
+    let weakAreas = [];
+
+    document.addEventListener('DOMContentLoaded', () => {
+        // VS Entrance Sequence
+        setTimeout(() => {
+            document.getElementById('vsEntrance').classList.add('entrance-active');
+        }, 500);
+
+        setTimeout(() => {
+            document.getElementById('vsEntrance').classList.add('animate-fadeOut');
+            setTimeout(() => {
+                document.getElementById('vsEntrance').classList.add('d-none');
+                document.getElementById('quizInterface').classList.remove('d-none');
+                startQuestion();
+            }, 500);
+        }, 3500);
+
+        // Anti-Cheat: Tab Switch Detection
+        window.onblur = () => {
+            cheatCount++;
+            const warning = document.getElementById('cheatWarning');
+            warning.classList.remove('d-none');
+            setTimeout(() => warning.classList.add('d-none'), 3000);
+            if (cheatCount >= 2) {
+                alert("Üst üste hile ihlali! Yarışma sonlandırılıyor.");
+                location.href = '@Url.Action("Index")';
+            }
+        };
+    });
+
+    function startQuestion() {
+        if (currentIndex >= questions.length) {
+            endMatch();
+            return;
+        }
+
+        const q = questions[currentIndex];
+        document.getElementById('questionTitle').innerText = q.questionText;
+        document.getElementById('optA').innerText = q.optionA;
+        document.getElementById('optB').innerText = q.optionB;
+        document.getElementById('optC').innerText = q.optionC;
+        document.getElementById('optD').innerText = q.optionD;
+        document.getElementById('currentQuestionNum').innerText = currentIndex + 1;
+        document.getElementById('categoryText').innerText = q.category;
+
+        // Reset buttons
+        document.querySelectorAll('.option-btn').forEach(btn => btn.className = 'option-btn');
+        
+        timer = 15;
+        document.getElementById('timerText').innerText = timer;
+        clearInterval(timerInterval);
+        timerInterval = setInterval(() => {
+            timer--;
+            document.getElementById('timerText').innerText = timer;
+            if (timer <= 0) {
+                clearInterval(timerInterval);
+                checkAnswer('TIMEOUT');
+            }
+        }, 1000);
+    }
+
+    function checkAnswer(answer) {
+        clearInterval(timerInterval);
+        const q = questions[currentIndex];
+        const buttons = document.querySelectorAll('.option-btn');
+        let selectedBtn;
+        
+        if (answer !== 'TIMEOUT') {
+            selectedBtn = Array.from(buttons).find(b => b.querySelector('.option-label').innerText === answer);
+        }
+
+        if (answer === q.correctAnswer) {
+            selectedBtn.classList.add('correct');
+            score += (100 + timer * 5); // Faster answer = more points
+            correctCount++;
+            confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 }, colors: ['#C5A059', '#581C1C'] });
+        } else {
+            if (selectedBtn) selectedBtn.classList.add('wrong');
+            wrongCount++;
+            if (q.category && !weakAreas.includes(q.category)) weakAreas.push(q.category);
+            
+            // Show correct answer
+            const correctBtn = Array.from(buttons).find(b => b.querySelector('.option-label').innerText === q.correctAnswer);
+            correctBtn.classList.add('correct');
+        }
+
+        document.getElementById('scoreText').innerText = score.toString().padStart(4, '0');
+
+        setTimeout(() => {
+            currentIndex++;
+            startQuestion();
+        }, 2000);
+    }
+
+    function endMatch() {
+        document.getElementById('quizInterface').classList.add('d-none');
+        document.getElementById('resultModal').classList.remove('d-none');
+        document.getElementById('resultModal').style.display = 'flex';
+
+        document.getElementById('finalScore').innerText = score;
+        document.getElementById('finalCorrect').innerText = correctCount;
+        document.getElementById('finalWrong').innerText = wrongCount;
+        document.getElementById('weakAreaText').innerText = weakAreas.length > 0 ? weakAreas.join(', ') : 'Yok';
+
+        // Post result to server
+        fetch('@Url.Action("SubmitResult")', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: `score=${score}&correct=${correctCount}&wrong=${wrongCount}&weakAreas=${weakAreas.join(',')}`
+        }).then(res => res.json()).then(data => {
+            if (data.awarded) {
+                document.getElementById('resultTitle').innerText = "BÜYÜK ÖDÜL KAZANILDI!";
+                document.getElementById('resultDesc').innerText = "400+ puan barajını aşarak ücretsiz kurs hakkı kazandınız!";
+                confetti({ particleCount: 200, spread: 100, origin: { y: 0.3 } });
+            }
+            document.getElementById('aiFeedbackText').innerText = data.feedback;
+        });
+    }
+</script>
+
+

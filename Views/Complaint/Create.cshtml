@@ -1,0 +1,88 @@
+﻿@model HalkEgitimSistemi.Models.Complaint
+@{
+    ViewData["Title"] = "Şikayet Bildir";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container py-5" style="max-width:680px;">
+    <div class="text-center mb-5">
+        <div class="d-inline-flex align-items-center justify-content-center rounded-circle mb-3" style="width:70px;height:70px;background:rgba(239,68,68,0.1);">
+            <i class="bi bi-shield-exclamation text-danger" style="font-size:2rem;"></i>
+        </div>
+        <h1 class="h3 fw-bold">Şikayet Bildir</h1>
+        <p class="text-muted">Şikayetiniz yalnızca yöneticimiz tarafından görüntülenir. Gizliliğiniz korunur.</p>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success text-center">
+            <i class="bi bi-check-circle-fill me-2"></i>@TempData["Success"]
+        </div>
+    }
+
+    <div class="card border-0 shadow">
+        <div class="card-body p-4 p-md-5">
+            <form method="post" asp-action="Create">
+                @Html.AntiForgeryToken()
+
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Adınız Soyadınız <span class="text-danger">*</span></label>
+                        <input asp-for="ReporterName" class="form-control" placeholder="Adınız Soyadınız" required />
+                        <span asp-validation-for="ReporterName" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">E-posta <span class="text-danger">*</span></label>
+                        <input asp-for="ReporterEmail" type="email" class="form-control" placeholder="ornek@email.com" required />
+                        <span asp-validation-for="ReporterEmail" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Şikayet Kategorisi</label>
+                        <select asp-for="Category" class="form-select"
+                                asp-items="Html.GetEnumSelectList<HalkEgitimSistemi.Models.ComplaintCategory>()">
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Şikayet Edilen Kişi (İsteğe Bağlı)</label>
+                        <input asp-for="ReportedPersonName" class="form-control" placeholder="Adı soyadı veya kullanıcı adı" />
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label fw-semibold">Şikayet Konusu <span class="text-danger">*</span></label>
+                        <input asp-for="Subject" class="form-control" placeholder="Kısa ve öz bir başlık yazın..." required maxlength="200" />
+                        <span asp-validation-for="Subject" class="text-danger small"></span>
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label fw-semibold">Açıklama <span class="text-danger">*</span></label>
+                        <textarea asp-for="Description" class="form-control" rows="5"
+                            placeholder="Şikayetinizi detaylı olarak açıklayın. Ne oldu, ne zaman oldu, nasıl bir çözüm bekliyorsunuz?" required maxlength="2000"></textarea>
+                        <div class="text-muted small text-end mt-1">En fazla 2000 karakter</div>
+                        <span asp-validation-for="Description" class="text-danger small"></span>
+                    </div>
+                    <div class="col-12">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="confirm" required>
+                            <label class="form-check-label text-muted small" for="confirm">
+                                Şikayetimin yönetici tarafından inceleneceğini ve gerekli durumlarda iletişime geçileceğini kabul ediyorum.
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-danger w-100 py-3 fw-bold">
+                            <i class="bi bi-send-fill me-2"></i>Şikayeti Gönder
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="text-center mt-4">
+        <a href="javascript:history.back()" class="text-muted text-decoration-none small">
+            <i class="bi bi-arrow-left me-1"></i>Geri Dön
+        </a>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

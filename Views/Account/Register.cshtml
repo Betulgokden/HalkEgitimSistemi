@@ -1,0 +1,98 @@
+@model HalkEgitimSistemi.Models.Student
+@{
+    ViewData["Title"] = "Kursiyer Kaydı";
+    Layout = "_Layout";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-5">
+            <div class="login-card animate-scaleIn">
+                <!-- Header -->
+                <div class="login-header">
+                    <div class="login-avatar">
+                        <i class="bi bi-person-plus-fill"></i>
+                    </div>
+                    <h3 style="color: white; font-family: 'Outfit', sans-serif; font-weight: 800; margin: 0;">Kursiyer Kaydı</h3>
+                    <p style="color: rgba(255,255,255,0.6); font-size: 0.9rem; margin: 0.5rem 0 0;">Sisteme kayıt olarak eğitimlerinizi yönetmeye başlayın.</p>
+                </div>
+
+                <!-- Body -->
+                <div style="padding: 2.5rem 2rem;">
+                    @if (ViewBag.Error != null)
+                    {
+                        <div class="alert" style="background: rgba(239,68,68,0.1); color: var(--danger); border: 1px solid rgba(239,68,68,0.3); border-radius: var(--radius-md); padding: 0.8rem 1.2rem; margin-bottom: 1.5rem; font-size: 0.9rem;">
+                            <i class="bi bi-exclamation-triangle-fill me-2"></i>@ViewBag.Error
+                        </div>
+                    }
+
+                    <form asp-action="Register" method="post" enctype="multipart/form-data">
+                        @Html.AntiForgeryToken()
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-premium-group">
+                                    <label class="form-premium-label"><i class="bi bi-person me-1"></i>ADINIZ</label>
+                                    <input asp-for="FirstName" class="form-premium-control" placeholder="Ad" required />
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-premium-group">
+                                    <label class="form-premium-label"><i class="bi bi-person me-1"></i>SOYADINIZ</label>
+                                    <input asp-for="LastName" class="form-premium-control" placeholder="Soyad" required />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-premium-group">
+                            <label class="form-premium-label"><i class="bi bi-envelope me-1"></i>E-POSTA</label>
+                            <input asp-for="Email" type="email" class="form-premium-control" placeholder="ornek@mail.com" required />
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-premium-group">
+                                    <label class="form-premium-label"><i class="bi bi-calendar-date me-1"></i>DOĞUM TARİHİ</label>
+                                    <input asp-for="BirthDate" type="date" class="form-premium-control" required />
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-premium-group">
+                                    <label class="form-premium-label"><i class="bi bi-image me-1"></i>VESİKALIK FOTO</label>
+                                    <input type="file" name="photoFile" class="form-premium-control" accept="image/*" required />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-premium-group">
+                            <label class="form-premium-label"><i class="bi bi-geo-alt me-1"></i>EV ADRESİ</label>
+                            <textarea asp-for="Address" class="form-premium-control" rows="2" placeholder="Tam adresiniz..." required></textarea>
+                        </div>
+
+                        <div class="form-premium-group mb-4">
+                            <label class="form-premium-label"><i class="bi bi-lock me-1"></i>ŞİFRE</label>
+                            <input asp-for="Password" type="password" class="form-premium-control" placeholder="••••••••" required />
+                        </div>
+
+                        <button type="submit" class="btn btn-premium btn-primary-glow w-100 py-3 mb-3">
+                            <i class="bi bi-check2-circle me-2"></i> Kaydı Tamamla
+                        </button>
+
+                        <div class="text-center mt-3 pt-3 border-top" style="border-color: rgba(255,255,255,0.05) !important;">
+                            <span class="text-muted small">Zaten hesabınız var mı?</span>
+                            <a asp-action="Login" class="text-primary-light small fw-bold text-decoration-none"> Giriş Yapın</a>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Footer -->
+                <div style="padding: 1rem 2rem; text-align: center; border-top: 1px solid var(--border-glass);">
+                    <p style="color: var(--text-muted); font-size: 0.82rem; margin: 0;">
+                        <i class="bi bi-shield-check me-1" style="color: var(--success);"></i>
+                        Güvenli kayıt sistemi
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

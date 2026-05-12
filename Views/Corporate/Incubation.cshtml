@@ -1,0 +1,65 @@
+﻿@{
+    ViewData["Title"] = "Kuluçka Merkezi";
+}
+
+<div class="container py-5 mt-5">
+    <div class="text-center mb-5 animate-fadeIn">
+        <h1 class="display-4 fw-bold text-white mb-3" style="font-family: 'Outfit', sans-serif;">Kuluçka Merkezi</h1>
+        <p class="text-white-50">Fikirlerinizi ticari değere dönüştüren kurumsal hızlandırma programı.</p>
+        <div style="height: 3px; width: 60px; background: #C5A059; margin: 20px auto;"></div>
+    </div>
+
+    <div class="row g-4 mb-5">
+        <div class="col-lg-8">
+            <div class="glass-card-static p-5 h-100 border-glass">
+                <h3 class="text-white fw-bold mb-4">Girişimcilik ve İnovasyon</h3>
+                <p class="text-white-70 mb-4">Halk Eğitim Merkezi bünyesinde kurulan Kuluçka Merkezimiz, kursiyerlerimizin ve yerel girişimcilerin yenilikçi fikirlerini desteklemek, mentorluk sağlamak ve yatırımcılarla buluşturmak için tasarlanmıştır.</p>
+                <div class="row g-4 mt-2">
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-center gap-3 p-3 bg-glass-sm rounded-4">
+                            <i class="bi bi-lightbulb text-warning fs-3"></i>
+                            <div>
+                                <h6 class="text-white m-0">Mentorluk</h6>
+                                <small class="text-white-50">Sektör liderlerinden rehberlik</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-center gap-3 p-3 bg-glass-sm rounded-4">
+                            <i class="bi bi-bank text-info fs-3"></i>
+                            <div>
+                                <h6 class="text-white m-0">Finansman</h6>
+                                <small class="text-white-50">Melek yatırımcı ağına erişim</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="glass-card-static p-4 border-glass shadow-lg h-100" style="background: linear-gradient(180deg, rgba(255,255,255,0.05) 0%, rgba(16, 185, 129, 0.1) 100%);">
+                <h5 class="text-white fw-bold mb-4">Başvuru Takvimi</h5>
+                <ul class="list-unstyled mb-4">
+                    <li class="mb-3 d-flex justify-content-between align-items-center">
+                        <span class="text-white-50">Dönem 1</span>
+                        <span class="badge bg-success">Açık</span>
+                    </li>
+                    <li class="mb-3 d-flex justify-content-between align-items-center">
+                        <span class="text-white-50">Dönem 2</span>
+                        <span class="badge bg-secondary">Yakında</span>
+                    </li>
+                </ul>
+                <button class="btn btn-success w-100 py-3 rounded-pill fw-bold shadow-lg">Hemen Başvur</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .glass-card-static { background: rgba(255,255,255,0.03); backdrop-filter: blur(20px); border-radius: 24px; border: 1px solid rgba(255,255,255,0.1); }
+    .bg-glass-sm { background: rgba(255,255,255,0.05); }
+    .animate-fadeIn { animation: fadeIn 1s both; }
+    @@keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+</style>
+
+

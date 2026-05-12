@@ -1,0 +1,325 @@
+@model HalkEgitimSistemi.Models.Student
+@{
+    ViewData["Title"] = "Kursiyer Paneli";
+    Layout = "_Layout";
+}
+
+<div class="container py-5">
+    <div class="page-header animate-fadeInDown">
+        <div class="page-header-content">
+            <div class="d-flex align-items-center">
+                <div class="page-header-icon" style="background: var(--gradient-hero);">
+                    <i class="bi bi-person-workspace"></i>
+                </div>
+                <div>
+                    <h1 class="page-header-title">Hoş Geldin, @Model.FirstName!</h1>
+                    <p class="page-header-subtitle">Eğitim yolculuğunu buradan yönetebilirsin.</p>
+                </div>
+            </div>
+            <div class="d-flex gap-2">
+                <a asp-action="Profile" class="btn btn-premium btn-primary-glow">
+                    <i class="bi bi-person-gear"></i> Profili Düzenle
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hızlı Erişim Kısayolları (Renkli & Premium) -->
+    <div class="row g-3 mb-4 animate-fadeInUp" style="animation-delay: 0.1s;">
+        <div class="col-6 col-md-2">
+            <a asp-action="MyCourses" class="glass-card-static p-3 text-center d-block text-decoration-none transition-all hover-translate-y h-100 border-bottom border-primary border-3">
+                <div class="shortcut-icon-circle bg-primary-soft mb-2 mx-auto"></div>
+                <span class="small fw-bold text-vibrant-purple">Kurslarım</span>
+            </a>
+        </div>
+        <div class="col-6 col-md-2">
+            <a asp-action="MyAttendance" class="glass-card-static p-3 text-center d-block text-decoration-none transition-all hover-translate-y h-100 border-bottom border-success border-3">
+                <div class="shortcut-icon-circle bg-success-soft mb-2 mx-auto"></div>
+                <span class="small fw-bold text-vibrant-green">Devamsızlık</span>
+            </a>
+        </div>
+        <div class="col-6 col-md-2">
+            <a asp-action="MyCertificates" class="glass-card-static p-3 text-center d-block text-decoration-none transition-all hover-translate-y h-100 border-bottom border-warning border-3">
+                <div class="shortcut-icon-circle bg-warning-soft mb-2 mx-auto"></div>
+                <span class="small fw-bold text-vibrant-orange">Sertifikalar</span>
+            </a>
+        </div>
+        <div class="col-6 col-md-2">
+            <a asp-action="MyCV" class="glass-card-static p-3 text-center d-block text-decoration-none transition-all hover-translate-y h-100 border-bottom border-info border-3">
+                <div class="shortcut-icon-circle bg-info-soft mb-2 mx-auto"></div>
+                <span class="small fw-bold text-vibrant-blue">Dijital CV</span>
+            </a>
+        </div>
+        <div class="col-6 col-md-2">
+            <a asp-action="SkillTree" class="glass-card-static p-3 text-center d-block text-decoration-none transition-all hover-translate-y h-100 border-bottom border-danger border-3">
+                <div class="shortcut-icon-circle bg-danger-soft mb-2 mx-auto"></div>
+                <span class="small fw-bold text-vibrant-pink">Yetenek Ağacı</span>
+            </a>
+        </div>
+        <div class="col-6 col-md-2">
+            <a asp-action="Messages" class="glass-card-static p-3 text-center d-block text-decoration-none transition-all hover-translate-y h-100 border-bottom border-secondary border-3">
+                <div class="shortcut-icon-circle bg-secondary-soft mb-2 mx-auto"></div>
+                <span class="small fw-bold text-vibrant-purple">Mesajlarım</span>
+            </a>
+        </div>
+    </div>
+
+    <style>
+        .shortcut-icon-circle {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        .bg-warning-soft { background: rgba(245, 158, 11, 0.1); }
+        .bg-primary-soft { background: rgba(88, 28, 28, 0.1); }
+        .bg-success-soft { background: rgba(16, 185, 129, 0.1); }
+        .bg-info-soft { background: rgba(6, 182, 212, 0.1); }
+        .bg-danger-soft { background: rgba(239, 68, 68, 0.1); }
+        .bg-secondary-soft { background: rgba(107, 114, 128, 0.1); }
+        
+        .glass-card-static:hover .shortcut-icon-circle {
+            transform: scale(1.1) rotate(5deg);
+        }
+    </style>
+
+    <!-- Campaign Banner -->
+    <div class="glass-card-static p-4 mb-4 animate-fadeInUp" style="border-left: 5px solid #f59e0b; background: rgba(245, 158, 11, 0.05);">
+        <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+            <div class="d-flex align-items-center">
+                <div class="section-icon section-icon-warning me-3" style="background: #f59e0b; color: white;">
+                    <i class="bi bi-gift-fill"></i>
+                </div>
+                <div>
+                    <h4 class="m-0 fw-bold" style="color: #fbbf24;">Büyük Konu Anlatımı Yarışması!</h4>
+                    <p class="m-0 text-white-50 small">Ayın en çok yıldızını alan not sahibine <strong>1 Adet Ücretsiz Kurs</strong> hediye! <span class="badge bg-warning text-dark ms-2">KAÇIRMA</span></p>
+                </div>
+            </div>
+            <a asp-action="UploadNote" class="btn btn-warning-premium fw-bold px-4 rounded-pill">HEMEN NOT YÜKLE</a>
+        </div>
+    </div>
+
+    <div class="row g-4 mb-5 stagger-children">
+        <div class="col-md-4">
+            <div class="glass-card-static p-4 text-center h-100 border-bottom border-primary border-4">
+                <div class="section-icon section-icon-primary mx-auto mb-3">
+                    <i class="bi bi-clipboard-check"></i>
+                </div>
+                <div style="font-size: 2.5rem; font-weight: 900; color: var(--primary-light);">@ViewBag.ApprovedCount</div>
+                <div style="font-weight: 600; color: var(--text-muted);">Aktif Kurslar</div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="glass-card-static p-4 text-center h-100 border-bottom border-success border-4">
+                <div class="section-icon section-icon-success mx-auto mb-3">
+                    <i class="bi bi-award"></i>
+                </div>
+                <div style="font-size: 2.5rem; font-weight: 900; color: var(--success);">@ViewBag.CompletedCount</div>
+                <div style="font-weight: 600; color: var(--text-muted);">Sertifikalar</div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="glass-card-static p-4 text-center h-100 border-bottom border-warning border-4">
+                <div class="section-icon section-icon-warning mx-auto mb-3">
+                    <i class="bi bi-hourglass-split"></i>
+                </div>
+                <div style="font-size: 2.5rem; font-weight: 900; color: var(--accent);">@ViewBag.PendingCount</div>
+                <div style="font-weight: 600; color: var(--text-muted);">Bekleyen Başvurular</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="glass-card-static p-4 animate-fadeInUp delay-300">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h4 style="font-family: 'Outfit'; font-weight: 800; color: var(--text-primary); margin: 0;">
+                        <i class="bi bi-journal-text me-2" style="color: var(--primary-light);"></i>Başvurularım
+                    </h4>
+                    <a asp-controller="Courses" asp-action="Index" class="btn btn-sm btn-premium btn-secondary-glass">
+                        <i class="bi bi-plus"></i> Yeni Kurs Bul
+                    </a>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table-premium w-100">
+                        <thead>
+                            <tr>
+                                <th>Kurs Adı</th>
+                                <th>Tarih</th>
+                                <th>Durum</th>
+                                <th>İşlem</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var app in Model.Applications.OrderByDescending(a => a.ApplyDate))
+                            {
+                                <tr>
+                                    <td>
+                                        <div style="font-weight: 600; color: var(--text-primary);">@app.Course?.CourseName</div>
+                                    </td>
+                                    <td style="color: var(--text-muted);">@app.ApplyDate.ToShortDateString()</td>
+                                    <td>
+                                        @if (app.Status == ApplicationStatus.Approved)
+                                        {
+                                            <span class="badge-premium badge-success">Onaylandı</span>
+                                        }
+                                        else if (app.Status == ApplicationStatus.Waiting)
+                                        {
+                                            <span class="badge-premium badge-warning">Yedek Listesi</span>
+                                        }
+                                        else if (app.Status == ApplicationStatus.Rejected)
+                                        {
+                                            <span class="badge-premium badge-danger">Reddedildi</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge-premium badge-primary">Bekliyor</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        <div class="d-flex gap-1">
+                                            <a asp-controller="Courses" asp-action="CourseDetail" asp-route-id="@app.CourseId" class="btn btn-icon btn-secondary-glass" title="Detaylar">
+                                                <i class="bi bi-eye"></i>
+                                            </a>
+                                            @if (app.Status == ApplicationStatus.Approved)
+                                            {
+                                                <a asp-controller="CourseChat" asp-action="Index" asp-route-courseId="@app.CourseId" class="btn btn-icon btn-success-glass" title="Kurs Sohbeti">
+                                                    <i class="bi bi-chat-dots-fill"></i>
+                                                </a>
+                                            }
+                                            @if (app.IsCompleted)
+                                            {
+                                                <a asp-action="Certificate" asp-route-id="@app.Id" class="btn btn-icon btn-primary-glow" title="Sertifikayı Görüntüle">
+                                                    <i class="bi bi-award-fill"></i>
+                                                </a>
+                                            }
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="glass-card-static p-4 animate-fadeInUp delay-400 h-100">
+                <h4 style="font-family: 'Outfit'; font-weight: 800; color: var(--text-primary); margin-bottom: 1.5rem;">
+                    <i class="bi bi-file-earmark-person me-2" style="color: var(--secondary);"></i>Dijital CV
+                </h4>
+                <div class="text-center py-4 mb-4" style="background: rgba(255,255,255,0.02); border-radius: 20px;">
+                    @if (!string.IsNullOrEmpty(Model.ProfilePicture))
+                    {
+                        <img src="@Model.ProfilePicture" style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 4px solid var(--primary-light);" />
+                    }
+                    else
+                    {
+                        <div class="mx-auto d-flex align-items-center justify-content-center" style="width: 120px; height: 120px; border-radius: 50%; background: var(--gradient-hero); color: white; font-size: 3rem; font-weight: 800;">
+                            @Model.FirstName[0]@Model.LastName[0]
+                        </div>
+                    }
+                    <h5 class="mt-3 mb-1" style="font-weight: 700;">@Model.FirstName @Model.LastName</h5>
+                    <p class="small text-muted">@Model.Email</p>
+                </div>
+                
+                <p style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6;">
+                    Sistemdeki eğitimlerinizi ve sertifikalarınızı tek bir dökümanda birleştirin.
+                </p>
+                
+                <a asp-action="MyCV" target="_blank" class="btn btn-premium btn-secondary-glass w-100 mt-2">
+                    <i class="bi bi-printer me-2"></i> CV'mi Görüntüle
+                </a>
+            </div>
+
+            <!-- Canlı Sohbet Odalarım -->
+            <div class="glass-card-static p-4 animate-fadeInUp delay-500 mt-4 h-auto">
+                <h4 style="font-family: 'Outfit'; font-weight: 800; color: var(--text-primary); margin-bottom: 1.5rem;">
+                    <i class="bi bi-chat-heart-fill me-2" style="color: var(--success);"></i>Canlı Sınıf Sohbetlerim
+                </h4>
+                <div class="d-flex flex-column gap-2">
+                    @foreach (var app in Model.Applications.Where(a => a.Status == ApplicationStatus.Approved))
+                    {
+                        <a asp-controller="CourseChat" asp-action="Index" asp-route-courseId="@app.CourseId" class="d-flex align-items-center gap-3 p-3 rounded-3 bg-white-5 hover-scale-sm text-decoration-none">
+                            <div class="avatar-xs rounded-circle bg-success d-flex align-items-center justify-content-center shadow-sm" style="width:40px; height:40px;">
+                                <i class="bi bi-chat-dots-fill text-white"></i>
+                            </div>
+                            <div class="flex-grow-1 overflow-hidden">
+                                <div class="fw-bold text-white text-truncate" style="font-size: 0.9rem;">@app.Course?.CourseName</div>
+                                <div class="text-success-glow small" style="font-size: 0.75rem;"><span class="pulse-dot-green"></span> Sohbet Odası Aktif</div>
+                            </div>
+                            <i class="bi bi-chevron-right text-white-50"></i>
+                        </a>
+                    }
+                    @if (!Model.Applications.Any(a => a.Status == ApplicationStatus.Approved))
+                    {
+                        <div class="text-center py-3 opacity-50 small italic">Henüz onaylı bir kursunuz bulunmuyor.</div>
+                    }
+                </div>
+            </div>
+        </div>
+    <div class="row g-4 mt-2">
+        <div class="col-md-6">
+            <div class="glass-card-static p-4 animate-fadeInUp delay-500 border-start border-primary border-4">
+                <div class="d-flex align-items-center mb-3">
+                    <div class="section-icon section-icon-primary me-3">
+                        <i class="bi bi-palette"></i>
+                    </div>
+                    <h4 class="m-0" style="font-weight: 800; color: var(--text-primary);">Sanal Sergiye Eser Yükle</h4>
+                </div>
+                <p class="text-muted small mb-4">Eserlerinizi veya videolarınızı sanal galerimize yükleyin, isminize tıklandığında CV'niz görünsün.</p>
+                <a asp-action="UploadArtwork" class="btn btn-premium btn-primary-glow w-100">
+                    <i class="bi bi-cloud-upload me-2"></i> Eser Paylaş
+                </a>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="glass-card-static p-4 animate-fadeInUp delay-600 h-100" style="border: 2px dashed #f59e0b; background: rgba(245, 158, 11, 0.05); border-radius: 24px;">
+                <div class="d-flex flex-column align-items-center justify-content-center text-center h-100 py-3">
+                    <div class="mb-3" style="font-size: 3rem; color: #fbbf24; filter: drop-shadow(0 0 10px rgba(251, 191, 36, 0.4));">
+                        <i class="bi bi-cloud-arrow-up-fill animate-bounce"></i>
+                    </div>
+                    <h4 class="fw-black mb-2" style="background: linear-gradient(135deg, #f59e0b, #581C1C); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 2px; font-weight: 900;">
+                        NOT YÜKLE
+                    </h4>
+                    <p class="text-white-50 small mb-4">En çok yıldızı topla, ücretsiz kursu kap!</p>
+                    <a asp-action="UploadNote" class="btn btn-warning-premium rounded-pill px-5 py-2 shadow-vibrant">
+                        HEMEN BAÅLA
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .btn-warning-premium {
+        background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
+        border: none;
+        color: #000 !important;
+        font-weight: 800;
+        box-shadow: 0 10px 20px rgba(245, 158, 11, 0.3);
+        transition: all 0.3s ease;
+    }
+    .btn-warning-premium:hover {
+        transform: scale(1.05);
+        box-shadow: 0 15px 30px rgba(245, 158, 11, 0.5);
+    }
+    .shadow-vibrant {
+        box-shadow: 0 0 20px rgba(245, 158, 11, 0.4);
+    }
+    @@keyframes bounce {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-10px); }
+    }
+    .animate-bounce {
+        animation: bounce 2s infinite;
+    }
+</style>
+
+
+

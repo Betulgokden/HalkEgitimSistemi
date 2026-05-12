@@ -1,0 +1,234 @@
+﻿@model HalkEgitimSistemi.Models.Student
+@{
+    ViewData["Title"] = "Yetenek Ağacı";
+    Layout = "_Layout";
+}
+
+<div class="skill-tree-container">
+    <div class="space-background">
+        <div id="stars"></div>
+        <div id="stars2"></div>
+        <div id="stars3"></div>
+    </div>
+
+    <div class="container py-5 text-center" style="position: relative; z-index: 10;">
+        <h1 class="skill-tree-title animate-glow">
+            <span class="d-block mb-2" style="font-size: 1rem; color: var(--text-accent); font-weight: 600; letter-spacing: 3px;">KENDİ EFSANENİ YARAT</span>
+            Yetenek Ağacını Kilidini Aç
+        </h1>
+        <p class="text-muted-premium mb-5">"Sadece Bir Kurs Değil, Destansı Bir Kariyer Haritası."</p>
+
+        <div class="tree-wrapper">
+            @if (Model.Applications != null && Model.Applications.Any())
+            {
+                var sortedApps = Model.Applications.OrderBy(a => a.ApplyDate).ToList();
+                for (int i = 0; i < sortedApps.Count; i++)
+                {
+                    var app = sortedApps[i];
+                    var isCompleted = app.IsCompleted;
+                    var isLocked = i > 0 && !sortedApps[i - 1].IsCompleted;
+                    
+                    <div class="skill-node-wrapper @(isCompleted ? "completed" : "") @(isLocked ? "locked" : "unlocked")" 
+                         onclick="handleNodeClick(@isLocked, '@app.Course.CourseName', '@(i > 0 ? sortedApps[i-1].Course.CourseName : "")')">
+                        <div class="skill-node">
+                            <div class="node-icon">
+                                <i class="bi @(isLocked ? "bi-lock-fill" : (isCompleted ? "bi-patch-check-fill" : "bi-lightning-charge-fill"))"></i>
+                            </div>
+                            <div class="node-content">
+                                <h5>@app.Course.CourseName</h5>
+                                <span class="badge @(isCompleted ? "bg-success-glow" : "bg-primary-glow")">
+                                    @(isCompleted ? "TAMAMLANDI" : "GÖREV DEVAM EDİYOR")
+                                </span>
+                            </div>
+                            @if (isLocked) {
+                                <div class="frosted-glass-overlay"></div>
+                            }
+                        </div>
+                        @if (i < sortedApps.Count - 1) {
+                            <div class="fiber-optic-line @(isCompleted ? "active" : "")"></div>
+                        }
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="empty-state text-center py-5 glass-card">
+                    <i class="bi bi-diagram-3-fill display-1 text-muted-premium mb-3 d-block"></i>
+                    <h3>Henüz bir görev almadın!</h3>
+                    <p>Maceraya atılmak için hemen bir kursa başvur.</p>
+                    <a asp-controller="Courses" asp-action="Browse" class="btn btn-premium btn-primary-glow mt-3">GÖREVE BAÅLA</a>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<style>
+    .skill-tree-container {
+        min-height: 100vh;
+        background: #050510;
+        color: white;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .space-background {
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0;
+        z-index: 1;
+    }
+
+    /* Star Animation */
+    #stars, #stars2, #stars3 {
+        width: 1px; height: 1px;
+        background: transparent;
+        box-shadow: 1744px 122px #FFF , 134px 1321px #FFF , 92px 859px #FFF; /* Simplified for example */
+        animation: animStar 50s linear infinite;
+    }
+    #stars::after { content: " "; position: absolute; top: 2000px; width: 1px; height: 1px; background: transparent; box-shadow: 1744px 122px #FFF , 134px 1321px #FFF; }
+
+    @@keyframes animStar { from { transform: translateY(0px); } to { transform: translateY(-2000px); } }
+
+    .skill-tree-title {
+        font-size: 3.5rem;
+        font-weight: 900;
+        text-transform: uppercase;
+        margin-bottom: 0.5rem;
+    }
+
+    .animate-glow {
+        animation: glow-text 3s ease-in-out infinite alternate;
+    }
+
+    @@keyframes glow-text {
+        from { text-shadow: 0 0 10px rgba(88, 28, 28, 0.5); }
+        to { text-shadow: 0 0 30px rgba(88, 28, 28, 0.8), 0 0 50px rgba(88, 28, 28, 0.3); }
+    }
+
+    .tree-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 80px;
+        margin-top: 50px;
+    }
+
+    .skill-node-wrapper {
+        position: relative;
+        width: 100%;
+        max-width: 400px;
+        transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .skill-node {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 2rem;
+        border-radius: 24px;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+        backdrop-filter: blur(10px);
+        transition: all 0.4s ease;
+    }
+
+    .skill-node-wrapper.completed .skill-node {
+        border-color: #00E5FF;
+        box-shadow: 0 0 30px rgba(0, 229, 255, 0.2);
+        background: rgba(0, 229, 255, 0.05);
+    }
+
+    .skill-node-wrapper.locked .skill-node {
+        opacity: 0.6;
+        filter: grayscale(1);
+    }
+
+    .frosted-glass-overlay {
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(8px);
+        z-index: 2;
+    }
+
+    .node-icon {
+        width: 60px;
+        height: 60px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.8rem;
+        color: var(--primary-light);
+    }
+
+    .completed .node-icon {
+        background: #00E5FF;
+        color: black;
+        box-shadow: 0 0 20px #00E5FF;
+    }
+
+    .fiber-optic-line {
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        width: 4px;
+        height: 80px;
+        background: rgba(255, 255, 255, 0.1);
+        transform: translateX(-50%);
+        z-index: 0;
+    }
+
+    .fiber-optic-line.active {
+        background: linear-gradient(to bottom, #00E5FF, #581C1C);
+        box-shadow: 0 0 15px #00E5FF;
+    }
+
+    .fiber-optic-line::after {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 20px;
+        background: white;
+        box-shadow: 0 0 10px white;
+        animation: flow-light 2s linear infinite;
+    }
+
+    @@keyframes flow-light {
+        0% { top: 0; opacity: 0; }
+        50% { opacity: 1; }
+        100% { top: 100%; opacity: 0; }
+    }
+
+    .bg-success-glow { background: #C5A059; color: white; box-shadow: 0 0 15px rgba(16, 185, 129, 0.5); }
+    .bg-primary-glow { background: #581C1C; color: white; box-shadow: 0 0 15px rgba(88, 28, 28, 0.5); }
+</style>
+
+<script>
+    function handleNodeClick(isLocked, courseTitle, prevCourseTitle) {
+        if (isLocked) {
+            Swal.fire({
+                icon: 'error',
+                title: 'GÜÇ YETERSİZ!',
+                text: `Bu güce erişmek için önce '${prevCourseTitle}' görevini tamamlamalısın.`,
+                background: '#0a0a20',
+                color: '#fff',
+                confirmButtonColor: '#581C1C'
+            });
+        } else {
+            Swal.fire({
+                icon: 'info',
+                title: courseTitle,
+                text: 'Görev detayları için kurs paneline yönlendiriliyorsunuz...',
+                background: '#0a0a20',
+                color: '#fff',
+                confirmButtonColor: '#00E5FF'
+            });
+        }
+    }
+</script>
+
+

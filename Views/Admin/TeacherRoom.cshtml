@@ -1,0 +1,293 @@
+@model IEnumerable<HalkEgitimSistemi.Models.TeacherChatMessage>
+@using System.Security.Claims
+@{
+    ViewData["Title"] = "Öğretmenler Odası (Yönetici)";
+}
+
+<div class="page-header animate-fadeIn">
+    <div class="container-fluid px-4">
+        <div class="page-header-content" style="background: rgba(88, 28, 28, 0.05); border-radius: 20px; padding: 20px; border: 1px solid var(--theme-card-border);">
+            <div>
+                <h1 class="page-header-title gold-text"><i class="bi bi-person-workspace me-2"></i> Öğretmenler Odası</h1>
+                <p class="page-header-subtitle text-white-50">Yönetici olarak öğretmenler ile gerçek zamanlı iletişim kurun.</p>
+            </div>
+            <div class="d-flex align-items-center gap-3">
+                <span id="connectionStatus" class="badge rounded-pill bg-danger-glow px-3 py-2">Bağlantı Kesildi</span>
+                <div class="live-indicator gold-text fw-bold">
+                    <span class="pulse-dot"></span> Canlı Panel
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid px-4 py-4">
+    <div class="row g-4">
+        <div class="col-lg-9">
+            <div class="glass-card-static chat-container d-flex flex-column shadow-2xl" style="height: 700px; border-radius: 30px; border: 2px solid var(--theme-card-border) !important;">
+                <div class="chat-header p-4 border-bottom border-glass d-flex justify-content-between align-items-center bg-glass-vibrant">
+                    <div class="d-flex align-items-center">
+                        <div class="header-icon-box me-3">
+                            <i class="bi bi-chat-left-dots-fill gold-text fs-4"></i>
+                        </div>
+                        <div>
+                            <span class="fw-900 gold-text letter-spacing-tight fs-5">Kurum İçi Sohbet</span>
+                            <div class="text-white-50 x-small fw-600">@(User.Identity?.Name) oturumu ile bağlı</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="chatMessages" class="chat-messages p-4 flex-grow-1 overflow-auto custom-scrollbar">
+                    @foreach (var msg in Model)
+                    {
+                        var isMe = msg.SenderName == User.Identity?.Name || msg.InstructorId == 0;
+                        <div class="chat-msg @(isMe ? "msg-me" : "msg-other") mb-4 animate-slide-in">
+                            <div class="d-flex @(isMe ? "flex-row-reverse" : "flex-row") align-items-end gap-2">
+                                <div class="msg-avatar">
+                                    <div class="avatar-circle">@msg.SenderName.Substring(0, 1)</div>
+                                </div>
+                                <div class="msg-bubble p-3 shadow-lg">
+                                    <div class="msg-info d-flex justify-content-between mb-1 gap-4">
+                                        <span class="msg-author small fw-900">@msg.SenderName</span>
+                                        <span class="msg-time x-small opacity-50">@msg.SentAt.ToString("HH:mm")</span>
+                                    </div>
+                                    <div class="msg-content">@msg.Message</div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                <div class="chat-footer p-4 border-top border-glass bg-glass-strong">
+                    <div class="input-group gap-2">
+                        <input type="text" id="messageInput" class="form-control modern-control" placeholder="Öğretmenlere bir mesaj gönderin..." autocomplete="off">
+                        <button class="btn btn-send-vibrant" id="sendButton">
+                            <i class="bi bi-send-fill"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3">
+            <div class="glass-card-static p-4 h-100 shadow-xl" style="border-radius: 30px; border: 2px solid var(--theme-card-border) !important;">
+                <h5 class="fw-900 mb-4 border-bottom border-glass pb-3 gold-text"><i class="bi bi-people me-2"></i> Aktif Üyeler</h5>
+                <div id="userList" class="user-list custom-scrollbar">
+                    <div class="text-white-50 small text-center p-3 animate-pulse">Sistem taranıyor...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .bg-glass-vibrant { background: rgba(197, 160, 89, 0.05); backdrop-filter: blur(10px); }
+    .bg-glass-strong { background: rgba(88, 28, 28, 0.03); backdrop-filter: blur(15px); }
+    
+    .header-icon-box {
+        width: 45px; height: 45px;
+        background: rgba(197, 160, 89, 0.1);
+        border-radius: 12px;
+        display: flex; align-items: center; justify-content: center;
+        border: 1px solid var(--theme-card-border);
+    }
+
+    .chat-messages {
+        background-image: radial-gradient(rgba(197, 160, 89, 0.03) 1px, transparent 1px);
+        background-size: 30px 30px;
+    }
+
+    .avatar-circle {
+        width: 35px; height: 35px;
+        background: var(--maroon);
+        color: var(--gold);
+        border: 2px solid var(--gold);
+        border-radius: 12px;
+        display: flex; align-items: center; justify-content: center;
+        font-weight: 800; font-size: 0.9rem;
+        box-shadow: 0 0 15px rgba(197, 160, 89, 0.2);
+    }
+
+    .msg-bubble {
+        max-width: 80%;
+        border-radius: 18px;
+        position: relative;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        backdrop-filter: blur(10px);
+    }
+
+    .msg-bubble:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.3) !important;
+    }
+
+    .msg-other .msg-bubble {
+        background: rgba(197, 160, 89, 0.08) !important;
+        border: 1.5px solid rgba(197, 160, 89, 0.3) !important;
+        border-bottom-left-radius: 4px !important;
+        color: #f5f0e1;
+    }
+
+    .msg-me .msg-bubble {
+        background: linear-gradient(135deg, rgba(88, 28, 28, 0.9), rgba(122, 38, 38, 0.8)) !important;
+        border: 1.5px solid var(--gold) !important;
+        border-bottom-right-radius: 4px !important;
+        color: white;
+        box-shadow: 0 4px 15px rgba(88, 28, 28, 0.4);
+    }
+
+    .msg-author { 
+        color: var(--gold) !important; 
+        text-shadow: 0 0 10px rgba(197, 160, 89, 0.2);
+        letter-spacing: 0.5px;
+    }
+    
+    .msg-content {
+        font-size: 1.05rem;
+        line-height: 1.5;
+        font-weight: 500;
+    }
+
+    .msg-time {
+        color: rgba(255, 255, 255, 0.5);
+    }
+
+    .btn-send-vibrant {
+        width: 55px; height: 55px;
+        background: var(--maroon);
+        color: var(--gold);
+        border: 1px solid var(--gold);
+        border-radius: 15px;
+        display: flex; align-items: center; justify-content: center;
+        transition: all 0.3s;
+    }
+    .btn-send-vibrant:hover {
+        transform: scale(1.05) rotate(5deg);
+        box-shadow: 0 0 20px rgba(197, 160, 89, 0.3);
+    }
+
+    .x-small { font-size: 0.7rem; }
+    .fw-900 { font-weight: 900; }
+    .letter-spacing-tight { letter-spacing: -0.5px; }
+
+    .animate-slide-in { animation: slideUp 0.4s ease-out both; }
+    @@keyframes slideUp {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+</style>
+
+@section Scripts {
+    <script>
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/teacherChatHub")
+            .withAutomaticReconnect()
+            .build();
+
+        const chatMessages = document.getElementById("chatMessages");
+        const messageInput = document.getElementById("messageInput");
+        const sendButton = document.getElementById("sendButton");
+        const statusBadge = document.getElementById("connectionStatus");
+        const userListDiv = document.getElementById("userList");
+
+        const myName = "@(User.FindFirstValue("FullName") ?? User.Identity?.Name ?? "Yetkili")";
+
+        function appendMessage(user, message, time, isMe) {
+            const div = document.createElement("div");
+            div.className = `chat-msg ${isMe ? "msg-me" : "msg-other"} mb-4 animate-slide-in`;
+            div.innerHTML = `
+                <div class="d-flex ${isMe ? "flex-row-reverse" : "flex-row"} align-items-end gap-2">
+                    <div class="msg-avatar">
+                        <div class="avatar-circle">${user.substring(0, 1)}</div>
+                    </div>
+                    <div class="msg-bubble p-3 shadow-lg">
+                        <div class="msg-info d-flex justify-content-between mb-1 gap-4">
+                            <span class="msg-author small fw-900">${user}</span>
+                            <span class="msg-time x-small opacity-50">${time}</span>
+                        </div>
+                        <div class="msg-content">
+                            ${renderMedia(message)}
+                        </div>
+                    </div>
+                </div>
+            `;
+            chatMessages.appendChild(div);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function renderMedia(text) {
+            if (text.startsWith("IMG:")) {
+                const url = text.substring(4).split('|')[0];
+                return `<img src="${url}" class="rounded mt-1" style="max-width:200px; cursor:pointer;" onclick="window.open('${url}')">`;
+            } else if (text.startsWith("VID:")) {
+                const url = text.substring(4).split('|')[0];
+                return `<video controls class="rounded mt-1 w-100" style="max-width:200px;"><source src="${url}" type="video/mp4"></video>`;
+            } else if (text.startsWith("FILE:")) {
+                const parts = text.substring(5).split('|');
+                return `<div class="p-1 bg-white-10 rounded mt-1 small"><i class="bi bi-file-earmark-arrow-down me-1"></i><a href="${parts[0]}" target="_blank" class="text-white">${parts[1] || 'Dosya'}</a></div>`;
+            }
+            return text;
+        }
+
+        connection.on("ReceiveMessage", function (user, message, time, wasCensored) {
+            const isMe = user === myName;
+            appendMessage(user, message, time, isMe);
+        });
+
+        connection.on("UpdateUserList", function(users) {
+            userListDiv.innerHTML = "";
+            users.forEach(u => {
+                const isAdmin = u.role === "Yönetici";
+                const div = document.createElement("div");
+                div.className = "d-flex align-items-center gap-2 mb-3 p-2 rounded-3 bg-glass border-glass hover-scale-sm";
+                div.innerHTML = `
+                    <div class="avatar-xs rounded-circle bg-${isAdmin ? 'danger' : 'primary'}-glow d-flex align-items-center justify-content-center" style="width:32px; height:32px;">
+                        <i class="bi bi-person-fill text-${isAdmin ? 'danger' : 'primary'} small"></i>
+                    </div>
+                    <div class="flex-grow-1 overflow-hidden">
+                        <div class="fw-bold text-primary-theme text-truncate" style="font-size: 0.85rem;">${u.name}</div>
+                        <div class="text-muted small" style="font-size: 0.7rem;">${u.role}</div>
+                    </div>
+                    ${u.name === myName ? '<span class="badge bg-success-glow p-1 rounded-circle" style="width:8px; height:8px;"></span>' : ''}
+                `;
+                userListDiv.appendChild(div);
+            });
+        });
+
+        connection.on("UserJoined", function(name) {
+            const toast = `<div class="alert alert-info py-1 px-3 small rounded-pill mb-2 text-center" style="background: rgba(var(--primary-rgb), 0.1); border: 1px solid rgba(var(--primary-rgb), 0.2); color: var(--primary-light);">${name} odaya katıldı.</div>`;
+            chatMessages.insertAdjacentHTML('beforeend', toast);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        });
+
+        connection.on("UserLeft", function(name) {
+            const toast = `<div class="alert alert-warning py-1 px-3 small rounded-pill mb-2 text-center" style="background: rgba(255,193,7,0.1); border: 1px solid rgba(255,193,7,0.2); color: #ffc107;">${name} odadan ayrıldı.</div>`;
+            chatMessages.insertAdjacentHTML('beforeend', toast);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        });
+
+        connection.start().then(function () {
+            statusBadge.className = "badge rounded-pill bg-success";
+            statusBadge.innerText = "Bağlı";
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }).catch(function (err) {
+            console.error(err.toString());
+        });
+
+        sendButton.addEventListener("click", function (event) {
+            const message = messageInput.value;
+            if (message.trim() !== "") {
+                connection.invoke("SendMessage", message).catch(function (err) {
+                    return console.error(err.toString());
+                });
+                messageInput.value = "";
+            }
+            event.preventDefault();
+        });
+
+        messageInput.addEventListener("keypress", function(e) {
+            if(e.key === 'Enter') sendButton.click();
+        });
+    </script>
+}
+

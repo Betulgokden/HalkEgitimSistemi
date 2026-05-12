@@ -1,0 +1,131 @@
+﻿@model List<HalkEgitimSistemi.Models.AcademicTest>
+@{
+    ViewData["Title"] = "Test Soruları";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var courses = ViewBag.Courses as List<HalkEgitimSistemi.Models.Course>;
+    int? selectedCourse = ViewBag.SelectedCourse;
+}
+
+<div class="container-fluid py-5 position-relative overflow-hidden">
+    <!-- Background Animated Shapes -->
+    <div class="position-absolute top-0 start-0 w-100 h-100 opacity-10 pointer-events-none">
+        <div class="shape-blob bg-primary" style="top: 10%; left: 5%; width: 300px; height: 300px;"></div>
+        <div class="shape-blob bg-secondary" style="bottom: 10%; right: 5%; width: 400px; height: 400px;"></div>
+    </div>
+
+    <div class="d-flex align-items-center justify-content-between mb-5 animate-fadeIn position-relative z-1">
+        <div>
+            <h1 class="h2 fw-bold text-gradient-secondary mb-1">
+                <i class="bi bi-pencil-square me-2 float-slow"></i>Test Soruları Hub
+            </h1>
+            <p class="text-muted-premium">Kendinizi sınayabileceğiniz ders bazlı konu tarama testleri.</p>
+        </div>
+        
+        <div class="d-flex gap-3 align-items-center">
+            <form method="get" class="d-flex gap-2">
+                <select name="courseId" class="form-select bg-glass border-glass text-white rounded-pill px-4" onchange="this.form.submit()">
+                    <option value="">Tüm Dersler</option>
+                    @foreach (var c in courses)
+                    {
+                        <!option value="@c.Id" @(selectedCourse == c.Id ? "selected" : "")>@c.CourseName</!option>
+                    }
+                </select>
+            </form>
+            @if (User.IsInRole("Admin") || User.IsInRole("Instructor"))
+            {
+                <button class="btn btn-secondary-glow rounded-pill px-4" data-bs-toggle="modal" data-bs-target="#addTestModal">
+                    <i class="bi bi-plus-lg me-2"></i> Yeni Test Oluştur
+                </button>
+            }
+        </div>
+    </div>
+
+    <div class="row g-4 stagger-children position-relative z-1">
+        @foreach (var test in Model)
+        {
+            <div class="col-md-6 col-lg-4">
+                <div class="glass-card-static h-100 p-4 transition-all hover-translate-y border-glass border-glow-hover">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div class="d-flex align-items-center gap-2">
+                            <div class="icon-box-sm bg-secondary-soft text-secondary">
+                                <i class="bi bi-list-check"></i>
+                            </div>
+                            <span class="small fw-bold text-secondary">@test.Course?.CourseName</span>
+                        </div>
+                        <span class="badge bg-glass border-glass text-white-50">@test.Questions.Count Soru</span>
+                    </div>
+                    
+                    <h4 class="fw-bold mb-3 text-white">@test.TestTitle</h4>
+                    <p class="text-muted-premium small mb-4">Bu test @test.Course?.CourseName dersinin müfredatına uygun olarak hazırlanmıştır.</p>
+                    
+                    <div class="mt-auto">
+                        <a asp-action="TakeTest" asp-route-id="@test.Id" class="btn btn-secondary-glow w-100 rounded-pill py-2 fw-bold">
+                            <i class="bi bi-play-circle me-2"></i> Teste Başla
+                        </a>
+                    </div>
+                </div>
+            </div>
+        }
+        
+        @if (!Model.Any())
+        {
+            <div class="col-12 text-center py-5">
+                <div class="mb-4 animate-float">
+                    <i class="bi bi-journal-x display-1 text-muted opacity-25"></i>
+                </div>
+                <h4 class="text-muted-premium fw-bold">Henüz bu kategoride test bulunmamaktadır.</h4>
+                <p class="text-muted-premium small">Eğitmenleriniz yakında yeni testler ekleyecektir.</p>
+            </div>
+        }
+    </div>
+</div>
+
+<!-- Add Test Modal -->
+<div class="modal fade" id="addTestModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content bg-glass-strong border-glass text-white">
+            <div class="modal-header border-white-10">
+                <h5 class="modal-title fw-bold">Yeni Test Oluştur</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form asp-action="AddTest" method="post">
+                <div class="modal-body p-4">
+                    <div class="mb-3">
+                        <label class="form-label small text-muted">Ders Seçimi</label>
+                        <select name="CourseId" class="form-select bg-glass border-glass text-white" required>
+                            @foreach (var c in courses) { <option value="@c.Id">@c.CourseName</option> }
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small text-muted">Test Başlığı</label>
+                        <input name="TestTitle" class="form-control bg-glass border-glass text-white" required placeholder="Örn: Hafta 1 - Temel Kavramlar" />
+                    </div>
+                </div>
+                <div class="modal-footer border-white-10">
+                    <button type="button" class="btn btn-secondary-glass rounded-pill px-4" data-bs-dismiss="modal">İptal</button>
+                    <button type="submit" class="btn btn-secondary-glow rounded-pill px-4">Testi Oluştur</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    .shape-blob {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(80px);
+        animation: blob-move 20s infinite alternate;
+        z-index: 0;
+    }
+    @@keyframes blob-move {
+        0% { transform: translate(0, 0) scale(1); }
+        100% { transform: translate(50px, 50px) scale(1.1); }
+    }
+    .border-glow-hover:hover {
+        border-color: var(--secondary) !important;
+        box-shadow: 0 0 30px rgba(88, 28, 28, 0.2) !important;
+    }
+</style>
+
+

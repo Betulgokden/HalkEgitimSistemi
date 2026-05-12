@@ -1,0 +1,170 @@
+@model IEnumerable<HalkEgitimSistemi.Models.Idea>
+
+@{
+    ViewData["Title"] = "Fikir Kumbarası";
+}
+
+<div class="page-header">
+    <div class="container">
+        <div class="page-header-content">
+            <div>
+                <h1 class="page-header-title"><i class="bi bi-piggy-bank me-2"></i> Fikir Kumbarası</h1>
+                <p class="page-header-subtitle">Kurumumuzun geleceğini senin fikirlerinle şekillendiriyoruz.</p>
+            </div>
+            <button class="btn btn-glow-premium" onclick="$('#submitIdeaModal').modal('show')">
+                <i class="bi bi-plus-circle me-1"></i> Yeni Fikir Gönder
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="container py-4">
+    <!-- Quick Stats (Modernize) -->
+    <div class="row g-4 mb-5 animate-fadeInUp">
+        <div class="col-md-4">
+            <div class="stat-box-modern" style="background: rgba(197, 160, 89, 0.15); border: 2px solid #C5A059; border-radius: 25px; padding: 2rem; text-align: center;">
+                <div class="stat-number-modern" style="color: #581C1C; font-size: 3rem; font-weight: 900;">@Model.Count()</div>
+                <div class="stat-label-modern" style="color: #581C1C; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">Toplam Fikir</div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="stat-box-modern" style="background: rgba(197, 160, 89, 0.15); border: 2px solid #C5A059; border-radius: 25px; padding: 2rem; text-align: center;">
+                <div class="stat-number-modern" style="color: #581C1C; font-size: 3rem; font-weight: 900;">@Model.Sum(i => i.Likes)</div>
+                <div class="stat-label-modern" style="color: #581C1C; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">Toplam Etkileşim</div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="stat-box-modern" style="background: rgba(197, 160, 89, 0.15); border: 2px solid #C5A059; border-radius: 25px; padding: 2rem; text-align: center;">
+                <div class="stat-number-modern" style="color: #581C1C; font-size: 3rem; font-weight: 900;">@Model.GroupBy(i => i.Category).Count()</div>
+                <div class="stat-label-modern" style="color: #581C1C; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">Farklı Kategori</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ideas Grid (Modernize) -->
+    <div class="row g-4 stagger-children" id="ideasGrid">
+        @foreach (var item in Model)
+        {
+            <div class="col-lg-4 col-md-6 idea-card-wrapper">
+                <div class="glass-card h-100 p-4 d-flex flex-column idea-card" style="border-radius: 30px; background: rgba(197, 160, 89, 0.1) !important; border: 1px solid rgba(197, 160, 89, 0.3) !important;">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <span class="badge-premium" style="background: #581C1C; color: #C5A059; padding: 6px 15px; border-radius: 12px; font-weight: 700; font-size: 0.8rem;">@item.Category</span>
+                        <div style="color: #581C1C; font-size: 0.85rem; font-weight: 600;"><i class="bi bi-clock me-1"></i> @item.CreatedAt.ToString("dd MMM yyyy")</div>
+                    </div>
+                    <h3 class="fw-bold mb-2" style="font-family: 'Outfit', sans-serif; font-size: 1.4rem; color: #581C1C;">@item.Title</h3>
+                    <p style="font-size: 0.95rem; line-height: 1.6; color: #581C1C; opacity: 0.9; margin-bottom: 0;" class="flex-grow-1">@item.Description</p>
+                    <div class="mt-4 pt-3 border-top d-flex justify-content-between align-items-center" style="border-color: rgba(88, 28, 28, 0.1) !important;">
+                        <div class="d-flex align-items-center">
+                            <div class="author-avatar-modern me-3" style="width: 35px; height: 35px; background: #581C1C; color: #C5A059; display: flex; align-items: center; justify-content: center; border-radius: 10px; font-weight: 800;">
+                                @item.AuthorName.Substring(0, 1)
+                            </div>
+                            <span class="small fw-bold" style="color: #581C1C;">@item.AuthorName</span>
+                        </div>
+                        <button class="btn p-1 px-3 rounded-pill" onclick="likeIdea(@item.Id, this)" style="background: rgba(88, 28, 28, 0.1); color: #581C1C; border: 1px solid rgba(88, 28, 28, 0.2);">
+                            <i class="bi bi-heart-fill me-2" style="color: #581C1C;"></i> <span class="like-count fw-bold">@item.Likes</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<style>
+    .idea-card {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .idea-card:hover {
+        transform: translateY(-8px);
+        background: rgba(197, 160, 89, 0.2) !important;
+        border-color: #C5A059 !important;
+        box-shadow: 0 15px 40px rgba(197, 160, 89, 0.15);
+    }
+    .stat-box-modern {
+        transition: all 0.3s ease;
+    }
+    .stat-box-modern:hover {
+        transform: translateY(-5px);
+        background: rgba(197, 160, 89, 0.25) !important;
+    }
+</style>
+
+<!-- Submit Idea Modal -->
+<div class="modal fade" id="submitIdeaModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-glass border-glass shadow-lg" style="backdrop-filter: blur(25px);">
+            <div class="modal-header border-glass">
+                <h5 class="modal-title fw-bold text-primary">Kumbaraya Fikir At</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="form-premium-group">
+                    <label class="form-premium-label">Fikir Başlığı</label>
+                    <input type="text" id="ideaTitle" class="form-premium-control" placeholder="Örn: Akıllı Bahçe Projesi">
+                </div>
+                <div class="form-premium-group">
+                    <label class="form-premium-label">Kategori</label>
+                    <select id="ideaCategory" class="form-premium-control">
+                        <option>Dijitalleşme</option>
+                        <option>Sanat & Kültür</option>
+                        <option>Sosyal Sorumluluk</option>
+                        <option>Eğitim Teknolojileri</option>
+                        <option>Kurumsal Gelişim</option>
+                        <option>Diğer</option>
+                    </select>
+                </div>
+                <div class="form-premium-group">
+                    <label class="form-premium-label">Detaylı Açıklama</label>
+                    <textarea id="ideaDescription" class="form-premium-control" rows="4" placeholder="Fikrini detaylandır..."></textarea>
+                </div>
+                <div class="form-premium-group">
+                    <label class="form-premium-label">İsminiz (Opsiyonel)</label>
+                    <input type="text" id="ideaAuthor" class="form-premium-control" placeholder="Anonim kalsın istiyorsan boş bırak">
+                </div>
+            </div>
+            <div class="modal-footer border-glass">
+                <button type="button" class="btn btn-secondary-glass" data-bs-dismiss="modal">Vazgeç</button>
+                <button type="button" class="btn btn-glow-premium" onclick="submitIdea()">Fikri Gönder</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function likeIdea(id, btn) {
+            $(btn).addClass('animate-pulse');
+            $.post('/IdeaBank/LikeIdea', { id: id }, function(res) {
+                if(res.success) {
+                    $(btn).find('.like-count').text(res.newLikes);
+                    setTimeout(() => $(btn).removeClass('animate-pulse'), 1000);
+                }
+            });
+        }
+
+        function submitIdea() {
+            const data = {
+                title: $('#ideaTitle').val(),
+                category: $('#ideaCategory').val(),
+                description: $('#ideaDescription').val(),
+                author: $('#ideaAuthor').val()
+            };
+
+            if(!data.title || !data.description) {
+                alert("Lütfen tüm alanları doldurun.");
+                return;
+            }
+
+            $.post('/IdeaBank/SubmitIdea', data, function(res) {
+                if(res.success) {
+                    $('#submitIdeaModal').modal('hide');
+                    location.reload(); // Simple reload for perfection in this context
+                } else {
+                    alert(res.message);
+                }
+            });
+        }
+    </script>
+}
+
+

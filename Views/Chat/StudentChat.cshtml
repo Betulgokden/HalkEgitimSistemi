@@ -1,0 +1,66 @@
+@model IEnumerable<HalkEgitimSistemi.Models.Message>
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "İşveren ile Sohbet";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="glass-card p-0 overflow-hidden shadow-lg border-glass" style="border-radius: 35px; height: 700px; display: flex; flex-direction: column;">
+                <!-- Chat Header -->
+                <div class="p-4 bg-glass-strong border-bottom border-secondary border-opacity-25 d-flex align-items-center justify-content-between">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="avatar-sm bg-info rounded-circle d-flex align-items-center justify-content-center" style="width: 50px; height: 50px; color: white;">
+                            <i class="bi bi-building fs-4"></i>
+                        </div>
+                        <div>
+                            <h5 class="text-white fw-bold mb-0">@ViewBag.EmployerName</h5>
+                            <span class="text-info x-small fw-bold"><i class="bi bi-patch-check-fill me-1"></i> DOĞRULANMIŞ İŞVEREN</span>
+                        </div>
+                    </div>
+                    <a href="/Chat/StudentMessages" class="btn btn-icon-glass"><i class="bi bi-x-lg"></i></a>
+                </div>
+
+                <!-- Message History -->
+                <div id="chatBox" class="flex-grow-1 p-4 overflow-auto bg-dark-glass" style="scroll-behavior: smooth;">
+                    @foreach (var msg in Model)
+                    {
+                        var isMe = msg.SenderRole == "Student";
+                        <div class="d-flex @(isMe ? "justify-content-end" : "justify-content-start") mb-4 animate-fadeInUp">
+                            <div class="message-bubble @(isMe ? "me" : "them") p-3 shadow-sm" style="max-width: 75%; border-radius: 20px;">
+                                <div class="text-white small">@msg.Content</div>
+                                <div class="text-white-50 x-small mt-1 text-end">@msg.Date.ToString("HH:mm")</div>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                <!-- Input Area -->
+                <div class="p-4 bg-glass-strong border-top border-secondary border-opacity-25">
+                    <form asp-action="SendMessage" method="post" class="d-flex gap-3">
+                        <input type="hidden" name="employerId" value="@ViewBag.EmployerId" />
+                        <input type="text" name="content" class="modern-control flex-grow-1" placeholder="Mesajınızı yazın..." required autocomplete="off" />
+                        <button type="submit" class="btn-glow-premium rounded-circle p-0 d-flex align-items-center justify-content-center" style="width: 55px; height: 55px; flex-shrink: 0;">
+                            <i class="bi bi-send-fill fs-5"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var chatBox = document.getElementById('chatBox');
+        chatBox.scrollTop = chatBox.scrollHeight;
+    });
+</script>
+
+<style>
+    .message-bubble.me { background: linear-gradient(135deg, #581C1C, #C5A059); border-bottom-right-radius: 5px !important; }
+    .message-bubble.them { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-bottom-left-radius: 5px !important; }
+    #chatBox::-webkit-scrollbar { width: 5px; }
+    #chatBox::-webkit-scrollbar-thumb { background: rgba(197, 160, 89, 0.2); border-radius: 10px; }
+</style>

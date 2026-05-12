@@ -1,0 +1,81 @@
+﻿@model List<HalkEgitimSistemi.Models.Application>
+@using HalkEgitimSistemi.Models
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Yoklama Durumum";
+}
+
+<div class="container py-4" style="max-width:800px;">
+    <div class="glass-card-static p-4 mb-4 animate-fadeInUp">
+        <h2 style="font-family:'Outfit';font-weight:800;margin:0;">
+            <i class="bi bi-calendar-check me-2" style="color:var(--success);"></i>Yoklama Durumum
+        </h2>
+        <p class="mb-0" style="color:var(--text-muted);">Devamsızlık takibi ve ders katılım detayları</p>
+    </div>
+
+    @foreach (var app in Model.Where(a => a.Status == ApplicationStatus.Approved))
+    {
+        var totalHours = 40; // Örnek toplam saat
+        var absentHours = app.Attendances?.Count(a => !a.IsPresent) ?? 0;
+        var presentHours = app.Attendances?.Count(a => a.IsPresent) ?? 0;
+        var maxAbsence = app.Course?.MaxAbsenceLimit ?? 4;
+
+        <div class="glass-card-static p-4 mb-4 animate-fadeInUp">
+            <h5 style="font-weight:700;color:var(--primary-light);margin-bottom:1.5rem;">@app.Course?.CourseName</h5>
+            
+            <div class="row g-4 mb-4">
+                <div class="col-6 col-md-3">
+                    <div class="text-center">
+                        <div class="small text-muted mb-1">Toplam Saat</div>
+                        <div class="h4 mb-0">@totalHours</div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="text-center">
+                        <div class="small text-muted mb-1">Gelinmedi</div>
+                        <div class="h4 mb-0 text-danger">@absentHours</div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="text-center">
+                        <div class="small text-muted mb-1">Gelindi</div>
+                        <div class="h4 mb-0 text-success">@presentHours</div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="text-center">
+                        <div class="small text-muted mb-1">Sınır</div>
+                        <div class="h4 mb-0">@maxAbsence</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="attendance-grid d-flex flex-wrap gap-2">
+                @for (int i = 1; i <= totalHours; i++)
+                {
+                    bool? status = null;
+                    if (i <= (app.Attendances?.Count ?? 0)) {
+                        status = app.Attendances.ElementAt(i-1).IsPresent;
+                    }
+
+                    <div class="attendance-box" 
+                         style="width:30px;height:30px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;
+                                background:@(status == true ? "rgba(16,185,129,0.2)" : status == false ? "rgba(239,68,68,0.2)" : "rgba(255,255,255,0.05)");
+                                border:1px solid @(status == true ? "var(--success)" : status == false ? "var(--danger)" : "var(--border-glass)");
+                                color:@(status == true ? "var(--success)" : status == false ? "var(--danger)" : "var(--text-muted)");"
+                         title="Saat @i">
+                        @(status == true ? "V" : status == false ? "X" : i.ToString())
+                    </div>
+                }
+            </div>
+            
+            @if (absentHours >= maxAbsence)
+            {
+                <div class="alert alert-danger mt-4 mb-0 d-flex align-items-center" style="background:rgba(239,68,68,0.1);border:1px solid var(--danger);color:var(--danger);">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                    <span>Devamsızlık sınırına ulaştınız veya aştınız. Kurs başarısız sayılabilir.</span>
+                </div>
+            }
+        </div>
+    }
+</div>

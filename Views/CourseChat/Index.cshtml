@@ -1,0 +1,445 @@
+@model List<HalkEgitimSistemi.Models.CourseChatMessage>
+
+@{
+    ViewData["Title"] = $"{ViewBag.CourseName} | Kurs Sohbeti";
+}
+
+<div class="container py-4">
+    <div class="row g-4 h-100" style="min-height: 80vh;">
+        <!-- Sol Panel: Kurs Bilgisi -->
+        <div class="col-lg-3">
+            <div class="glass-card-static h-100 p-4 d-flex flex-column">
+                <div class="mb-4">
+                    <div class="position-relative">
+                        <img src="@ViewBag.CourseImage" class="img-fluid rounded-4 mb-3 shadow-lg border-glass" alt="Course" style="height: 180px; width: 100%; object-fit: cover;">
+                        <span class="badge bg-primary-glow position-absolute top-0 start-0 m-2 shadow-sm">Aktif Eğitim</span>
+                    </div>
+                    <h5 class="fw-bold mb-1 text-primary-light">@ViewBag.CourseName</h5>
+                    <p class="text-white-50 x-small mb-0">Halk Eğitim Dijital Ekosistemi</p>
+                </div>
+                
+                <hr class="border-white-10">
+
+                <div class="instructor-info mb-4">
+                    <h6 class="fw-bold mb-3 small opacity-50 uppercase letter-spacing-1">Kurs Eğitmeni</h6>
+                    <div class="participant-item p-3 glass-card-static border-glass" style="border-left: 4px solid #C5A059;">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="avatar-circle shadow-glow-sm">@ViewBag.InstructorName.Substring(0, 1)</div>
+                            <div class="overflow-hidden">
+                                <h6 class="mb-0 fw-bold small text-truncate">@ViewBag.InstructorName</h6>
+                                <small class="text-white-50 x-small">Yetkili Eğitmen</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="students-info flex-grow-1">
+                    <h6 class="fw-bold mb-3 small opacity-50 uppercase letter-spacing-1">Katılımcılar (<span id="participantCount">@ViewBag.StudentCount</span>)</h6>
+                    <div class="participant-list custom-scrollbar" id="participantsContainer" style="max-height: 30vh; overflow-y: auto;">
+                        @foreach (var student in (dynamic)ViewBag.Students)
+                        {
+                            <div class="participant-item mb-2 p-2 d-flex align-items-center gap-2 participant-hover rounded-3" data-name="@student.FullName">
+                                <div class="avatar-circle-sm position-relative">
+                                    @student.FullName.Substring(0, 1)
+                                    <span class="status-dot-offline"></span>
+                                </div>
+                                <p class="mb-0 x-small fw-bold text-truncate">@student.FullName</p>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sağ Panel: Sohbet Alanı -->
+        <div class="col-lg-9 d-flex flex-column">
+            <div class="glass-card-static flex-grow-1 d-flex flex-column p-0 overflow-hidden shadow-2xl border-glass">
+                <!-- Chat Header -->
+                <div class="chat-header p-4 border-bottom border-white-10 d-flex justify-content-between align-items-center bg-glass-sm">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="avatar-group-icon bg-success bg-opacity-10 text-success shadow-glow-success-sm">
+                            <i class="bi bi-chat-left-dots-fill"></i>
+                        </div>
+                        <div>
+                            <h5 class="mb-0 fw-bold">Sınıf Grup Sohbeti</h5>
+                            <div class="d-flex align-items-center gap-2">
+                                <span id="connectionStatus" class="badge rounded-pill bg-warning text-dark" style="font-size: 0.65rem; transition: all 0.4s;">Bağlantı Kuruluyor...</span>
+                                <small class="text-success"><i class="bi bi-shield-check me-1"></i> Güvenli İletişim Hattı</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <a asp-controller="Courses" asp-action="CourseDetail" asp-route-id="@ViewBag.CourseId" class="btn btn-icon-glass" title="Kurs Detayları"><i class="bi bi-info-circle"></i></a>
+                        <button class="btn btn-icon-glass" onclick="location.reload()" title="Yenile"><i class="bi bi-arrow-clockwise"></i></button>
+                    </div>
+                </div>
+
+                <!-- Chat Messages Area -->
+                <div id="chatMessages" class="chat-messages-area p-4 flex-grow-1 overflow-auto bg-dark-glass custom-scrollbar">
+
+                    @foreach (var msg in Model)
+                    {
+                        var isMe = msg.SenderName == ViewBag.SenderName;
+                        var isTeacher = msg.SenderRole == "Instructor" || msg.SenderRole == "Admin";
+                        var messageContent = msg.Message;
+
+                        <div class="message-wrapper @(isMe ? "me" : "others") mb-4 animate-fadeInUp">
+                            <div class="message-bubble @(isMe ? "bubble-me" : "bubble-others") @(isTeacher ? "bubble-instructor" : "") shadow-sm">
+                                @if (!isMe)
+                                {
+                                    <div class="message-sender d-flex align-items-center gap-1">
+                                        @if (msg.SenderRole == "Admin")
+                                        {
+                                            <span class="text-white fw-bold">@msg.SenderName</span>
+                                            <span class="badge bg-danger ms-1" style="font-size:0.5rem; background: linear-gradient(135deg, #ef4444, #991b1b) !important;">YÖNETİCİ</span>
+                                        }
+                                        else if (msg.SenderRole == "Instructor")
+                                        {
+                                            <span class="text-primary-light fw-bold">@msg.SenderName</span>
+                                            <span class="badge bg-primary-glow ms-1" style="font-size:0.5rem;">EĞİTMEN</span>
+                                        }
+                                        else
+                                        {
+                                            <span>@msg.SenderName</span>
+                                        }
+                                    </div>
+                                }
+                                <div class="message-text">
+                                    @if (messageContent.StartsWith("IMG:"))
+                                    {
+                                        var parts = messageContent.Substring(4).Split('|');
+                                        var imgUrl = parts[0];
+                                        <img src="@imgUrl" class="chat-img-clickable rounded-3 mt-2 shadow-lg" style="max-width:280px; cursor:pointer;" onclick="window.open('@imgUrl')">
+                                    }
+                                    else if (messageContent.StartsWith("VID:"))
+                                    {
+                                        var parts = messageContent.Substring(4).Split('|');
+                                        var vidUrl = parts[0];
+                                        <video controls class="rounded-3 mt-2 w-100 shadow-lg" style="max-width:320px;"><source src="@vidUrl" type="video/mp4"></video>
+                                    }
+                                    else if (messageContent.StartsWith("FILE:"))
+                                    {
+                                        var parts = messageContent.Substring(5).Split('|');
+                                        var fileUrl = parts[0];
+                                        var fileName = parts.Length > 1 ? parts[1] : "Dosya";
+                                        <div class="p-3 bg-glass rounded-4 mt-2 border-glass d-flex align-items-center gap-3 chat-file-box">
+                                            <div class="file-icon-circle"><i class="bi bi-file-earmark-arrow-down-fill"></i></div>
+                                            <div class="flex-grow-1 overflow-hidden">
+                                                <div class="small fw-bold text-truncate text-white">@fileName</div>
+                                                <a href="@fileUrl" target="_blank" class="x-small text-primary-light text-decoration-none">Dosyayı Görüntüle</a>
+                                            </div>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        @messageContent
+                                    }
+                                </div>
+                                <div class="message-time">@msg.SentAt.ToString("HH:mm")</div>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                <!-- Chat Input Area -->
+                <div class="chat-input-area p-4 border-top border-white-10 bg-glass-sm">
+                    <form id="chatForm" class="d-flex gap-3 align-items-center">
+                        <div class="flex-grow-1 position-relative">
+                            <div class="chat-input-wrapper">
+                                <input type="text" id="messageInput" class="form-control chat-input-modern" placeholder="Eğitiminize dair bir şeyler yazın..." autocomplete="off">
+                                <div class="input-actions-chat">
+                                    <button type="button" id="photoBtn" class="btn btn-icon-action" title="Görsel/Video"><i class="bi bi-camera-fill"></i></button>
+                                    <button type="button" id="fileBtn" class="btn btn-icon-action" title="Dosya"><i class="bi bi-paperclip"></i></button>
+                                    <button type="button" id="emojiPickerBtn" class="btn btn-icon-action"><i class="bi bi-emoji-heart-fill text-warning"></i></button>
+                                </div>
+                            </div>
+
+                            <!-- Hidden Inputs -->
+                            <input type="file" id="photoInput" style="display:none;" accept="image/*,video/mp4,video/webm">
+                            <input type="file" id="fileInput" style="display:none;" accept=".pdf,.docx,.txt,.xlsx,.pptx,.zip">
+                            
+                            <!-- Emoji Menu -->
+                            <div id="emojiMenu" class="emoji-menu shadow-2xl animate-fadeInUp" style="display: none;">
+                                <div class="emoji-grid">
+                                    <span>😀</span><span>😂</span><span>😊</span><span>😎</span><span>🤔</span><span>👍</span>
+                                    <span>❤️</span><span>🔥</span><span>⭐</span><span>🚀</span><span>💡</span><span>✅</span>
+                                    <span>👋</span><span>🤝</span><span>🎨</span><span>💻</span><span>📚</span><span>🎓</span>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" id="sendBtn" class="btn btn-send-modern shadow-glow-success">
+                            <i class="bi bi-send-fill"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .chat-input-modern {
+        background: rgba(255,255,255,0.08) !important;
+        border: 1px solid rgba(255,255,255,0.15) !important;
+        border-radius: 20px !important;
+        padding: 15px 120px 15px 25px !important;
+        color: #C5A059 !important;
+        font-weight: 500;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .chat-input-modern::placeholder {
+        color: rgba(197, 160, 89, 0.5) !important;
+    }
+    
+    [data-theme="light"] .chat-input-modern {
+        background: white !important;
+        border-color: #C5A059 !important;
+        color: #581C1C !important;
+    }
+
+    [data-theme="light"] .chat-input-modern::placeholder {
+        color: rgba(88, 28, 28, 0.4) !important;
+    }
+
+    .chat-input-modern:focus {
+        background: rgba(255,255,255,0.12) !important;
+        border-color: #C5A059 !important;
+        box-shadow: 0 0 25px rgba(197, 160, 89, 0.3);
+    }
+
+    .btn-send-modern {
+        width: 58px;
+        height: 58px;
+        border-radius: 20px;
+        background: linear-gradient(135deg, #C5A059, #C5A059);
+        border: none;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.4rem;
+        transition: all 0.3s;
+    }
+    
+    .btn-send-modern:hover {
+        transform: scale(1.05) rotate(5deg);
+        box-shadow: 0 10px 25px rgba(197, 160, 89, 0.4);
+    }
+
+    .avatar-circle-sm {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: rgba(197, 160, 89, 0.1);
+        color: var(--primary-light);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        font-size: 0.8rem;
+    }
+
+    .file-icon-circle {
+        width: 45px;
+        height: 45px;
+        border-radius: 12px;
+        background: rgba(56, 189, 248, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #38bdf8;
+        font-size: 1.4rem;
+    }
+
+    .status-dot-online {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 10px;
+        height: 10px;
+        background-color: #27c93f;
+        border-radius: 50%;
+        border: 2px solid #1a1a1a;
+        box-shadow: 0 0 5px #27c93f;
+    }
+    
+    .status-dot-offline {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 10px;
+        height: 10px;
+        background-color: #666;
+        border-radius: 50%;
+        border: 2px solid #1a1a1a;
+    }
+
+    [data-theme="light"] .status-dot-online,
+    [data-theme="light"] .status-dot-offline {
+        border-color: white;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar { width: 5px; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(197, 160, 89, 0.2); border-radius: 10px; }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(197, 160, 89, 0.4); }
+</style>
+
+@section Scripts {
+    <script>
+        const chatMessages = document.getElementById('chatMessages');
+        const chatForm = document.getElementById('chatForm');
+        const messageInput = document.getElementById('messageInput');
+        const statusBadge = document.getElementById("connectionStatus");
+        const courseId = parseInt("@ViewBag.CourseId");
+        const senderName = "@ViewBag.SenderName";
+
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+
+        // --- SIGNALR INTEGRATION ---
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("@Url.Content("~/courseChatHub")")
+            .withAutomaticReconnect([0, 3000, 5000, 10000, 30000])
+            .build();
+
+        connection.on("ReceiveCourseMessage", (senderName, role, message, sentAt, isCensored, cid, senderEmail) => {
+            if (parseInt(cid) === courseId) {
+                appendMessage({ senderName, senderRole: role, message, sentAt: sentAt.split(' ')[1] || sentAt, senderEmail });
+            }
+        });
+
+        connection.on("UserJoined", (name, cid) => {
+             if (parseInt(cid) === courseId) {
+                  const html = `<div class="text-center my-3 animate-fadeIn"><span class="badge bg-glass text-white-50 p-2 border-glass small"><i class="bi bi-person-check-fill me-2 text-success"></i>${name} derse katıldı.</span></div>`;
+                  chatMessages.insertAdjacentHTML('beforeend', html);
+                  chatMessages.scrollTop = chatMessages.scrollHeight;
+             }
+        });
+
+        connection.on("ReceiveSystemWarning", (msg) => {
+             const html = `<div class="text-center my-3"><div class="d-inline-block bg-danger bg-opacity-20 border border-danger border-opacity-20 rounded-4 px-4 py-2 text-danger small shadow-sm"><i class="bi bi-info-circle-fill me-2"></i>${msg}</div></div>`;
+             chatMessages.insertAdjacentHTML('beforeend', html);
+             chatMessages.scrollTop = chatMessages.scrollHeight;
+        });
+
+        connection.onreconnecting(() => {
+            statusBadge.className = "badge rounded-pill bg-warning text-dark";
+            statusBadge.innerText = "Yeniden Bağlanıyor...";
+        });
+
+        connection.onreconnected(() => {
+            statusBadge.className = "badge rounded-pill bg-success text-white";
+            statusBadge.innerText = "Bağlı";
+            connection.invoke("JoinCourse", courseId);
+        });
+
+        connection.on("UpdateUserList", (users) => {
+             // Reset all
+             document.querySelectorAll('#participantsContainer .status-dot-online').forEach(el => el.className = 'status-dot-offline');
+             
+             users.forEach(u => {
+                  const item = document.querySelector(`#participantsContainer .participant-item[data-name="${u.name}"]`);
+                  if(item) {
+                       const dot = item.querySelector('span[class^="status-dot"]');
+                       if(dot) dot.className = 'status-dot-online';
+                  }
+             });
+        });
+
+        connection.start().then(() => {
+            console.log("CourseChat Connected.");
+            statusBadge.className = "badge rounded-pill bg-success text-white";
+            statusBadge.innerText = "Bağlı";
+            connection.invoke("JoinCourse", courseId).catch(err => {
+                console.error("Join error:", err);
+            });
+        }).catch(err => {
+            console.error("SignalR Error:", err);
+            statusBadge.className = "badge rounded-pill bg-danger text-white";
+            statusBadge.innerText = "Bağlantı Hatası";
+            if(err.toString().includes("401")) alert("Oturumunuzun süresi dolmuş. Lütfen tekrar giriş yapın.");
+        });
+
+        chatForm.onsubmit = async (e) => {
+            e.preventDefault();
+            const text = messageInput.value.trim();
+            if (!text || connection.state !== signalR.HubConnectionState.Connected) return;
+            messageInput.value = '';
+            connection.invoke("SendMessageToCourse", courseId, text).catch(err => {
+                console.error("Send failed:", err);
+                messageInput.value = text;
+            });
+        };
+
+        // Emoji & Media Logic (Simplified for brevity but functional)
+        const emojiBtn = document.getElementById('emojiPickerBtn');
+        const emojiMenu = document.getElementById('emojiMenu');
+        emojiBtn.onclick = (e) => { e.stopPropagation(); emojiMenu.style.display = emojiMenu.style.display === 'none' ? 'block' : 'none'; };
+        document.querySelectorAll('.emoji-grid span').forEach(s => {
+            s.onclick = () => { messageInput.value += s.innerText; messageInput.focus(); emojiMenu.style.display = 'none'; };
+        });
+        document.addEventListener('click', () => { emojiMenu.style.display = 'none'; });
+
+        const photoBtn = document.getElementById('photoBtn');
+        const photoInput = document.getElementById('photoInput');
+        const fileBtn = document.getElementById('fileBtn');
+        const fileInput = document.getElementById('fileInput');
+        photoBtn.onclick = () => photoInput.click();
+        fileBtn.onclick = () => fileInput.click();
+        
+        const handleFileUpload = async (input) => {
+            if (input.files.length > 0) {
+                const formData = new FormData();
+                formData.append('file', input.files[0]);
+                try {
+                    const response = await fetch('@Url.Content("~/CourseChat/UploadChatFile")', { method: 'POST', body: formData });
+                    if (response.ok) {
+                        const data = await response.json();
+                        let msgType = data.type.startsWith(".") ? (([".jpg",".png",".jpeg"].includes(data.type.toLowerCase()) ? "IMG:" : "FILE:")) : "FILE:";
+                        connection.invoke("SendMessageToCourse", courseId, msgType + data.url + "|" + data.originalName);
+                    }
+                } catch (err) { console.error("Upload error:", err); }
+                input.value = '';
+            }
+        };
+        photoInput.onchange = () => handleFileUpload(photoInput);
+        fileInput.onchange = () => handleFileUpload(fileInput);
+
+        function appendMessage(msg) {
+            const isMe = msg.senderName === senderName;
+            const isTeacher = msg.senderRole === "Instructor" || msg.senderRole === "Admin";
+            const escape = (str) => { const p = document.createElement('p'); p.textContent = str; return p.innerHTML; };
+            
+            let messageContent = msg.message;
+            if (messageContent.startsWith("IMG:")) {
+                const imgUrl = escape(messageContent.substring(4).split('|')[0]);
+                messageContent = `<img src="${imgUrl}" class="chat-img-clickable rounded-3 mt-2 shadow-lg" style="max-width:280px; cursor:pointer;" onclick="window.open('${imgUrl}')">`;
+            } else if (messageContent.startsWith("VID:")) {
+                const vidUrl = escape(messageContent.substring(4).split('|')[0]);
+                messageContent = `<video controls class="rounded-3 mt-2 w-100 shadow-lg" style="max-width:320px;"><source src="${vidUrl}" type="video/mp4"></video>`;
+            } else if (messageContent.startsWith("FILE:")) {
+                const parts = messageContent.substring(5).split('|');
+                const fileUrl = escape(parts[0]);
+                const fileName = escape(parts[1] || "Dosya");
+                messageContent = `<div class="p-3 bg-glass rounded-4 mt-2 border-glass d-flex align-items-center gap-3 chat-file-box">
+                                    <div class="file-icon-circle"><i class="bi bi-file-earmark-arrow-down-fill"></i></div>
+                                    <div class="flex-grow-1 overflow-hidden">
+                                        <div class="small fw-bold text-truncate text-white">${fileName}</div>
+                                        <a href="${fileUrl}" target="_blank" class="x-small text-primary-light text-decoration-none">Dosyayı Görüntüle</a>
+                                    </div>
+                                  </div>`;
+            } else { messageContent = escape(messageContent); }
+
+            const html = `
+                <div class="message-wrapper ${isMe ? 'me' : 'others'} mb-4 animate-fadeInUp">
+                    <div class="message-bubble ${isMe ? 'bubble-me' : 'bubble-others'} ${isTeacher ? 'bubble-instructor' : ''} shadow-sm">
+                        ${!isMe ? `<div class="message-sender">${msg.senderName} ${isTeacher ? '<span class="badge bg-primary-glow ms-1" style="font-size:0.5rem;">EÄžİTMEN</span>' : ''}</div>` : ''}
+                        <div class="message-text">${messageContent}</div>
+                        <div class="message-time">${msg.sentAt}</div>
+                    </div>
+                </div>`;
+            chatMessages.insertAdjacentHTML('beforeend', html);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+    </script>
+}

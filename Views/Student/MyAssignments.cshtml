@@ -1,0 +1,75 @@
+﻿@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Ödevler ve Sınavlar";
+    var apps = ViewBag.Apps as List<HalkEgitimSistemi.Models.Application> ?? new();
+}
+@using HalkEgitimSistemi.Models
+
+<div class="container py-4" style="max-width:800px;">
+    <div class="glass-card-static p-4 mb-4 animate-fadeInUp">
+        <h2 style="font-family:'Outfit';font-weight:800;margin:0;">
+            <i class="bi bi-pencil-square me-2" style="color:var(--warning);"></i>Ödevler ve Sınavlar
+        </h2>
+        <p class="mb-0" style="color:var(--text-muted);">Akademik performans ve yaklaşan değerlendirmeler</p>
+    </div>
+
+    @if (!apps.Any(a => a.Status == ApplicationStatus.Approved))
+    {
+        <div class="glass-card-static p-5 text-center animate-scaleIn">
+            <i class="bi bi-info-circle mb-3" style="font-size:2.5rem;color:var(--info);"></i>
+            <h5>Onaylanmış bir kursunuz bulunmuyor</h5>
+            <p style="color:var(--text-muted);">Ödev ve sınav takvimi sadece aktif kurslarınız için görünür.</p>
+        </div>
+    }
+    else
+    {
+        @foreach (var app in apps.Where(a => a.Status == ApplicationStatus.Approved))
+        {
+            <div class="glass-card-static p-4 mb-4 animate-fadeInUp">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="mb-0" style="font-weight:700;color:var(--primary-light);">@app.Course?.CourseName</h5>
+                    @if(app.ExamGrade.HasValue)
+                    {
+                        <span class="badge bg-success">Tamamlandı</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-warning">Devam Ediyor</span>
+                    }
+                </div>
+
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <div class="p-3" style="background:rgba(255,255,255,0.03);border-radius:12px;border:1px solid var(--border-glass);">
+                            <div class="small text-muted mb-1">Sınav Notu</div>
+                            <div class="h4 mb-0" style="font-family:'Outfit';">@(app.ExamGrade.HasValue ? app.ExamGrade.Value.ToString() : "--") <small class="text-muted" style="font-size:0.8rem;">/ 100</small></div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="p-3" style="background:rgba(255,255,255,0.03);border-radius:12px;border:1px solid var(--border-glass);">
+                            <div class="small text-muted mb-1">Başarı Durumu</div>
+                            <div class="h4 mb-0" style="font-family:'Outfit';">
+                                @if(!app.ExamGrade.HasValue) { <span class="text-muted">Bekliyor</span> }
+                                else if(app.ExamGrade >= 50) { <span class="text-success">Geçti</span> }
+                                else { <span class="text-danger">Kaldı</span> }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <h6 style="font-size:0.85rem;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);">Yaklaşan Sınav/Ödev Takvimi</h6>
+                    <div class="list-group list-group-flush mt-2">
+                        <div class="list-group-item bg-transparent border-glass py-3 d-flex justify-content-between align-items-center">
+                            <div>
+                                <i class="bi bi-journal-text me-2 text-warning"></i>
+                                <span>Final Değerlendirmesi</span>
+                            </div>
+                            <span class="text-muted small">@app.Course?.EndDate.AddDays(-7).ToString("dd MMMM yyyy")</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+</div>

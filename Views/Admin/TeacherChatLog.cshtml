@@ -1,0 +1,85 @@
+﻿@model List<HalkEgitimSistemi.Models.TeacherChatMessage>
+@{
+    ViewData["Title"] = "Öğretmen Odası Arşivi";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid py-4">
+    <div class="d-flex align-items-center justify-content-between mb-4 animate-fadeIn">
+        <div>
+            <h1 class="h3 mb-1 fw-bold text-gradient-primary">
+                <i class="bi bi-shield-lock-fill me-2 float-slow"></i>Öğretmen Odası Arşivi
+            </h1>
+            <p class="text-muted-premium mb-0">Öğretmenler arası tüm kurumsal yazışmalar (Yönetici Denetimi)</p>
+        </div>
+        <a asp-action="MessageLog" class="btn btn-secondary-glass rounded-pill px-4">
+            <i class="bi bi-arrow-left me-2"></i> Geri Dön
+        </a>
+    </div>
+
+    <div class="glass-card-static border-0 shadow-lg p-4 animate-fadeInUp mb-4" style="min-height: 60vh;">
+        <div class="chat-container d-flex flex-column gap-3" id="chatContainer">
+            @foreach (var msg in Model)
+            {
+                <div class="chat-bubble-wrapper d-flex @(msg.InstructorId == 0 ? "justify-content-center" : "justify-content-start")">
+                    <div class="chat-bubble glass-card p-3 @(msg.InstructorId == 0 ? "border-primary-glow bg-primary-soft text-center" : "border-glass hover-bg-glass")" 
+                         style="max-width: 80%; border-radius: 20px; position: relative; background: rgba(15, 23, 42, 0.6);">
+                        
+                        <div class="d-flex align-items-center gap-2 mb-1">
+                            <span class="fw-bold @(msg.InstructorId == 0 ? "text-primary" : "text-gradient-secondary")">@(msg.InstructorId == 0 ? "SİSTEM / YÖNETİCİ" : msg.Instructor?.FullName)</span>
+                            <span class="small text-muted-premium">@msg.SentAt.ToString("dd.MM.yyyy HH:mm")</span>
+                        </div>
+                        
+                        <div class="chat-content text-white">
+                            @msg.Message
+                        </div>
+                        
+                        @if (msg.InstructorId != 0)
+                        {
+                            <div class="position-absolute top-0 end-0 p-2 opacity-50">
+                                <i class="bi bi-lock-fill small"></i>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- Admin Mesaj Yazma Alanı -->
+    <div class="glass-card p-4 animate-fadeInUp">
+        <form asp-action="SendAdminChatMessage" method="post" class="d-flex gap-3">
+            @Html.AntiForgeryToken()
+            <div class="flex-grow-1">
+                <input type="text" name="message" class="modern-control" placeholder="Arşive resmi bir duyuru veya mesaj ekleyin..." required style="border-radius: 20px !important;">
+            </div>
+            <button type="submit" class="btn btn-premium btn-primary-glow px-4">
+                <i class="bi bi-send-fill me-2"></i> Gönder
+            </button>
+        </form>
+    </div>
+</div>
+
+<style>
+    .chat-bubble {
+        transition: all 0.3s ease;
+        border: 1px solid rgba(255,255,255,0.1) !important;
+    }
+    .chat-bubble:hover {
+        transform: translateX(5px);
+        border-color: var(--primary) !important;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3) !important;
+    }
+    .text-gradient-primary {
+        background: linear-gradient(135deg, #C5A059, #581C1C);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    .text-gradient-secondary {
+        background: linear-gradient(135deg, #38bdf8, #818cf8);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+</style>
+
+

@@ -1,0 +1,115 @@
+﻿@model IEnumerable<HalkEgitimSistemi.Models.Message>
+@{
+    ViewData["Title"] = "Mesajlarım";
+}
+
+<div class="container py-5">
+    <div class="page-header animate-fadeInDown">
+        <div class="page-header-content">
+            <div class="d-flex align-items-center">
+                <div class="page-header-icon" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);">
+                    <i class="bi bi-chat-left-dots-fill"></i>
+                </div>
+                <div>
+                    <h1 class="page-header-title">Mesajlarım</h1>
+                    <p class="page-header-subtitle">Eğitmenlerle olan tüm yazışmalarınızı buradan takip edebilirsiniz.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4 mt-2">
+        <div class="col-lg-12">
+            @if (!Model.Any())
+            {
+                <div class="glass-card-static p-5 text-center animate-fadeInUp">
+                    <div style="width: 80px; height: 80px; margin: 0 auto 1.5rem; background: rgba(107,114,128,0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                        <i class="bi bi-chat-dots" style="font-size: 2.5rem; color: var(--text-muted);"></i>
+                    </div>
+                    <h3 style="color: var(--text-primary); font-family: 'Outfit'; font-weight: 800;">Henüz Mesajınız Yok</h3>
+                    <p style="color: var(--text-muted);">Eğitmenlere soru sorduğunuzda burada listelenecektir.</p>
+                    <a asp-controller="Instructors" asp-action="Index" class="btn btn-premium btn-primary-glow mt-3">
+                        Eğitmenlere Göz At
+                    </a>
+                </div>
+            }
+            else
+            {
+                <div class="message-timeline animate-fadeInUp">
+                    @foreach (var message in Model)
+                    {
+                        <div class="message-card-wrapper mb-4">
+                            <div class="glass-card-static p-0 overflow-hidden @(message.IsFromInstructor ? "border-instructor" : "border-student")">
+                                <div class="message-header p-3 d-flex justify-content-between align-items-center" style="background: rgba(255,255,255,0.02); border-bottom: 1px solid rgba(255,255,255,0.05);">
+                                    <div class="d-flex align-items-center">
+                                        <div class="message-user-icon me-3">
+                                            @if (message.IsFromInstructor)
+                                            {
+                                                <div class="avatar-sm bg-success-glow">
+                                                    <i class="bi bi-person-workspace"></i>
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                <div class="avatar-sm bg-primary-glow">
+                                                    <i class="bi bi-person-fill"></i>
+                                                </div>
+                                            }
+                                        </div>
+                                        <div>
+                                            <h6 class="mb-0 fw-bold @(message.IsFromInstructor ? "text-success" : "text-primary-light")">
+                                                @(message.IsFromInstructor ? (message.ReceiverInstructor?.FullName ?? "Eğitmen") : "Siz")
+                                            </h6>
+                                            <small class="text-white-50" style="font-size: 0.75rem;">@message.Date.ToString("dd MMMM yyyy HH:mm")</small>
+                                        </div>
+                                    </div>
+                                    <div class="message-badge">
+                                        @if (message.IsFromInstructor && !message.IsRead)
+                                        {
+                                            <span class="badge-premium badge-danger shadow-glow-sm">YENİ</span>
+                                        }
+                                        <span class="badge-premium badge-secondary small">@message.Subject</span>
+                                    </div>
+                                </div>
+                                <div class="message-body p-4">
+                                    <p class="mb-0 text-white" style="white-space: pre-line; line-height: 1.7; font-size: 1.05rem;">@message.Content</p>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<style>
+    .message-timeline {
+        max-width: 900px;
+        margin: 0 auto;
+    }
+    .avatar-sm {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        color: white;
+    }
+    .border-instructor {
+        border-left: 4px solid #C5A059 !important;
+    }
+    .border-student {
+        border-left: 4px solid #581C1C !important;
+    }
+    .message-card-wrapper {
+        transition: transform 0.3s ease;
+    }
+    .message-card-wrapper:hover {
+        transform: translateX(10px);
+    }
+</style>
+
+

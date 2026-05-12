@@ -1,0 +1,154 @@
+﻿@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Sınıf Performansı";
+    var course = ViewBag.Course as HalkEgitimSistemi.Models.Course;
+    var apps = ViewBag.Apps as List<HalkEgitimSistemi.Models.Application>;
+    int total = ViewBag.Total ?? 0;
+    int approved = ViewBag.Approved ?? 0;
+    double avgAbsence = ViewBag.AvgAbsence ?? 0.0;
+    double avgExam = ViewBag.AvgExam ?? 0.0;
+}
+@using HalkEgitimSistemi.Models
+
+<div class="container py-4">
+    <div class="glass-card-static p-4 mb-4 animate-fadeInUp">
+        <h2 style="font-family:'Outfit';font-weight:800;margin:0;">
+            <i class="bi bi-bar-chart-line-fill me-2" style="color:var(--success);"></i>Sınıf Performans Raporu
+        </h2>
+        <p class="mb-0" style="color:var(--text-muted);"><i class="bi bi-book me-1"></i>@course?.CourseName</p>
+    </div>
+
+    <!-- Özet Kartlar -->
+    <div class="row g-4 mb-4">
+        <div class="col-6 col-md-3">
+            <div class="hero-stat animate-scaleIn">
+                <span class="hero-stat-number" style="font-size:2rem;">@total</span>
+                <span class="hero-stat-label">Toplam Kayıt</span>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="hero-stat animate-scaleIn" style="animation-delay:0.1s;">
+                <span class="hero-stat-number" style="font-size:2rem;background:linear-gradient(135deg,#C5A059,#C5A059);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">@approved</span>
+                <span class="hero-stat-label">Onaylı Öğrenci</span>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="hero-stat animate-scaleIn" style="animation-delay:0.2s;">
+                <span class="hero-stat-number" style="font-size:2rem;background:linear-gradient(135deg,#ef4444,#dc2626);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">@avgAbsence</span>
+                <span class="hero-stat-label">Ort. Devamsızlık (s)</span>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="hero-stat animate-scaleIn" style="animation-delay:0.3s;">
+                <span class="hero-stat-number" style="font-size:2rem;background:linear-gradient(135deg,#581C1C,#C5A059);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">@avgExam</span>
+                <span class="hero-stat-label">Ort. Sınav Notu</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Devam oranı çubuğu -->
+    <div class="glass-card-static p-4 mb-4 animate-fadeInUp">
+        <h5 style="font-family:'Outfit';font-weight:700;margin-bottom:1rem;">📊 Kayıt Durumu Dağılımı</h5>
+        @{
+            int pending = apps?.Count(a => a.Status == ApplicationStatus.Pending) ?? 0;
+            int rejected = apps?.Count(a => a.Status == ApplicationStatus.Rejected) ?? 0;
+            double approvedPct = total > 0 ? Math.Round((double)approved / total * 100) : 0;
+            double pendingPct = total > 0 ? Math.Round((double)pending / total * 100) : 0;
+            double rejectedPct = total > 0 ? Math.Round((double)rejected / total * 100) : 0;
+        }
+        <div class="progress mb-2" style="height:24px;border-radius:12px;background:rgba(255,255,255,0.08);">
+            <div class="progress-bar bg-success" style="width:@approvedPct%">@approvedPct%</div>
+            <div class="progress-bar bg-warning" style="width:@pendingPct%">@pendingPct%</div>
+            <div class="progress-bar bg-danger" style="width:@rejectedPct%">@rejectedPct%</div>
+        </div>
+        <div class="d-flex gap-4 mt-2" style="font-size:0.82rem;">
+            <span><span class="badge bg-success me-1">●</span>Onaylı (@approved)</span>
+            <span><span class="badge bg-warning text-dark me-1">●</span>Bekleyen (@pending)</span>
+            <span><span class="badge bg-danger me-1">●</span>Reddedilen (@rejected)</span>
+        </div>
+    </div>
+
+    <!-- Öğrenci Tablosu -->
+    <div class="glass-card-static p-0 overflow-hidden animate-fadeInUp">
+        <div class="p-4 border-bottom" style="border-color:var(--border-glass)!important;">
+            <h5 class="mb-0" style="font-family:'Outfit';font-weight:800;">Öğrenci Detay Listesi</h5>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-premium mb-0">
+                <thead>
+                    <tr>
+                        <th>Öğrenci</th>
+                        <th>Durum</th>
+                        <th>Devamsızlık</th>
+                        <th>Sınav Notu</th>
+                        <th>Durum</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (apps != null)
+                    {
+                        @foreach (var a in apps.Take(50))
+                        {
+                            var abs = a.Attendances?.Count(at => !at.IsPresent) ?? 0;
+                            var max = course?.MaxAbsenceLimit ?? 4;
+                            <tr>
+                                <td>
+                                    <div class="fw-bold">@a.FirstName @a.LastName</div>
+                                    <div class="text-muted" style="font-size:0.75rem;">@a.Email</div>
+                                </td>
+                                <td>
+                                    @if (a.Status == ApplicationStatus.Approved)
+                                    {
+                                        <span class="badge-premium badge-success">Onaylı</span>
+                                    }
+                                    else if (a.Status == ApplicationStatus.Pending)
+                                    {
+                                        <span class="badge-premium badge-warning">Bekliyor</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge-premium badge-danger">Reddedildi</span>
+                                    }
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <div class="progress" style="width:50px;height:6px;background:rgba(255,255,255,0.1);border-radius:3px;">
+                                            <div class="progress-bar @(abs >= max ? "bg-danger" : abs >= max-1 ? "bg-warning" : "bg-success")"
+                                                 style="width:@(Math.Min(100, abs * 100 / (max > 0 ? max : 1)))%"></div>
+                                        </div>
+                                        <span style="font-weight:700;font-size:0.85rem;">@abs / @max</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    @if (a.ExamGrade.HasValue)
+                                    {
+                                        <span style="font-weight:700;color:@(a.ExamGrade >= 50 ? "var(--success)" : "var(--danger)");">@a.ExamGrade</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">—</span>
+                                    }
+                                </td>
+                                <td>
+                                    @if (abs >= max)
+                                    {
+                                        <span class="badge bg-danger">⚠️ Sınır Aşıldı</span>
+                                    }
+                                    else if (a.ExamGrade.HasValue && a.ExamGrade < 50)
+                                    {
+                                        <span class="badge bg-warning text-dark">Başarısız</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-success">Normal</span>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+

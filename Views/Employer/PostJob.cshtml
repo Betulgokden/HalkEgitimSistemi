@@ -1,0 +1,78 @@
+@model HalkEgitimSistemi.Models.JobPosting
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Yeni İlan Yayınla";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-7">
+            <div class="glass-card p-5 animate-scaleIn" style="border-radius: 40px; background: rgba(15, 23, 42, 0.8) !important;">
+                <div class="text-center mb-5">
+                    <div class="icon-box-lg bg-vibrant-purple mx-auto mb-3">
+                        <i class="bi bi-megaphone-fill text-white fs-1"></i>
+                    </div>
+                    <h2 class="text-white fw-bold hero-main-title">YENİ <span class="highlight-text">İÅ İLANI</span></h2>
+                    <p class="text-white-50">Borçka'nın yetenekli kursiyerlerine doğrudan ulaşın.</p>
+                </div>
+
+                <form asp-action="PostJob" method="post">
+                    @Html.AntiForgeryToken()
+                    <div class="row g-4">
+                        <div class="col-12">
+                            <label class="modern-label"><i class="bi bi-type me-2"></i> İlan Başlığı</label>
+                            <input asp-for="Title" class="modern-control" placeholder="Örn: Mobilya Tasarım Uzmanı Aranıyor" required />
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label class="modern-label"><i class="bi bi-grid-3x3-gap me-2"></i> İlgili Kurs Kategorisi</label>
+                            <select asp-for="RequiredCategory" class="modern-control">
+                                <option value="">Hepsi</option>
+                                @if (ViewBag.Categories != null)
+                                {
+                                    @foreach (var cat in ViewBag.Categories)
+                                    {
+                                        <option value="@cat">@cat</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label class="modern-label"><i class="bi bi-wallet2 me-2"></i> Maaş Aralığı (Opsiyonel)</label>
+                            <input asp-for="SalaryRange" class="modern-control" placeholder="Örn: 25.000₺ - 35.000₺" />
+                        </div>
+
+                        <div class="col-12">
+                            <label class="modern-label"><i class="bi bi-text-paragraph me-2"></i> İş Tanımı</label>
+                            <textarea asp-for="Description" class="modern-control" rows="5" placeholder="Aranan nitelikler ve iş tanımı..." required></textarea>
+                        </div>
+
+                        <div class="col-12 mt-5">
+                            <div class="p-4 bg-dark-glass rounded-4 border border-info border-opacity-25 d-flex align-items-center gap-3">
+                                <i class="bi bi-robot text-info fs-2 animate-bounce"></i>
+                                <div>
+                                    <h6 class="text-white fw-bold mb-1">AI Eşleştirme Aktif</h6>
+                                    <p class="text-white-50 small mb-0">İlanınızı yayınladığınızda, <b>HalkBot</b> uygun kriterlere sahip kursiyerlere anında bildirim gönderecektir.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 mt-4">
+                            <button type="submit" class="modern-submit-btn py-3 fs-5">
+                                İLANI YAYINLA <i class="bi bi-send-check-fill ms-2"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .bg-vibrant-purple { background: linear-gradient(135deg, #C5A059, #581C1C) !important; }
+    .icon-box-lg { width: 80px; height: 80px; border-radius: 24px; display: flex; align-items: center; justify-content: center; box-shadow: 0 15px 30px rgba(197, 160, 89, 0.3); }
+</style>
+
+

@@ -1,0 +1,143 @@
+@model List<HalkEgitimSistemi.Models.CourseResource>
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Ders Materyalleri";
+    var course = ViewBag.Course as HalkEgitimSistemi.Models.Course;
+}
+
+<div class="container py-4">
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert animate-fadeIn mb-4" style="background:rgba(16,185,129,0.1);color:var(--success);border:1px solid rgba(16,185,129,0.2);border-radius:var(--radius-md);padding:1rem 1.5rem;">
+            <i class="bi bi-check-circle-fill me-2"></i>@TempData["Success"]
+        </div>
+    }
+
+    <!-- Başlık -->
+    <div class="glass-card-static p-4 mb-4 animate-fadeInUp shadow-glow" style="border-left: 5px solid var(--primary) !important;">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <div class="d-flex align-items-center gap-4">
+                <a asp-controller="Teacher" asp-action="Dashboard" class="btn btn-premium btn-secondary-glass" title="Panele Dön">
+                    <i class="bi bi-grid-fill"></i> <span class="d-none d-md-inline ms-1">Panele Dön</span>
+                </a>
+                <div>
+                    <h2 style="font-family:'Outfit';font-weight:800;margin:0;color:var(--text-primary);">
+                        <i class="bi bi-folder2-open me-2" style="color:var(--primary);"></i>Ders Materyalleri
+                    </h2>
+                    <p class="mb-0 fw-bold" style="color:var(--primary-light);">
+                        <i class="bi bi-mortarboard-fill me-1"></i>@course?.CourseName
+                    </p>
+                </div>
+            </div>
+            <button class="btn btn-premium btn-warning-glow px-4" data-bs-toggle="modal" data-bs-target="#uploadModal">
+                <i class="bi bi-cloud-upload-fill me-2"></i> Materyal Yükle
+            </button>
+        </div>
+    </div>
+
+    <!-- Materyal Listesi -->
+    <div class="glass-card-static p-0 overflow-hidden animate-fadeInUp">
+        @if (!Model.Any())
+        {
+            <div class="p-5 text-center">
+                <div style="width:80px;height:80px;margin:0 auto 1rem;background:rgba(197,160,89,0.1);border-radius:50%;display:flex;align-items:center;justify-content:center;">
+                    <i class="bi bi-folder2-open" style="font-size:2rem;color:var(--primary);"></i>
+                </div>
+                <h5 style="font-family:'Outfit';color:var(--text-primary);font-weight:700;">Henüz materyal yüklenmedi</h5>
+                <p style="color:var(--text-secondary);">Eğitim sürecini desteklemek için döküman, video veya link paylaşabilirsiniz.</p>
+            </div>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table class="table table-premium mb-0">
+                    <thead style="background: rgba(197, 160, 89, 0.1) !important;">
+                            <tr>
+                                <th class="ps-4 border-0" style="color: var(--primary-light); text-transform: uppercase; font-size: 0.75rem; letter-spacing: 1px;">Materyal Adı</th>
+                                <th class="border-0" style="color: var(--primary-light); text-transform: uppercase; font-size: 0.75rem; letter-spacing: 1px;">Tür</th>
+                                <th class="border-0" style="color: var(--primary-light); text-transform: uppercase; font-size: 0.75rem; letter-spacing: 1px;">Yükleme Tarihi</th>
+                                <th class="text-end pe-4 border-0" style="color: var(--primary-light); text-transform: uppercase; font-size: 0.75rem; letter-spacing: 1px;">İşlem</th>
+                            </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var mat in Model)
+                        {
+                            string icon = mat.FileType switch {
+                                "PDF" => "bi-file-earmark-pdf-fill text-danger",
+                                "Video" => "bi-play-circle-fill text-info",
+                                "Slayt" => "bi-projector-fill text-warning",
+                                "Link" => "bi-link-45deg text-success",
+                                _ => "bi-file-earmark-fill text-primary-light"
+                            };
+                            <tr>
+                                <td class="ps-4">
+                                    <a href="@mat.FilePath" target="_blank" class="text-decoration-none fw-bold" style="color:var(--text-primary);">
+                                        <i class="bi @icon me-2"></i>@mat.Title
+                                    </a>
+                                </td>
+                                <td><span class="badge bg-glass border-glass text-white small px-3">@mat.FileType</span></td>
+                                <td style="font-size:0.82rem;color:var(--text-secondary);">@mat.UploadDate.ToString("dd.MM.yyyy HH:mm")</td>
+                                <td class="text-end pe-4">
+                                    <div class="d-flex justify-content-end gap-2">
+                                        <a href="@mat.FilePath" target="_blank" class="btn btn-sm btn-premium btn-secondary-glass" title="Görüntüle">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                        <form asp-action="DeleteMaterial" method="post" class="d-inline" onsubmit="return confirm('Materyal silinsin mi?')">
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="id" value="@mat.Id" />
+                                            <button type="submit" class="btn btn-sm btn-premium btn-danger-glow">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>
+
+<!-- Upload Modal -->
+<div class="modal fade" id="uploadModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="background:var(--bg-dark);border:1px solid var(--border-glass);border-radius:var(--radius-lg);">
+            <div class="modal-header" style="border-bottom:1px solid var(--border-glass);">
+                <h5 class="modal-title fw-bold"><i class="bi bi-cloud-upload-fill text-warning me-2"></i>Materyal Yükle</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form asp-action="UploadMaterial" method="post" enctype="multipart/form-data">
+                @Html.AntiForgeryToken()
+                <div class="modal-body p-4">
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <label class="form-premium-label">Materyal Başlığı</label>
+                            <input type="text" name="title" class="form-premium-control" placeholder="Konu anlatımı, slayt adı..." required />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-premium-label">Tür</label>
+                            <select name="resourceType" class="form-premium-control">
+                                <option>PDF</option>
+                                <option>Slayt</option>
+                                <option>Video</option>
+                                <option>Link</option>
+                                <option>Diğer</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-premium-label">Dosya</label>
+                            <input type="file" name="file" class="form-premium-control" />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="border-top:1px solid var(--border-glass);">
+                    <button type="button" class="btn btn-premium btn-secondary-glass" data-bs-dismiss="modal">İptal</button>
+                    <button type="submit" class="btn btn-premium btn-primary-glow"><i class="bi bi-upload me-1"></i>Yükle</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+

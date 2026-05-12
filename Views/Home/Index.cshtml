@@ -1,0 +1,1015 @@
+@model List<HalkEgitimSistemi.Models.News>
+@using HalkEgitimSistemi.Services
+@using System.Linq
+@inject ISiteSettingsService Settings
+@{
+    ViewData["Title"] = "Ana Sayfa";
+    Layout = "_Layout";
+}
+
+
+
+
+
+
+<section class="hero-vibrant hero-huge" style="padding-top: 40px !important;">
+    <div class="container hero-content text-center mt-5">
+        <!-- Status Badge -->
+        <div class="status-badge-wrapper animate-fadeIn">
+            <span class="status-badge" style="background: rgba(197, 160, 89, 0.05); border: 1px solid rgba(197, 160, 89, 0.2); padding: 10px 25px; border-radius: 30px; font-weight: 700; color: #C5A059; box-shadow: 0 0 20px rgba(197, 160, 89, 0.2);">
+                <i class="bi bi-patch-check-fill me-2"></i> <span data-i18n="hero_badge">✅ MEB Onaylı Sertifika • 🛡️ %100 Kurumsal Güvence</span>
+            </span>
+        </div>
+
+        <!-- Main Heading -->
+        <h1 class="hero-title animate-fadeInUp mt-4" style="animation-delay: 0.2s; font-size: clamp(2.5rem, 6vw, 4.5rem); line-height: 1.1; letter-spacing: -2px;">
+            <span style="color: #C5A059;" data-i18n="hero_title_1">Potansiyelini Keşfet,</span><br>
+            <span style="color: #581C1C;" data-i18n="hero_title_2">Kendi Geleceğinin Mimarı Ol</span>
+        </h1>
+
+        <!-- Subtitle -->
+        <p class="hero-subtitle animate-fadeInUp mx-auto mt-4" style="animation-delay: 0.4s; max-width: 800px; font-size: 1.25rem; opacity: 0.8; line-height: 1.6;" data-i18n="hero_subtitle">
+            Eğitim sürecinizi resmi ve geçerli bir kariyere bağlayın. 
+            Gelecek Atölyesi ve Fikir Bankası ile vizyonunuzu profesyonel hayata taşıyın, geleceğin mimarı olun.
+        </p>
+
+        <!-- CTA Buttons -->
+        <div class="hero-cta animate-fadeInUp mt-5" style="animation-delay: 0.6s;">
+            <div class="d-flex flex-wrap justify-content-center gap-3">
+                <a asp-controller="Courses" asp-action="Browse" class="btn btn-lg px-5 py-3 rounded-pill shadow-lg" style="background: #581C1C !important; color: #C5A059 !important; border: 1px solid #C5A059 !important; font-weight: 800 !important; box-shadow: 0 10px 30px rgba(88, 28, 28, 0.4) !important;">
+                    <i class="bi bi-rocket-takeoff me-2"></i> <span data-i18n="hero_btn_start">Hemen Başla</span>
+                </a>
+                <a href="#about" class="btn btn-lg px-5 py-3 rounded-pill" style="border: 2px solid #C5A059 !important; color: #C5A059 !important; background: rgba(197, 160, 89, 0.05) !important; font-weight: 700 !important; backdrop-filter: blur(10px);">
+                    <i class="bi bi-info-circle me-2"></i> <span data-i18n="hero_btn_about">Kurumsal Güvence</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- KARİYER VE YETENEK MERKEZİ (UNIFIED HUB) -->
+<section id="career-hub" class="py-4" style="background: radial-gradient(circle at center, rgba(128, 0, 0, 0.05), transparent 70%); border-bottom: 1px solid var(--border-color);">
+    <div class="container">
+        <div class="row g-4 align-items-stretch">
+            <!-- Left: HalkPoint Leaderboard -->
+            <div class="col-lg-4">
+                <div class="glass-card p-4 h-100" style="border: 2px solid #C5A059; background: rgba(197, 160, 89, 0.1) !important; border-radius: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.05);">
+                    <div class="d-flex align-items-center justify-content-between mb-4">
+                        <h4 class="gold-text" style="font-weight: 900; margin: 0;"><i class="bi bi-trophy-fill me-2"></i> Liderlik Tablosu</h4>
+                        <span class="badge rounded-pill bg-maroon-theme text-gold px-3 py-2 fw-bold" style="background: var(--maroon); color: var(--gold); border: 1px solid var(--gold);">HalkPoint</span>
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table class="table w-100 m-0" style="border-collapse: separate; border-spacing: 0 10px;">
+                            <tbody style="background: transparent !important;">
+                                <tr class="leaderboard-item animate-fadeIn" style="background: rgba(88, 28, 28, 0.15) !important; border-radius: 15px; border: 1px solid var(--theme-card-border) !important;">
+                                    <td style="padding: 15px; border: none; border-radius: 15px 0 0 15px; width: 60px;">
+                                        <span class="badge" style="background: var(--maroon); color: var(--gold); border: 1px solid var(--gold); font-size: 0.9rem; padding: 10px 14px; font-weight: 900; border-radius: 12px;">1</span>
+                                    </td>
+                                    <td style="padding: 15px; border: none;">
+                                        <strong class="gold-text" style="font-size: 1.1rem; font-family: 'Outfit';">Ahmet Yılmaz</strong>
+                                    </td>
+                                    <td class="text-end" style="padding: 15px; border: none; border-radius: 0 15px 15px 0;">
+                                        <span class="gold-text" style="font-size: 1.2rem; font-weight: 900;">2,450 <small style="font-size: 0.7rem; opacity: 0.7;">HP</small></span>
+                                    </td>
+                                </tr>
+                                <tr class="leaderboard-item animate-fadeIn" style="background: rgba(88, 28, 28, 0.1) !important; border-radius: 15px; border: 1px solid var(--theme-card-border) !important;">
+                                    <td style="padding: 15px; border: none; border-radius: 15px 0 0 15px;">
+                                        <span class="badge" style="background: rgba(197, 160, 89, 0.1); color: var(--gold); border: 1px solid var(--gold); font-size: 0.9rem; padding: 10px 14px; font-weight: 900; border-radius: 12px;">2</span>
+                                    </td>
+                                    <td style="padding: 15px; border: none;">
+                                        <strong class="gold-text" style="font-size: 1.1rem; opacity: 0.9;">Elif Kaya</strong>
+                                    </td>
+                                    <td class="text-end" style="padding: 15px; border: none; border-radius: 0 15px 15px 0;">
+                                        <span class="gold-text" style="font-size: 1.2rem; font-weight: 800;">2,120 <small style="font-size: 0.7rem; opacity: 0.7;">HP</small></span>
+                                    </td>
+                                </tr>
+                                <tr class="leaderboard-item animate-fadeIn" style="background: rgba(88, 28, 28, 0.1) !important; border-radius: 15px; border: 1px solid var(--theme-card-border) !important;">
+                                    <td style="padding: 15px; border: none; border-radius: 15px 0 0 15px;">
+                                        <span class="badge" style="background: rgba(197, 160, 89, 0.1); color: var(--gold); border: 1px solid var(--gold); font-size: 0.9rem; padding: 10px 14px; font-weight: 900; border-radius: 12px;">3</span>
+                                    </td>
+                                    <td style="padding: 15px; border: none;">
+                                        <strong class="gold-text" style="font-size: 1.1rem; opacity: 0.9;">Mehmet Öz</strong>
+                                    </td>
+                                    <td class="text-end" style="padding: 15px; border: none; border-radius: 0 15px 15px 0;">
+                                        <span class="gold-text" style="font-size: 1.2rem; font-weight: 800;">1,890 <small style="font-size: 0.7rem; opacity: 0.7;">HP</small></span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="mt-4 p-3 rounded-4" style="background: rgba(197, 160, 89, 0.05); border: 1px dashed var(--gold);">
+                        <h6 class="gold-text" style="font-weight: 800; font-size: 0.75rem; margin-bottom: 0.8rem; text-transform: uppercase; letter-spacing: 1px;">NASIL KAZANILIR?</h6>
+                        <div class="d-flex flex-column gap-2 x-small" style="color: var(--theme-text); opacity: 0.9; font-weight: 600;">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span><i class="bi bi-plus-circle-fill me-2 maroon-text" style="color: var(--maroon) !important;"></i>Derse Katılım</span>
+                                <strong class="gold-text">10 HP</strong>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span><i class="bi bi-plus-circle-fill me-2 maroon-text" style="color: var(--maroon) !important;"></i>Not Paylaşımı</span>
+                                <strong class="gold-text">50 HP</strong>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span><i class="bi bi-plus-circle-fill me-2 maroon-text" style="color: var(--maroon) !important;"></i>Quiz Başarısı</span>
+                                <strong class="gold-text">100 HP</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Middle: Active Job Postings -->
+            <div class="col-lg-5">
+                <div class="glass-card p-4 h-100" style="border-radius: 30px; border: 2px solid #C5A059; box-shadow: 0 10px 30px rgba(0,0,0,0.05);">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h4 class="gold-text" style="font-weight: 900; margin: 0;"><i class="bi bi-briefcase-fill me-2"></i> Güncel İş İlanları</h4>
+                        <a href="/Jobs" class="btn btn-link p-0 x-small fw-bold gold-text" style="text-decoration: none;">TÜMÜ <i class="bi bi-arrow-right"></i></a>
+                    </div>
+                    
+                    <div class="row g-3">
+                        @if (ViewBag.JobPostings != null && ((List<HalkEgitimSistemi.Models.JobPosting>)ViewBag.JobPostings).Any())
+                        {
+                            @foreach (var job in ((List<HalkEgitimSistemi.Models.JobPosting>)ViewBag.JobPostings).Take(2))
+                            {
+                                <div class="col-12">
+                                    <div class="p-3 rounded-4 border transition-all job-card-light">
+                                        <div class="d-flex justify-content-between align-items-start mb-2">
+                                            <h6 class="text-white" style="font-weight: 800; margin: 0;">@job.Title</h6>
+                                            <span class="badge" style="background: #581C1C; color: #C5A059; font-size: 0.7rem;">@job.RequiredCategory</span>
+                                        </div>
+                                        <div class="text-white-50" style="font-size: 0.8rem; margin-bottom: 1rem;"><i class="bi bi-geo-alt me-1"></i> @job.Location | <i class="bi bi-cash-stack me-1"></i> @job.SalaryRange</div>
+                                        <button class="btn w-100 rounded-pill" style="background: #581C1C; color: #C5A059; font-weight: 800; font-size: 0.85rem;" onclick="openJobModal(@job.Id, '@job.Title', '@job.Requirements.Replace("'", "\\'")', '@job.SalaryRange')">İncele</button>
+                                    </div>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <!-- Fallback Dummy Data -->
+                            <div class="col-12">
+                                <div class="p-3 rounded-4 border job-card-light" style="opacity: 0.8;">
+                                    <div class="d-flex justify-content-between align-items-start mb-2">
+                                        <h6 class="text-white" style="font-weight: 800; margin: 0;">Grafik Tasarımcı</h6>
+                                        <span class="badge" style="background: #581C1C; color: #C5A059; font-size: 0.7rem;">REKLAM</span>
+                                    </div>
+                                    <div class="text-white-50" style="font-size: 0.8rem; margin-bottom: 0.5rem;">Borçka Merkez | 35.000 TL - 45.000 TL</div>
+                                    <button class="btn w-100 rounded-pill disabled" style="background: rgba(88, 28, 28, 0.1); color: #581C1C; font-weight: 700; border: none;">Sistem Kaydı Bekleniyor</button>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right: Career Matrix & Stats -->
+            <div class="col-lg-3">
+                <div class="glass-card p-4 h-100" style="border-radius: 25px; border: 1px solid var(--border-color); box-shadow: 0 10px 30px rgba(0,0,0,0.05);">
+                    <h5 class="gold-text fw-black mb-3 text-center">KARİYER MATRİSİ</h5>
+                    
+                    <div class="d-grid gap-2">
+                        <div class="matrix-item-mini p-2 rounded-3 border border-white-10 matrix-item-light" style="background: rgba(88, 28, 28, 0.05);">
+                            <div class="d-flex justify-content-between x-small fw-bold">
+                                <span class="text-white">Siber Güvenlik</span>
+                                <span class="gold-text">500 HP</span>
+                            </div>
+                            <div class="progress mt-1" style="height: 4px; background: rgba(0,0,0,0.1);">
+                                <div class="progress-bar bg-warning" style="width: 100%;"></div>
+                            </div>
+                        </div>
+                        <div class="matrix-item-mini p-2 rounded-3 border border-white-10 opacity-50 matrix-item-light" style="background: rgba(88, 28, 28, 0.02);">
+                            <div class="d-flex justify-content-between x-small fw-bold">
+                                <span class="text-white">Yapay Zeka</span>
+                                <span class="gold-text">3000 HP</span>
+                            </div>
+                            <div class="progress mt-1" style="height: 4px; background: rgba(0,0,0,0.1);">
+                                <div class="progress-bar bg-warning" style="width: 30%;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 pt-3 border-top border-white-10">
+                        <button type="button" class="btn btn-warning-glow btn-sm w-100 rounded-pill mb-2 fw-bold" style="background: #C5A059; color: #581C1C; border: none; box-shadow: 0 0 20px rgba(197,160,89,0.5);" data-bs-toggle="modal" data-bs-target="#talentMapModal">
+                            <i class="bi bi-map-fill me-1"></i> Yetenek Haritası
+                        </button>
+                        <div class="form-check form-switch modern-switch d-flex align-items-center justify-content-center gap-2">
+                            <input class="form-check-input" type="checkbox" role="switch" id="readyToWorkSwitch" style="width: 35px; height: 18px;">
+                            <label class="form-check-label text-white fw-bold x-small" for="readyToWorkSwitch">ACİL İSTİHDAM</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .fw-black { font-weight: 900 !important; }
+    .bg-bronze { background: linear-gradient(135deg, #cd7f32, #a0522d); }
+    .matrix-item { transition: all 0.3s ease; }
+    .matrix-item:hover { transform: translateY(-5px); background: rgba(197,160,89,0.15) !important; }
+    .job-card-premium { transition: all 0.4s ease; cursor: pointer; }
+    .job-card-premium:hover { transform: scale(1.02); box-shadow: 0 15px 35px rgba(197, 160, 89, 0.2) !important; }
+    .fw-900 { font-weight: 900 !important; }
+</style>
+
+<!-- Job Detail Modal -->
+<div class="modal fade" id="jobModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-dark border-gold">
+            <div class="modal-header border-0">
+                <h5 class="modal-title text-gold" id="jobModalTitle"></h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body text-white">
+                <p><strong>Gereksinimler:</strong> <span id="jobModalReqs"></span></p>
+                <p><strong>Maaş:</strong> <span id="jobModalSalary"></span></p>
+            </div>
+            <div class="modal-footer border-0">
+                <a href="/Application/Apply" class="btn btn-primary">Başvuru Yap</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function openJobModal(id, title, reqs, salary) {
+        document.getElementById('jobModalTitle').innerText = title;
+        document.getElementById('jobModalReqs').innerText = reqs;
+        document.getElementById('jobModalSalary').innerText = salary;
+        new bootstrap.Modal(document.getElementById('jobModal')).show();
+    }
+</script>
+
+<style>
+    .showcase-card {
+        position: relative;
+        overflow: hidden;
+        border-radius: 20px;
+        transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        cursor: pointer;
+    }
+    .showcase-card:hover {
+        transform: scale(1.03) translateY(-10px);
+        box-shadow: 0 20px 40px rgba(197, 160, 89, 0.3);
+    }
+    .showcase-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        padding: 30px 20px 20px;
+        background: linear-gradient(to top, rgba(15, 23, 42, 0.9), transparent);
+        color: white;
+        opacity: 0;
+        transform: translateY(20px);
+        transition: all 0.4s ease;
+    }
+    .showcase-card:hover .showcase-overlay {
+        opacity: 1;
+        transform: translateY(0);
+    }
+</style>
+
+<!-- MAIN CONTENT WRAPPER -->
+<main class="container py-5">
+    
+    <!-- 1. Announcements & Gamification -->
+    <div class="row g-4 mb-5">
+        <div class="col-lg-8">
+            <div class="d-flex justify-content-between align-items-end mb-4">
+                <div>
+                    <h2 class="fw-bold mb-0 gold-text" style="font-size: 2.2rem;" data-i18n="home_announcements">Son Duyurular</h2>
+                    <div style="width: 60px; height: 4px; background: #C5A059; border-radius: 10px; margin-top: 8px;"></div>
+                </div>
+                <a asp-controller="News" asp-action="Index" class="btn btn-link text-primary text-decoration-none p-0 fw-bold"><span data-i18n="home_view_all">Tümünü Gör</span> <i class="bi bi-arrow-right ms-1"></i></a>
+            </div>
+            <div class="row g-4">
+                @if (Model != null && Model.Any())
+                {
+                    @foreach (var news in Model.Take(2))
+                    {
+                        <div class="col-md-6">
+                            <div class="card h-100 border-0 glass-card shadow-lg" style="border-radius: 25px; overflow: hidden; background: var(--bg-card); transition: 0.4s;">
+                                @if (!string.IsNullOrEmpty(news.ImageUrl)) {
+                                    <img src="@news.ImageUrl" class="card-img-top" style="height: 160px; object-fit: cover;" alt="@news.Title">
+                                }
+                                <div class="card-body p-4">
+                                    <div class="text-primary small mb-2 fw-bold"><i class="bi bi-calendar-event me-2"></i> @news.Date.ToShortDateString()</div>
+                                    <h5 class="card-title fw-bold text-white mb-2">@news.Title</h5>
+                                    <p class="card-text text-white-50 small mb-3">@(news.Content?.Length > 100 ? news.Content.Substring(0, 100) + "..." : news.Content)</p>
+                                    <a asp-controller="News" asp-action="Details" asp-route-id="@news.Id" class="btn btn-outline-light btn-sm rounded-pill px-4" data-i18n="home_read">Devamını Oku</a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="glass-card-static p-4 h-100 border-primary-glow animate-fadeInRight" style="background: var(--bg-card) !important; border-radius: 30px;">
+                <div class="badge bg-primary mb-3" data-i18n="home_new_gen">YENİ NESİL ÖĞRENME</div>
+                <h3 class="fw-bold text-white mb-3" data-i18n="home_quiz_title">Bilgini Göster, <span class="gold-text">Ücretsiz Kurs</span> Kazan!</h3>
+                <p class="text-white-50 small mb-4" data-i18n="home_quiz_text">Yarışmaya katılın, puanları toplayın ve dilediğiniz kursa ücretsiz kayıt olma şansı yakalayın.</p>
+                <div class="points-preview mb-4">
+                    <div class="d-flex justify-content-between text-white small mb-1">
+                        <span data-i18n="home_points_target">Hedef Puan</span>
+                        <span>450/500</span>
+                    </div>
+                    <div class="progress bg-dark" style="height: 10px; border-radius: 5px;">
+                        <div class="progress-bar bg-primary" style="width: 90%;"></div>
+                    </div>
+                </div>
+                <a asp-controller="Quiz" asp-action="Index" class="btn btn-primary w-100 py-3 rounded-pill">
+                    <i class="bi bi-controller me-2"></i> <span data-i18n="home_join_quiz">Yarışmaya Katıl</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. Bilgi Kilidi -->
+    <div class="row g-4 mb-5">
+        <div class="col-12">
+            <div class="glass-card-static p-5 animate-fadeInUp shadow-3xl" style="background: var(--bg-card) !important; border: 1px solid var(--border-color) !important; border-radius: 40px; position: relative; overflow: hidden;">
+                <div class="row align-items-center">
+                    <div class="col-lg-2 text-center mb-4 mb-lg-0">
+                        <i class="bi bi-safe2-fill text-primary" style="font-size: 5rem; filter: drop-shadow(0 0 20px rgba(197, 160, 89, 0.5));"></i>
+                    </div>
+                    <div class="col-lg-6">
+                        <h2 class="text-white fw-900 mb-2" style="font-family: 'Outfit';" data-i18n="home_vault_title">BİLGİ KİLİDİ: <span class="gold-text">Hazineyi Açın!</span></h2>
+                        <p class="text-white-50 mb-4" data-i18n="home_vault_text">Her onaylı ders notu, bu dijital kasanın kilidini biraz daha açar. Topluluk olarak %100'e ulaştığımızda, ayın en popüler kursu herkese <span class="text-warning fw-bold">ücretsiz</span> olacak!</p>
+                        <div class="vault-progress-wrapper mb-3">
+                            <div class="d-flex justify-content-between text-white-50 small mb-2">
+                                <span class="fw-bold"><i class="bi bi-unlock-fill me-1"></i> Kilit Açılma Oranı</span>
+                                <span class="fw-bold text-primary">@((ViewBag.VaultProgress ?? 42))% Tamamlandı</span>
+                            </div>
+                            <div class="progress" style="height: 20px; border-radius: 10px; background: rgba(255,255,255,0.05);">
+                                <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: @((ViewBag.VaultProgress ?? 42))%; background: linear-gradient(90deg, #C5A059, #581C1C) !important;"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 text-center">
+                        <div class="p-4 rounded-30" style="background: rgba(197, 160, 89, 0.05); border: 1px dashed rgba(197, 160, 89, 0.3);">
+                            <p class="text-white small mb-3 fw-bold" data-i18n="home_vault_hint">Not yükle ve kasanın kilidini aç!</p>
+                            <a asp-controller="Library" asp-action="Virtual" class="btn btn-primary w-100 py-3 rounded-pill" data-i18n="home_vault_btn">
+                                <i class="bi bi-cloud-arrow-up-fill me-2"></i> NOT YÜKLE
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. Freelance & İşveren -->
+    <div class="row g-4 mb-5">
+        <div class="col-lg-8">
+            <div class="glass-card-static p-4 h-100" style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 35px;">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h4 class="text-white fw-bold m-0" data-i18n="home_freelance_title"><i class="bi bi-rocket-takeoff-fill text-success me-2"></i> FREELANCE KÖPRÜSÜ</h4>
+                    <span class="badge bg-success text-white small">2026 KAZANÇ REHBERİ</span>
+                </div>
+                <div class="row g-3 text-center">
+                    <div class="col-md-4">
+                        <div class="p-3 bg-glass rounded-4 border border-secondary">
+                            <i class="bi bi-code-slash text-info fs-3"></i>
+                            <div class="text-white fw-bold">₺25.000+</div>
+                            <div class="x-small text-white-50">Yazılım</div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="p-3 bg-glass rounded-4 border border-secondary">
+                            <i class="bi bi-palette text-danger fs-3"></i>
+                            <div class="text-white fw-bold">₺22.000+</div>
+                            <div class="x-small text-white-50">Tasarım</div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="p-3 bg-glass rounded-4 border border-secondary">
+                            <i class="bi bi-translate text-warning fs-3"></i>
+                            <div class="text-white fw-bold">₺18.500+</div>
+                            <div class="x-small text-white-50">Çeviri</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="glass-card-static p-4 h-100" style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 35px;">
+                <h4 class="text-white fw-bold mb-3" data-i18n="home_employer_panel"><i class="bi bi-building-fill-check text-primary me-2"></i> İŞVEREN PANELİ</h4>
+                <p class="text-white-50 small mb-4" data-i18n="home_employer_text">Borçka'nın sertifikalı yeteneklerine ulaşın.</p>
+                <div class="d-grid gap-2">
+                    <a href="/Employer/Register" class="btn btn-primary py-2 rounded-pill fw-bold text-white" data-i18n="home_employer_register">KAYIT OL</a>
+                    <a href="/Account/Login?role=Employer" class="btn btn-outline-light py-2 rounded-pill fw-bold small" data-i18n="home_employer_login">GİRİŞ YAP</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. HAFTANIN YETENEKLERİ (SPOTLIGHT) -->
+    <div class="row g-4 mb-5 animate-fadeInUp">
+        <div class="col-12 text-center mb-4">
+            <h2 class="text-white fw-bold hero-main-title" data-i18n="home_spotlight_title">HAFTANIN <span class="gold-text">YETENEKLERİ</span></h2>
+            <p class="text-white-50" data-i18n="home_spotlight_text">Üstün başarı gösteren ve işverenlerin radarındaki kursiyerlerimiz.</p>
+        </div>
+        
+        <div class="col-lg-4">
+            <div class="glass-card-static p-4 text-center border-gold-glow spotlight-card h-100">
+                <div class="spotlight-badge">ZİRVEDEKİ YETENEK</div>
+                <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=200" class="rounded-circle mb-3 border border-3 border-gold p-1" style="width: 100px; height: 100px; object-fit: cover;">
+                <h5 class="text-white fw-bold mb-1">Arda Yılmaz</h5>
+                <p class="x-small text-info fw-bold mb-3">TAM YIĞIN GELİŞTİRİCİ</p>
+                <div class="d-flex justify-content-center gap-2 mb-4">
+                    <span class="badge bg-vibrant-dark border border-secondary px-2 py-1 x-small">C#</span>
+                    <span class="badge bg-vibrant-dark border border-secondary px-2 py-1 x-small">React</span>
+                    <span class="badge bg-vibrant-dark border border-secondary px-2 py-1 x-small">SQL</span>
+                </div>
+                <div class="p-3 bg-dark-glass rounded-4 mb-4 border border-white-5">
+                    <div class="d-flex justify-content-between x-small text-white-50 mb-1">
+                        <span>BAŞARI PUANI</span>
+                        <span class="text-gold">98/100</span>
+                    </div>
+                    <div class="progress" style="height: 4px; background: rgba(255,255,255,0.05);">
+                        <div class="progress-bar bg-gold" style="width: 98%;"></div>
+                    </div>
+                </div>
+                <button class="btn btn-warning w-100 rounded-pill py-2 fw-900 shadow-gold" onclick="window.location.href='/Account/Login?role=Employer'" style="color: #581C1C !important; background: #C5A059 !important; border: none !important;">PROFİLİ İNCELE</button>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="glass-card-static p-4 text-center border-maroon-glow spotlight-card h-100">
+                <div class="spotlight-badge" style="background: #581C1C;">TASARIMIN USTASI</div>
+                <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200" class="rounded-circle mb-3 border border-3 border-maroon p-1" style="width: 100px; height: 100px; object-fit: cover;">
+                <h5 class="text-white fw-bold mb-1">Selin Demir</h5>
+                <p class="x-small text-danger fw-bold mb-3">GRAFİK TASARIMCI</p>
+                <div class="d-flex justify-content-center gap-2 mb-4">
+                    <span class="badge bg-vibrant-dark border border-secondary px-2 py-1 x-small">UI/UX</span>
+                    <span class="badge bg-vibrant-dark border border-secondary px-2 py-1 x-small">Figma</span>
+                    <span class="badge bg-vibrant-dark border border-secondary px-2 py-1 x-small">Branding</span>
+                </div>
+                <div class="p-3 bg-dark-glass rounded-4 mb-4 border border-white-5">
+                    <div class="d-flex justify-content-between x-small text-white-50 mb-1">
+                        <span>BAŞARI PUANI</span>
+                        <span class="text-danger">95/100</span>
+                    </div>
+                    <div class="progress" style="height: 4px; background: rgba(255,255,255,0.05);">
+                        <div class="progress-bar bg-danger" style="width: 95%;"></div>
+                    </div>
+                </div>
+                <button class="btn btn-warning w-100 rounded-pill py-2 fw-900 shadow-gold" onclick="window.location.href='/Account/Login?role=Employer'" style="color: #581C1C !important; background: #C5A059 !important; border: none !important;">PROFİLİ İNCELE</button>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="glass-card-static p-4 text-center border-info-glow spotlight-card h-100">
+                <div class="spotlight-badge" style="background: #0dcaf0;">TARIM ELÇİSİ</div>
+                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200" class="rounded-circle mb-3 border border-3 border-info p-1" style="width: 100px; height: 100px; object-fit: cover;">
+                <h5 class="text-white fw-bold mb-1">Caner Öz</h5>
+                <p class="x-small text-info fw-bold mb-3">ARICILIK TEKNİKERİ</p>
+                <div class="d-flex justify-content-center gap-2 mb-4">
+                    <span class="badge bg-vibrant-dark border border-secondary px-2 py-1 x-small">Bal Üretimi</span>
+                    <span class="badge bg-vibrant-dark border border-secondary px-2 py-1 x-small">Arı Sağlığı</span>
+                </div>
+                <div class="p-3 bg-dark-glass rounded-4 mb-4 border border-white-5">
+                    <div class="d-flex justify-content-between x-small text-white-50 mb-1">
+                        <span>BAŞARI PUANI</span>
+                        <span class="text-info">92/100</span>
+                    </div>
+                    <div class="progress" style="height: 4px; background: rgba(255,255,255,0.05);">
+                        <div class="progress-bar bg-info" style="width: 92%;"></div>
+                    </div>
+                </div>
+                <button class="btn btn-warning w-100 rounded-pill py-2 fw-900 shadow-gold" onclick="window.location.href='/Account/Login?role=Employer'" style="color: #581C1C !important; background: #C5A059 !important; border: none !important;">PROFİLİ İNCELE</button>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .spotlight-card { position: relative; border-radius: 35px; background: rgba(15, 23, 42, 0.6) !important; transition: all 0.4s; overflow: hidden; }
+        .spotlight-card:hover { transform: translateY(-15px) scale(1.02); }
+        .spotlight-badge { position: absolute; top: 20px; right: -30px; background: #C5A059; color: white; padding: 5px 40px; transform: rotate(45deg); font-size: 0.6rem; font-weight: 900; letter-spacing: 1px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+        [data-theme="light"] .spotlight-badge { color: #581C1C !important; }
+        [data-theme="light"] .spotlight-badge[style*="background: #581C1C"] { color: #C5A059 !important; }
+        [data-theme="light"] .spotlight-badge[style*="background:#581C1C"] { color: #C5A059 !important; }
+        .border-gold-glow { border: 1px solid rgba(197, 160, 89, 0.3) !important; box-shadow: 0 0 30px rgba(197, 160, 89, 0.1); }
+        .border-maroon-glow { border: 1px solid rgba(88, 28, 28, 0.3) !important; box-shadow: 0 0 30px rgba(88, 28, 28, 0.1); }
+        .border-info-glow { border: 1px solid rgba(13, 202, 240, 0.3) !important; box-shadow: 0 0 30px rgba(13, 202, 240, 0.1); }
+        .border-gold { border-color: #C5A059 !important; }
+        .border-maroon { border-color: #581C1C !important; }
+    </style>
+
+    <!-- 5. Borçka'nın Ustaları -->
+    <div class="row g-4 mb-5 animate-fadeInUp">
+        <div class="col-12 text-center mb-4">
+            <h2 class="text-white fw-bold hero-main-title" data-i18n="home_masters_title">BORÇKA'NIN <span class="gold-text">USTALARI</span></h2>
+            <p class="text-white-50" data-i18n="home_masters_text">Mezun olup kendi işini kuran gurur tablolarımız.</p>
+        </div>
+        <div class="col-lg-3 col-md-6">
+            <div class="glass-card-static p-4 text-center border-primary h-100" style="border-radius: 30px;">
+                <img src="https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=200" class="rounded-circle mb-3 border border-3 border-info" style="width: 80px; height: 80px; object-fit: cover;">
+                <h6 class="text-white fw-bold mb-1">Meltem Tasarım</h6>
+                <p class="x-small text-info fw-bold mb-3">Moda Tasarım Mezunu</p>
+                <p class="x-small text-white-50 mb-4">"Bugün Borçka merkezde butiğimi açtım."</p>
+                <a href="#" class="btn btn-sm btn-outline-info rounded-pill px-4">Gez</a>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+            <div class="glass-card-static p-4 text-center border-primary h-100" style="border-radius: 30px;">
+                <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=200" class="rounded-circle mb-3 border border-3 border-danger" style="width: 80px; height: 80px; object-fit: cover;">
+                <h6 class="text-white fw-bold mb-1">Artvin Yazılım</h6>
+                <p class="x-small text-danger fw-bold mb-3">Web Geliştirme Mezunu</p>
+                <p class="x-small text-white-50 mb-4">"Dünyaya yazılım ihraç ediyorum."</p>
+                <a href="#" class="btn btn-sm btn-outline-danger rounded-pill px-4">Portfolyo</a>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+            <div class="glass-card-static p-4 text-center border-primary h-100" style="border-radius: 30px;">
+                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200" class="rounded-circle mb-3 border border-3 border-warning" style="width: 80px; height: 80px; object-fit: cover;">
+                <h6 class="text-white fw-bold mb-1">Usta Eller Ahşap</h6>
+                <p class="x-small text-warning fw-bold mb-3">Mobilya Tasarım Mezunu</p>
+                <p class="x-small text-white-50 mb-4">"Kendi ahşap atölyemi kurdum."</p>
+                <a href="#" class="btn btn-sm btn-outline-warning rounded-pill px-4">Atölye</a>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+            <div class="glass-card-static p-4 text-center border-primary h-100" style="border-radius: 30px;">
+                <img src="https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?w=200" class="rounded-circle mb-3 border border-3 border-primary" style="width: 80px; height: 80px; object-fit: cover;">
+                <h6 class="text-white fw-bold mb-1">Kod Borçka</h6>
+                <p class="x-small text-primary fw-bold mb-3">Mobil Uygulama Mezunu</p>
+                <p class="x-small text-white-50 mb-4">"İlk uygulamam App Store'da yayında!"</p>
+                <a href="#" class="btn btn-sm btn-outline-primary rounded-pill px-4">Uygulama</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 5. Borçka'ya Değer -->
+    <div class="row g-4 mb-5 animate-fadeInUp">
+        <div class="col-12">
+            <div class="glass-card-static p-4 border-danger" style="background: rgba(88, 28, 28, 0.05); border-radius: 40px;">
+                <div class="row align-items-center">
+                    <div class="col-lg-1 text-center mb-3 mb-lg-0">
+                        <i class="bi bi-tree-fill text-danger fs-1"></i>
+                    </div>
+                    <div class="col-lg-7">
+                        <h4 class="text-white fw-bold mb-1" data-i18n="home_value_title">BORÇKA'YA DEĞER: <span class="text-danger">Karagöl'ü Yeşertiyoruz!</span></h4>
+                        @{
+                            var progressVal = await Settings.GetSettingAsync("KaragolGoalProgress", "342");
+                            var targetVal = await Settings.GetSettingAsync("KaragolGoalTarget", "500");
+                            var progress = int.Parse(progressVal);
+                            var target = int.Parse(targetVal);
+                            var percent = (progress * 100) / target;
+                        }
+                        <p class="text-white-50 small mb-3">Hedef: <b>@target</b> kursiyerimiz siber güvenlik eğitimini tamamlarsa, Borçka Karagöl çevresine fidan dikilecektir.</p>
+                        <div class="progress" style="height: 12px; border-radius: 6px; background: rgba(255,255,255,0.05);">
+                            <div class="progress-bar progress-bar-striped progress-bar-animated bg-danger" role="progressbar" style="width: @percent%;"></div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 text-end">
+                        <div class="text-danger fw-bold h3 mb-0">@progress / @target</div>
+                        <div class="text-white-50 x-small fw-bold uppercase">TAMAMLANAN EĞİTİM</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 📸 INTERACTIVE GALLERY PREVIEW -->
+    <div class="row g-4 mb-5 animate-fadeInUp">
+        <div class="col-12 text-center mb-4">
+            <h2 class="text-white fw-bold hero-main-title" data-i18n="home_gallery_title">DİJİTAL <span class="gold-text">GALERİ</span></h2>
+            <p class="text-white-50" data-i18n="home_gallery_text">Kampüsümüzden anlık kesitler ve görsel başarılar.</p>
+        </div>
+        <div class="col-lg-3 col-6">
+            <div class="gallery-item-premium">
+                <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=400" alt="Students" class="rounded-4 w-100">
+                <div class="gallery-badge">EKİP ÇALIŞMASI</div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-6">
+            <div class="gallery-item-premium">
+                <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400" alt="Tech" class="rounded-4 w-100">
+                <div class="gallery-badge">TEKNOLOJİ</div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-6">
+            <div class="gallery-item-premium">
+                <img src="https://images.unsplash.com/photo-1531403009284-440f080d1e12?w=400" alt="Design" class="rounded-4 w-100">
+                <div class="gallery-badge">YARATICILIK</div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-6">
+            <div class="gallery-item-premium">
+                <img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=400" alt="Lab" class="rounded-4 w-100">
+                <div class="gallery-badge">SİBER KAMPÜS</div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .gallery-item-premium {
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+            border: 2px solid rgba(255,255,255,0.05);
+            transition: all 0.3s ease;
+        }
+        .gallery-item-premium:hover {
+            border-color: #C5A059;
+            transform: scale(1.05);
+            z-index: 5;
+        }
+        .gallery-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(197, 160, 89, 0.8);
+            backdrop-filter: blur(5px);
+            color: white;
+            font-size: 0.6rem;
+            font-weight: 900;
+            padding: 5px 12px;
+            border-radius: 20px;
+            letter-spacing: 1px;
+        }
+    </style>
+
+    <!-- 6. Borçka Dijital 3D Isı Haritası (Google Earth Style) -->
+    <div class="row align-items-center mt-5 mb-5">
+        <div class="col-lg-4 mb-4 mb-lg-0 animate-fadeInLeft">
+            <div class="d-flex align-items-center mb-4">
+                <div style="width: 12px; height: 12px; background: #581C1C; border-radius: 50%; box-shadow: 0 0 10px #581C1C;" class="me-3 animate-pulse"></div>
+                <h2 class="text-white fw-bold hero-main-title m-0" data-i18n="home_map_title">BORÇKA <span class="gold-text">3D EARTH</span></h2>
+            </div>
+            
+            <p class="text-white-50 mb-4" data-i18n="home_map_text">
+                Borçka'nın mahallelerini 3D uydu teknolojisiyle keşfedin. 
+                <b>@ViewBag.LeaderNeighborhood</b> bu hafta eğitimde zirvede!
+            </p>
+
+            <div class="glass-card-static p-4 mb-4" style="border-radius: 25px; background: rgba(197, 160, 89, 0.1); border: 1px solid rgba(197, 160, 89, 0.2);">
+                <div class="d-flex align-items-center mb-3">
+                    <div class="bg-primary rounded-circle p-2 me-3">
+                        <i class="bi bi-star-fill text-white"></i>
+                    </div>
+                    <h6 class="text-white fw-bold m-0">MAHALLE GÖREVİ</h6>
+                </div>
+                <p class="x-small text-white-50">"Gündoğdu Mahallesi 100 kursiyer barajını geçerse, özel Robotik Atölyesi!"</p>
+                <div class="progress mt-3" style="height: 6px; background: rgba(255,255,255,0.05);">
+                    <div class="progress-bar bg-danger" style="width: 75%;"></div>
+                </div>
+            </div>
+
+            <div class="neighborhood-rankings">
+                @if (ViewBag.Neighborhoods != null)
+                {
+                    foreach (var n in ((IEnumerable<HalkEgitimSistemi.Models.Neighborhood>)ViewBag.Neighborhoods).OrderByDescending(x => x.ActiveStudents).Take(3))
+                    {
+                        <div class="glass-card-static p-3 mb-3 d-flex justify-content-between align-items-center" style="border-radius: 20px;">
+                            <div>
+                                <div class="text-white fw-bold small">@n.Name</div>
+                                <div class="progress mt-2" style="height: 4px; width: 100px; background: rgba(255,255,255,0.05);">
+                                    <div class="progress-bar bg-primary" style="width: @((n.Intensity * 100))%;"></div>
+                                </div>
+                            </div>
+                            <div class="text-end">
+                                <div class="text-vibrant-purple fw-bold small">@n.ActiveStudents Kursiyer</div>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+
+        <div class="col-lg-8 animate-fadeInRight">
+            <div id="heatmap-container" class="glass-card-static p-2 border-primary-glow shadow-3xl" style="border-radius: 40px; height: 600px; position: relative; overflow: hidden; background: #000 !important;">
+                <!-- 🌍 Google Earth / Maps Embed -->
+                @{
+                    var mapLat = await Settings.GetSettingAsync("Map_Lat", "41.363923");
+                    var mapLng = await Settings.GetSettingAsync("Map_Lng", "41.679698");
+                    var mapZoom = await Settings.GetSettingAsync("Map_Zoom", "18");
+                    var mapUrl = $"https://maps.google.com/maps?q={mapLat},{mapLng}&t=k&z={mapZoom}&ie=UTF8&iwloc=&output=embed";
+                }
+                <iframe 
+                    style="border:0; border-radius: 35px; width: 100%; height: 100%;" 
+                    loading="lazy" 
+                    allowfullscreen 
+                    src="@mapUrl">
+                </iframe>
+                
+                <!-- Floating Info Overlay -->
+                <div class="map-overlay-badge" style="position: absolute; top: 25px; right: 25px; z-index: 10; background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(10px); padding: 10px 20px; border-radius: 30px; border: 1px solid rgba(197, 160, 89, 0.3); color: white; font-size: 0.8rem; font-weight: 800;">
+                    <i class="bi bi-broadcast text-danger me-2 animate-pulse"></i> CANLI 3D UYDU GÖRÜNTÜSÜ
+                </div>
+
+                <div class="map-legend" style="position: absolute; bottom: 30px; left: 30px; z-index: 10; background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(10px); padding: 15px; border-radius: 20px; border: 1px solid rgba(197, 160, 89, 0.2);">
+                    <div class="text-white x-small fw-bold mb-2 uppercase">EĞİTİM YOĞUNLUĞU</div>
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="x-small text-white-50">Seyrek</span>
+                        <div style="width: 100px; height: 8px; border-radius: 4px; background: linear-gradient(90deg, #C5A059, #581C1C);"></div>
+                        <span class="x-small text-white-50">Yoğun</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+@section Scripts {
+    <style>
+        .glass-card { 
+            background: rgba(255, 255, 255, 0.03) !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            backdrop-filter: blur(10px);
+            transition: 0.4s;
+        }
+        .glass-card:hover { 
+            transform: translateY(-10px); 
+            border-color: #C5A059 !important;
+            background: rgba(255, 255, 255, 0.05) !important;
+        }
+        
+        .hero-main-title {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 900;
+            letter-spacing: -1px;
+        }
+
+        .gold-text {
+            color: #C5A059 !important;
+            text-shadow: none !important;
+        }
+
+        .text-vibrant-purple { color: #C5A059 !important; }
+        .text-vibrant-pink { color: #581C1C !important; }
+        .bg-vibrant-purple { background: #C5A059 !important; }
+        .bg-vibrant-pink { background: #581C1C !important; }
+        
+        .shadow-gold { box-shadow: 0 10px 30px rgba(197, 160, 89, 0.2); }
+        .rounded-30 { border-radius: 30px; }
+    </style>
+}
+<!-- 💼 Job Application Modal -->
+<div class="modal fade" id="jobModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content border-0" style="background: #0f172a; border-radius: 40px; overflow: hidden;">
+            <div class="modal-body p-0">
+                <div class="row g-0">
+                    <!-- Left Side: Details -->
+                    <div class="col-lg-5 p-5" style="background: rgba(88, 28, 28, 0.3);">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h2 class="text-white fw-bold m-0" id="mJobTitle">İş İlanı Detayı</h2>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <h6 class="text-gold fw-bold uppercase letter-spacing-1 mb-2" data-i18n="job_requirements">Şartlar</h6>
+                            <p class="text-white-50" id="mJobRequirements">Yükleniyor...</p>
+                        </div>
+
+                        <div class="mb-4">
+                            <h6 class="text-gold fw-bold uppercase letter-spacing-1 mb-2" data-i18n="job_salary">Maaş Aralığı</h6>
+                            <p class="text-white" id="mJobSalary">Görüşülecek</p>
+                        </div>
+
+                        <div class="mt-5 p-4 rounded-4" style="background: rgba(197, 160, 89, 0.1); border: 1px dashed rgba(197, 160, 89, 0.3);">
+                            <p class="small text-white-50 m-0">
+                                <i class="bi bi-info-circle-fill text-gold me-2"></i> 
+                                Bu başvuru formu dijital imza ile onaylanacak ve Borçka HEM veri tabanına işlenecektir. 
+                                PDF formatında çıktı alabilir veya işverene mesaj yoluyla iletebilirsiniz.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Right Side: Application Form -->
+                    <div class="col-lg-7 p-5">
+                        <form id="jobAppForm">
+                            <input type="hidden" id="mJobId" />
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="text-white-50 small mb-2" data-i18n="form_full_name">Ad Soyad</label>
+                                    <input type="text" class="cyber-input py-3" id="appFullName" required />
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="text-white-50 small mb-2" data-i18n="form_email">E-Posta</label>
+                                    <input type="email" class="cyber-input py-3" id="appEmail" required />
+                                </div>
+                                <div class="col-12">
+                                    <label class="text-white-50 small mb-2" data-i18n="form_experience">Deneyim Özeti</label>
+                                    <textarea class="cyber-input py-3" id="appExperience" rows="3" required></textarea>
+                                </div>
+                                <div class="col-12">
+                                    <label class="text-white-50 small mb-2" data-i18n="form_signature">Dijital İmza</label>
+                                    <div class="signature-wrapper rounded-4 overflow-hidden mb-2" style="border: 2px solid rgba(197, 160, 89, 0.3); background: #fff;">
+                                        <canvas id="signature-pad" style="width: 100%; height: 150px; cursor: crosshair;"></canvas>
+                                    </div>
+                                    <button type="button" class="btn btn-link text-white-50 btn-sm p-0 text-decoration-none" onclick="clearSignature()" data-i18n="form_clear_signature">İmzayı Temizle</button>
+                                </div>
+                                <div class="col-12 mt-4">
+                                    <button type="button" class="btn btn-premium w-100 py-3 fs-5" onclick="submitApplication()" data-i18n="form_submit">
+                                        Başvuruyu Tamamla & PDF Al <i class="bi bi-file-earmark-pdf-fill ms-2"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .job-card-premium { transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+    .job-card-premium:hover { transform: translateY(-10px); background: rgba(197, 160, 89, 0.05); }
+    .job-badge { position: absolute; top: 0; right: 0; background: #C5A059; color: #581C1C; padding: 5px 20px; font-weight: 800; font-size: 0.7rem; border-bottom-left-radius: 20px; text-transform: uppercase; }
+    .line-clamp-3 { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+    
+    .signature-wrapper canvas { display: block; }
+</style>
+
+<script>
+    let signaturePad;
+
+    document.addEventListener("DOMContentLoaded", function() {
+        const canvas = document.getElementById('signature-pad');
+        signaturePad = new SignaturePad(canvas);
+        
+        // Resize canvas correctly
+        function resizeCanvas() {
+            const ratio =  Math.max(window.devicePixelRatio || 1, 1);
+            canvas.width = canvas.offsetWidth * ratio;
+            canvas.height = canvas.offsetHeight * ratio;
+            canvas.getContext("2d").scale(ratio, ratio);
+            signaturePad.clear();
+        }
+        window.onresize = resizeCanvas;
+        resizeCanvas();
+    });
+
+    function openJobModal(id, title, req, salary) {
+        document.getElementById('mJobId').value = id;
+        document.getElementById('mJobTitle').innerText = title;
+        document.getElementById('mJobRequirements').innerText = req;
+        document.getElementById('mJobSalary').innerText = salary;
+        
+        const myModal = new bootstrap.Modal(document.getElementById('jobModal'));
+        myModal.show();
+        
+        // Timeout to ensure canvas is visible before resizing
+        setTimeout(() => {
+            const canvas = document.getElementById('signature-pad');
+            const ratio =  Math.max(window.devicePixelRatio || 1, 1);
+            canvas.width = canvas.offsetWidth * ratio;
+            canvas.height = canvas.offsetHeight * ratio;
+            canvas.getContext("2d").scale(ratio, ratio);
+            signaturePad.clear();
+        }, 300);
+    }
+
+    function clearSignature() {
+        signaturePad.clear();
+    }
+
+    async function submitApplication() {
+        if (signaturePad.isEmpty()) {
+            alert("Lütfen başvuruyu dijital olarak imzalayın.");
+            return;
+        }
+
+        const name = document.getElementById('appFullName').value;
+        const email = document.getElementById('appEmail').value;
+        const experience = document.getElementById('appExperience').value;
+        const jobTitle = document.getElementById('mJobTitle').innerText;
+        
+        if (!name || !email || !experience) {
+            alert("Lütfen tüm alanları doldurun.");
+            return;
+        }
+
+        const signatureData = signaturePad.toDataURL();
+
+        // 📄 Generate PDF using jsPDF
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+
+        // PDF Styling
+        doc.setFillColor(88, 28, 28);
+        doc.rect(0, 0, 210, 40, 'F');
+        
+        doc.setTextColor(255, 255, 255);
+        doc.setFontSize(22);
+        doc.text("BORCKA HALK EGITIM MERKEZI", 20, 20);
+        doc.setFontSize(12);
+        doc.text("KARIYER VE ISTIHDAM PORTALI - IS BASVURU FORMU", 20, 30);
+
+        doc.setTextColor(0, 0, 0);
+        doc.setFontSize(14);
+        doc.text("ILAN BILGILERI", 20, 55);
+        doc.setLineWidth(0.5);
+        doc.line(20, 57, 190, 57);
+
+        doc.setFontSize(11);
+        doc.text("Pozisyon: " + jobTitle, 20, 65);
+        doc.text("Tarih: " + new Date().toLocaleDateString(), 150, 65);
+
+        doc.setFontSize(14);
+        doc.text("ADAY BILGILERI", 20, 85);
+        doc.line(20, 87, 190, 87);
+
+        doc.setFontSize(11);
+        doc.text("Ad Soyad: " + name, 20, 95);
+        doc.text("E-Posta: " + email, 20, 105);
+        
+        doc.text("Deneyim Ozeti:", 20, 120);
+        const splitExperience = doc.splitTextToSize(experience, 170);
+        doc.text(splitExperience, 20, 127);
+
+        doc.text("ADAY IMZASI", 40, 200);
+        
+        doc.text("KURUMSAL ONAY (KASE/MÜHÜR)", 130, 200);
+        // Placeholder for Admin Stamp (Institutional Approval)
+        doc.setDrawColor(197, 160, 89);
+        doc.setLineWidth(1);
+        doc.circle(160, 220, 15);
+        doc.setFontSize(8);
+        doc.text("BORCKA HEM", 152, 218);
+        doc.text("ONAYLANDI", 153, 223);
+
+        doc.save(`Borcka_HEM_Basvuru_${name.replace(" ", "_")}.pdf`);
+
+        // Simulate sending to employer
+        const sendToEmployer = confirm("Başvurunuz başarıyla tamamlandı ve PDF dosyanız oluşturuldu!\n\nBu PDF dosyasını işverene 'Mesaj Yoluyla' şimdi göndermek ister misiniz?");
+        
+        if (sendToEmployer) {
+            alert("PDF Dosyası işverene güvenli mesaj kanalı üzerinden iletildi. İşveren profilindeki 'Gelen Başvurular' sekmesinden bu dosyaya erişebilecektir.");
+        }
+
+        bootstrap.Modal.getInstance(document.getElementById('jobModal')).hide();
+        clearSignature();
+        document.getElementById('jobAppForm').reset();
+    }
+</script>
+
+<!-- Regional Talent Map Modal -->
+    <div class="modal fade" id="talentMapModal" tabindex="-1">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content bg-dark border-gold-glow shadow-3xl" style="border-radius: 30px;">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title text-gold fw-bold"><i class="bi bi-geo-fill me-2"></i> Borçka Sektörel Yetenek Dağılımı</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <div class="p-3 rounded-4" style="background: rgba(197, 160, 89, 0.05); border: 1px solid rgba(197, 160, 89, 0.2);">
+                                <h6 class="text-white fw-bold mb-3">Merkez Mahallesi</h6>
+                                <div class="d-flex justify-content-between x-small text-white-50 mb-1">
+                                    <span>Grafik Tasarım</span>
+                                    <span class="text-warning">85%</span>
+                                </div>
+                                <div class="progress mb-3" style="height: 4px; background: rgba(255,255,255,0.05);"><div class="progress-bar bg-warning" style="width: 85%;"></div></div>
+                                <div class="d-flex justify-content-between x-small text-white-50 mb-1">
+                                    <span>Yazılım Geliştirme</span>
+                                    <span class="text-info">72%</span>
+                                </div>
+                                <div class="progress" style="height: 4px; background: rgba(255,255,255,0.05);"><div class="progress-bar bg-info" style="width: 72%;"></div></div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="p-3 rounded-4" style="background: rgba(88, 28, 28, 0.05); border: 1px solid rgba(88, 28, 28, 0.2);">
+                                <h6 class="text-white fw-bold mb-3">Köyler & Kırsal</h6>
+                                <div class="d-flex justify-content-between x-small text-white-50 mb-1">
+                                    <span>Tarım Teknolojileri</span>
+                                    <span class="text-success">94%</span>
+                                </div>
+                                <div class="progress mb-3" style="height: 4px; background: rgba(255,255,255,0.05);"><div class="progress-bar bg-success" style="width: 94%;"></div></div>
+                                <div class="d-flex justify-content-between x-small text-white-50 mb-1">
+                                    <span>Geleneksel El Sanatları</span>
+                                    <span class="text-danger">68%</span>
+                                </div>
+                                <div class="progress" style="height: 4px; background: rgba(255,255,255,0.05);"><div class="progress-bar bg-danger" style="width: 68%;"></div></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-4 p-3 bg-dark-glass rounded-4 border border-white-5">
+                        <p class="text-white-50 small m-0">
+                            <i class="bi bi-lightbulb-fill text-warning me-2"></i>
+                            Bu veriler, son 1 yıl içerisindeki kurs başvuruları ve mezuniyet projelerine dayanarak gerçek zamanlı olarak hesaplanmaktadır.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openTalentMapModal() {
+            const modalEl = document.getElementById('talentMapModal');
+            if (modalEl) {
+                const modal = new bootstrap.Modal(modalEl);
+                modal.show();
+            }
+        }
+    </script>

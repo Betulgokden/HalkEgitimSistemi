@@ -1,0 +1,96 @@
+﻿@model HalkEgitimSistemi.Models.ExhibitionItem
+@{
+    ViewData["Title"] = "Eser Yükle";
+    Layout = "_Layout";
+}
+
+<div class="container py-5" style="margin-top: 100px;">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="glass-card p-5 animate__animated animate__fadeInUp">
+                <h2 class="text-white mb-4">ğŸ¨ Yeni Eser Yükle</h2>
+                <p class="text-white-50 mb-5">Sanal sergimizde yer alacak çalışmanızı buradan paylaşabilirsiniz. Görsel veya Video (.mp4) yükleyebilirsiniz.</p>
+
+                <form asp-action="UploadArtwork" method="post" enctype="multipart/form-data">
+                    <div class="mb-4">
+                        <label class="text-white form-label">Eser Adı</label>
+                        <input asp-for="Title" class="form-control glass-input" placeholder="Eserinize bir isim verin..." required />
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="text-white form-label">İlgili Kurs</label>
+                        <select asp-for="CourseId" class="form-select glass-input">
+                            <option value="">Kurs Seçin (Opsiyonel)</option>
+                            @if (ViewBag.Courses != null)
+                            {
+                                @foreach (var course in ViewBag.Courses)
+                                {
+                                    <option value="@course.Id">@course.CourseName</option>
+                                }
+                            }
+                        </select>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="text-white form-label">Eser Dosyası (Görsel veya Video)</label>
+                        <input type="file" name="mediaFile" class="form-control glass-input" accept="image/*,video/mp4" required />
+                        <small class="text-white-50">Önerilen: Görsel için 1920x1080, Video için .mp4 formatı.</small>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="text-white form-label">Eserin Hikayesi</label>
+                        <textarea name="Story" class="form-control glass-input" rows="3" placeholder="Bu eseri yaparken neyden ilham aldınız?"></textarea>
+                    </div>
+
+                    <div class="d-grid mt-5">
+                        <button type="submit" class="btn btn-premium py-3">
+                            <i class="bi bi-cloud-upload me-2"></i> Eseri Paylaş
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .glass-card {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 24px;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    }
+
+    .glass-input {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: white;
+        border-radius: 12px;
+        padding: 12px 20px;
+    }
+
+    .glass-input:focus {
+        background: rgba(255, 255, 255, 0.1);
+        border-color: #C5A059;
+        color: white;
+        box-shadow: 0 0 0 4px rgba(197, 160, 89, 0.1);
+    }
+
+    .btn-premium {
+        background: linear-gradient(135deg, #C5A059 0%, #d946ef 100%);
+        border: none;
+        color: white;
+        font-weight: 600;
+        border-radius: 12px;
+        transition: all 0.3s ease;
+    }
+
+    .btn-premium:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px -5px rgba(197, 160, 89, 0.5);
+        color: white;
+    }
+</style>
+
+

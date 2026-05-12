@@ -1,0 +1,231 @@
+@model List<HalkEgitimSistemi.Models.MasterTrainerApplication>
+@{
+    ViewData["Title"] = "Panel Başvuruları";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var studentRequests = ViewBag.StudentRequests as List<HalkEgitimSistemi.Models.Student> ?? new List<HalkEgitimSistemi.Models.Student>();
+}
+
+<div class="container-fluid py-4">
+    <!-- Üst Başlık ve İstatistikler -->
+    <div class="row mb-4 animate-fadeIn">
+        <div class="col-md-6">
+            <h1 class="h3 mb-1 fw-bold gold-text" style="font-family: 'Outfit'; letter-spacing: 1px;">
+                <i class="bi bi-shield-lock-fill me-2"></i>Panel Başvuruları Yönetimi
+            </h1>
+            <p class="text-white-50 mb-0">Eğitmen ve Kursiyer erişim taleplerini buradan yönetebilirsiniz.</p>
+        </div>
+        <div class="col-md-6 d-flex justify-content-end align-items-center gap-3">
+            <div class="glass-card-static px-4 py-2 d-flex align-items-center gap-2">
+                <span class="badge rounded-pill" style="background: var(--maroon); color: var(--gold); border: 1px solid var(--gold);">
+                    @ViewBag.PendingInstructorCount Eğitmen Bekliyor
+                </span>
+                <span class="badge rounded-pill" style="background: rgba(197, 160, 89, 0.1); color: var(--theme-text); border: 1px solid var(--theme-card-border);">
+                    @ViewBag.PendingStudentCount Kursiyer Bekliyor
+                </span>
+            </div>
+        </div>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success-glass animate-shake mb-4">
+            <i class="bi bi-check-circle-fill me-2"></i>@TempData["Success"]
+        </div>
+    }
+
+    <div class="row g-4">
+        <!-- SOL TARAF: EĞİTMEN BAŞVURULARI -->
+        <div class="col-lg-6">
+            <div class="glass-card-static h-100 p-0 overflow-hidden animate-fadeInLeft" style="border: 2px solid var(--theme-card-border) !important; border-radius: 25px;">
+                <div class="p-3 border-bottom d-flex justify-content-between align-items-center" style="background: var(--maroon); border-color: var(--gold) !important;">
+                    <h5 class="mb-0 fw-bold gold-text"><i class="bi bi-mortarboard-fill me-2"></i>Eğitmen Başvuruları</h5>
+                    <div class="dropdown">
+                        <button class="btn btn-sm btn-outline-gold dropdown-toggle py-0" type="button" data-bs-toggle="dropdown">Filtre</button>
+                        <ul class="dropdown-menu dropdown-menu-dark">
+                            <li><a class="dropdown-item" href="/Admin/InstructorApplications">Tümü</a></li>
+                            <li><a class="dropdown-item" href="/Admin/InstructorApplications?status=Pending">Bekleyen</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="table-responsive" style="max-height: 600px;">
+                    <table class="table align-middle mb-0" style="background: transparent !important;">
+                        <tbody style="background: transparent !important;">
+                            @foreach (var app in Model)
+                            {
+                                <tr class="hover-gold-row border-bottom border-white-5" style="background: transparent !important;">
+                                    <td class="ps-3" style="width: 60px;">
+                                        <div class="position-relative cursor-pointer" onclick="showInstructorDetails(@app.Id)">
+                                            @if (!string.IsNullOrEmpty(app.PhotoPath))
+                                            {
+                                                <img src="@app.PhotoPath" class="rounded-circle border border-gold shadow-sm" style="width: 45px; height: 45px; object-fit: cover;" alt="Foto">
+                                            }
+                                            else
+                                            {
+                                                <div class="rounded-circle bg-maroon border border-gold d-flex align-items-center justify-content-center gold-text" style="width: 45px; height: 45px;">
+                                                    <i class="bi bi-person-fill"></i>
+                                                </div>
+                                            }
+                                            <div class="position-absolute bottom-0 end-0 bg-gold rounded-circle d-flex align-items-center justify-content-center" style="width: 15px; height: 15px; border: 1px solid var(--maroon);">
+                                                <i class="bi bi-search text-maroon" style="font-size: 0.5rem;"></i>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <a href="javascript:void(0)" onclick="showInstructorDetails(@app.Id)" class="fw-bold text-decoration-none gold-text d-block">@app.FullName</a>
+                                        <small class="text-white-50">@app.Specialty</small>
+                                    </td>
+                                    <td class="text-end pe-3">
+                                        <div class="d-flex justify-content-end gap-1">
+                                            <form method="post" action="/Admin/ApproveInstructorApp" class="m-0">
+                                                @Html.AntiForgeryToken()
+                                                <input type="hidden" name="id" value="@app.Id" />
+                                                <button type="submit" class="btn btn-xs @(app.Status == HalkEgitimSistemi.Models.TrainerApplicationStatus.Approved ? "btn-success" : "btn-outline-success-glass") p-1 px-2" title="Onayla"><i class="bi bi-check-lg"></i></button>
+                                            </form>
+                                            <form method="post" action="/Admin/RejectInstructorApp" class="m-0">
+                                                @Html.AntiForgeryToken()
+                                                <input type="hidden" name="id" value="@app.Id" />
+                                                <button type="submit" class="btn btn-xs @(app.Status == HalkEgitimSistemi.Models.TrainerApplicationStatus.Rejected ? "btn-danger" : "btn-outline-danger-glass") p-1 px-2" title="Reddet"><i class="bi bi-x-lg"></i></button>
+                                            </form>
+                                            <form method="post" action="/Admin/ResetInstructorApp" class="m-0">
+                                                @Html.AntiForgeryToken()
+                                                <input type="hidden" name="id" value="@app.Id" />
+                                                <button type="submit" class="btn btn-xs @(app.Status == HalkEgitimSistemi.Models.TrainerApplicationStatus.Pending ? "btn-warning" : "btn-outline-warning-glass") p-1 px-2" title="Beklemeye Al"><i class="bi bi-arrow-counterclockwise"></i></button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- SAĞ TARAF: KURSİYER PANELİ TALEPLERİ -->
+        <div class="col-lg-6">
+            <div class="glass-card-static h-100 p-0 overflow-hidden animate-fadeInRight" style="border: 2px solid var(--theme-card-border) !important; border-radius: 25px;">
+                <div class="p-3 border-bottom d-flex justify-content-between align-items-center" style="background: rgba(197, 160, 89, 0.1); border-color: var(--theme-card-border) !important;">
+                    <h5 class="mb-0 fw-bold gold-text"><i class="bi bi-people-fill me-2"></i>Kursiyer Paneli Talepleri</h5>
+                    <span class="badge bg-maroon gold-text">@studentRequests.Count Yeni</span>
+                </div>
+                <div class="table-responsive" style="max-height: 600px;">
+                    <table class="table align-middle mb-0" style="background: transparent !important;">
+                        <tbody style="background: transparent !important;">
+                            @foreach (var student in studentRequests)
+                            {
+                                <tr class="hover-gold-row border-bottom border-white-5" style="background: transparent !important;">
+                                    <td class="ps-3" style="width: 60px;">
+                                        <div class="position-relative cursor-pointer" onclick="showStudentDetails(@student.Id)">
+                                            @if (!string.IsNullOrEmpty(student.ProfilePicture))
+                                            {
+                                                <img src="@student.ProfilePicture" class="rounded-circle border border-gold shadow-sm" style="width: 45px; height: 45px; object-fit: cover;" alt="Foto">
+                                            }
+                                            else
+                                            {
+                                                <div class="rounded-circle bg-maroon-theme border border-white-10 d-flex align-items-center justify-content-center text-white-50" style="width: 45px; height: 45px;">
+                                                    <i class="bi bi-person"></i>
+                                                </div>
+                                            }
+                                            <div class="position-absolute bottom-0 end-0 bg-gold rounded-circle d-flex align-items-center justify-content-center" style="width: 15px; height: 15px; border: 1px solid var(--maroon);">
+                                                <i class="bi bi-search text-maroon" style="font-size: 0.5rem;"></i>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <a href="javascript:void(0)" onclick="showStudentDetails(@student.Id)" class="fw-bold text-decoration-none gold-text d-block">@student.FirstName @student.LastName</a>
+                                        <small class="text-white-50">@student.Email</small>
+                                    </td>
+                                    <td class="text-end pe-3">
+                                        <div class="d-flex justify-content-end gap-1">
+                                            <form method="post" action="/Admin/ApproveStudentRequest" class="m-0">
+                                                @Html.AntiForgeryToken()
+                                                <input type="hidden" name="id" value="@student.Id" />
+                                                <button type="submit" class="btn btn-xs @(student.IsApproved ? "btn-success" : "btn-outline-success-glass") p-1 px-2" title="Onayla"><i class="bi bi-shield-check"></i></button>
+                                            </form>
+                                            <form method="post" action="/Admin/RejectStudentRequest" class="m-0">
+                                                @Html.AntiForgeryToken()
+                                                <input type="hidden" name="id" value="@student.Id" />
+                                                <button type="submit" class="btn btn-xs @(student.IsDeleted ? "btn-danger" : "btn-outline-danger-glass") p-1 px-2" title="Reddet"><i class="bi bi-trash"></i></button>
+                                            </form>
+                                            <form method="post" action="/Admin/ResetStudentRequest" class="m-0">
+                                                @Html.AntiForgeryToken()
+                                                <input type="hidden" name="id" value="@student.Id" />
+                                                <button type="submit" class="btn btn-xs @(!student.IsApproved && !student.IsDeleted ? "btn-warning" : "btn-outline-warning-glass") p-1 px-2" title="Beklemeye Al"><i class="bi bi-arrow-counterclockwise"></i></button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                            @if (!studentRequests.Any())
+                            {
+                                <tr>
+                                    <td colspan="3" class="text-center py-5 text-white-50">
+                                        <i class="bi bi-check2-all display-4 d-block mb-2"></i>
+                                        Bekleyen talep bulunmuyor.
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- DETAY MODALLARI -->
+<div class="modal fade" id="detailsModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content glass-card-static border-gold" style="border-radius: 20px;">
+            <div class="modal-header border-bottom border-white-10">
+                <h5 class="modal-title gold-text fw-bold" id="modalTitle">Başvuru Detayları</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4" id="modalBody">
+                <!-- İçerik JS ile dolacak -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .cursor-pointer { cursor: pointer; }
+    .btn-xs { padding: 0.2rem 0.4rem; font-size: 0.75rem; }
+    .btn-outline-success-glass { color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); background: rgba(16, 185, 129, 0.05); }
+    .btn-outline-danger-glass { color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3); background: rgba(239, 68, 68, 0.05); }
+    .btn-outline-warning-glass { color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.3); background: rgba(245, 158, 11, 0.05); }
+    
+    .btn-success { background: #10b981 !important; color: white !important; }
+    .btn-danger { background: #ef4444 !important; color: white !important; }
+    .btn-warning { background: #f59e0b !important; color: white !important; }
+
+    .table > :not(caption) > * > * { background-color: transparent !important; }
+    .hover-gold-row:hover { background: rgba(197, 160, 89, 0.1) !important; cursor: pointer; }
+    .btn-outline-gold { border: 1px solid var(--gold); color: var(--gold); }
+    .btn-outline-gold:hover { background: var(--gold); color: var(--maroon); }
+    .border-gold { border: 2px solid var(--gold) !important; }
+</style>
+
+<script>
+    function showInstructorDetails(id) {
+        // Normalde API'den çekilir ama hızlı çözüm için listeyi JS'e gömüyoruz veya basit bir HTML oluşturuyoruz
+        // Bu demo için AJAX benzeri bir yapı kurgulayalım
+        fetch(`/Admin/GetInstructorAppDetails/${id}`)
+            .then(res => res.text())
+            .then(html => {
+                document.getElementById('modalBody').innerHTML = html;
+                document.getElementById('modalTitle').innerHTML = '<i class="bi bi-mortarboard-fill me-2"></i>Eğitmen Başvuru Detayı';
+                new bootstrap.Modal(document.getElementById('detailsModal')).show();
+            });
+    }
+
+    function showStudentDetails(id) {
+        fetch(`/Admin/GetStudentRequestDetails/${id}`)
+            .then(res => res.text())
+            .then(html => {
+                document.getElementById('modalBody').innerHTML = html;
+                document.getElementById('modalTitle').innerHTML = '<i class="bi bi-people-fill me-2"></i>Kursiyer Panel Talep Detayı';
+                new bootstrap.Modal(document.getElementById('detailsModal')).show();
+            });
+    }
+</script>

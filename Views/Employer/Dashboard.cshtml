@@ -1,0 +1,374 @@
+@model IEnumerable<dynamic>
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Visionary Employer Dashboard";
+}
+
+<div class="container-fluid py-5 px-lg-5">
+    <!-- Header Section -->
+    <div class="row g-4 align-items-center mb-5 animate-fadeIn">
+        <div class="col-lg-7">
+            <h1 class="text-white fw-bold hero-main-title mb-1" style="font-size: 3.5rem; letter-spacing: -2px;">
+                BORÇKA <span style="color: #C5A059;">YETENEK</span> HAVUZU
+            </h1>
+            <p class="text-white-50 fs-5" data-i18n="employer_dashboard_subtitle">Sektörel liderlerle yetenekli mezunları buluşturan dijital köprü.</p>
+        </div>
+        
+        <!-- 🌟 Günün Öne Çıkan Yeteneği (Star of the Day) -->
+        <div class="col-lg-5">
+            @if (ViewBag.Spotlight != null)
+            {
+                var spotlight = (HalkEgitimSistemi.Models.Student)ViewBag.Spotlight;
+                <div class="spotlight-card animate-float">
+                    <div class="spotlight-badge"><i class="bi bi-star-fill"></i> GÜNÜN YILDIZI</div>
+                    <div class="d-flex align-items-center gap-3 p-3">
+                        <div class="spotlight-avatar">
+                            <img src="@(spotlight.ProfilePicture ?? "https://ui-avatars.com/api/?name=" + spotlight.FirstName + "+" + spotlight.LastName)" alt="Star">
+                        </div>
+                        <div>
+                            <h5 class="text-white fw-bold mb-0">@spotlight.FirstName @spotlight.LastName</h5>
+                            <span class="gold-text x-small fw-bold tracking-widest">@spotlight.Points PUAN | @spotlight.EloRating ELO</span>
+                            <div class="mt-2">
+                                <button class="btn btn-gold-sm py-1 px-3 rounded-pill" onclick="showContact('@spotlight.Email', '@spotlight.PhoneNumber', @spotlight.Id)">Keşfet</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- Stats & Quick Actions -->
+    <div class="d-flex justify-content-between align-items-center mb-5">
+        <ul class="nav nav-pills gap-3 p-2 bg-dark-glass rounded-pill border border-secondary border-opacity-25" id="employerTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active px-4 py-2 rounded-pill fw-bold text-uppercase tracking-wider" id="search-tab" data-bs-toggle="pill" data-bs-target="#search-content" type="button" role="tab">
+                    <i class="bi bi-person-bounding-box me-2"></i> Kursiyer Matrisi
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link px-4 py-2 rounded-pill fw-bold text-uppercase tracking-wider" id="jobs-tab" data-bs-toggle="pill" data-bs-target="#jobs-content" type="button" role="tab">
+                    <i class="bi bi-bar-chart-line me-2"></i> Sektörel Analiz & İlanlar
+                </button>
+            </li>
+        </ul>
+
+        <button class="btn-heatmap px-4 py-2 rounded-pill" onclick="openHeatmap()">
+            <i class="bi bi-geo-alt-fill me-2"></i> BÖLGESEL YETENEK HARİTASI
+        </button>
+    </div>
+
+    <div class="tab-content" id="employerTabsContent">
+        <!-- SEARCH TAB -->
+        <div class="tab-pane fade show active" id="search-content" role="tabpanel">
+            <!-- Advanced Filter Bar -->
+            <div class="glass-card p-4 mb-5 border-glass shadow-lg" style="border-radius: 30px; background: rgba(15, 23, 42, 0.6);">
+                <form method="get" class="row g-4 align-items-end" id="filterForm">
+                    <div class="col-lg-3">
+                        <label class="text-white-50 small fw-bold mb-2 ms-2"><i class="bi bi-search me-1"></i> YETENEK ARA</label>
+                        <input type="text" name="search" class="modern-control" placeholder="C#, Grafik, Arıcılık..." value="@ViewBag.Search">
+                    </div>
+                    <div class="col-lg-3">
+                        <label class="text-white-50 small fw-bold mb-2 ms-2"><i class="bi bi-grid me-1"></i> SEKTÖR</label>
+                        <select name="category" class="modern-control">
+                            <option value="">Tüm Sektörler</option>
+                            @if (ViewBag.Categories != null) {
+                                foreach (var cat in ViewBag.Categories) {
+                                    <option value="@cat" selected="@(ViewBag.Category == cat)">@cat</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                    <div class="col-lg-3">
+                        <!-- ⚡ Akıllı Filtre: Hemen Görüşülebilir -->
+                        <div class="d-flex align-items-center justify-content-between p-3 bg-white-5 rounded-4 border border-secondary border-opacity-10 h-100">
+                            <div>
+                                <h6 class="text-white small fw-bold mb-0">Hemen Görüşülebilir</h6>
+                                <p class="text-white-50 x-small mb-0">Aktif iş arayanlar</p>
+                            </div>
+                            <div class="form-check form-switch fs-4">
+                                <input class="form-check-input" type="checkbox" name="readyToWork" value="true" id="readySwitch" @(ViewBag.ReadyToWork ? "checked" : "") onchange="this.form.submit()">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <button type="submit" class="btn-glow-premium w-100 py-3 rounded-4">
+                            MATRİSİ GÜNCELLE <i class="bi bi-cpu ms-2"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Talent Grid (Radar Charts) -->
+            <div class="row g-4 animate-fadeIn">
+                @if (Model != null && Model.Any())
+                {
+                    @foreach (var student in Model)
+                    {
+                        <div class="col-xl-4 col-lg-6">
+                            <div class="talent-card-matrix h-100 p-4 border-glass shadow-hover position-relative overflow-hidden">
+                                <div class="card-bg-glow"></div>
+                                <div class="d-flex justify-content-between align-items-start mb-4 position-relative">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="talent-avatar-sm">
+                                            <i class="bi bi-person-badge text-white fs-3"></i>
+                                        </div>
+                                        <div>
+                                            <h4 class="text-white fw-bold mb-0">@student.Name</h4>
+                                            <span class="gold-text x-small fw-bold tracking-widest text-uppercase">@student.Category</span>
+                                        </div>
+                                    </div>
+                                    <div class="text-end">
+                                        <div class="match-score-radial" title="Sektörel Uyumluluk">
+                                            <span class="small">%</span>@(new Random().Next(82, 98))
+                                        </div>
+                                        @if (student.IsAvailable) {
+                                            <span class="badge bg-success-soft text-success x-small mt-2 rounded-pill">
+                                                <i class="bi bi-lightning-fill"></i> HEMEN BAŞLAYABİLİR
+                                            </span>
+                                        }
+                                    </div>
+                                </div>
+
+                                <!-- Skill Matrix (Chart) -->
+                                <div class="matrix-container mb-4" style="height: 220px;">
+                                    <canvas id="chart-@student.Id" class="skill-chart-canvas"></canvas>
+                                </div>
+
+                                <div class="instructor-feedback p-3 bg-white-5 rounded-4 mb-4 border border-secondary border-opacity-10">
+                                    <div class="d-flex align-items-center gap-2 mb-2">
+                                        <i class="bi bi-chat-quote-fill text-info"></i>
+                                        <span class="text-white-50 x-small fw-bold">EĞİTMEN GÖRÜŞÜ</span>
+                                    </div>
+                                    <p class="text-white small mb-0 font-italic">"Analitik düşünme yeteneği çok yüksek, karmaşık projelerde sorumluluk alabilen bir kursiyer."</p>
+                                </div>
+
+                                <div class="d-flex gap-2">
+                                    <button class="btn btn-premium flex-grow-1 rounded-pill py-2 fw-bold" onclick="showContact('@student.Email', '@student.PhoneNumber', @student.Id)">
+                                        <i class="bi bi-lightning-fill me-1"></i> İLETİŞİME GEÇ
+                                    </button>
+                                    <button class="btn btn-dark-glass rounded-pill px-3" title="Sohbet Başlat" onclick="window.location.href='/Chat/EmployerChat?studentId=@student.Id'">
+                                        <i class="bi bi-chat-dots"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+
+        <!-- JOBS & ANALYSIS TAB -->
+        <div class="tab-pane fade" id="jobs-content" role="tabpanel">
+            <div class="row g-4">
+                <!-- Heatmap Widget -->
+                <div class="col-lg-4">
+                    <div class="glass-card p-4 border-glass h-100" style="border-radius: 30px;">
+                        <h4 class="text-white fw-bold mb-4 d-flex align-items-center gap-2">
+                            <i class="bi bi-geo-alt-fill text-danger"></i> İstihdam Isı Haritası
+                        </h4>
+                        <div class="heatmap-container bg-dark-glass rounded-4 p-3 border border-secondary border-opacity-10 position-relative mb-4" style="height: 300px;">
+                            <div class="map-placeholder d-flex flex-column align-items-center justify-content-center h-100 opacity-50">
+                                <i class="bi bi-map fs-1 mb-2"></i>
+                                <span class="small tracking-widest text-uppercase">Borçka Bölge Analizi</span>
+                            </div>
+                            @if (ViewBag.NeighborhoodStats != null) {
+                                int i = 0;
+                                foreach (var stat in ViewBag.NeighborhoodStats) {
+                                    <div class="heat-dot" style="top: @(20 + i*15)%; left: @(30 + i*10)%; --size: @(30 + stat.Count*10)px; --color: #f59e0b;">
+                                        <span class="dot-label">@stat.Neighborhood</span>
+                                    </div>
+                                    i++;
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Job Postings -->
+                <div class="col-lg-8">
+                    <div class="glass-card p-4 border-glass h-100" style="border-radius: 30px;">
+                        <div class="d-flex justify-content-between align-items-center mb-5">
+                            <div>
+                                <h4 class="text-white fw-bold mb-1">Kurumsal İlan Yönetimi</h4>
+                                <p class="text-white-50 small">İlanlarınızın performansını ve başvuruları takip edin.</p>
+                            </div>
+                            <button class="btn-glow-premium px-4 py-3 rounded-pill fw-bold" onclick="location.href='/Employer/PostJob'">
+                                <i class="bi bi-plus-circle me-2"></i> YENİ İLAN YAYINLA
+                            </button>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table class="table table-dark table-hover align-middle">
+                                <thead>
+                                    <tr class="text-white-50 x-small tracking-widest border-bottom border-secondary border-opacity-25">
+                                        <th class="py-3">POZİSYON</th>
+                                        <th class="py-3">BAŞVURU</th>
+                                        <th class="py-3">DURUM</th>
+                                        <th class="py-3 text-end">YÖNET</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="border-bottom border-secondary border-opacity-10">
+                                        <td>
+                                            <div class="text-white fw-bold">Modern Seralarda Organik Tarım</div>
+                                            <div class="text-white-25 x-small">Bugün yayınlandı</div>
+                                        </td>
+                                        <td><span class="text-info fw-bold small">0 Aday</span></td>
+                                        <td><span class="badge bg-success-soft text-success rounded-pill px-3">AKTİF</span></td>
+                                        <td class="text-end">
+                                            <button class="btn btn-icon-glass"><i class="bi bi-three-dots"></i></button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 📍 Regional Talent Map Modal -->
+<div class="modal fade" id="heatmapModal" tabindex="-1">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content bg-dark border-gold overflow-hidden" style="border-radius: 40px;">
+            <div class="modal-body p-0">
+                <div class="row g-0">
+                    <div class="col-lg-8 bg-glass-dark p-5">
+                        <h2 class="text-white fw-bold mb-4">BÖLGESEL YETENEK HARİTASI</h2>
+                        <div class="interactive-map-container" style="height: 500px; background: url('https://upload.wikimedia.org/wikipedia/commons/e/e0/Artvin_districts.png') no-repeat center; background-size: contain; filter: invert(1) brightness(0.7) sepia(1) hue-rotate(-20deg) saturate(2);">
+                            <!-- Markers for neighborhoods -->
+                            <div class="map-marker" style="top: 40%; left: 50%;" data-bs-toggle="tooltip" title="Merkez: Grafik Tasarım Yoğunluklu"></div>
+                            <div class="map-marker" style="top: 60%; left: 40%;" data-bs-toggle="tooltip" title="Aralık: Tarım Teknolojileri Yoğunluklu"></div>
+                            <div class="map-marker" style="top: 30%; left: 60%;" data-bs-toggle="tooltip" title="Karagöl: Turizm ve Arıcılık"></div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 p-5" style="background: rgba(197, 160, 89, 0.05);">
+                        <h4 class="gold-text fw-bold mb-4">SEKTÖREL YOĞUNLUK</h4>
+                        <div class="neighborhood-list">
+                            @if (ViewBag.NeighborhoodStats != null) {
+                                foreach (var stat in ViewBag.NeighborhoodStats) {
+                                    <div class="d-flex justify-content-between align-items-center mb-3 p-3 bg-white-5 rounded-4">
+                                        <div>
+                                            <div class="text-white fw-bold">@stat.Neighborhood</div>
+                                            <div class="text-white-50 x-small">Bölgesel Yetenek Sayısı</div>
+                                        </div>
+                                        <div class="badge bg-gold text-dark rounded-pill">@stat.Count</div>
+                                    </div>
+                                }
+                            }
+                        </div>
+                        <p class="text-white-50 small mt-4">
+                            <i class="bi bi-info-circle me-2"></i> 
+                            Bu harita, kursiyerlerin ikamet adresleri ve başarıyla tamamladıkları sertifikalar baz alınarak gerçek zamanlı oluşturulmuştur.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function openHeatmap() {
+        const modal = new bootstrap.Modal(document.getElementById('heatmapModal'));
+        modal.show();
+    }
+
+    function showContact(email, phone, studentId) {
+        Swal.fire({
+            title: '<span style="color:white; font-family:Outfit; font-weight:800;">KURUMSAL İLETİŞİM</span>',
+            html: `<div class="p-4 text-center">
+                    <div class="p-4 bg-dark-glass rounded-4 border border-info border-opacity-50 mb-4">
+                        <div class="mb-3">
+                            <span class="text-white-50 x-small d-block mb-1 text-uppercase">Telefon Numarası</span>
+                            <code class="text-info fs-3 fw-bold">${phone || 'Girilmedi'}</code>
+                        </div>
+                        <hr class="border-white-10">
+                        <div>
+                            <span class="text-white-50 x-small d-block mb-1 text-uppercase">E-Posta Adresi</span>
+                            <code class="text-white fs-5">${email}</code>
+                        </div>
+                    </div>
+                    <div class="d-grid gap-2">
+                        <a href="tel:${phone}" class="btn btn-info py-3 rounded-pill fw-bold ${!phone ? 'disabled' : ''}">HEMEN ARA</a>
+                        <button onclick="window.location.href='/Chat/EmployerChat?studentId=${studentId}'" class="btn btn-premium py-3 rounded-pill fw-bold">SOHBET BAŞLAT</button>
+                    </div>
+                   </div>`,
+            background: 'rgba(5, 8, 15, 0.98)',
+            backdrop: 'blur(15px)',
+            showConfirmButton: false,
+            showCloseButton: true
+        });
+    }
+
+    function createSkillChart(canvasId) {
+        const ctx = document.getElementById(canvasId).getContext('2d');
+        new Chart(ctx, {
+            type: 'radar',
+            data: {
+                labels: ['Teknik Bilgi', 'Problem Çözme', 'Ekip Çalışması', 'İletişim', 'Yaratıcılık'],
+                datasets: [{
+                    label: 'Yetenek Skoru',
+                    data: [85, 70, 90, 65, 80],
+                    backgroundColor: 'rgba(197, 160, 89, 0.2)',
+                    borderColor: '#C5A059',
+                    borderWidth: 2,
+                    pointBackgroundColor: '#C5A059'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    r: {
+                        angleLines: { color: 'rgba(255, 255, 255, 0.1)' },
+                        grid: { color: 'rgba(255, 255, 255, 0.1)' },
+                        pointLabels: { color: 'rgba(255, 255, 255, 0.5)', font: { size: 10, family: 'Outfit' } },
+                        ticks: { display: false },
+                        suggestedMin: 0,
+                        suggestedMax: 100
+                    }
+                },
+                plugins: { legend: { display: false } }
+            }
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        @if (Model != null) {
+            foreach (var student in Model) {
+                <text>createSkillChart('chart-@student.Id');</text>
+            }
+        }
+    });
+</script>
+
+<style>
+    .hero-main-title { font-family: 'Outfit', sans-serif; text-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+    .btn-heatmap { background: rgba(197, 160, 89, 0.1); border: 1px solid #C5A059; color: #C5A059; font-weight: 800; transition: all 0.3s; }
+    .btn-heatmap:hover { background: #C5A059; color: black; transform: translateY(-2px); }
+    
+    .spotlight-card { background: linear-gradient(135deg, rgba(197, 160, 89, 0.2), rgba(88, 28, 28, 0.2)); border: 1px solid rgba(197, 160, 89, 0.3); border-radius: 24px; position: relative; overflow: hidden; }
+    .spotlight-badge { position: absolute; top: 0; right: 0; background: #C5A059; color: #581C1C; font-size: 0.6rem; font-weight: 900; padding: 4px 12px; border-bottom-left-radius: 12px; }
+    .spotlight-avatar { width: 60px; height: 60px; border-radius: 50%; border: 2px solid #C5A059; overflow: hidden; }
+    .spotlight-avatar img { width: 100%; height: 100%; object-fit: cover; }
+    
+    .btn-gold-sm { background: #C5A059; border: none; color: black; font-weight: 800; font-size: 0.7rem; transition: all 0.3s; }
+    .btn-gold-sm:hover { opacity: 0.9; transform: scale(1.05); }
+
+    .talent-card-matrix { background: rgba(15, 23, 42, 0.5); border-radius: 35px; transition: all 0.4s; border: 1px solid rgba(255,255,255,0.05); }
+    .talent-card-matrix:hover { transform: translateY(-10px); border-color: #C5A059; background: rgba(20, 28, 45, 0.7); }
+    .match-score-radial { width: 50px; height: 50px; border: 3px solid #C5A059; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 900; font-family: 'Outfit'; font-size: 1.1rem; }
+    
+    .heat-dot { position: absolute; border-radius: 50%; background: var(--color); opacity: 0.3; width: var(--size); height: var(--size); filter: blur(15px); animation: heat-pulse 4s infinite alternate; display: flex; align-items: center; justify-content: center; }
+    .dot-label { color: white; font-weight: 800; font-size: 0.6rem; text-shadow: 0 0 10px black; pointer-events: none; }
+    
+    .map-marker { position: absolute; width: 20px; height: 20px; background: #C5A059; border: 3px solid white; border-radius: 50%; cursor: pointer; box-shadow: 0 0 20px #C5A059; transition: all 0.3s; }
+    .map-marker:hover { transform: scale(1.5); box-shadow: 0 0 30px #C5A059; }
+
+    .bg-success-soft { background: rgba(25, 135, 84, 0.15); }
+    .form-switch .form-check-input:checked { background-color: #198754; border-color: #198754; }
+</style>

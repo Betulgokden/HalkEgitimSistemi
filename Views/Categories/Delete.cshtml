@@ -1,0 +1,46 @@
+﻿@model HalkEgitimSistemi.Models.Category
+
+@{
+    ViewData["Title"] = "Kategori Sil";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-5 col-md-7">
+            <div class="delete-card animate-scaleIn">
+                <!-- Header -->
+                <div class="delete-header">
+                    <div class="delete-icon">
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+                    </div>
+                    <h3 style="color: var(--danger); font-family: 'Outfit', sans-serif; font-weight: 800; margin: 0;">Silmek İstediğinize Emin Misiniz?</h3>
+                    <p style="color: var(--text-muted); font-size: 0.9rem; margin: 0.5rem 0 0;">Bu işlem geri alınamaz!</p>
+                </div>
+
+                <!-- Details -->
+                <div style="padding: 1.5rem 2rem;">
+                    <div class="detail-row" style="padding: 1rem 0; border-radius: var(--radius-md); background: var(--bg-glass); padding: 1rem 1.5rem; margin-bottom: 1rem;">
+                        <div class="detail-label" style="flex: 0 0 auto; margin-right: 1rem;">
+                            <i class="bi bi-tag-fill me-1"></i>Kategori
+                        </div>
+                        <div class="detail-value" style="font-weight: 700; color: var(--text-primary);">
+                            @Html.DisplayFor(model => model.CategoryName)
+                        </div>
+                    </div>
+
+                    <form asp-action="Delete">
+                        <input type="hidden" asp-for="Id" />
+                        <div class="d-flex gap-3">
+                            <a asp-action="Index" class="btn btn-premium btn-secondary-glass flex-fill justify-content-center">
+                                <i class="bi bi-x-lg"></i> Vazgeç
+                            </a>
+                            <button type="submit" class="btn btn-premium btn-danger-glow flex-fill justify-content-center">
+                                <i class="bi bi-trash3"></i> Evet, Sil
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

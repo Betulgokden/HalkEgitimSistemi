@@ -1,0 +1,130 @@
+﻿@model HalkEgitimSistemi.Models.Student
+@{
+    ViewData["Title"] = "Profil Ayarları";
+    Layout = "_Layout";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="glass-card-static p-4 p-md-5 animate-fadeInUp">
+                <div class="d-flex align-items-center mb-4">
+                    <div class="section-icon section-icon-info me-3">
+                        <i class="bi bi-person-gear"></i>
+                    </div>
+                    <div>
+                        <h2 style="font-family: 'Outfit'; font-weight: 800; color: var(--text-primary); margin: 0;">Profil Ayarları</h2>
+                        <p style="color: var(--text-muted); margin: 0;">Kişisel bilgilerinizi ve CV detaylarınızı güncelleyin.</p>
+                    </div>
+                </div>
+
+                @if (TempData["Success"] != null)
+                {
+                    <div class="alert alert-success-glass mb-4">
+                        <i class="bi bi-check-circle-fill me-2"></i> @TempData["Success"]
+                    </div>
+                }
+
+                <form asp-action="Profile" method="post" enctype="multipart/form-data">
+                    <div class="row g-4">
+                        <div class="col-md-4 text-center">
+                            <div class="mb-3">
+                                @if (!string.IsNullOrEmpty(Model.ProfilePicture))
+                                {
+                                    <img src="@Model.ProfilePicture" id="previewImg" style="width: 150px; height: 150px; border-radius: 20px; object-fit: cover; border: 4px solid var(--border-glass);" />
+                                }
+                                else
+                                {
+                                    <div id="previewPlaceholder" class="mx-auto d-flex align-items-center justify-content-center" style="width: 150px; height: 150px; border-radius: 20px; background: rgba(255,255,255,0.05); color: var(--text-muted); font-size: 3rem;">
+                                        <i class="bi bi-person"></i>
+                                    </div>
+                                    <img id="previewImg" style="width: 150px; height: 150px; border-radius: 20px; object-fit: cover; border: 4px solid var(--border-glass); display:none;" />
+                                }
+                            </div>
+                            <label class="btn btn-sm btn-secondary-glass w-100">
+                                <i class="bi bi-camera me-1"></i> Fotoğraf Seç
+                                <input type="file" name="profilePic" class="d-none" onchange="previewFile(this)" />
+                            </label>
+                        </div>
+
+                        <div class="col-md-8">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label text-muted small fw-bold">AD</label>
+                                    <input asp-for="FirstName" class="form-premium-control" required />
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label text-muted small fw-bold">SOYAD</label>
+                                    <input asp-for="LastName" class="form-premium-control" required />
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label text-muted small fw-bold">E-POSTA (Değiştirilemez)</label>
+                                    <input asp-for="Email" class="form-premium-control" readonly style="opacity: 0.6;" />
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label text-muted small fw-bold">TELEFON</label>
+                                    <input asp-for="PhoneNumber" class="form-premium-control" placeholder="05xx xxx xx xx" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label text-muted small fw-bold">T.C. KİMLİK NO</label>
+                                    <input asp-for="TcNo" class="form-premium-control" placeholder="11 haneli T.C. No" maxlength="11" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label text-muted small fw-bold">DOĞUM TARİHİ</label>
+                                    <input asp-for="BirthDate" type="date" class="form-premium-control" />
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label text-muted small fw-bold">MEMLEKET / NERELİ</label>
+                                    <input asp-for="BirthPlace" class="form-premium-control" placeholder="Örn: Ankara, Çankaya" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <hr class="divider-premium" />
+                            <h5 style="font-family: 'Outfit'; font-weight: 700; color: var(--text-primary);" class="mb-3">
+                                <i class="bi bi-file-earmark-person me-2" style="color: var(--secondary);"></i>CV Detayları
+                            </h5>
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label text-muted small fw-bold">HAKKIMDA (ÖZET BİLGİ)</label>
+                            <textarea asp-for="Summary" class="form-premium-control" rows="4" placeholder="Kendinizden kısaca bahsedin..."></textarea>
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label text-muted small fw-bold">YETENEKLER (VİRGÜLLE AYIRIN)</label>
+                            <input asp-for="Skills" class="form-premium-control" placeholder="Örn: C#, Web Tasarım, İngilizce, Takım Çalışması" />
+                            <small class="text-muted">CV sayfasında etiket olarak görünecektir.</small>
+                        </div>
+
+                        <div class="col-12 mt-5">
+                            <button type="submit" class="btn btn-premium btn-primary-glow w-100 py-3">
+                                <i class="bi bi-save me-2"></i> Değişiklikleri Kaydet
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function previewFile(input) {
+            const file = input.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const preview = document.getElementById('previewImg');
+                    const placeholder = document.getElementById('previewPlaceholder');
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                    if (placeholder) placeholder.style.display = 'none';
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+    </script>
+}

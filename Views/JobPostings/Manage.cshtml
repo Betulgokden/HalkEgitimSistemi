@@ -1,0 +1,86 @@
+@model IEnumerable<HalkEgitimSistemi.Models.JobPosting>
+@{
+    ViewData["Title"] = "İlan Yönetimi";
+}
+
+<div class="container-fluid px-4 py-5">
+    <div class="d-flex justify-content-between align-items-center mb-5">
+        <div>
+            <h1 class="text-white fw-900 mb-1" style="font-family: 'Outfit';">İlanlarımı Yönet</h1>
+            <p class="text-white-50 small">Yayınladığınız iş ilanlarını kontrol edin ve güncelleyin.</p>
+        </div>
+        <a asp-action="Create" class="btn btn-premium px-4">
+            <i class="bi bi-plus-lg me-2"></i>YENİ İLAN
+        </a>
+    </div>
+
+    <div class="glass-card shadow-2xl overflow-hidden" style="border-radius: 30px; border: 1.5px solid var(--theme-card-border);">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0" style="color: white;">
+                <thead class="bg-glass-strong">
+                    <tr>
+                        <th class="ps-4 py-4 border-0 gold-text small fw-900">İLAN BAŞLIĞI</th>
+                        <th class="py-4 border-0 gold-text small fw-900">KONUM / TÜR</th>
+                        <th class="py-4 border-0 gold-text small fw-900">TARİH</th>
+                        <th class="py-4 border-0 gold-text small fw-900">DURUM</th>
+                        <th class="pe-4 py-4 border-0 gold-text small fw-900 text-end">İŞLEMLER</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var job in Model)
+                    {
+                        <tr class="border-bottom border-white-5 hover-gold-row">
+                            <td class="ps-4 py-4">
+                                <div class="fw-bold">@job.Title</div>
+                                <div class="text-white-50 x-small">@job.CompanyName</div>
+                            </td>
+                            <td>
+                                <div class="small">@job.Location</div>
+                                <div class="x-small gold-text">@job.JobType</div>
+                            </td>
+                            <td>
+                                <div class="small">@job.CreatedAt.ToString("dd.MM.yyyy")</div>
+                                @if (job.Deadline.HasValue)
+                                {
+                                    <div class="x-small text-white-25">Son: @job.Deadline.Value.ToString("dd.MM.yyyy")</div>
+                                }
+                            </td>
+                            <td>
+                                @if (job.IsActive)
+                                {
+                                    <span class="badge bg-success-glow text-success px-3 rounded-pill">Yayında</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-white-10 text-white-25 px-3 rounded-pill">Pasif</span>
+                                }
+                            </td>
+                            <td class="pe-4 text-end">
+                                <div class="d-flex justify-content-end gap-2">
+                                    <form asp-action="ToggleActive" asp-route-id="@job.Id" method="post" style="display:inline;">
+                                        <button type="submit" class="btn btn-sm @(job.IsActive ? "btn-outline-warning-glass" : "btn-outline-success-glass")">
+                                            <i class="bi @(job.IsActive ? "bi-eye-slash" : "bi-eye")"></i>
+                                        </button>
+                                    </form>
+                                    <form asp-action="Delete" asp-route-id="@job.Id" method="post" style="display:inline;" onsubmit="return confirm('Bu ilanı silmek istediğinize emin misiniz?');">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger-glass">
+                                            <i class="bi bi-trash3"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<style>
+    .bg-glass-strong { background: rgba(0,0,0,0.2); }
+    .btn-outline-success-glass { color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); background: rgba(16, 185, 129, 0.05); }
+    .btn-outline-warning-glass { color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.3); background: rgba(245, 158, 11, 0.05); }
+    .btn-outline-danger-glass { color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3); background: rgba(239, 68, 68, 0.05); }
+    .hover-gold-row:hover { background: rgba(197, 160, 89, 0.03) !important; }
+</style>

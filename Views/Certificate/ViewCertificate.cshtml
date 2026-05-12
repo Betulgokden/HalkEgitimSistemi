@@ -1,0 +1,198 @@
+﻿@model HalkEgitimSistemi.Models.Application
+
+@{
+    ViewData["Title"] = "Doğrulanmış Sertifika";
+}
+
+<div class="container py-5 text-center">
+    <div class="animate-fadeInDown mb-4">
+        <div class="d-inline-flex align-items-center gap-2 p-3" style="background: rgba(16,185,129,0.15); border: 1px solid rgba(16,185,129,0.3); border-radius: var(--radius-full); color: var(--success);">
+            <i class="bi bi-shield-fill-check fs-4"></i>
+            <span style="font-family: 'Outfit'; font-weight: 700; font-size: 1.1rem; text-transform: uppercase;">Belge Doğrulandı - Orijinal</span>
+        </div>
+    </div>
+
+    <!-- Certificate Card Layout (3D Tilt Effect) -->
+    <div class="mx-auto animate-scaleIn mb-5" style="max-width: 900px; perspective: 1000px;">
+        <div class="text-end mb-3 d-flex justify-content-end gap-2 no-print">
+             <button id="btnShare" class="btn btn-premium btn-primary-glass">
+                 <i class="bi bi-share"></i> Geçici Bağlantı Oluştur
+             </button>
+             <button onclick="window.print()" class="btn btn-premium btn-secondary-glass">
+                 <i class="bi bi-printer"></i> Yazdır / PDF
+             </button>
+        </div>
+
+        <div id="printable-certificate" 
+             class="sertifika-karti" 
+             data-tilt data-tilt-glare data-tilt-max-glare="0.3" data-tilt-max="5"
+             style="background: #fff; border-radius: 8px; border: 25px solid #1e293b; padding: 4rem; position: relative; overflow: hidden; box-shadow: 0 50px 100px rgba(0,0,0,0.3); color: #1a202c; text-align: center; font-family: 'Outfit', serif; transform-style: preserve-3d;">
+            
+            <!-- Ornate Border corners -->
+            <div style="position: absolute; top: 10px; left: 10px; width: 60px; height: 60px; border-top: 5px solid #d4af37; border-left: 5px solid #d4af37;"></div>
+            <div style="position: absolute; top: 10px; right: 10px; width: 60px; height: 60px; border-top: 5px solid #d4af37; border-right: 5px solid #d4af37;"></div>
+            <div style="position: absolute; bottom: 10px; left: 10px; width: 60px; height: 60px; border-bottom: 5px solid #d4af37; border-left: 5px solid #d4af37;"></div>
+            <div style="position: absolute; bottom: 10px; right: 10px; width: 60px; height: 60px; border-bottom: 5px solid #d4af37; border-right: 5px solid #d4af37;"></div>
+
+            <!-- Content -->
+            <div style="position: relative; z-index: 1; transform: translateZ(50px);">
+                <div class="mb-4 d-flex justify-content-between align-items-center">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cc/Ministry_of_National_Education_Turkey_logo.svg/1200px-Ministry_of_National_Education_Turkey_logo.svg.png" style="height: 80px;" />
+                    <div style="text-align: right;">
+                        <div style="font-weight: 800; color: #1e293b; font-size: 0.9rem;">T.C. MİLLİ EĞİTİM BAKANLIĞI</div>
+                        <div style="font-size: 0.8rem; color: #64748b;">Halk Eğitimi Merkezi Müdürlüğü</div>
+                    </div>
+                </div>
+                
+                <h1 style="font-size: 3.5rem; font-weight: 900; color: #1e293b; letter-spacing: 0.15em; text-transform: uppercase; margin: 3rem 0; font-family: 'Outfit';">
+                    SERTİFİKA
+                </h1>
+
+                <p style="font-size: 1.4rem; color: #475569; margin-bottom: 1.5rem; font-style: italic;">Sayın</p>
+
+                <div style="font-size: 3rem; font-weight: 900; color: #0f172a; margin-bottom: 1.5rem; border-bottom: 3px double #d4af37; display: inline-block; padding: 0 3rem 0.5rem;">
+                    @Model.FirstName.ToUpper() @Model.LastName.ToUpper()
+                </div>
+
+                <p style="font-size: 1.2rem; color: #64748b; margin-bottom: 2rem;">
+                    T.C. Kimlik No: <strong style="color: #1e293b;">@Model.TcNo</strong>
+                </p>
+
+                <p style="font-size: 1.4rem; color: #334155; margin: 3rem auto; line-height: 1.8; max-width: 800px;">
+                    Kurumumuz bünyesinde gerçekleştirilen <strong style="color: #1e293b;">@Model.Course?.DurationHours saatlik</strong> teorik ve uygulamalı eğitimleri kapsayan <br/>
+                    <strong style="color: #b45309; font-size: 2rem; display: block; margin: 1rem 0; font-weight: 800;">@Model.Course?.CourseName.ToUpper()</strong>
+                    programını başarıyla tamamlayarak bu sertifikayı almaya hak kazanmıştır.
+                </p>
+
+                <div class="row align-items-end mt-5 pt-4">
+                    <div class="col-4 text-center">
+                        <div style="font-size: 0.8rem; color: #64748b; margin-bottom: 0.5rem; text-transform: uppercase;">Belge No</div>
+                        <div style="font-weight: 800; font-size: 1rem; color: #1e293b;">@Model.CertificateCode</div>
+                        <div style="border-top: 1px solid #d4af37; margin-top: 0.5rem; width: 80%; margin-left: 10%;"></div>
+                    </div>
+                    <div class="col-4 text-center">
+                        <div style="width: 110px; height: 110px; margin: 0 auto; border: 4px double #d4af37; padding: 5px; background: white;">
+                            <img src='https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=@Url.Action("Verify", "Certificate", new { certificateCode = Model.CertificateCode }, Context.Request.Scheme)' width="100%" />
+                        </div>
+                        <div style="font-size: 0.7rem; color: #94a3b8; margin-top: 0.5rem;">Belge Doğrulama Kodu</div>
+                    </div>
+                    <div class="col-4 text-center">
+                        <div style="font-size: 0.8rem; color: #64748b; margin-bottom: 0.5rem; text-transform: uppercase;">Müdür İmza</div>
+                        <div style="font-family: 'Brush Script MT', cursive; font-size: 2.8rem; color: #1e293b; line-height: 1;">Betül Gökden</div>
+                        <div style="border-top: 1px solid #d4af37; margin-top: 0.5rem; width: 80%; margin-left: 10%;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Actions Section -->
+    <div class="row justify-content-center g-4 mb-5 no-print">
+        <div class="col-md-4">
+            <a href="https://www.linkedin.com/profile/add?startTask=CERTIFICATION_NAME&name=@Uri.EscapeDataString(Model.Course?.CourseName ?? "")&organizationName=Halk%20E%C4%9Fitim%20Merkezi&issueYear=@Model.ApplyDate.Year&issueMonth=@Model.ApplyDate.Month&certUrl=@Uri.EscapeDataString(Url.Action("Verify", "Certificate", new { certificateCode = Model.CertificateCode }, Context.Request.Scheme) ?? "")" 
+               target="_blank" class="btn btn-linkedin btn-lg w-100 py-3 shadow-lg">
+                <i class="bi bi-linkedin me-2"></i> LinkedIn Profiline Ekle
+            </a>
+        </div>
+    </div>
+
+    <!-- Education Journey Timeline -->
+    <div class="max-w-700 mx-auto text-start no-print">
+        <h4 class="mb-4" style="color: var(--text-primary); font-family: 'Outfit'; font-weight: 700;">
+            <i class="bi bi-compass me-2 text-primary"></i> Eğitim Serüveni
+        </h4>
+        <div class="timeline-container ps-4 border-start border-2 border-primary-light position-relative ms-3">
+            <div class="timeline-item mb-4 position-relative">
+                <div class="timeline-dot"></div>
+                <div class="small text-muted">@Model.ApplyDate.ToString("dd MMMM yyyy")</div>
+                <div class="fw-bold">Eğitime Başladı</div>
+                <div class="text-secondary small">Kursiyer kaydı sisteme onaylandı ve eğitim süreci başladı.</div>
+            </div>
+            
+            <div class="timeline-item mb-4 position-relative">
+                <div class="timeline-dot"></div>
+                <div class="small text-muted">Devam Durumu</div>
+                <div class="fw-bold">Katılım: %@(Model.Attendances?.Count > 0 ? (Model.Attendances.Count(a => a.IsPresent) * 100 / Model.Attendances.Count) : 100)</div>
+                <div class="text-secondary small">Toplam @Model.Course?.DurationHours saatlik ders programının büyük bir kısmına katılım sağlandı.</div>
+            </div>
+
+            @if (Model.ExamGrade.HasValue)
+            {
+                <div class="timeline-item mb-4 position-relative">
+                    <div class="timeline-dot"></div>
+                    <div class="small text-muted">Başarı Puanı</div>
+                    <div class="fw-bold">Bitirme Projesi: @Model.ExamGrade / 100</div>
+                    <div class="text-secondary small">Eğitim sonu yapılan değerlendirmede üstün başarı gösterildi.</div>
+                </div>
+            }
+
+            <div class="timeline-item position-relative">
+                <div class="timeline-dot bg-success border-success"></div>
+                <div class="small text-muted">@(Model.IsCompleted ? "Tamamlandı" : "")</div>
+                <div class="fw-bold text-success">Sertifika Almaya Hak Kazandı</div>
+                <div class="text-secondary small">Tüm gereksinimler karşılandı ve dijital imzalı belge oluşturuldu.</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="mt-5 no-print">
+        <a asp-action="Verify" class="btn btn-premium btn-secondary-glass">
+            <i class="bi bi-arrow-left"></i> Yeni Sorgulama
+        </a>
+    </div>
+</div>
+
+<!-- Modal for temporary link -->
+<div class="modal fade" id="shareModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-glass border-glass">
+            <div class="modal-header border-0">
+                <h5 class="modal-title">Geçici Paylaşım Linki</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p class="small text-muted">Bu link 24 saat boyunca geçerli kalacak ve sonra otomatik olarak imha edilecektir.</p>
+                <div class="input-group">
+                    <input type="text" id="shareUrlInput" class="form-control bg-dark border-secondary text-white" readonly>
+                    <button class="btn btn-primary" onclick="copyShareUrl()">Kopyala</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .btn-linkedin { background: #0077b5; color: white; border: none; transition: all 0.3s; }
+    .btn-linkedin:hover { background: #005582; color: white; transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,119,181,0.3); }
+    .timeline-dot { position: absolute; left: -33px; top: 5px; width: 14px; height: 14px; background: var(--bg-dark); border: 2px solid var(--primary-light); border-radius: 50%; z-index: 2; }
+    .timeline-container { border-color: rgba(255,255,255,0.1) !important; }
+    
+    @@media print {
+        .no-print { display: none !important; }
+        body * { visibility: hidden; }
+        #printable-certificate, #printable-certificate * { visibility: visible; }
+        #printable-certificate { position: absolute; left: 0; top: 0; width: 100%; height: auto; box-shadow: none !important; border: 5px solid #1a202c !important; transform: none !important; }
+    }
+</style>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
+    <script>
+        $('#btnShare').on('click', function() {
+            $.post('/Certificate/GenerateTemporaryLink', { certificateCode: '@Model.CertificateCode' }, function(res) {
+                if(res.success) {
+                    $('#shareUrlInput').val(res.link);
+                    const modal = new bootstrap.Modal(document.getElementById('shareModal'));
+                    modal.show();
+                }
+            });
+        });
+
+        function copyShareUrl() {
+            const input = document.getElementById('shareUrlInput');
+            input.select();
+            document.execCommand('copy');
+            alert('Link kopyalandı!');
+        }
+    </script>
+}

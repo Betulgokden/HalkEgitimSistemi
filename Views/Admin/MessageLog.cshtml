@@ -1,0 +1,136 @@
+﻿@model List<HalkEgitimSistemi.Models.Message>
+@{
+    ViewData["Title"] = "Mesajlaşma Takibi";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string search = ViewBag.Search ?? "";
+}
+
+<style>
+    .msg-table, .msg-table thead, .msg-table tbody,
+    .msg-table tr, .msg-table td, .msg-table th {
+        background-color: transparent !important;
+        color: rgba(255,255,255,0.85) !important;
+        border-color: rgba(255,255,255,0.06) !important;
+    }
+    .msg-table thead th {
+        background: rgba(255,255,255,0.04) !important;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        font-size: 0.82rem;
+        text-transform: uppercase;
+        color: rgba(255,255,255,0.5) !important;
+    }
+    .msg-table tbody tr:hover td {
+        background: rgba(139,92,246,0.08) !important;
+    }
+    .msg-table-wrapper {
+        background: rgba(15,17,26,0.7) !important;
+        border-radius: 16px;
+        overflow: hidden;
+        border: 1px solid rgba(255,255,255,0.08);
+        backdrop-filter: blur(25px);
+    }
+</style>
+
+<div class="container-fluid py-4">
+    <div class="d-flex align-items-center justify-content-between mb-4">
+        <div>
+            <h1 class="h3 mb-1 fw-bold text-gradient-primary">
+                <i class="bi bi-chat-dots-fill me-2 float-slow"></i>Mesajlaşma Takibi
+            </h1>
+            <p class="text-muted-premium mb-0">Öğrenci <i class="bi bi-arrow-left-right mx-1 text-primary"></i> Öğretmen tüm yazışmalar</p>
+        </div>
+        <div class="d-flex gap-3">
+            <a asp-action="TeacherChatLog" class="btn btn-primary-glow px-4 py-2 rounded-pill fw-bold animate-pulse-slow text-white" style="background: linear-gradient(135deg, #581C1C, #C5A059) !important; border: none !important; box-shadow: 0 0 20px rgba(88, 28, 28, 0.4) !important;">
+                <i class="bi bi-people-fill me-2"></i> Öğretmen Chat Log
+            </a>
+            <a asp-action="CourseChatLog" class="btn btn-secondary-glow px-4 py-2 rounded-pill fw-bold animate-pulse-slow text-white" style="background: linear-gradient(135deg, #581C1C, #7000ff) !important; border: none !important; box-shadow: 0 0 20px rgba(88, 28, 28, 0.4) !important;">
+                <i class="bi bi-collection-play-fill me-2"></i> Kurs Chat Log
+            </a>
+        </div>
+    </div>
+
+    <!-- Arama -->
+    <form method="get" action="/Admin/MessageLog" class="mb-4 animate-fadeIn" style="animation-delay: 0.2s;">
+        <div class="input-group glass-card p-1 rounded-pill" style="max-width:500px; border: 1px solid rgba(255,255,255,0.15);">
+            <span class="input-group-text bg-transparent border-0 text-white-50 ps-3"><i class="bi bi-search"></i></span>
+            <input type="text" name="search" class="form-control bg-transparent border-0 text-white px-2" placeholder="Gönderen, içerik veya öğretmen ara..." value="@search" style="box-shadow: none;">
+            @if (!string.IsNullOrEmpty(search))
+            {
+                <a href="/Admin/MessageLog" class="btn btn-secondary-glass btn-sm rounded-pill my-1 me-1 d-flex align-items-center">Temizle</a>
+            }
+            <button class="btn btn-primary-glow rounded-pill px-4 my-1 me-1" type="submit">Ara</button>
+        </div>
+    </form>
+
+    <div class="msg-table-wrapper shadow-lg animate-fadeInUp">
+        <div class="card-body p-0">
+            <div class="table-responsive" style="min-height: 400px; background: transparent !important;">
+                <table class="table align-middle mb-0 border-0 msg-table">
+                    <thead>
+                        <tr class="border-bottom border-white-10">
+                            <th class="py-3 px-4 border-0">Gönderen</th>
+                            <th class="py-3 border-0">Alıcı Öğretmen</th>
+                            <th class="py-3 border-0">Konu</th>
+                            <th class="py-3 border-0">İçerik (Özet)</th>
+                            <th class="py-3 border-0">Tarih</th>
+                            <th class="py-3 px-4 border-0">Durum</th>
+                        </tr>
+                    </thead>
+                    <tbody class="border-0">
+                        @foreach (var msg in Model)
+                        {
+                            <tr class="border-bottom border-white-5 transition-all hover-bg-glass">
+                                <td class="px-4 py-3">
+                                    <div class="fw-bold">@msg.SenderUsername</div>
+                                    @if (msg.IsFromInstructor)
+                                    {
+                                        <span class="badge bg-primary-soft text-primary-light" style="font-size:0.65rem; border: 1px solid rgba(88, 28, 28, 0.2);">Eğitmen</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-success-soft text-success" style="font-size:0.65rem; border: 1px solid rgba(16, 185, 129, 0.2);">Kursiyer</span>
+                                    }
+                                </td>
+                                <td>@msg.ReceiverInstructor?.FullName</td>
+                                <td class="fw-semibold">@msg.Subject</td>
+                                <td class="text-muted-premium small" style="max-width:250px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+                                    @msg.Content
+                                </td>
+                                <td class="small text-muted-premium">@msg.Date.ToString("dd.MM.yyyy HH:mm")</td>
+                                <td class="px-4">
+                                    @if (msg.IsRead)
+                                    {
+                                        <span class="badge bg-success-glow rounded-pill px-3 py-2"><i class="bi bi-check2-all me-1"></i> Okundu</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-warning-glow rounded-pill px-3 py-2 text-dark"><i class="bi bi-envelope me-1"></i> Okunmadı</span>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                        @if (!Model.Any())
+                        {
+                            <tr>
+                                <td colspan="6" class="text-center py-5 border-0">
+                                    <div class="mb-4 animate-float">
+                                        <i class="bi bi-chat-square-dots display-1 text-primary-light opacity-25"></i>
+                                    </div>
+                                    <h5 class="fw-bold text-white">Henüz mesaj kaydı bulunamadı.</h5>
+                                    <p class="text-muted-premium small">Filtrelerinizi kontrol edebilir veya daha sonra tekrar bakabilirsiniz.</p>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="card-footer border-top border-white-10 bg-transparent py-3 px-4 text-muted-premium small d-flex justify-content-between align-items-center">
+            <span><i class="bi bi-info-circle me-1"></i> Toplam @Model.Count mesaj gösteriliyor (Son 200 Kayıt)</span>
+            <span class="badge bg-glass border-glass">Sistem Günlüğü</span>
+        </div>
+    </div>
+</div>
+
+

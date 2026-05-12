@@ -1,0 +1,210 @@
+﻿@model List<HalkEgitimSistemi.Models.Student>
+@{
+    ViewData["Title"] = "Bilgi Yarışması Hub";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var recentMatches = ViewBag.RecentMatches as List<HalkEgitimSistemi.Models.QuizMatch>;
+}
+
+<div class="quiz-hub-hero py-5 text-center position-relative overflow-hidden">
+    <div class="container animate-fadeIn">
+        <div class="badge bg-primary-glow mb-3 rounded-pill px-4 py-2 fw-bold animate-pulse">
+            <i class="bi bi-trophy-fill me-2"></i> SEZON 1: BİLGİ ÅAMPİYONASI
+        </div>
+        <h1 class="display-3 fw-bold text-white mb-4">Kendini Kanıtla, <span class="text-gradient">Eğitimi Kazan!</span></h1>
+        <p class="lead text-white-50 mb-5 mx-auto" style="max-width: 700px;">
+            Halk Eğitim Bilgi Yarışması ile hem öğren hem de rekabet et. Puan topla, liderlik tablosuna gir ve ücretsiz kurs ödüllerini yakala.
+        </p>
+        
+        <div class="d-flex justify-content-center gap-4">
+            <a asp-action="StartMatch" class="btn btn-vibrant-glow btn-lg px-5 py-3 rounded-pill shadow-lg">
+                <i class="bi bi-play-circle-fill me-2"></i> Yarışmaya Başla
+            </a>
+            <button class="btn btn-dark-glass btn-lg px-5 py-3 rounded-pill" onclick="showLeaderboard()">
+                <i class="bi bi-list-ol me-2"></i> Liderlik Tablosu
+            </button>
+        </div>
+    </div>
+    
+    <!-- VS Animation Background Elements -->
+    <div class="vs-glow-left"></div>
+    <div class="vs-glow-right"></div>
+</div>
+
+<div class="container py-5">
+    <div class="row g-5">
+        <!-- Leaderboard -->
+        <div class="col-lg-8 animate-fadeInLeft">
+            <div class="glass-card-static p-4 border-0 shadow-lg">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h3 class="fw-bold text-white mb-0">En İyiler (Global ELO)</h3>
+                    <i class="bi bi-stars text-warning fs-4"></i>
+                </div>
+                
+                <div class="table-responsive">
+                    <table class="table table-dark table-hover border-0 align-middle">
+                        <thead>
+                            <tr class="text-muted small uppercase">
+                                <th class="border-0">#</th>
+                                <th class="border-0">KULLANICI</th>
+                                <th class="border-0">ELO</th>
+                                <th class="border-0">PUAN</th>
+                                <th class="border-0">G/M</th>
+                                <th class="border-0">DURUM</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (int i = 0; i < Model.Count; i++)
+                            {
+                                var s = Model[i];
+                                <tr class="border-white-5">
+                                    <td class="border-0 fw-bold @(i < 3 ? "text-warning" : "text-white-50")">@(i + 1)</td>
+                                    <td class="border-0">
+                                        <div class="d-flex align-items-center gap-3">
+                                            <div class="avatar-sm rounded-circle bg-glass-strong p-1">
+                                                <img src="https://ui-avatars.com/api/?name=@s.FirstName+@s.LastName&background=random" class="rounded-circle w-100" />
+                                            </div>
+                                            <span class="fw-bold">@s.FirstName @s.LastName</span>
+                                        </div>
+                                    </td>
+                                    <td class="border-0 text-secondary fw-bold">@s.EloRating</td>
+                                    <td class="border-0 text-primary-light fw-bold">@s.Points</td>
+                                    <td class="border-0 small">@s.Wins / @s.TotalMatches</td>
+                                    <td class="border-0">
+                                        <span class="badge bg-success-soft text-success small rounded-pill px-3">Çevrimiçi</span>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Live Activity -->
+        <div class="col-lg-4 animate-fadeInRight">
+            <div class="glass-card-static p-4 border-0 shadow-lg h-100">
+                <h4 class="fw-bold text-white mb-4">Son Düellolar</h4>
+                <div class="match-activity-list">
+                    @foreach (var match in recentMatches)
+                    {
+                        <div class="match-item p-3 rounded-4 mb-3 bg-glass border-glass hover-scale">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="small text-muted">@match.MatchDate.ToString("HH:mm")</span>
+                                <span class="badge bg-primary-soft text-primary small">TAMAMLANDI</span>
+                            </div>
+                            <div class="d-flex align-items-center justify-content-between">
+                                <div class="text-center">
+                                    <div class="small fw-bold">@match.Student?.FirstName</div>
+                                    <div class="text-success fw-bold">@match.Score</div>
+                                </div>
+                                <div class="px-3 text-muted-premium italic">VS</div>
+                                <div class="text-center">
+                                    <div class="small fw-bold">AI Bot</div>
+                                    <div class="text-white-50 small">Bot</div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+                
+                <div class="mt-5 p-4 rounded-4 bg-primary-soft border-primary-glow text-center">
+                    <i class="bi bi-gift-fill fs-1 mb-3 d-block text-primary"></i>
+                    <h5 class="fw-bold text-white">Büyük Ödül</h5>
+                    <p class="small text-white-50">400+ puan toplayan herkese bir sonraki kurs tamamen ücretsiz!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <!-- REWARDS TABLE -->
+    <div class="mt-5 animate-fadeInUp">
+        <div class="glass-card-static p-5 border-glass shadow-2xl">
+            <div class="text-center mb-5">
+                <h2 class="fw-bold text-white mb-2">Başarı Ödülleri & Ücretsiz Kurslar</h2>
+                <p class="text-muted-premium">Topladığın puanları aşağıdaki değerli eğitimlere dönüştürebilirsin.</p>
+            </div>
+            
+            <div class="row g-4 text-center">
+                <div class="col-md-3">
+                    <div class="reward-card p-4 rounded-4 border-glass hover-scale">
+                        <div class="reward-icon-circle mb-3 mx-auto" style="background: rgba(197, 160, 89, 0.1);">
+                            <i class="bi bi-music-note-beamed text-primary fs-3"></i>
+                        </div>
+                        <h5 class="fw-bold text-white">Gitar Eğitimi</h5>
+                        <div class="text-secondary fw-bold mb-2">500 PUAN</div>
+                        <div class="progress bg-dark mb-3" style="height: 6px;">
+                            <div class="progress-bar bg-primary" style="width: 100%;"></div>
+                        </div>
+                        <button class="btn btn-outline-primary btn-sm rounded-pill w-100 disabled">YAKINDA</button>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="reward-card p-4 rounded-4 border-glass hover-scale">
+                        <div class="reward-icon-circle mb-3 mx-auto" style="background: rgba(88, 28, 28, 0.1);">
+                            <i class="bi bi-laptop text-secondary fs-3"></i>
+                        </div>
+                        <h5 class="fw-bold text-white">Python Pro</h5>
+                        <div class="text-secondary fw-bold mb-2">1200 PUAN</div>
+                        <div class="progress bg-dark mb-3" style="height: 6px;">
+                            <div class="progress-bar bg-secondary" style="width: 80%;"></div>
+                        </div>
+                        <button class="btn btn-outline-secondary btn-sm rounded-pill w-100 disabled">YAKINDA</button>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="reward-card p-4 rounded-4 border-glass hover-scale">
+                        <div class="reward-icon-circle mb-3 mx-auto" style="background: rgba(245, 158, 11, 0.1);">
+                            <i class="bi bi-cup-hot text-warning fs-3"></i>
+                        </div>
+                        <h5 class="fw-bold text-white">Gastronomi</h5>
+                        <div class="text-secondary fw-bold mb-2">2000 PUAN</div>
+                        <div class="progress bg-dark mb-3" style="height: 6px;">
+                            <div class="progress-bar bg-warning" style="width: 60%;"></div>
+                        </div>
+                        <button class="btn btn-outline-warning btn-sm rounded-pill w-100 disabled">YAKINDA</button>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="reward-card p-4 rounded-4 border-glass hover-scale">
+                        <div class="reward-icon-circle mb-3 mx-auto" style="background: rgba(16, 185, 129, 0.1);">
+                            <i class="bi bi-shield-lock text-success fs-3"></i>
+                        </div>
+                        <h5 class="fw-bold text-white">Siber Güvenlik</h5>
+                        <div class="text-secondary fw-bold mb-2">5000 PUAN</div>
+                        <div class="progress bg-dark mb-3" style="height: 6px;">
+                            <div class="progress-bar bg-success" style="width: 40%;"></div>
+                        </div>
+                        <button class="btn btn-outline-success btn-sm rounded-pill w-100 disabled">YAKINDA</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .reward-card { background: rgba(255,255,255,0.02); transition: all 0.3s; }
+    .reward-card:hover { background: rgba(255,255,255,0.05); border-color: var(--secondary) !important; }
+    .reward-icon-circle { width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+    .hover-scale:hover { transform: scale(1.05); }
+    .quiz-hub-hero { 
+        background: radial-gradient(circle at center, #1e1b4b 0%, #0f172a 100%);
+        min-height: 400px;
+        display: flex;
+        align-items: center;
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .vs-glow-left { position: absolute; left: -10%; top: 50%; width: 40%; height: 200%; background: radial-gradient(circle, rgba(197, 160, 89, 0.1) 0%, transparent 70%); transform: translateY(-50%) rotate(-15deg); pointer-events: none; }
+    .vs-glow-right { position: absolute; right: -10%; top: 50%; width: 40%; height: 200%; background: radial-gradient(circle, rgba(88, 28, 28, 0.1) 0%, transparent 70%); transform: translateY(-50%) rotate(15deg); pointer-events: none; }
+    
+    .bg-primary-glow { background: rgba(197, 160, 89, 0.3); border: 1px solid var(--primary); box-shadow: 0 0 20px rgba(197, 160, 89, 0.4); color: white; }
+    
+    .match-item { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); cursor: default; }
+    .match-item:hover { transform: translateX(10px); background: rgba(255,255,255,0.05); }
+    
+    .text-primary-light { color: #C5A059; }
+    .border-white-5 { border-bottom: 1px solid rgba(255,255,255,0.05) !important; }
+</style>
+
+

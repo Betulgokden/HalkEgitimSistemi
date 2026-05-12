@@ -1,0 +1,172 @@
+@model HalkEgitimSistemi.Models.Student
+
+@{
+    ViewData["Title"] = "Öğrenci Paneli";
+}
+
+<div class="container py-5">
+    <!-- Welcome Header -->
+    <div class="p-5 mb-5 animate-fadeInDown">
+        <div class="row align-items-center">
+            <div class="col-md-auto text-center mb-3 mb-md-0">
+                <div class="avatar-large">
+                    @if (string.IsNullOrEmpty(Model.ProfilePicture))
+                    {
+                        <i class="bi bi-person-circle display-1 text-primary-light"></i>
+                    }
+                    else
+                    {
+                        <img src="@Model.ProfilePicture" alt="Profile" class="img-fluid rounded-circle shadow-lg" style="width: 120px; height: 120px; object-fit: cover;">
+                    }
+                </div>
+            </div>
+            <div class="col-md">
+                <h1 class="display-5 fw-bold mb-1">Hoş Geldin, <span class="section-title-gradient">@Model.FirstName!</span></h1>
+                <p class="text-white-50 mb-0">Eğitim yolculuğundaki gelişimini buradan takip edebilirsin.</p>
+            </div>
+            <div class="col-md-auto text-end mt-4 mt-md-0">
+                    <div class="stat-badge animate-pulse-slow">
+                        <span class="stat-value text-info">@Model.SuccessScore</span>
+                        <span class="stat-label">Yetenek Skoru</span>
+                    </div>
+                    <div class="stat-badge border-gold-glow">
+                        <span class="stat-value text-gold">@Model.Points</span>
+                        <span class="stat-label">Toplam Puan</span>
+                    </div>
+                    <div class="stat-badge">
+                        <span class="stat-value">@Model.Applications.Count</span>
+                        <span class="stat-label">Toplam Kurs</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Course List -->
+    <h3 class="fw-bold mb-4"><i class="bi bi-journal-bookmark-fill text-primary-light me-2"></i> Kurslarım</h3>
+    
+    <div class="row g-4">
+        @if (!Model.Applications.Any())
+        {
+            <div class="col-12">
+                <div class="glass-card-static p-5 text-center">
+                    <p class="mb-0">Henüz bir kurs başvurunuz bulunmuyor. <a asp-controller="Courses" asp-action="Browse" class="text-primary-light fw-bold">Kurslara göz atın!</a></p>
+                </div>
+            </div>
+        }
+        else
+        {
+            @foreach (var app in Model.Applications)
+            {
+                <div class="col-md-6 col-lg-4">
+                    <div class="course-panel-card glass-card-static animate-fadeInUp">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <span class="badge @(app.Status == ApplicationStatus.Approved ? "bg-success-glass" : app.Status == ApplicationStatus.Pending ? "bg-warning-glass" : "bg-danger-glass")">
+                                @(app.Status == ApplicationStatus.Approved ? "Onaylandı" : app.Status == ApplicationStatus.Pending ? "Onay Bekliyor" : "Reddedildi")
+                            </span>
+                            @if (app.IsCompleted)
+                            {
+                                <span class="badge bg-primary-glass"><i class="bi bi-patch-check-fill me-1"></i> Sertifika Hazır</span>
+                            }
+                        </div>
+                        
+                        <h5 class="fw-bold mb-3">@(app.Course?.CourseName ?? "Bilinmeyen Kurs")</h5>
+                        
+                        <div class="progress mb-4" style="height: 8px; background: rgba(255,255,255,0.05);">
+                            @{
+                                var attendanceCount = app.Attendances?.Count(a => a.IsPresent) ?? 0;
+                                var totalAttendance = app.Attendances?.Count ?? 1; // avoid div by zero
+                                var progress = (attendanceCount * 100) / totalAttendance;
+                            }
+                            <div class="progress-bar bg-primary-glow" role="progressbar" style="width: @progress%" aria-valuenow="@progress" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+
+                        <div class="d-flex justify-content-between text-muted small mb-4">
+                            <span><i class="bi bi-person-check-fill me-1"></i> Devamsızlık: @(app.Attendances?.Count(a => !a.IsPresent) ?? 0) Gün</span>
+                            <span>@(progress)% Katılım</span>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <a asp-action="CourseDetails" asp-route-id="@app.Id" class="btn btn-premium btn-secondary-glass">
+                                Detayları Gör <i class="bi bi-arrow-right ms-2"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>
+
+<style>
+    .stat-badge {
+        background: rgba(255,255,255,0.03);
+        border: 1px solid var(--border-glass);
+        padding: 10px 20px;
+        border-radius: 16px;
+        text-align: center;
+        min-width: 100px;
+    }
+
+    .stat-value {
+        display: block;
+        font-size: 1.5rem;
+        font-weight: 800;
+        line-height: 1;
+        margin-bottom: 5px;
+    }
+
+    .stat-label {
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: var(--text-muted);
+    }
+
+    .course-panel-card {
+        padding: 1.5rem;
+        transition: all 0.3s ease;
+    }
+
+    .course-panel-card:hover {
+        transform: translateY(-5px);
+        border-color: var(--primary-light);
+        background: rgba(255,255,255,0.05);
+    }
+
+    .bg-success-glass { background: rgba(16, 185, 129, 0.1); color: #C5A059; border: 1px solid rgba(16, 185, 129, 0.2); }
+    .bg-warning-glass { background: rgba(245, 158, 11, 0.1); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.2); }
+    .bg-danger-glass { background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.2); }
+    .bg-primary-glass { background: rgba(197, 160, 89, 0.1); color: #C5A059; border: 1px solid rgba(197, 160, 89, 0.2); }
+
+    .bg-primary-glow {
+        background: var(--primary-light);
+        box-shadow: 0 0 10px var(--primary-light);
+    }
+    
+    .text-gold { color: #C5A059 !important; }
+    .border-gold-glow { border: 1px solid rgba(197, 160, 89, 0.4) !important; box-shadow: 0 0 15px rgba(197, 160, 89, 0.1); }
+    
+    .icon-box-md {
+        width: 50px;
+        height: 50px;
+        border-radius: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .bg-vibrant-purple { background: linear-gradient(135deg, #C5A059, #581C1C) !important; }
+    
+    .bg-white-5 { background: rgba(255, 255, 255, 0.05); }
+    .border-white-10 { border: 1px solid rgba(255, 255, 255, 0.1) !important; }
+    
+    .animate-pulse-slow {
+        animation: pulse-slow 3s infinite;
+    }
+    @@keyframes pulse-slow {
+        0% { opacity: 1; }
+        50% { opacity: 0.7; }
+        100% { opacity: 1; }
+    }
+</style>
+

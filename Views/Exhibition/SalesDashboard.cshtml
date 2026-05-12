@@ -1,0 +1,93 @@
+@model IEnumerable<HalkEgitimSistemi.Models.ExhibitionItem>
+@{
+    ViewData["Title"] = "Satış Takip Paneli";
+}
+
+<div class="container py-5">
+    <div class="glass-card-static p-5 mb-5 animate-fadeIn">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <h1 class="display-6 fw-bold text-white mb-2">Pazar Yeri <span class="text-success">Satış Takibi</span></h1>
+                <p class="text-white-50">Eserlerin satış durumlarını ve alıcı bilgilerini buradan yönetebilirsiniz.</p>
+            </div>
+            <div class="text-end">
+                <div class="h3 fw-bold text-warning">@Model.Sum(m => m.Price) ₺</div>
+                <div class="small text-white-50">Toplam Satış Hacmi</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="table-responsive glass-card-static p-4 animate-fadeInUp">
+        <table class="table table-dark table-hover align-middle">
+            <thead>
+                <tr>
+                    <th>Eser</th>
+                    <th>Kursiyer (Sanatçı)</th>
+                    <th>Fiyat</th>
+                    <th>Alıcı Bilgileri</th>
+                    <th>Satış Tarihi</th>
+                    <th>Durum</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <img src="@item.ImageUrl" class="rounded me-3" style="width: 50px; height: 50px; object-fit: cover;">
+                                <div>
+                                    <div class="fw-bold">@item.Title</div>
+                                    <div class="small text-white-50">ID: @item.Id</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>@item.ArtistName</td>
+                        <td><span class="badge bg-success">@item.Price ₺</span></td>
+                        <td>
+                            <div><strong>@item.BuyerName</strong></div>
+                            <div class="small text-white-50">@item.BuyerPhone</div>
+                        </td>
+                        <td>@item.SoldAt?.ToString("dd.MM.yyyy HH:mm")</td>
+                        <td>
+                            <span class="badge bg-danger rounded-pill px-3">SATILDI</span>
+                        </td>
+                    </tr>
+                }
+                @if (!Model.Any())
+                {
+                    <tr>
+                        <td colspan="6" class="text-center py-5 text-white-50">
+                            <i class="bi bi-cart-x display-4 d-block mb-3"></i>
+                            Henüz gerçekleşmiş bir satış bulunmamaktadır.
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="mt-4">
+        <a asp-action="Index" class="btn btn-secondary-glass">
+            <i class="bi bi-arrow-left me-2"></i> Sergiye Geri Dön
+        </a>
+    </div>
+</div>
+
+<style>
+    .table-dark {
+        background: transparent !important;
+    }
+    .table thead th {
+        border-bottom: 2px solid rgba(255,255,255,0.1);
+        color: var(--primary-light);
+        text-transform: uppercase;
+        font-size: 0.8rem;
+        letter-spacing: 1px;
+    }
+    .table td {
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+        padding: 1.5rem 1rem;
+    }
+</style>
+

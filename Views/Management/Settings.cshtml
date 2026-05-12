@@ -1,0 +1,104 @@
+﻿@model IEnumerable<HalkEgitimSistemi.Models.SiteSettings>
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Genel Sistem Ayarları";
+}
+
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-5 animate-fadeIn">
+        <div>
+            <h1 class="text-white fw-bold hero-main-title">DİNAMİK <span class="highlight-text">MARKALAMA</span></h1>
+            <p class="text-white-50">Sistemin kurumsal kimliğini ve bölgesel ayarlarını buradan yönetin.</p>
+        </div>
+        <a href="/Management/Logs" class="btn btn-dark-glass py-3 px-4 rounded-pill">
+            <i class="bi bi-journal-text me-2"></i> DENETİM KAYITLARI
+        </a>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="glass-card p-5 animate-scaleIn" style="border-radius: 40px;">
+                <form asp-action="SaveSettings" method="post">
+                    @Html.AntiForgeryToken()
+                    
+                    <div class="row g-4">
+                        <div class="col-12 mb-4">
+                            <h5 class="text-info fw-bold mb-3 border-bottom border-info border-opacity-25 pb-2">
+                                <i class="bi bi-building me-2"></i> Kurumsal Kimlik
+                            </h5>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="modern-label">İl / Bölge</label>
+                            <select name="settings[City]" class="modern-control">
+                                <option value="Artvin" selected>Artvin</option>
+                                <option value="Trabzon">Trabzon</option>
+                                <option value="Rize">Rize</option>
+                                <option value="Erzurum">Erzurum</option>
+                                <option value="İstanbul">İstanbul</option>
+                            </select>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label class="modern-label">İlçe</label>
+                            <input type="text" name="settings[District]" class="modern-control" value="@Model.FirstOrDefault(s => s.Key == "District")?.Value" placeholder="Örn: Borçka" required />
+                        </div>
+
+                        <div class="col-12">
+                            <label class="modern-label">Kurum Kısa Adı (Ön Takı)</label>
+                            <input type="text" name="settings[InstitutionName]" class="modern-control" value="@Model.FirstOrDefault(s => s.Key == "InstitutionName")?.Value" placeholder="Örn: Borçka" required />
+                            <small class="text-white-50">Örn: "Borçka" Halk Eğitimi Merkezi şeklinde görünür.</small>
+                        </div>
+
+                        <div class="col-12 mt-5 mb-4">
+                            <h5 class="text-vibrant-pink fw-bold mb-3 border-bottom border-danger border-opacity-25 pb-2">
+                                <i class="bi bi-megaphone me-2"></i> Pazarlama & Slogan
+                            </h5>
+                        </div>
+
+                        <div class="col-12">
+                            <label class="modern-label">Ana Sayfa Sloganı</label>
+                            <input type="text" name="settings[Slogan]" class="modern-control" value="@Model.FirstOrDefault(s => s.Key == "Slogan")?.Value" placeholder="Geleceği Sen İnşa Et" required />
+                        </div>
+
+                        <div class="col-12 mt-5">
+                            <div class="p-4 bg-dark-glass rounded-4 border border-warning border-opacity-25">
+                                <div class="d-flex align-items-center gap-3">
+                                    <i class="bi bi-shield-lock-fill text-warning fs-2"></i>
+                                    <div>
+                                        <h6 class="text-white fw-bold mb-1">Siber Güvenlik Onayı</h6>
+                                        <p class="text-white-50 small mb-0">Bu değişiklikler tüm sertifika şablonlarını ve resmi başlıkları anında günceller. Değişiklikler log sistemine kaydedilecektir.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 mt-4 text-end">
+                            <button type="submit" class="modern-submit-btn px-5 py-3 w-auto">
+                                AYARLARI UYGULA <i class="bi bi-check-circle-fill ms-2"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="glass-card-static p-4 animate-fadeInRight" style="border-radius: 30px;">
+                <h5 class="text-white fw-bold mb-4">Mevcut Durum</h5>
+                <div class="d-flex flex-column gap-3">
+                    <div class="p-3 bg-dark-glass rounded-3 border border-secondary">
+                        <div class="text-white-50 x-small fw-bold">AKTİF KURUM</div>
+                        <div class="text-info fw-bold">@Model.FirstOrDefault(s => s.Key == "InstitutionName")?.Value Halk Eğitimi Merkezi</div>
+                    </div>
+                    <div class="p-3 bg-dark-glass rounded-3 border border-secondary">
+                        <div class="text-white-50 x-small fw-bold">SON GÜNCELLEME</div>
+                        <div class="text-white fw-bold">@Model.Max(s => s.LastUpdated).ToString("dd.MM.yyyy HH:mm")</div>
+                        <div class="text-white-50 x-small">Tarafından: @Model.FirstOrDefault(s => s.LastUpdated == Model.Max(m => m.LastUpdated))?.UpdatedBy</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

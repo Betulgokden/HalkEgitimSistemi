@@ -1,0 +1,480 @@
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Sisteme Giriş";
+    ViewData["BodyClass"] = "login-page-active";
+}
+
+<div class="container py-5" style="min-height: 90vh; display: flex; align-items: center; justify-content: center; position: relative; z-index: 100;">
+    <!-- Main Modern Panel -->
+    <div class="modern-login-box animate-scaleIn">
+        
+        <!-- Header Section -->
+        <div class="modern-login-header">
+            <div class="login-brand-icon">
+                <i class="bi bi-shield-lock" id="headerIcon"></i>
+            </div>
+            <h2 id="loginTitle" data-i18n="login_title_admin">Yönetici Paneli</h2>
+            <p data-i18n="login_header_text">Sisteme erişmek için kimliğinizi doğrulayın</p>
+        </div>
+
+        <div class="modern-login-body">
+            @if (ViewBag.Error != null)
+            {
+                <div class="modern-alert animate-shake">
+                    <i class="bi bi-exclamation-circle me-2"></i> @ViewBag.Error
+                </div>
+            }
+
+            <form asp-action="Login" asp-controller="Account" method="post">
+                
+                <!-- Advanced Role Switcher -->
+                <div class="modern-role-switcher">
+                    <input type="radio" id="roleAdmin" name="role" value="Admin" checked class="d-none">
+                    <input type="radio" id="roleTeacher" name="role" value="Instructor" class="d-none">
+                    <input type="radio" id="roleStudent" name="role" value="Student" class="d-none">
+                    <input type="radio" id="roleEmployer" name="role" value="Employer" class="d-none">
+
+                    <label for="roleAdmin" class="m-role-item active" id="labelAdmin">
+                        <i class="bi bi-shield-shaded"></i> <span data-i18n="login_role_admin">Yönetici</span>
+                    </label>
+                    <label for="roleTeacher" class="m-role-item" id="labelTeacher" style="--role-active-bg: linear-gradient(135deg, #C5A059, #A68041);">
+                        <i class="bi bi-mortarboard"></i> <span data-i18n="login_role_teacher">Eğitmen</span>
+                    </label>
+                    <label for="roleStudent" class="m-role-item" id="labelStudent">
+                        <i class="bi bi-person-workspace"></i> <span data-i18n="login_role_student">Kursiyer</span>
+                    </label>
+                    <label for="roleEmployer" class="m-role-item" id="labelEmployer">
+                        <i class="bi bi-building"></i> <span data-i18n="login_role_employer">İşveren</span>
+                    </label>
+                </div>
+
+                <!-- Input Fields (Aligned) -->
+                <div class="modern-input-stack">
+                    
+                    <!-- Instructor Course Select (Conditional) -->
+                    <div id="courseSelectGroup" style="display: none;" class="modern-form-row">
+                        <label class="modern-label"><i class="bi bi-book me-2"></i> Branş</label>
+                        <div class="modern-input-wrapper">
+                            <select name="instructorCourseId" id="courseSelect" class="modern-control">
+                                <option value="">Seçim Yapın...</option>
+                                @if (ViewBag.InstructorCourses != null)
+                                {
+                                    @foreach (var c in ViewBag.InstructorCourses)
+                                    {
+                                        <option value="@c.Id">@c.CourseName</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="modern-form-row">
+                        <label class="modern-label" id="usernameLabel"><i class="bi bi-person me-2"></i> <span data-i18n="login_label_identity">Kimlik</span></label>
+                        <div class="modern-input-wrapper">
+                            <input type="text" name="username" id="usernameInput" class="modern-control" placeholder="Kullanıcı Adı veya E-posta" required autofocus autocomplete="off" />
+                        </div>
+                    </div>
+
+                    <div class="modern-form-row">
+                        <label class="modern-label"><i class="bi bi-lock me-2"></i> <span data-i18n="login_label_password">Şifre</span></label>
+                        <div class="modern-input-wrapper">
+                            <input type="password" name="password" class="modern-control" placeholder="••••••••" required />
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-end px-1 mt-2">
+                        <a href="/Account/ForgotPassword" class="text-info small fw-bold text-decoration-none" style="color: #C5A059 !important;" data-i18n="login_forgot_password">Şifremi Unuttum</a>
+                    </div>
+                </div>
+
+                <div id="loginProgress" class="progress d-none mb-4" style="height: 6px; background: rgba(255,255,255,0.05); border-radius: 3px; overflow: hidden;">
+                    <div class="progress-bar" role="progressbar" style="width: 0%; background: linear-gradient(90deg, #C5A059, #581C1C); transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);"></div>
+                </div>
+
+                <button type="submit" id="loginBtn" class="modern-submit-btn">
+                    <span id="btnText"><span data-i18n="login_btn_submit">Oturum Aç</span> <i class="bi bi-arrow-right-short ms-1"></i></span>
+                    <span id="btnLoader" class="d-none">
+                        <span class="spinner-border spinner-border-sm me-1"></span> <span data-i18n="login_btn_loading">Sisteme Giriş Yapılıyor...</span>
+                    </span>
+                </button>
+            </form>
+        </div>
+
+        <!-- Footer / Quick Links -->
+        <div class="modern-login-footer">
+            <div class="text-center mb-3">
+                <span style="color: #C5A059; font-size: 0.75rem; font-weight: 800; letter-spacing: 2px; text-transform: uppercase;" data-i18n="login_jet_title">JET HIZINDA GİRİŞ</span>
+            </div>
+            <div class="quick-login-grid">
+                <div class="ql-item ql-admin" onclick="fastLogin('Admin', 'Betül', '0808')">
+                    <i class="bi bi-shield-check"></i>
+                    <span data-i18n="login_ql_admin">ADMIN</span>
+                </div>
+                <div class="ql-item ql-teacher" onclick="fastLoginTeacher('16', 'Caner Kandemir', '123')">
+                    <i class="bi bi-mortarboard"></i>
+                    <span data-i18n="login_ql_teacher">EĞİTMEN</span>
+                </div>
+                <div class="ql-item ql-student" onclick="fastLogin('Student', 'betul.gokden@halkegitim.com', '123')">
+                    <i class="bi bi-person-fill"></i>
+                    <span data-i18n="login_ql_student">KURSİYER</span>
+                </div>
+                <div class="ql-item" style="border-color: #581C1C; color: #581C1C;" onclick="location.href='/Employer/Register'">
+                    <i class="bi bi-plus-circle"></i>
+                    <span data-i18n="login_ql_register">KAYIT OL</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .modern-login-box {
+        background: rgba(15, 23, 42, 0.8);
+        backdrop-filter: blur(40px) saturate(180%);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 32px;
+        width: 100%;
+        max-width: 500px;
+        box-shadow: 0 40px 100px rgba(0, 0, 0, 0.5);
+        overflow: hidden;
+    }
+
+    .modern-login-header {
+        padding: 3rem 2rem 2rem;
+        text-align: center;
+        background: linear-gradient(180deg, rgba(197, 160, 89, 0.05), transparent);
+    }
+
+    .login-brand-icon {
+        width: 64px;
+        height: 64px;
+        background: var(--gradient-primary);
+        color: white;
+        border-radius: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        margin: 0 auto 1.5rem;
+        box-shadow: 0 10px 30px rgba(197, 160, 89, 0.4);
+    }
+
+    .modern-login-header h2 {
+        font-family: 'Outfit', sans-serif;
+        font-weight: 800;
+        color: white;
+        letter-spacing: -1px;
+        margin-bottom: 0.5rem;
+    }
+
+    .modern-login-header p {
+        color: rgba(255, 255, 255, 0.5);
+        font-size: 0.95rem;
+    }
+
+    .modern-login-body {
+        padding: 0 2.5rem 2.5rem;
+    }
+
+    .modern-role-switcher {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 16px;
+        padding: 5px;
+        display: flex;
+        gap: 5px;
+        margin-bottom: 2.5rem;
+    }
+
+    .m-role-item {
+        flex: 1;
+        padding: 12px 5px;
+        border-radius: 12px;
+        text-align: center;
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: rgba(255, 255, 255, 0.4);
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .m-role-item i { font-size: 1.2rem; }
+
+    .m-role-item.active {
+        background: var(--role-active-bg, linear-gradient(135deg, #C5A059, #581C1C)) !important;
+        color: white !important;
+        box-shadow: 0 10px 25px rgba(197, 160, 89, 0.4) !important;
+        border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    }
+
+    .modern-input-stack {
+        display: flex;
+        flex-direction: column;
+        gap: 1.8rem;
+    }
+
+    .modern-form-row {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .modern-label {
+        font-size: 0.8rem;
+        font-weight: 800;
+        color: rgba(255, 255, 255, 0.5);
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        padding-left: 5px;
+    }
+
+    .modern-control {
+        width: 100%;
+        background: rgba(7, 10, 19, 0.9) !important;
+        border: 2px solid rgba(197, 160, 89, 0.3) !important;
+        border-radius: 20px !important;
+        padding: 18px 24px !important;
+        color: #ffffff !important;
+        font-size: 1.1rem !important;
+        font-weight: 500 !important;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: inset 0 2px 10px rgba(0,0,0,0.5);
+    }
+
+    .modern-control:focus {
+        background: rgba(7, 10, 19, 1) !important;
+        border-color: #C5A059 !important;
+        box-shadow: 0 0 25px rgba(197, 160, 89, 0.4), inset 0 2px 10px rgba(0,0,0,0.6) !important;
+        outline: none;
+        transform: translateY(-2px);
+    }
+
+    .modern-control::placeholder {
+        color: rgba(255, 255, 255, 0.3) !important;
+    }
+
+    .modern-submit-btn {
+        width: 100%;
+        margin-top: 3rem;
+        padding: 18px;
+        border-radius: 20px;
+        border: none;
+        background: linear-gradient(135deg, #C5A059, #581C1C);
+        color: white;
+        font-weight: 800;
+        font-size: 1.15rem;
+        box-shadow: 0 15px 35px rgba(197, 160, 89, 0.4);
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        cursor: pointer;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+
+    .modern-submit-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 15px 40px rgba(197, 160, 89, 0.5);
+    }
+
+    .modern-login-footer {
+        padding: 1.5rem 2.5rem;
+        background: rgba(0, 0, 0, 0.2);
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .quick-login-grid {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+    }
+
+    .ql-item {
+        flex: 1;
+        padding: 12px 10px;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 14px;
+        font-size: 0.7rem;
+        font-weight: 800;
+        color: rgba(255, 255, 255, 0.5);
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+        letter-spacing: 1px;
+    }
+
+    .ql-item i { font-size: 1.2rem; transition: transform 0.3s ease; }
+
+    .ql-item:hover {
+        transform: translateY(-5px);
+        color: white;
+        background: rgba(255, 255, 255, 0.08);
+    }
+    
+    .ql-item:hover i { transform: scale(1.2); }
+
+    .ql-admin:hover { border-color: #f59e0b; box-shadow: 0 10px 20px rgba(245, 158, 11, 0.2); }
+    .ql-admin:hover i { color: #f59e0b; }
+    
+    .ql-teacher:hover { border-color: #C5A059; box-shadow: 0 10px 20px rgba(197, 160, 89, 0.2); }
+    .ql-teacher:hover i { color: #C5A059; }
+    
+    .ql-student:hover { border-color: #581C1C; box-shadow: 0 10px 20px rgba(88, 28, 28, 0.2); }
+    .ql-student:hover i { color: #581C1C; }
+
+    .modern-alert {
+        background: rgba(239, 68, 68, 0.1);
+        color: #ef4444;
+        padding: 12px;
+        border-radius: 12px;
+        border: 1px solid rgba(239, 68, 68, 0.2);
+        margin-bottom: 2rem;
+        font-size: 0.9rem;
+        text-align: center;
+    }
+</style>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // PERFORMANS OPTİMİZASYONU: Giriş sayfasında yağmur efektini kapat
+            const rain = document.getElementById('rainContainer');
+            if (rain) rain.style.display = 'none';
+
+            const labelAdmin   = document.getElementById('labelAdmin');
+            const labelTeacher = document.getElementById('labelTeacher');
+            const labelStudent = document.getElementById('labelStudent');
+            const roleAdmin    = document.getElementById('roleAdmin');
+            const roleTeacher  = document.getElementById('roleTeacher');
+            const roleStudent  = document.getElementById('roleStudent');
+            const roleEmployer = document.getElementById('roleEmployer');
+            const labelEmployer = document.getElementById('labelEmployer');
+            const loginTitle   = document.getElementById('loginTitle');
+            const headerIcon   = document.getElementById('headerIcon');
+            const courseGroup  = document.getElementById('courseSelectGroup');
+            const usernameLabel = document.getElementById('usernameLabel');
+            const usernameInput = document.getElementById('usernameInput');
+
+            function switchToAdmin() {
+                labelAdmin.classList.add('active');
+                labelTeacher.classList.remove('active');
+                labelStudent.classList.remove('active');
+                roleAdmin.checked = true;
+                loginTitle.textContent = 'Yönetici Paneli';
+                headerIcon.className = 'bi bi-shield-lock-fill';
+                courseGroup.style.display = 'none';
+                usernameLabel.innerHTML = '<i class="bi bi-person me-1"></i>Kullanıcı Adı';
+                usernameInput.placeholder = 'Kullanıcı adınızı girin';
+            }
+
+            function switchToTeacher() {
+                labelTeacher.classList.add('active');
+                labelAdmin.classList.remove('active');
+                labelStudent.classList.remove('active');
+                roleTeacher.checked = true;
+                loginTitle.textContent = 'Eğitmen Paneli';
+                headerIcon.className = 'bi bi-mortarboard-fill';
+                courseGroup.style.display = 'block';
+                usernameLabel.innerHTML = '<i class="bi bi-person me-1"></i>Ad Soyad';
+                usernameInput.placeholder = 'Örn: Dr. Ahmet Yılmaz';
+            }
+
+            function switchToStudent() {
+                labelStudent.classList.add('active');
+                labelAdmin.classList.remove('active');
+                labelTeacher.classList.remove('active');
+                roleStudent.checked = true;
+                loginTitle.textContent = 'Kursiyer Paneli';
+                headerIcon.className = 'bi bi-person-circle';
+                courseGroup.style.display = 'none';
+                usernameLabel.innerHTML = '<i class="bi bi-person me-1"></i>E-Posta veya Ad Soyad';
+                usernameInput.placeholder = 'ornek@mail.com veya Ad Soyad';
+            }
+
+            function switchToEmployer() {
+                labelEmployer.classList.add('active');
+                labelAdmin.classList.remove('active');
+                labelTeacher.classList.remove('active');
+                labelStudent.classList.remove('active');
+                roleEmployer.checked = true;
+                loginTitle.textContent = 'İşveren Paneli';
+                headerIcon.className = 'bi bi-building-fill-check';
+                courseGroup.style.display = 'none';
+                usernameLabel.innerHTML = '<i class="bi bi-envelope-at me-1"></i>Kurumsal E-Posta';
+                usernameInput.placeholder = 'firma@kurum.com';
+            }
+
+            labelAdmin.addEventListener('click', switchToAdmin);
+            labelTeacher.addEventListener('click', switchToTeacher);
+            labelStudent.addEventListener('click', switchToStudent);
+            labelEmployer.addEventListener('click', switchToEmployer);
+
+            // URL Parametresine göre otomatik rol seçimi
+            const urlParams = new URLSearchParams(window.location.search);
+            const roleParam = urlParams.get('role');
+            if (roleParam === 'Admin') switchToAdmin();
+            else if (roleParam === 'Instructor') switchToTeacher();
+            else if (roleParam === 'Student') switchToStudent();
+
+            // JET HIZINDA GİRİŞ: Gecikmeler kaldırıldı
+            window.fastLogin = function(role, username, password) {
+                if (role === 'Admin') switchToAdmin();
+                else if (role === 'Student') switchToStudent();
+                else if (role === 'Instructor') switchToTeacher();
+
+                document.getElementById('usernameInput').value = username;
+                document.getElementsByName('password')[0].value = password;
+
+                document.querySelector('form').submit();
+            };
+
+            window.fastLoginTeacher = function(instructorId, fullName, password) {
+                switchToTeacher();
+
+                const sel = document.getElementById('courseSelect');
+                if (sel) {
+                    for (let i = 0; i < sel.options.length; i++) {
+                        if (sel.options[i].value == instructorId) {
+                            sel.selectedIndex = i;
+                            break;
+                        }
+                    }
+                }
+
+                document.getElementById('usernameInput').value = fullName;
+                document.getElementsByName('password')[0].value = password || '';
+                document.querySelector('form').submit();
+            };
+
+            // Giriş yapılırken bekleme olmaksızın form gönderilir ve ilerleme çubuğu animasyonu başlar
+            const loginForm = document.querySelector('form');
+            loginForm.addEventListener('submit', function() {
+                const btnText = document.getElementById('btnText');
+                const btnLoader = document.getElementById('btnLoader');
+                const loginBtn = document.getElementById('loginBtn');
+                const progressDiv = document.getElementById('loginProgress');
+                const progressBar = progressDiv?.querySelector('.progress-bar');
+                
+                if (btnText && btnLoader) {
+                    btnText.classList.add('d-none');
+                    btnLoader.classList.remove('d-none');
+                    loginBtn.style.opacity = '0.8';
+                    loginBtn.style.pointerEvents = 'none';
+                }
+
+                if (progressDiv && progressBar) {
+                    progressDiv.classList.remove('d-none');
+                    // Jet hızında dolum simülasyonu - Hızlandırıldı!
+                    setTimeout(() => progressBar.style.width = '40%', 10);
+                    setTimeout(() => progressBar.style.width = '80%', 150);
+                    setTimeout(() => progressBar.style.width = '95%', 300);
+                }
+            });
+        });
+    </script>
+}

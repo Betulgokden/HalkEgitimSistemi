@@ -1,0 +1,82 @@
+@model List<HalkEgitimSistemi.Models.GalleryItem>
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "E-Sergiye Eser Gönder";
+    int courseId = ViewBag.CourseId ?? 0;
+}
+
+<div class="container py-4">
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert animate-fadeIn mb-4" style="background:rgba(16,185,129,0.1);color:var(--success);border:1px solid rgba(16,185,129,0.2);border-radius:var(--radius-md);padding:1rem 1.5rem;">
+            <i class="bi bi-check-circle-fill me-2"></i>@TempData["Success"]
+        </div>
+    }
+
+    <div class="glass-card-static p-4 mb-4 animate-fadeInUp">
+        <h2 style="font-family:'Outfit';font-weight:800;margin:0; background: linear-gradient(135deg, #fff, #C5A059); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+            <i class="bi bi-palette-fill me-2" style="color:var(--secondary); -webkit-text-fill-color: var(--secondary);"></i>E-Sergiye Eser Gönder
+        </h2>
+        <p class="mb-0 fw-bold" style="color:rgba(255,255,255,0.7);">Öğrencilerinizin eserlerini seçerek sanal sergiye gönderebilirsiniz.</p>
+    </div>
+
+    <!-- Mevcut Galeri Eserleri -->
+    <div class="glass-card-static p-4 animate-fadeInUp">
+        <h5 style="font-family:'Outfit';font-weight:700;margin-bottom:1.5rem;">
+            <i class="bi bi-images me-2"></i>Galeri Eserleri — Seçin & Sergiye Ekleyin
+        </h5>
+
+        @if (!Model.Any())
+        {
+            <div class="text-center py-5">
+                <i class="bi bi-images display-5 d-block mb-3" style="color:var(--text-muted);"></i>
+                <p style="color:var(--text-muted);">Henüz galeri eseri yok. Önce galeriye eser eklemeniz gerekiyor.</p>
+                <a asp-controller="Gallery" asp-action="Index" class="btn btn-premium btn-secondary-glass">
+                    <i class="bi bi-arrow-right me-1"></i>Galeriye Git
+                </a>
+            </div>
+        }
+        else
+        {
+            <div class="row g-3">
+                @foreach (var item in Model)
+                {
+                    <div class="col-md-4 col-lg-3">
+                        <div class="gallery-item-card" style="background:var(--bg-card);border:1px solid var(--border-glass);border-radius:var(--radius-lg);overflow:hidden;transition:transform 0.2s,border-color 0.2s;"
+                             onmouseover="this.style.transform='translateY(-4px)';this.style.borderColor='rgba(139,92,246,0.5)';"
+                             onmouseout="this.style.transform='';this.style.borderColor='var(--border-glass)';">
+                            <img src="@item.ImageUrl" alt="@item.Title"
+                                 style="width:100%;height:160px;object-fit:cover;" />
+                            <div style="padding:0.75rem;">
+                                <div class="fw-bold" style="font-size:0.9rem;color:var(--text-primary);">@item.Title</div>
+                                <div style="font-size:0.75rem;color:var(--text-muted);">@item.Description</div>
+                                <div class="mt-2">
+                                    <form asp-controller="Gallery" asp-action="AddToExhibition" method="post">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="id" value="@item.Id" />
+                                        <button type="submit" class="btn btn-sm btn-premium btn-primary-glow w-100 py-2 fw-bold"
+                                            style="background: linear-gradient(135deg, #581C1C, #C5A059); color: white; border: none; box-shadow: 0 4px 15px rgba(88, 28, 28, 0.4);"
+                                            onclick="return confirm('Bu eser sanal sergiye eklensin mi?')">
+                                            <i class="bi bi-plus-circle me-1"></i>Sergiye Ekle
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+
+        <div class="mt-4 d-flex gap-3">
+            <a asp-action="Dashboard" class="btn btn-premium btn-vibrant-purple">
+                <i class="bi bi-grid-fill me-1"></i> Panele Dön
+            </a>
+            <a asp-controller="Exhibition" asp-action="Index" class="btn btn-premium btn-vibrant-orange">
+                <i class="bi bi-eye me-1"></i> Sanal Sergiyi Gör
+            </a>
+        </div>
+    </div>
+</div>
+
+

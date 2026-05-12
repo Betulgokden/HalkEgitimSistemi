@@ -1,0 +1,133 @@
+﻿@model IEnumerable<HalkEgitimSistemi.Models.Application>
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Not Girişi";
+}
+
+<div class="container py-5">
+    <div class="glass-card-purple p-4 mb-4 animate-fadeInUp shadow-glow" style="background: var(--bg-glass) !important; border: 1px solid var(--border-glass) !important;">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <div class="d-flex align-items-center gap-4">
+                <a asp-controller="Teacher" asp-action="Dashboard" class="btn btn-premium btn-secondary-glass" style="width: 45px; height: 45px; padding: 0; display: flex; align-items: center; justify-content: center; border-radius: 12px;" title="Panele Dön">
+                    <i class="bi bi-chevron-left" style="font-size: 1.2rem; color: var(--primary);"></i>
+                </a>
+                <div>
+                    <h2 class="section-title mb-1" style="font-family: 'Outfit'; color: var(--primary) !important;">
+                        <i class="bi bi-patch-check me-2" style="color: var(--primary);"></i>Öğrenci Not Girişi
+                    </h2>
+                    <p class="mb-0 fw-bold" style="color: var(--text-muted);">@ViewBag.CourseName - Sınav sonuçlarını sisteme işleyin.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <form asp-action="SaveGrades" method="post">
+        @Html.AntiForgeryToken()
+        <div class="glass-card-purple p-0 overflow-hidden animate-fadeInUp" style="animation-delay: 0.1s; background: var(--bg-glass) !important; border: 1px solid var(--border-glass) !important;">
+            
+            @if (!Model.Any())
+            {
+                <div class="p-5 text-center">
+                    <div style="width: 80px; height: 80px; margin: 0 auto 1.5rem; background: rgba(245, 158, 11, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                        <i class="bi bi-clipboard-x" style="font-size: 2.5rem; color: var(--warning);"></i>
+                    </div>
+                    <h5 class="text-white fw-bold" style="font-family: 'Outfit';">Henüz öğrenci bulunmamaktadır</h5>
+                    <p class="text-white-50">Not girişi yapılabilecek aktif bir öğrenci kaydı yok.</p>
+                </div>
+            }
+            else
+            {
+                <div class="table-responsive" style="background: transparent !important;">
+                    <table class="table-premium mb-0" style="background: transparent !important; border-collapse: separate; border-spacing: 0;">
+                        <thead style="background: rgba(88, 28, 28, 0.05) !important;">
+                            <tr>
+                                <th class="ps-4" style="border: none; color: var(--primary); padding: 1.2rem 1.5rem;">ÖÄRENCİ BİLGİLERİ</th>
+                                <th style="border: none; color: var(--primary); padding: 1.2rem 1.5rem;">T.C. NO</th>
+                                <th width="220" class="text-center" style="border: none; color: var(--primary); padding: 1.2rem 1.5rem;">SINAV NOTU (0-100)</th>
+                                <th class="text-center pe-4" style="border: none; color: var(--primary); padding: 1.2rem 1.5rem;">DURUM</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var student in Model)
+                            {
+                                <tr style="background: transparent !important; border-bottom: 1px solid rgba(255,255,255,0.05) !important;">
+                                    <td class="ps-4" style="padding: 1.2rem 1.5rem; border: none;">
+                                        <div class="d-flex align-items-center gap-3">
+                                            <div class="avatar-circle-sm" style="background: var(--gradient-premium); color: white; border: none; font-size: 0.85rem; width: 36px; height: 36px;">@student.FirstName[0]@student.LastName[0]</div>
+                                            <div>
+                                                <div class="fw-bold text-white" style="font-size: 0.95rem;">@student.FirstName @student.LastName</div>
+                                                <div class="small" style="color: rgba(255,255,255,0.4);">@student.Email</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td style="padding: 1.2rem 1.5rem; border: none;">
+                                        <span class="badge-premium badge-secondary small" style="background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.6); border: 1px solid rgba(255,255,255,0.1);">@student.TcNo</span>
+                                    </td>
+                                    <td class="text-center" style="padding: 1.2rem 1.5rem; border: none;">
+                                        <div class="px-3">
+                                            <input type="number" name="grades[@student.Id]" value="@student.ExamGrade" 
+                                                   class="form-premium-control text-center py-2 grade-input shadow-glow-sm" 
+                                                   min="0" max="100" placeholder="--" 
+                                                   style="background: rgba(255,255,255,0.05) !important; border: 1px solid rgba(255,255,255,0.1) !important; color: white !important;" />
+                                        </div>
+                                    </td>
+                                    <td class="text-center pe-4" style="padding: 1.2rem 1.5rem; border: none;">
+                                        @if (student.ExamGrade >= 50) {
+                                            <span class="badge-premium badge-success w-100 justify-content-center" style="box-shadow: 0 0 15px rgba(16, 185, 129, 0.2);"><i class="bi bi-check-circle-fill me-2"></i>GEÇTİ</span>
+                                        } else if (student.ExamGrade.HasValue) {
+                                            <span class="badge-premium badge-danger w-100 justify-content-center" style="box-shadow: 0 0 15px rgba(239, 68, 68, 0.2);"><i class="bi bi-x-circle-fill me-2"></i>KALDI</span>
+                                        } else {
+                                            <span class="badge-premium badge-secondary w-100 justify-content-center opacity-75" style="background: rgba(255,255,255,0.05);"><i class="bi bi-dash-circle me-2"></i>GİRİLMEDİ</span>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="p-4 border-top border-glass" style="background: rgba(88, 28, 28, 0.03) !important;">
+                    <button type="submit" class="btn btn-premium w-100 justify-content-center py-3 text-dark fw-900" style="background: #581C1C !important; color: #C5A059 !important; border: 1px solid #C5A059 !important;">
+                        <i class="bi bi-cloud-upload-fill me-2"></i> Notları Kaydet ve Yayınla
+                    </button>
+                </div>
+            }
+        </div>
+    </form>
+</div>
+
+<style>
+    .avatar-circle-sm {
+        width: 32px; height: 32px; border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        font-family: 'Outfit';
+    }
+    .grade-input:focus {
+        background: rgba(255,255,255,0.1) !important;
+        border-color: var(--warning) !important;
+        box-shadow: 0 0 15px rgba(245,158,11,0.3) !important;
+    }
+</style>
+
+<style>
+    .avatar-circle-sm {
+        width: 32px; height: 32px; border-radius: 50%;
+        background: var(--gradient-card); border: 1px solid var(--border-glass);
+        display: flex; align-items: center; justify-content: center;
+        font-size: 0.75rem; font-weight: 800; color: var(--primary-light);
+    }
+    .grade-input {
+        background: rgba(255,255,255,0.05);
+        border: 1px solid rgba(255,255,255,0.1);
+        color: white;
+        font-weight: 700;
+        font-family: 'Outfit';
+        font-size: 1.1rem;
+    }
+    .grade-input:focus {
+        background: rgba(255,255,255,0.1);
+        border-color: var(--warning);
+        box-shadow: 0 0 15px rgba(245,158,11,0.2);
+    }
+</style>
+

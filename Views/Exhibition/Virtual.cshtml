@@ -1,0 +1,821 @@
+@model List<HalkEgitimSistemi.Models.ExhibitionItem>
+
+@{
+    Layout = null; // 3D galerinin kendi tam ekran yapısı olacak
+}
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sanal Sergi | 3D Sanat Galerisi</title>
+    
+    <!-- A-Frame Library -->
+    <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
+    <script src="https://unpkg.com/aframe-event-set-component@5.0.0/dist/aframe-event-set-component.min.js"></script>
+
+    <script>
+        function buildModernFloor() {
+            const canvas = document.createElement('canvas');
+            canvas.width = 512; canvas.height = 512;
+            const ctx = canvas.getContext('2d');
+            ctx.fillStyle = '#bc9d7a'; // Wood base
+            ctx.fillRect(0, 0, 512, 512);
+            // Planks
+            for (let i = 0; i < 10; i++) {
+                ctx.strokeStyle = '#8d6e63';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(0, i * 51);
+                ctx.lineTo(512, i * 51);
+                ctx.stroke();
+            }
+            // Wood grain
+            for (let i = 0; i < 500; i++) {
+                ctx.fillStyle = `rgba(0,0,0,${Math.random() * 0.05})`;
+                ctx.fillRect(Math.random()*512, Math.random()*512, Math.random()*100, 1);
+            }
+            return canvas.toDataURL();
+        }
+
+        function buildGoldCarpet() {
+            const canvas = document.createElement('canvas');
+            canvas.width = 512; canvas.height = 512;
+            const ctx = canvas.getContext('2d');
+            ctx.fillStyle = '#d4af37'; // Gold base
+            ctx.fillRect(0, 0, 512, 512);
+            // Patterns
+            ctx.strokeStyle = '#fff';
+            ctx.lineWidth = 1;
+            for (let i = 0; i < 512; i += 20) {
+                ctx.beginPath();
+                ctx.arc(i, 256, 50, 0, Math.PI * 2);
+                ctx.stroke();
+            }
+            // Damask style
+            for (let i = 0; i < 20; i++) {
+                ctx.fillStyle = 'rgba(255,255,255,0.1)';
+                ctx.font = '20px Arial';
+                ctx.fillText('âœ§', Math.random()*512, Math.random()*512);
+            }
+            return canvas.toDataURL();
+        }
+
+        function buildModernCeiling() {
+            const canvas = document.createElement('canvas');
+            canvas.width = 512; canvas.height = 512;
+            const ctx = canvas.getContext('2d');
+            ctx.fillStyle = '#fcfcfc'; // White base
+            ctx.fillRect(0, 0, 512, 512);
+            // Modern Grid
+            ctx.strokeStyle = 'rgba(212, 175, 55, 0.3)'; // Subtle gold
+            ctx.lineWidth = 2;
+            for (let i = 0; i <= 512; i += 64) {
+                ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, 512); ctx.stroke();
+                ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(512, i); ctx.stroke();
+            }
+            // Small recessed dots at junctions
+            ctx.fillStyle = '#d4af37';
+            for (let i = 0; i <= 512; i += 64) {
+                for (let j = 0; j <= 512; j += 64) {
+                    ctx.beginPath(); ctx.arc(i, j, 2, 0, Math.PI*2); ctx.fill();
+                }
+            }
+            return canvas.toDataURL();
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const floorUrl = buildModernFloor();
+            const carpetUrl = buildGoldCarpet();
+            const ceilingUrl = buildModernCeiling();
+            
+            document.getElementById('floor-tex').src = floorUrl;
+            document.getElementById('carpet-tex').src = carpetUrl;
+            document.getElementById('ceiling-tex').src = ceilingUrl;
+        });
+    </script>
+        <!-- Kurumsal Tipografi: Montserrat (Başlıklar) + Open Sans (Metinler) -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+    <style>
+        :root {
+            --primary: #d4af37;
+            --primary-glow: rgba(212, 175, 55, 0.4);
+            --bg-glass: rgba(245, 245, 220, 0.85);
+            --border-glass: rgba(212, 175, 55, 0.2);
+            --text-main: #3d2b1f;
+            --text-dim: #7c6a5a;
+        }
+
+        body {
+            margin: 0; padding: 0; overflow: hidden;
+            font-family: 'Open Sans', sans-serif;
+            background: #f5f5dc;
+        }
+
+        /* â”€â”€â”€ UI OVERLAYS (GLASSMORPHISM) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+        #bottom-bar {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 1200px;
+            height: 80px;
+            background: var(--bg-glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-glass);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 40px;
+            z-index: 1000;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            pointer-events: none;
+        }
+
+        .bar-left, .bar-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            pointer-events: auto;
+        }
+
+        .logo-box {
+            width: 45px;
+            height: 45px;
+            background: var(--primary);
+            color: #000;
+            font-weight: 900;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            box-shadow: 0 0 20px var(--primary-glow);
+        }
+
+        .logo-name {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 800;
+            color: var(--text-main);
+            font-size: 1rem;
+            letter-spacing: 1px;
+        }
+
+        .logo-sub {
+            font-size: 0.65rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .bar-center {
+            text-align: center;
+        }
+
+        .crosshair {
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 5px;
+            animation: pulse 2s infinite;
+        }
+
+        .move-text {
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+
+        .audio-guide-btn {
+            background: #fff;
+            color: #000;
+            padding: 10px 25px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .audio-guide-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(255,255,255,0.4);
+        }
+
+        .exit-btn {
+            position: fixed;
+            top: 40px;
+            right: 40px;
+            background: rgba(255, 68, 68, 0.2);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 68, 68, 0.3);
+            color: #ff4444;
+            padding: 12px 30px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 0.85rem;
+            z-index: 3000;
+            transition: all 0.3s ease;
+        }
+
+        .exit-btn:hover {
+            background: #ff4444;
+            color: #fff;
+            box-shadow: 0 0 30px rgba(255, 68, 68, 0.4);
+        }
+
+        #gallery-title-overlay {
+            position: fixed;
+            top: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            z-index: 1000;
+            pointer-events: none;
+        }
+
+        .main-title {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 900;
+            font-size: 2.2rem;
+            margin: 0;
+            letter-spacing: 12px;
+            color: var(--text-main);
+            text-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+
+        .sub-title {
+            font-size: 0.85rem;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            margin-top: 5px;
+        }
+
+        /* â”€â”€â”€ DETAY MODAL (PREMIUM DARK) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+        #detail-modal {
+            position: fixed;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 550px;
+            max-height: 90vh;
+            background: #fffdfa;
+            border: 1px solid var(--border-glass);
+            border-radius: 24px;
+            display: none;
+            z-index: 2000;
+            box-shadow: 0 50px 150px rgba(61, 43, 31, 0.2);
+            overflow-y: auto;
+            animation: modalFadeIn 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .modal-banner {
+            width: 100%;
+            height: 300px;
+            background: #fdf5e6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 1px solid var(--border-glass);
+            position: relative;
+        }
+
+        .modal-banner img {
+            max-width: 85%;
+            max-height: 85%;
+            object-fit: contain;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        }
+
+        .modal-content-inner {
+            padding: 30px;
+            color: var(--text-main);
+        }
+
+        .modal-info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .info-item label {
+            display: block;
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--text-dim);
+            margin-bottom: 6px;
+        }
+
+        .info-item span {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: 0.95rem;
+        }
+
+        #modal-desc {
+            font-size: 0.9rem;
+            line-height: 1.7;
+            color: var(--text-dim);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 35px;
+            height: 35px;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(10px);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: #fff;
+            cursor: pointer;
+            z-index: 2100;
+            transition: all 0.3s;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .close-btn:hover { 
+            background: var(--primary);
+            color: #fff;
+            transform: rotate(90deg);
+        }
+
+        #modal-close-btn {
+            width: 100%;
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            padding: 15px;
+            border-radius: 12px;
+            font-weight: 800;
+            margin-top: 30px;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 0.8rem;
+            transition: all 0.3s;
+        }
+
+        #modal-close-btn:hover {
+            box-shadow: 0 0 30px var(--primary-glow);
+            transform: translateY(-2px);
+        }
+
+        /* â”€â”€â”€ SESLİ REHBER â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+        #guide-overlay {
+            position: fixed;
+            top: 40px;
+            left: 40px;
+            background: var(--bg-glass);
+            backdrop-filter: blur(20px);
+            padding: 15px 30px;
+            border-radius: 50px;
+            border: 1px solid var(--border-glass);
+            display: none;
+            align-items: center;
+            gap: 20px;
+            z-index: 1500;
+        }
+
+        .guide-status {
+            font-weight: 800;
+            color: var(--text-main);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .guide-progress {
+            width: 150px;
+            height: 4px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+        }
+
+        .guide-progress-bar {
+            height: 100%;
+            background: var(--primary);
+            box-shadow: 0 0 10px var(--primary-glow);
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        .stop-guide-btn {
+            background: rgba(255, 68, 68, 0.2);
+            color: #ff4444;
+            border: 1px solid rgba(255, 68, 68, 0.3);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        @@keyframes pulse {
+            0% { opacity: 0.5; transform: scale(0.95); }
+            50% { opacity: 1; transform: scale(1.05); }
+            100% { opacity: 0.5; transform: scale(0.95); }
+        }
+
+        @@keyframes modalFadeIn {
+            from { opacity: 0; transform: translate(-50%, -40%); }
+            to { opacity: 1; transform: translate(-50%, -50%); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sesli Rehber Overlay -->
+    <div id="guide-overlay">
+        <i class="bi bi-headphones text-dark"></i>
+        <span class="guide-status">Tur Devam Ediyor...</span>
+        <div class="guide-progress"><div class="guide-progress-bar" id="guide-bar"></div></div>
+        <button class="stop-guide-btn" onclick="stopTour()">TURU DURDUR</button>
+    </div>
+
+    <!-- Sergi Başlığı Overlay -->
+    <div id="gallery-title-overlay">
+        <p class="main-title">DİJİTAL SANAT GALERİSİ</p>
+        <p class="sub-title">Halk Eğitim Merkezi E-Sergi Deneyimi</p>
+    </div>
+
+    <div id="bottom-bar">
+        <div class="bar-left">
+            <div class="logo-box">HE</div>
+            <div class="logo-text">
+                <div class="logo-name">HALK EÄİTİM MERKEZİ</div>
+                <div class="logo-sub">Dijital E-Sergi Platformu</div>
+            </div>
+        </div>
+        
+        <div class="bar-center">
+            <div class="crosshair"><i class="bi bi-crosshair2"></i></div>
+            <div class="move-text">WASD Hareket &nbsp;|&nbsp; Fare Bakış &nbsp;|&nbsp; Eserlere Tıkla</div>
+        </div>
+
+        <div class="bar-right">
+            <i class="bi bi-volume-up" id="music-toggle" style="font-size: 1.5rem; cursor: pointer; color:#333; pointer-events:auto;" onclick="toggleMusic()"></i>
+            <div class="audio-guide-btn" onclick="startTour()">
+                <i class="bi bi-headphones"></i>
+                Sesli Rehberi Başlat
+            </div>
+        </div>
+    </div>
+
+    <a href="/Exhibition/Index" class="exit-btn">Galeriden Çık</a>
+
+    <!-- Profil / CV Modal -->
+    <div id="cv-modal" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); width:400px; background:white; z-index:3000; border-radius:20px; overflow:hidden; box-shadow: 0 50px 100px rgba(0,0,0,0.5);">
+        <div id="cv-header" style="height:150px; background:var(--primary); position:relative;">
+            <div id="cv-pic-container" style="position:absolute; bottom:-40px; left:50%; transform:translateX(-50%);">
+                <img id="cv-pic" src="" style="width:80px; height:80px; border-radius:50%; border:4px solid white; object-fit:cover;">
+            </div>
+            <span class="close-btn" onclick="document.getElementById('cv-modal').style.display='none'">&times;</span>
+        </div>
+        <div style="padding:50px 30px 30px; text-align:center;">
+            <h4 id="cv-name" style="margin-bottom:5px; font-weight:800;"></h4>
+            <p id="cv-skills" style="color:var(--primary); font-size:0.8rem; margin-bottom:20px;"></p>
+            <p id="cv-summary" style="font-size:0.9rem; color:#666;"></p>
+            <a id="cv-link" href="#" class="btn btn-dark w-100 mt-4 py-2" style="border-radius:10px;">Profilini Görüntüle</a>
+        </div>
+    </div>
+
+    <!-- Gelişmiş Modal -->
+    <div id="detail-modal">
+        <span class="close-btn" onclick="closeModal()">&times;</span>
+        <div class="modal-banner">
+            <div id="modal-loader" style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);">
+                <div class="spinner-border text-primary" role="status"></div>
+            </div>
+            <img id="modal-img" src="" alt="" crossorigin="anonymous" style="opacity:0; transition:opacity 0.3s;" onload="this.style.opacity=1; document.getElementById('modal-loader').style.display='none';">
+        </div>
+        <div class="modal-content-inner">
+            <div class="modal-info-grid">
+                <div class="info-item">
+                    <label>Eser Adı</label>
+                    <span id="modal-title"></span>
+                </div>
+                <div class="info-item">
+                    <label>Sanatçı</label>
+                    <span id="modal-artist" class="text-primary" style="cursor:pointer; border-bottom: 1px dashed;" onclick="showArtistCV(currentStudentId, document.getElementById('modal-artist').innerText)"></span>
+                </div>
+                <div class="info-item">
+                    <label>Kategori / Teknik</label>
+                    <span id="modal-course"></span>
+                </div>
+                <div class="info-item">
+                    <label>Eser Fiyatı</label>
+                    <span id="modal-price" class="text-warning"></span>
+                </div>
+            </div>
+            
+            <h5 class="fw-bold mb-3">Eser Hakkında</h5>
+            <p id="modal-desc"></p>
+            
+            <div class="mt-4 pt-4 border-top">
+                <p class="small text-muted mb-0">Halk Eğitim Merkezi - Sanal Sergi Projesi kapsamında kursiyerlerimiz tarafından üretilmiştir. Tüm hakları saklıdır.</p>
+            </div>
+
+            <button id="modal-close-btn" onclick="window.location.href='/Exhibition/Index'">Kapat ve Galeriye Dön</button>
+        </div>
+    </div>
+
+    <a-scene cursor="fuse: false; rayOrigin: mouse" 
+        raycaster="objects: .interactable; interval: 100" 
+             renderer="antialias: false; colorManagement: true; sortObjects: true; precision: low; powerPreference: high-performance"
+             loading-screen="dotsColor: #d4af37; backgroundColor: #f5f5dc">
+        
+        <a-assets>
+            <img id="floor-tex" src="" crossorigin="anonymous">
+            <img id="carpet-tex" src="" crossorigin="anonymous">
+            <img id="ceiling-tex" src="" crossorigin="anonymous">
+            <img id="guide-img" src="/_api/media/media__1777740263300.png" crossorigin="anonymous">
+            <audio id="ambient-music" src="https://cdn.pixabay.com/download/audio/2021/11/25/audio_91b120c831.mp3?filename=emotional-piano-music-11111.mp3" preload="auto"></audio>
+        </a-assets>
+
+        <a-sky color="#fdf5e6"></a-sky>
+        <a-entity fog="type: exponential; color: #f5f5dc; density: 0.008"></a-entity>
+        
+        <!-- Modern Tavan (BEIGE & GOLD LUXURY) -->
+        <a-entity position="0 8 0">
+            <a-plane rotation="90 0 0" width="100" height="100" src="#ceiling-tex" repeat="15 15" material="roughness: 1; metalness: 0.1;"></a-plane>
+            <a-box position="0 -0.05 -10" width="40" height="0.1" depth="0.3" color="#d4af37" material="roughness: 0.8; metalness: 0.2"></a-box>
+            <a-box position="0 -0.05 10" width="40" height="0.1" depth="0.3" color="#d4af37" material="roughness: 0.8; metalness: 0.2"></a-box>
+        </a-entity>
+
+        <!-- Bej Mimari Kolonlar -->
+        <a-box position="-18 4 -14" width="1.2" height="12" depth="1.2" color="#e3d5ca">
+            <a-box position="0 0 0.61" width="0.1" height="12" depth="0.02" color="#d4af37"></a-box>
+        </a-box>
+        <a-box position="18 4 -14" width="1.2" height="12" depth="1.2" color="#e3d5ca">
+            <a-box position="0 0 0.61" width="0.1" height="12" depth="0.02" color="#d4af37"></a-box>
+        </a-box>
+
+        <!-- Modern Duvarlar (Bej Panel) -->
+        <!-- Modern Duvarlar (Tam Kapalı Mimari) -->
+        <!-- Ön/Arka -->
+        <a-plane position="0 4 -15.1" width="50" height="12" color="#e3d5ca"></a-plane>
+        <a-plane position="0 4 15.1" rotation="0 180 0" width="50" height="12" color="#e3d5ca"></a-plane>
+        <!-- Yanlar -->
+        <a-plane position="-25.1 4 0" rotation="0 90 0" width="30" height="12" color="#e3d5ca"></a-plane>
+        <a-plane position="25.1 4 0" rotation="0 -90 0" width="30" height="12" color="#e3d5ca"></a-plane>
+        
+        <!-- Köşe Kolonları (Boşlukları Kapatır) -->
+        <a-box position="-25 4 -15" width="1.5" height="12" depth="1.5" color="#dccfba">
+            <a-box position="0.76 0 0.76" width="0.1" height="12" depth="0.1" color="#d4af37"></a-box>
+        </a-box>
+        <a-box position="25 4 -15" width="1.5" height="12" depth="1.5" color="#dccfba">
+            <a-box position="-0.76 0 0.76" width="0.1" height="12" depth="0.1" color="#d4af37"></a-box>
+        </a-box>
+        <a-box position="-25 4 15" width="1.5" height="12" depth="1.5" color="#dccfba">
+            <a-box position="0.76 0 -0.76" width="0.1" height="12" depth="0.1" color="#d4af37"></a-box>
+        </a-box>
+        <a-box position="25 4 15" width="1.5" height="12" depth="1.5" color="#dccfba">
+            <a-box position="-0.76 0 -0.76" width="0.1" height="12" depth="0.1" color="#d4af37"></a-box>
+        </a-box>
+
+        <!-- Altın Süsleme Detayları -->
+        <a-box position="0 0.05 -15" width="50" height="0.1" depth="0.1" color="#d4af37"></a-box>
+        <a-box position="0 7.95 -15" width="50" height="0.1" depth="0.1" color="#d4af37"></a-box>
+
+        <!-- Galeri Oturma Bankları (Bej & Gold) -->
+        <a-entity position="0 0 0">
+            <a-box position="0 0.4 6" width="4" height="0.4" depth="1.2" color="#fcfcfc">
+                <a-box position="-1.8 -0.3 0.5" width="0.1" height="0.6" depth="0.1" color="#d4af37"></a-box>
+                <a-box position="1.8 -0.3 0.5" width="0.1" height="0.6" depth="0.1" color="#d4af37"></a-box>
+            </a-box>
+        </a-entity>
+
+        <!-- Yumuşak Galeri Aydınlatması -->
+        <a-entity light="type: ambient; color: #fff; intensity: 0.3"></a-entity>
+        <a-entity light="type: directional; color: #fff; intensity: 0.2" position="-1 10 1"></a-entity>
+
+        <a-plane id="floor-plane" src="#floor-tex" rotation="-90 0 0" width="100" height="100" repeat="20 20" material="roughness: 0.8; metalness: 0.1;"></a-plane>
+        
+        <!-- Uzun Gold Halı -->
+        <a-plane id="carpet-plane" src="#carpet-tex" position="0 0.01 0" rotation="-90 0 0" width="8" height="60" repeat="1 10" material="roughness: 1; metalness: 0.1;"></a-plane>
+
+        <!-- Dinamik İçerik (Duvarlara Eşit Dağıtılmış Tablolar) -->
+        @{
+            int index = 0;
+            foreach (var item in Model.Take(16))
+            {
+                string posX = "0", posY = "3.2", posZ = "0", rotation = "0 0 0";
+                int wallIndex = index / 4;
+                int itemInWallIndex = index % 4;
+                float offset = (itemInWallIndex * 8) - 12;
+
+                if (wallIndex == 0) { posX = offset.ToString().Replace(',', '.'); posZ = "-14.95"; rotation = "0 0 0"; }
+                else if (wallIndex == 1) { posX = offset.ToString().Replace(',', '.'); posZ = "14.95"; rotation = "0 180 0"; }
+                else if (wallIndex == 2) { posX = "-19.95"; posZ = offset.ToString().Replace(',', '.'); rotation = "0 90 0"; }
+                else { posX = "19.95"; posZ = offset.ToString().Replace(',', '.'); rotation = "0 -90 0"; }
+
+                <a-entity id="painting-entity-@index" position="@posX @posY @posZ" rotation="@rotation" class="painting-item" 
+                          data-title="@item.Title" data-artist="@item.ArtistName" data-img="@item.ImageUrl" data-course="@(item.Course?.CourseName ?? "Sanat Atölyesi")">
+                    <a-box width="3.5" height="4.5" depth="0.1" color="#fcfcfc"></a-box>
+                    <a-box width="3.6" height="4.6" depth="0.05" color="#d4af37" position="0 0 -0.05" material="roughness: 0.7; metalness: 0.3"></a-box>
+                    
+                    @if (item.Type == HalkEgitimSistemi.Models.ExhibitionType.Video && !string.IsNullOrEmpty(item.VideoUrl))
+                    {
+                        <a-video src="@item.VideoUrl" width="3.15" height="4.15" position="0 0 0.07" autoplay="true" loop="true" muted="true" class="interactable"
+                                 onclick="showDetail('@item.Title', '@item.ArtistName', '@item.ImageUrl', '@(item.Course?.CourseName ?? "Atölye")', '@item.Price', '@item.StudentId')"></a-video>
+                    }
+                    else
+                    {
+                        <a-box class="interactable" width="3.2" height="4.2" depth="0.1" color="#fff" position="0 0 0.05"
+                               onclick="showDetail('@item.Title', '@item.ArtistName', '@item.ImageUrl', '@(item.Course?.CourseName ?? "Atölye")', '@item.Price', '@item.StudentId')"
+                               animation__hover="property: scale; to: 1.05 1.05 1.05; dur: 300; startEvents: mouseenter"
+                               animation__leave="property: scale; to: 1 1 1; dur: 300; startEvents: mouseleave">
+                            <a-image src="@item.ImageUrl" width="3.15" height="4.15" position="0 0 0.07" material="shader: standard; transparent: false; side: front;"></a-image>
+                        </a-box>
+                    }
+
+                    <a-entity position="0 -3 0.1">
+                        <a-plane width="2.4" height="0.8" color="#fcfcfc" material="opacity: 0.9"></a-plane>
+                        <a-text value="@item.Title.ToUpper()" align="center" width="4" color="#000" position="0 0.15 0.01" font="https://cdn.aframe.io/fonts/Aileron-Semibold.fnt" negate="false" wrap-count="20"></a-text>
+                        <a-text value="@item.ArtistName" align="center" width="3.5" color="#b45309" position="0 -0.15 0.01" font="https://cdn.aframe.io/fonts/Aileron-Semibold.fnt"
+                                class="interactable" onclick="showArtistCV('@item.StudentId', '@item.ArtistName')" negate="false"></a-text>
+                    </a-entity>
+                </a-entity>
+                index++;
+            }
+        }
+
+        <a-entity id="guide-avatar" position="0 0 0" visible="false">
+            <a-cylinder radius="0.8" height="0.1" position="0 0 0" color="#d4af37" material="metalness: 0.3; roughness: 0.7">
+                <a-ring radius-inner="0.8" radius-outer="0.85" color="#d4af37" rotation="-90 0 0" material="roughness: 0.8; metalness: 0.2"></a-ring>
+            </a-cylinder>
+            <a-light type="point" color="#d4af37" intensity="0.5" distance="4"></a-light>
+        </a-entity>
+
+        <!-- Tur İşaretçisi: Gelişmiş BÜYÜK Gold Ok -->
+        <a-entity id="tour-pointer" visible="false">
+            <a-entity rotation="180 0 0">
+                <a-cone radius-bottom="0.3" radius-top="0" height="0.6" color="#d4af37" 
+                        animation="property: position; dir: alternate; dur: 800; easing: easeInOutSine; loop: true; to: 0 0.4 0"></a-cone>
+                <a-cylinder radius="0.1" height="0.4" color="#d4af37" position="0 0.5 0"></a-cylinder>
+            </a-entity>
+            <a-light type="point" color="#d4af37" intensity="0.8" distance="4"></a-light>
+        </a-entity>
+
+        <a-entity id="rig" position="0 0 0">
+            <a-entity id="main-camera" camera look-controls="pointerLockEnabled: false" wasd-controls="acceleration: 100" position="0 1.6 0">
+                <a-entity cursor="fuse: false" position="0 0 -1" geometry="primitive: circle; radius: 0.005" material="color: #d4af37; shader: flat"></a-entity>
+            </a-entity>
+        </a-entity>
+
+        <a-sound src="#ambient-music" autoplay="true" loop="true" volume="0.4"></a-sound>
+
+    </a-scene>
+
+    <script>
+        let tourActive = false;
+        let tourIndex = 0;
+        let tourTimeout = null;
+        let speechSynth = window.speechSynthesis;
+        let currentUtterance = null;
+        let currentStudentId = 0;
+        let mouthInterval = null;
+
+        window.addEventListener('beforeunload', stopTour);
+
+        function showDetail(title, artist, img, course, price, studentId) {
+            currentStudentId = studentId;
+            document.getElementById('modal-title').innerText = title;
+            document.getElementById('modal-artist').innerText = artist;
+            document.getElementById('modal-course').innerText = course;
+            document.getElementById('modal-price').innerText = (price || "0") + " ₺";
+            
+            // Image loading management
+            const modalImg = document.getElementById('modal-img');
+            const loader = document.getElementById('modal-loader');
+            modalImg.style.opacity = '0';
+            loader.style.display = 'block';
+            modalImg.src = img;
+
+            document.getElementById('modal-desc').innerText = 
+                title + ' isimli bu eser, ' + artist + ' tarafından ' + course + ' kursu bünyesinde hazırlanmıştır. ' +
+                'Halk Eğitim Merkezimizin geleneksel ve modern teknikleri harmanlayan eğitim anlayışının seçkin bir örneğidir.';
+            document.getElementById('detail-modal').style.display = 'block';
+        }
+
+        function closeModal() { document.getElementById('detail-modal').style.display = 'none'; }
+
+        async function showArtistCV(studentId, artistName) {
+            if (!studentId || studentId === '0') {
+                alert(artistName + " bir eğitmen veya misafir sanatçıdır.");
+                return;
+            }
+
+            try {
+                const response = await fetch('/Student/GetPublicProfile/' + studentId);
+                const data = await response.json();
+                
+                if (data.success) {
+                    document.getElementById('cv-name').innerText = data.fullName;
+                    document.getElementById('cv-skills').innerText = data.skills || "Yetenekler Belirtilmemiş";
+                    document.getElementById('cv-summary').innerText = data.summary || "Bu öğrenci hakkında henüz bir özet bilgi bulunmuyor.";
+                    document.getElementById('cv-pic').src = data.profilePic || "https://ui-avatars.com/api/?name=" + data.fullName;
+                    document.getElementById('cv-link').href = "/Student/PublicCV/" + studentId;
+                    document.getElementById('cv-modal').style.display = 'block';
+                }
+            } catch (e) {
+                console.error("CV Yüklenemedi", e);
+            }
+        }
+
+        function startTour() {
+            tourActive = true;
+            tourIndex = 0;
+            document.getElementById('guide-overlay').style.display = 'flex';
+            document.getElementById('guide-avatar').setAttribute('visible', 'true');
+            nextTourStep();
+        }
+
+        function stopTour() {
+            tourActive = false;
+            if (tourTimeout) { clearTimeout(tourTimeout); tourTimeout = null; }
+            if (speechSynth.speaking) { speechSynth.cancel(); }
+            
+            const rig = document.getElementById('rig');
+            const guide = document.getElementById('guide-avatar');
+            const pointer = document.getElementById('tour-pointer');
+            
+            rig.removeAttribute('animation');
+            guide.removeAttribute('animation');
+            
+            if (pointer) pointer.setAttribute('visible', 'false');
+            document.getElementById('guide-overlay').style.display = 'none';
+            document.getElementById('guide-avatar').setAttribute('visible', 'false');
+            
+            const s = document.querySelector('a-sound');
+            if (s && s.components.sound) s.components.sound.stopSound();
+        }
+
+        function nextTourStep() {
+            if (!tourActive || tourIndex >= 16) { stopTour(); return; }
+            const item = document.getElementById('painting-entity-' + tourIndex); if (!item) return;
+            const pos = item.getAttribute('position');
+            const rig = document.getElementById('rig'); const guide = document.getElementById('guide-avatar');
+            
+            const pointer = document.getElementById('tour-pointer');
+            pointer.setAttribute('visible', 'true');
+            pointer.setAttribute('position', `${pos.x} ${pos.y + 3.8} ${pos.z}`);
+            pointer.setAttribute('rotation', "0 0 0");
+
+            const guideTargetPos = { x: pos.x * 0.82 - (pos.z != 0 ? 0.5 : 0), y: 0.1, z: pos.z * 0.82 - (pos.x != 0 ? 0.5 : 0) };
+            guide.setAttribute('animation', { property: 'position', to: `${guideTargetPos.x} ${guideTargetPos.y} ${guideTargetPos.z}`, dur: 2000, easing: 'easeInOutQuad' });
+            
+            const cameraTargetPos = { x: pos.x * 0.55, y: 0, z: pos.z * 0.55 };
+            rig.setAttribute('animation', { property: 'position', to: `${cameraTargetPos.x} ${cameraTargetPos.y} ${cameraTargetPos.z}`, dur: 2500, easing: 'easeInOutQuad' });
+
+            const title = item.getAttribute('data-title'); const artist = item.getAttribute('data-artist');
+            const text = `Sayın ziyaretçimiz, şu an önünde bulunduğumuz eser, kursiyerimiz ${artist} tarafından büyük bir özenle hazırlanan "${title}" isimli çalışmadır. Bu eser, Halk Eğitim Merkezimizde verilen eğitimin kalitesini ve sanatçımızın teknik ustalığını en güzel şekilde yansıtmaktadır. Renklerin uyumu ve fırça darbelerindeki hassasiyet, uzun süren bir emeğin ve tutkunun ürünüdür. Halk eğitim kurslarımızın sunduğu imkanlarla sanata dönüştürülen bu nadide parçayı yakından incelemenizi öneririm.`;
+            
+            tourTimeout = setTimeout(() => {
+                if (!tourActive) return;
+                speak(text, () => {
+                    if (!tourActive) return;
+                    tourTimeout = setTimeout(() => {
+                        if (!tourActive) return;
+                        tourIndex++;
+                        document.getElementById('guide-bar').style.width = (tourIndex / 16 * 100) + '%';
+                        nextTourStep();
+                    }, 2500);
+                });
+            }, 1500);
+        }
+
+        function speak(text, callback) {
+            if (speechSynth.speaking) speechSynth.cancel();
+            currentUtterance = new SpeechSynthesisUtterance(text);
+            currentUtterance.lang = 'tr-TR';
+            currentUtterance.rate = 0.8; // Tane tane anlatım için yavaşlattım
+            currentUtterance.onend = callback;
+            speechSynth.speak(currentUtterance);
+        }
+
+        function toggleMusic() {
+            const s = document.querySelector('a-sound');
+            const icon = document.getElementById('music-toggle');
+            if (s.components.sound.isPlaying) { s.components.sound.stopSound(); icon.className = "bi bi-volume-mute"; }
+            else { s.components.sound.playSound(); icon.className = "bi bi-volume-up"; }
+        }
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,131 @@
+﻿@model List<HalkEgitimSistemi.Models.ProfanityBan>
+@{
+    ViewData["Title"] = "İhlal Takip Merkezi";
+    Layout = "_AdminLayout";
+}
+
+<div class="container-fluid py-4">
+    <div class="glass-card-static p-4 mb-4 animate-fadeInUp">
+        <div class="d-flex align-items-center justify-content-between">
+            <div>
+                <h2 style="font-family:'Outfit';font-weight:800;margin:0;">
+                    <i class="bi bi-shield-lock me-2 text-warning"></i>İhlal Takip Merkezi
+                </h2>
+                <p class="text-muted-premium mb-0">Otomatik filtreye takılan kullanıcılar ve ceza durumları</p>
+            </div>
+            <div class="text-end">
+                <span class="badge bg-danger px-3 py-2 rounded-pill">
+                    <i class="bi bi-person-x-fill me-1"></i> @Model.Count(b => b.IsCurrentlyBanned) Aktif Kısıtlama
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Yeni Ceza Skalası -->
+    <div class="row g-4 mb-4 animate-fadeInUp" style="animation-delay:0.1s;">
+        <div class="col-md-4">
+            <div class="glass-card-static p-3 d-flex align-items-center gap-3" style="border-left: 4px solid var(--warning);">
+                <div class="fs-2 text-warning fw-bold">3</div>
+                <div>
+                    <h6 class="mb-0 fw-bold">1 Saat Ban</h6>
+                    <small class="text-muted-premium">Geçici mesaj kısıtlaması</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="glass-card-static p-3 d-flex align-items-center gap-3" style="border-left: 4px solid #ff4757;">
+                <div class="fs-2 text-danger fw-bold">5</div>
+                <div>
+                    <h6 class="mb-0 fw-bold">Süresiz Kısıtlama</h6>
+                    <small class="text-muted-premium">Yorum ve mesaj yetkisi askıya alınır</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="glass-card-static p-3 d-flex align-items-center gap-3" style="border-left: 4px solid #C5A059;">
+                <div class="fs-2 text-purple fw-bold">10</div>
+                <div>
+                    <h6 class="mb-0 fw-bold">Hesap Dondurma</h6>
+                    <small class="text-muted-premium">Kalıcı erişim engeli</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="glass-card-static p-0 overflow-hidden animate-fadeInUp" style="animation-delay: 0.2s;">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0" style="color: white;">
+                <thead style="background: rgba(255,255,255,0.05);">
+                    <tr>
+                        <th class="ps-4">Kullanıcı</th>
+                        <th>Puan</th>
+                        <th>Son İhlal Metni</th>
+                        <th>Durum / Bitiş</th>
+                        <th class="text-end pe-4">İşlemler</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var ban in Model)
+                    {
+                        <tr style="background: @(ban.IsCurrentlyBanned ? "rgba(239,68,68,0.03)" : "transparent");">
+                            <td class="ps-4">
+                                <div class="fw-bold">@ban.UserName</div>
+                                <div class="text-muted-premium extra-small">@ban.UserEmail</div>
+                            </td>
+                            <td>
+                                <span class="badge @(ban.OffenseCount >= 10 ? "bg-danger" : ban.OffenseCount >= 5 ? "bg-warning text-dark" : "bg-info") rounded-pill">
+                                    @ban.OffenseCount Puan
+                                </span>
+                            </td>
+                            <td>
+                                <div class="text-muted-premium small text-truncate" style="max-width:200px;" title="@ban.LastOffenseText">
+                                    @ban.LastOffenseText
+                                </div>
+                            </td>
+                            <td>
+                                @if (ban.IsPermanent)
+                                {
+                                    <span class="text-danger fw-bold"><i class="bi bi-snow2 me-1"></i> DONDURULDU</span>
+                                }
+                                else if (ban.BanUntil.HasValue && ban.BanUntil.Value > DateTime.Now)
+                                {
+                                    <span class="text-warning">
+                                        <i class="bi bi-clock-history me-1"></i> 
+                                        @ban.BanUntil.Value.ToString("HH:mm") (@((int)(ban.BanUntil.Value - DateTime.Now).TotalMinutes) dk kaldı)
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="text-success small"><i class="bi bi-check-circle me-1"></i> Aktif</span>
+                                }
+                            </td>
+                            <td class="text-end pe-4">
+                                <div class="d-flex justify-content-end gap-2">
+                                    @if (ban.IsCurrentlyBanned)
+                                    {
+                                        <form method="post" asp-action="LiftBan">
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="id" value="@ban.Id" />
+                                            <button type="submit" class="btn btn-sm btn-outline-success border-0" title="Kısıtlamayı Kaldır">
+                                                <i class="bi bi-unlock-fill"></i>
+                                            </button>
+                                        </form>
+                                    }
+                                    <form method="post" asp-action="MakePermanentBan">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="id" value="@ban.Id" />
+                                        <button type="submit" class="btn btn-sm btn-outline-danger border-0" title="Kalıcı Dondur">
+                                            <i class="bi bi-person-x"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+

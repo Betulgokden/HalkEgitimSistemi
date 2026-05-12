@@ -1,0 +1,47 @@
+﻿@{
+    ViewData["Title"] = "B2B Protokoller";
+}
+
+<div class="container py-5 mt-5">
+    <div class="glass-card-premium p-5 animate-fadeIn">
+        <div class="row align-items-center">
+            <div class="col-lg-7">
+                <h6 class="text-uppercase fw-bold text-info mb-3" style="letter-spacing: 2px;">Kurumsal İşbirlikleri</h6>
+                <h1 class="display-4 fw-bold text-white mb-4">B2B Protokol Yönetimi</h1>
+                <p class="text-white-70 lead mb-5">Halk Eğitim Merkezi, sanayi ve teknoloji devleriyle yaptığı protokoller sayesinde kursiyerlerine doğrudan istihdam ve staj imkanları sunar.</p>
+                
+                <div class="d-flex flex-wrap gap-4">
+                    <div class="partner-stat">
+                        <h2 class="fw-bold text-white mb-0">150+</h2>
+                        <small class="text-white-50 text-uppercase">Aktif Protokol</small>
+                    </div>
+                    <div class="partner-stat">
+                        <h2 class="fw-bold text-white mb-0">12K</h2>
+                        <small class="text-white-50 text-uppercase">Yıllık İstihdam</small>
+                    </div>
+                    <div class="partner-stat">
+                        <h2 class="fw-bold text-white mb-0">45</h2>
+                        <small class="text-white-50 text-uppercase">Global Partner</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-5 text-center mt-5 mt-lg-0">
+                <div class="partner-grid">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg" height="40" class="m-3 opacity-50 grayscale" alt="Partner">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" height="30" class="m-3 opacity-50 grayscale" alt="Partner">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Google_logo.svg" height="40" class="m-3 opacity-50 grayscale" alt="Partner">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/0/08/Cisco_logo_blue_2016.svg" height="50" class="m-3 opacity-50 grayscale" alt="Partner">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .glass-card-premium { background: rgba(255,255,255,0.03); backdrop-filter: blur(25px); border-radius: 30px; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 30px 60px rgba(0,0,0,0.3); }
+    .partner-stat { border-left: 3px solid #0dcaf0; padding-left: 20px; }
+    .grayscale { filter: grayscale(1) brightness(2); }
+    .animate-fadeIn { animation: fadeIn 1.2s ease-out; }
+    @@keyframes fadeIn { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+</style>
+

@@ -1,0 +1,80 @@
+﻿<div class="flipbook-wrapper-mini mb-4">
+    <div class="magazine-book-mini" id="magazineMini">
+        <div class="magazine-page-mini active" data-page="0"><img src="/images/magazine_cover_lifelong_learning_1778191714694.png"></div>
+        <div class="magazine-page-mini" data-page="1"><img src="/images/magazine_panel_computer_kitchen_1778191739703.png"></div>
+        <div class="magazine-page-mini" data-page="2"><img src="/images/magazine_panel_saz_music_1778191765113.png"></div>
+        <div class="magazine-page-mini" data-page="3"><img src="/images/magazine_panel_wood_carving_1778191790537.png"></div>
+        <div class="magazine-page-mini" data-page="4"><img src="/images/magazine_panel_fashion_textile_1778191815376.png"></div>
+        <div class="magazine-page-mini" data-page="5"><img src="/images/magazine_panel_western_music_1778191843182.png"></div>
+        <div class="magazine-page-mini" data-page="6"><img src="/images/magazine_panel_sport_yoga_1778191880090.png"></div>
+        <div class="magazine-page-mini" data-page="7"><img src="/images/magazine_back_cover_art_1778191924204.png"></div>
+    </div>
+    <div class="d-flex justify-content-between align-items-center mt-3">
+        <button class="btn btn-sm btn-outline-light rounded-pill" onclick="prevMiniPage()">Önceki</button>
+        <span id="miniPageNum" class="text-muted small">Sayfa: 1 / 8</span>
+        <button class="btn btn-sm btn-primary-glow rounded-pill" onclick="nextMiniPage()">Sonraki</button>
+    </div>
+</div>
+
+<style>
+    .flipbook-wrapper-mini {
+        max-width: 100%;
+        margin: 0 auto;
+        position: relative;
+    }
+    .magazine-book-mini {
+        width: 100%;
+        height: 500px;
+        position: relative;
+        background: #000;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+    }
+    .magazine-page-mini {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        transition: all 0.5s ease;
+        transform: scale(0.9);
+    }
+    .magazine-page-mini.active {
+        opacity: 1;
+        transform: scale(1);
+        z-index: 2;
+    }
+    .magazine-page-mini img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
+</style>
+
+<script>
+    let currentMiniPage = 0;
+    const miniPages = document.querySelectorAll('.magazine-page-mini');
+    const miniPageNum = document.getElementById('miniPageNum');
+
+    function updateMiniPages() {
+        miniPages.forEach((p, i) => {
+            p.classList.toggle('active', i === currentMiniPage);
+        });
+        miniPageNum.innerText = `Sayfa: ${currentMiniPage + 1} / 8`;
+    }
+
+    function nextMiniPage() {
+        if (currentMiniPage < miniPages.length - 1) {
+            currentMiniPage++;
+            updateMiniPages();
+        }
+    }
+
+    function prevMiniPage() {
+        if (currentMiniPage > 0) {
+            currentMiniPage--;
+            updateMiniPages();
+        }
+    }
+</script>
+

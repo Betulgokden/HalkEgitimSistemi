@@ -1,0 +1,118 @@
+﻿@{
+    ViewData["Title"] = "Gelecek Atölyesi";
+}
+
+<div class="container-fluid py-5 mt-5">
+    <!-- Header Section -->
+    <div class="text-center mb-5 animate-fadeInUp">
+        <h1 class="display-3 fw-bold text-gradient-premium mb-3" style="font-family: 'Outfit', sans-serif;">Gelecek Atölyesi</h1>
+        <p class="lead text-white-50 mx-auto" style="max-width: 800px;">Yarının teknolojilerini bugünden keşfedin. Yapay zeka, Robotik ve Sürdürülebilir Tasarım dünyasına adım atın.</p>
+        <div class="header-line mx-auto"></div>
+    </div>
+
+    <!-- Vision Cards -->
+    <div class="row g-4 mb-5 px-lg-5">
+        <div class="col-md-4">
+            <div class="glass-card-premium p-4 h-100 text-center animate-scaleIn" style="--delay: 0.1s;">
+                <div class="icon-box-glow mb-4 mx-auto">
+                    <i class="bi bi-robot"></i>
+                </div>
+                <h3 class="h4 fw-bold text-white mb-3">Yapay Zeka Laboratuvarı</h3>
+                <p class="text-white-50 small">Üretken yapay zeka modelleri ve derin öğrenme algoritmaları ile projeler geliştirin.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="glass-card-premium p-4 h-100 text-center animate-scaleIn" style="--delay: 0.2s;">
+                <div class="icon-box-glow mb-4 mx-auto" style="background: linear-gradient(135deg, #C5A059, #C5A059);">
+                    <i class="bi bi-cpu"></i>
+                </div>
+                <h3 class="h4 fw-bold text-white mb-3">Robotik & IoT</h3>
+                <p class="text-white-50 small">Sensör teknolojileri ve mikroişlemcilerle akıllı sistemler tasarlayın.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="glass-card-premium p-4 h-100 text-center animate-scaleIn" style="--delay: 0.3s;">
+                <div class="icon-box-glow mb-4 mx-auto" style="background: linear-gradient(135deg, #f59e0b, #d97706);">
+                    <i class="bi bi-rocket-takeoff"></i>
+                </div>
+                <h3 class="h4 fw-bold text-white mb-3">Girişimcilik Kampı</h3>
+                <p class="text-white-50 small">Fikirlerinizi ürüne dönüştürün ve teknoloji dünyasında yerinizi alın.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Active Projects / Events -->
+    <div class="glass-card-premium p-5 mb-5 mx-lg-5 animate-fadeInUp" style="--delay: 0.4s;">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h2 class="fw-bold text-white mb-4">Yeni Dönem Atölye Kayıtları Başladı!</h2>
+                <p class="text-white-70 mb-4">Bu ay "Gelecek Atölyesi" kapsamında Meta-Education ve NFT Tasarımı eğitimlerimiz başlıyor. Siz de bu dönüşümün bir parçası olun.</p>
+                <div class="d-flex gap-3">
+                    <button class="btn btn-glow-premium px-4 py-2 rounded-pill">Hemen Kaydol</button>
+                    <button class="btn btn-outline-light px-4 py-2 rounded-pill">Programı İncele</button>
+                </div>
+            </div>
+            <div class="col-lg-6 d-none d-lg-block">
+                <img src="https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&q=80&w=800" class="img-fluid rounded-4 shadow-lg border-glass" alt="Workshop">
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .text-gradient-premium {
+        background: linear-gradient(135deg, #fff 0%, #a5b4fc 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    .header-line {
+        width: 100px;
+        height: 4px;
+        background: linear-gradient(90deg, #C5A059, #581C1C);
+        border-radius: 2px;
+    }
+    .glass-card-premium {
+        background: rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 24px;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .glass-card-premium:hover {
+        transform: translateY(-10px) scale(1.02);
+        background: rgba(255, 255, 255, 0.07);
+        border-color: rgba(255, 255, 255, 0.2);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+    }
+    .icon-box-glow {
+        width: 80px;
+        height: 80px;
+        background: linear-gradient(135deg, #C5A059, #581C1C);
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.5rem;
+        color: white;
+        box-shadow: 0 10px 20px rgba(88, 28, 28, 0.3);
+    }
+    .animate-fadeInUp {
+        animation: fadeInUp 0.8s both;
+        animation-delay: var(--delay, 0s);
+    }
+    .animate-scaleIn {
+        animation: scaleIn 0.6s both;
+        animation-delay: var(--delay, 0s);
+    }
+    @@keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(30px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    @@keyframes scaleIn {
+        from { opacity: 0; transform: scale(0.9); }
+        to { opacity: 1; transform: scale(1); }
+    }
+    .border-glass { border: 1px solid rgba(255,255,255,0.1); }
+</style>
+
+

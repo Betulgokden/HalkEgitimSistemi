@@ -1,0 +1,300 @@
+﻿@model HalkEgitimSistemi.Models.Instructor
+
+@{
+    ViewData["Title"] = "Eğitmen Detayı";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8">
+            <div class="glass-card-static animate-scaleIn overflow-hidden">
+                <!-- Header / Photo -->
+                <div style="padding: 3rem 2rem 2rem; border-bottom: 1px solid var(--border-glass); background: linear-gradient(135deg, rgba(88, 28, 28, 0.1) 0%, rgba(88, 28, 28, 0.05) 100%); text-align: center;">
+                    <div class="instructor-avatar" style="width: 120px; height: 120px; margin: 0 auto 1.5rem; border: 3px solid var(--primary);">
+                        @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                        {
+                            <img src="@Model.ImageUrl" alt="@Model.FullName" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;" />
+                        }
+                        else
+                        {
+                            <i class="bi bi-person-circle" style="font-size: 4rem; color: var(--primary-light);"></i>
+                        }
+                    </div>
+                    <h2 class="text-vibrant-purple" style="font-family: 'Outfit', sans-serif; font-weight: 900; margin: 0; font-size: 2.2rem; text-shadow: 0 0 20px rgba(197, 160, 89, 0.4);">@Model.FullName</h2>
+                    <p class="text-vibrant-pink" style="font-weight: 800; text-transform: uppercase; letter-spacing: 0.15em; font-size: 1rem; margin-top: 0.5rem;">@Model.Title</p>
+                </div>
+
+                <!-- Info Details -->
+                <div style="padding: 2rem;">
+                    <div class="detail-row">
+                        <div class="detail-label">Atandığı Kurs</div>
+                        <div class="detail-value">
+                            @if (Model.Course != null)
+                            {
+                                <span class="badge-premium badge-primary">
+                                    <i class="bi bi-journal-bookmark me-1"></i> @Model.Course.CourseName
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="badge-premium badge-secondary">Genel Görevli / İdare</span>
+                            }
+                        </div>
+                    </div>
+                    
+                    <div class="detail-row">
+                        <div class="detail-label">Müsaitlik Durumu</div>
+                        <div class="detail-value">
+                            @if (ViewBag.IsBusy == true)
+                            {
+                                <span class="badge-premium" style="background: rgba(220, 38, 38, 0.1); color: #ef4444; border: 1px solid rgba(220, 38, 38, 0.2);">
+                                    <i class="bi bi-clock-history me-1"></i> Åu An Derste
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="badge-premium" style="background: rgba(16, 185, 129, 0.1); color: #C5A059; border: 1px solid rgba(16, 185, 129, 0.2);">
+                                    <i class="bi bi-check-circle me-1"></i> Müsait
+                                </span>
+                            }
+                        </div>
+                    </div>
+                    
+                    <div class="detail-row">
+                        <div class="detail-label">Kayıt ID</div>
+                        <div class="detail-value">#@Model.Id</div>
+                    </div>
+
+                    @if (!string.IsNullOrEmpty(Model.CvFilePath))
+                    {
+                        <div class="mt-4">
+                            <a asp-action="DownloadCv" asp-route-id="@Model.Id" class="btn btn-premium btn-secondary-glass w-100 justify-content-center">
+                                <i class="bi bi-file-earmark-pdf"></i> Özgeçmişi (CV) İndir
+                            </a>
+                        </div>
+                    }
+
+                    <div class="d-flex gap-2 mt-4">
+                        <a asp-action="Index" class="btn btn-premium btn-secondary-glass flex-fill justify-content-center">
+                            <i class="bi bi-arrow-left"></i> Listeye Dön
+                        </a>
+                        @if (User.Identity != null && User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                        {
+                            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-premium btn-primary-glow flex-fill justify-content-center">
+                                <i class="bi bi-pencil-square"></i> Düzenle
+                            </a>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <!-- Haftalık Ders Programı -->
+            <div class="glass-card-static mt-4 p-4 animate-fadeInUp">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h4 class="text-vibrant-blue" style="font-family: 'Outfit', sans-serif; font-weight: 800; margin: 0;">
+                        <i class="bi bi-calendar-week me-2"></i> Çalışma Programı
+                    </h4>
+                    <span class="badge-premium badge-primary small px-3">Haftalık</span>
+                </div>
+                
+                <div class="table-responsive">
+                    <table class="table table-premium mb-0">
+                        <thead>
+                            <tr>
+                                <th>Gün</th>
+                                <th>Saat Aralığı</th>
+                                <th>Branş / Not</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                var turkishDays = new Dictionary<string, string> {
+                                    { "Monday", "Pazartesi" }, { "Tuesday", "Salı" }, { "Wednesday", "Çarşamba" },
+                                    { "Thursday", "Perşembe" }, { "Friday", "Cuma" }, { "Saturday", "Cumartesi" }, { "Sunday", "Pazar" }
+                                };
+                            }
+                            @foreach (var day in turkishDays)
+                            {
+                                var schedule = Model.Schedules.FirstOrDefault(s => s.Day == day.Key);
+                                <tr class="@(schedule != null ? "table-active-row" : "")">
+                                    <td class="fw-bold">
+                                        <i class="bi bi-calendar-check me-2 text-primary"></i>@day.Value
+                                    </td>
+                                    <td>
+                                        @if (schedule != null) {
+                                            <span class="badge bg-glass text-primary-theme fw-600">
+                                                @schedule.StartTime.ToString(@"hh\:mm") - @schedule.EndTime.ToString(@"hh\:mm")
+                                            </span>
+                                        } else {
+                                            <span class="text-white-50 small opacity-75">Mesai Dışı</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (schedule != null) {
+                                            <div class="d-flex align-items-center">
+                                                <i class="bi bi-info-circle-fill me-2 text-vibrant-purple small"></i>
+                                                <span class="small text-white">@schedule.Note</span>
+                                            </div>
+                                        } else {
+                                            <span class="text-white-50 small opacity-50">-</span>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-5 col-md-8">
+            <!-- Eğitmene Soru Sor -->
+            <div class="glass-card-static p-4 animate-fadeInUp" style="animation-delay: 0.1s;">
+                <h4 class="text-vibrant-green" style="font-family: 'Outfit', sans-serif; font-weight: 800; margin-bottom: 1.5rem;">
+                    <i class="bi bi-chat-dots me-2"></i> Eğitmene Soru Sor
+                </h4>
+                
+                @if (User.Identity != null && User.Identity.IsAuthenticated)
+                {
+                    @if (User.IsInRole("Student"))
+                    {
+                        <p class="text-muted-premium small mb-4">Eğitmenimize merak ettiğiniz konuları buradan sorabilirsiniz. Yanıtlar eğitmen panelinden verilecektir.</p>
+                        <form id="messageForm" asp-action="MesajGonder" asp-controller="Message" method="post">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="instructorId" value="@Model.Id" />
+                            
+                            <div class="mb-3">
+                                <label class="form-label text-vibrant-purple small fw-bold">Konu</label>
+                                <input type="text" name="subject" class="form-control bg-glass border-glass text-white" style="border-radius: 12px; padding: 12px;" placeholder="Soru başlığınız..." required />
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label class="form-label text-vibrant-purple small fw-bold">Mesajınız</label>
+                                <textarea name="content" rows="5" class="form-control bg-glass border-glass text-white" style="border-radius: 12px; padding: 12px;" placeholder="Mesajınızı detaylıca yazın..." required></textarea>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-premium btn-primary-glow w-100">
+                                <i class="bi bi-send-fill me-2"></i> Mesaj Gönder
+                            </button>
+                        </form>
+                    }
+                    else
+                    {
+                        <div class="alert alert-info border-0 bg-glass text-primary-theme">
+                            <i class="bi bi-info-circle me-2"></i> Sadece kursiyerlerimiz eğitmenlere soru sorabilir.
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="text-center py-4">
+                        <i class="bi bi-lock-fill d-block mb-3" style="font-size: 2.5rem; color: var(--primary-light);"></i>
+                        <p class="text-muted-premium">Soru sormak için giriş yapmalısınız.</p>
+                        <a asp-controller="Account" asp-action="Login" class="btn btn-premium btn-primary-glow mt-2">
+                            Giriş Yap
+                        </a>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Notification Toast -->
+<div id="messageToast" class="toast-premium">
+    <div class="toast-content">
+        <i id="toastIcon" class="bi bi-check-circle-fill"></i>
+        <span id="toastMessage">Mesajınız gönderildi!</span>
+    </div>
+</div>
+
+<style>
+    .toast-premium {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        background: rgba(15, 15, 35, 0.9);
+        backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: white;
+        padding: 1rem 2rem;
+        border-radius: 15px;
+        display: flex;
+        align-items: center;
+        z-index: 9999;
+        transform: translateY(150%);
+        transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+    }
+    .toast-premium.show {
+        transform: translateY(0);
+    }
+    .toast-content {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    .toast-content i {
+        font-size: 1.5rem;
+    }
+    .toast-success i { color: #C5A059; }
+    .toast-error i { color: #ef4444; }
+</style>
+
+@section Scripts {
+    <script>
+        document.getElementById('messageForm')?.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const form = this;
+            const formData = new FormData(form);
+            const btn = form.querySelector('button[type="submit"]');
+            const originalBtnContent = btn.innerHTML;
+
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> Gönderiliyor...';
+            btn.disabled = true;
+
+            fetch(form.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                showToast(data.message, data.success ? 'success' : 'error');
+                if (data.success) {
+                    form.reset();
+                }
+            })
+            .catch(error => {
+                showToast('Bir hata oluştu. Lütfen tekrar deneyin.', 'error');
+            })
+            .finally(() => {
+                btn.innerHTML = originalBtnContent;
+                btn.disabled = false;
+            });
+        });
+
+        function showToast(message, type) {
+            const toast = document.getElementById('messageToast');
+            const toastMsg = document.getElementById('toastMessage');
+            const toastIcon = document.getElementById('toastIcon');
+
+            toastMsg.innerText = message;
+            toast.className = 'toast-premium show toast-' + type;
+            
+            if (type === 'success') {
+                toastIcon.className = 'bi bi-check-circle-fill';
+            } else {
+                toastIcon.className = 'bi bi-exclamation-triangle-fill';
+            }
+
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 4000);
+        }
+    </script>
+}
+
+

@@ -1,0 +1,92 @@
+﻿@model List<HalkEgitimSistemi.Models.CourseChatMessage>
+@{
+    ViewData["Title"] = "Kurs Sohbet Arşivi";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var courses = ViewBag.Courses as IEnumerable<dynamic>;
+    int? selectedCourseId = ViewBag.SelectedCourse;
+}
+
+<div class="container-fluid py-4">
+    <div class="d-flex align-items-center justify-content-between mb-4 animate-fadeIn">
+        <div>
+            <h1 class="h3 mb-1 fw-bold text-gradient-primary">
+                <i class="bi bi-collection-play-fill me-2 float-slow"></i>Kurs Sohbet Arşivi
+            </h1>
+            <p class="text-muted-premium mb-0">Öğrenci â†” Öğretmen canlı ders ve kurs yazışmaları</p>
+        </div>
+        <div class="d-flex gap-3 align-items-center">
+            <form method="get" class="d-flex gap-2">
+                <select name="courseId" class="form-select bg-glass border-glass text-white rounded-pill px-4" style="min-width: 250px;" onchange="this.form.submit()">
+                    <option value="">Tüm Kurslar</option>
+                    @if (courses != null)
+                    {
+                        foreach (var c in courses)
+                        {
+                            <!option value="@c.Id" @(selectedCourseId == c.Id ? "selected" : "")>@c.CourseName</!option>
+                        }
+                    }
+                </select>
+            </form>
+            <a asp-action="MessageLog" class="btn btn-secondary-glass rounded-pill px-4">
+                <i class="bi bi-arrow-left me-2"></i> Geri Dön
+            </a>
+        </div>
+    </div>
+
+    <div class="glass-card-static border-0 shadow-lg p-4 animate-fadeInUp" style="min-height: 70vh;">
+        <div class="chat-container d-flex flex-column gap-3">
+            @foreach (var msg in Model)
+            {
+                <div class="chat-bubble-wrapper d-flex justify-content-start">
+                    <div class="chat-bubble glass-card p-3 border-glass hover-bg-glass" 
+                         style="max-width: 85%; border-radius: 20px; border-left: 5px solid @(msg.SenderRole == "Instructor" ? "#581C1C" : "#C5A059") !important;">
+                        
+                        <div class="d-flex align-items-center justify-content-between gap-4 mb-2">
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="fw-bold @(msg.SenderRole == "Instructor" ? "text-secondary" : "text-primary-light")">@msg.SenderName</span>
+                                @if (msg.SenderRole == "Instructor")
+                                {
+                                    <span class="badge bg-secondary-soft text-secondary small" style="font-size: 0.6rem;">EÄİTMEN</span>
+                                }
+                                <span class="badge bg-glass border-glass small opacity-75" style="font-size: 0.6rem;">@msg.Course?.CourseName</span>
+                            </div>
+                            <span class="small text-muted-premium" style="font-size: 0.75rem;">@msg.SentAt.ToString("dd.MM HH:mm")</span>
+                        </div>
+                        
+                        <div class="chat-content text-white">
+                            @msg.Message
+                        </div>
+                    </div>
+                </div>
+            }
+            
+            @if (!Model.Any())
+            {
+                <div class="text-center py-5">
+                    <i class="bi bi-chat-left-dots display-1 opacity-10 text-secondary"></i>
+                    <h4 class="mt-4 opacity-50 fw-bold">Bu kurs için henüz mesaj kaydı bulunamadı.</h4>
+                    <p class="text-muted-premium">Lütfen başka bir kurs seçin veya filtreleri temizleyin.</p>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<style>
+    .chat-bubble {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        background: rgba(255, 255, 255, 0.03) !important;
+    }
+    .chat-bubble:hover {
+        transform: scale(1.01) translateX(10px);
+        background: rgba(255, 255, 255, 0.07) !important;
+        box-shadow: -15px 10px 40px rgba(0,0,0,0.4) !important;
+    }
+    .text-gradient-primary {
+        background: linear-gradient(135deg, #C5A059, #581C1C);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+</style>
+
+

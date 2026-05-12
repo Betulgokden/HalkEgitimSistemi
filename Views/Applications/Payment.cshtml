@@ -1,0 +1,79 @@
+@model HalkEgitimSistemi.Models.Application
+
+@{
+    ViewData["Title"] = "Ödeme İşlemi";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="glass-card-static animate-fadeInUp">
+                <div style="padding: 2rem; border-bottom: 1px solid var(--border-glass); background: var(--gradient-card); text-align: center;">
+                    <div class="icon-box mx-auto mb-3" style="background: var(--gradient-warm); color: white; width: 60px; height: 60px; border-radius: 15px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
+                        <i class="bi bi-credit-card-fill"></i>
+                    </div>
+                    <h3 style="font-family: 'Outfit', sans-serif; font-weight: 800; margin: 0;">Güvenli Ödeme</h3>
+                    <p class="text-muted small mb-0">@Model.Course?.CourseName Kursu İçin</p>
+                </div>
+
+                <div style="padding: 2rem;">
+                    <div class="alert alert-info border-0 mb-4" style="background: rgba(99,102,241,0.1); color: var(--primary-light);">
+                        <i class="bi bi-info-circle-fill me-2"></i>
+                        Başvurunuz onaylanmıştır. Eğitime katılmak için ödemenizi tamamlamanız gerekmektedir.
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center mb-4 p-3 rounded-3" style="background: rgba(255,255,255,0.03);">
+                        <span class="text-muted">Kurs Ücreti:</span>
+                        <span class="fs-4 fw-bold text-white">@(Model.Course?.Price.ToString("N2") ?? "750,00") ₺</span>
+                    </div>
+
+                    <form asp-action="ProcessPayment" method="post">
+                        <input type="hidden" name="id" value="@Model.Id" />
+                        
+                        <div class="form-premium-group">
+                            <label class="form-premium-label"><i class="bi bi-person me-1"></i>Kart Üzerindeki İsim</label>
+                            <input type="text" name="cardName" class="form-premium-control" placeholder="AD SOYAD" required />
+                        </div>
+
+                        <div class="form-premium-group">
+                            <label class="form-premium-label"><i class="bi bi-credit-card me-1"></i>Kart Numarası</label>
+                            <input type="text" name="cardNumber" class="form-premium-control" placeholder="0000 0000 0000 0000" required />
+                        </div>
+
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="form-premium-group">
+                                    <label class="form-premium-label"><i class="bi bi-calendar3 me-1"></i>Son Kullanma</label>
+                                    <input type="text" name="expiry" class="form-premium-control" placeholder="AA/YY" required />
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-premium-group">
+                                    <label class="form-premium-label"><i class="bi bi-shield-lock me-1"></i>CVV</label>
+                                    <input type="password" name="cvv" class="form-premium-control" placeholder="***" maxlength="3" required />
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-premium w-100 mt-4 py-3" style="background: var(--gradient-warm); color: white; border: none; font-weight: 800;">
+                            <i class="bi bi-check-circle-fill me-2"></i> Ödemeyi Tamamla
+                        </button>
+                    </form>
+
+                    <div class="text-center mt-4">
+                        <p class="text-muted extra-small">
+                            <i class="bi bi-lock-fill me-1"></i> 
+                            Ödemeniz 256-bit SSL sertifikası ile korunmaktadır.
+                        </p>
+                        <div class="d-flex justify-content-center gap-3 opacity-50">
+                            <i class="bi bi-credit-card fs-4"></i>
+                            <i class="bi bi-credit-card-2-back fs-4"></i>
+                            <i class="bi bi-credit-card-2-front fs-4"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

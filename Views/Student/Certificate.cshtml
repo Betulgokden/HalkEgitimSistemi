@@ -1,0 +1,239 @@
+﻿@model HalkEgitimSistemi.Models.Application
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Sertifika - @Model.FirstName @Model.LastName</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Outfit:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: 'Outfit', sans-serif;
+        }
+        .certificate-container {
+            width: 1000px;
+            height: 700px;
+            background: white;
+            position: relative;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+            border: 20px solid #1e293b;
+            padding: 40px;
+            box-sizing: border-box;
+            background-image: 
+                radial-gradient(circle at 100% 100%, rgba(37, 99, 235, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 0% 0%, rgba(88, 28, 28, 0.05) 0%, transparent 50%);
+        }
+        .certificate-border-inner {
+            border: 2px solid #e2e8f0;
+            height: 100%;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px;
+            box-sizing: border-box;
+            position: relative;
+        }
+        .logo {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #1e293b;
+            margin-bottom: 20px;
+        }
+        .cert-header {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: #1e293b;
+            margin-bottom: 10px;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+        .cert-sub {
+            font-size: 1.2rem;
+            color: #64748b;
+            margin-bottom: 40px;
+        }
+        .presented-to {
+            font-size: 1.1rem;
+            color: #94a3b8;
+            margin-bottom: 10px;
+        }
+        .student-name {
+            font-family: 'Dancing Script', cursive;
+            font-size: 4.5rem;
+            color: #2563eb;
+            margin-bottom: 20px;
+        }
+        .cert-description {
+            font-size: 1.1rem;
+            color: #475569;
+            text-align: center;
+            max-width: 600px;
+            line-height: 1.6;
+            margin-bottom: 50px;
+        }
+        .course-name {
+            font-weight: 700;
+            color: #1e293b;
+        }
+        .footer-info {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            margin-top: auto;
+        }
+        .signature-box {
+            border-top: 1px solid #cbd5e1;
+            padding-top: 10px;
+            width: 200px;
+            text-align: center;
+        }
+        .signature-name {
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+        .signature-title {
+            font-size: 0.8rem;
+            color: #64748b;
+        }
+        .cert-code {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            font-size: 0.75rem;
+            color: #94a3b8;
+            font-family: monospace;
+        }
+        .stamp {
+            position: absolute;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0.15;
+            width: 150px;
+        }
+        .action-bar {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            background: #1e293b;
+            color: white;
+            padding: 15px 40px;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 20px;
+            z-index: 1000;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        }
+        .action-text {
+            margin-right: auto;
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: #38bdf8;
+        }
+        .linkedin-btn {
+            background: #0077b5;
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+        }
+        .linkedin-btn:hover {
+            background: #005a8a;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,119,181,0.4);
+        }
+        .print-btn {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.2);
+            padding: 10px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .print-btn:hover {
+            background: rgba(255,255,255,0.2);
+        }
+        @@media print {
+            .no-print { display: none !important; }
+            body { background: white; padding-top: 0; }
+            .certificate-container { box-shadow: none; border: 15px solid #1e293b; }
+        }
+        body { padding-top: 80px; }
+    </style>
+    <script>
+        function shareOnLinkedIn() {
+            const url = encodeURIComponent(window.location.href);
+            window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${url}`, '_blank');
+        }
+    </script>
+</head>
+<body>
+    <div class="action-bar no-print">
+        <span class="action-text">Başarını Sır Gibi Saklama. Sektöre Kanıtla.</span>
+        <button class="linkedin-btn" onclick="shareOnLinkedIn()">
+            <img src="https://cdn-icons-png.flaticon.com/512/174/174857.png" width="20" alt="LinkedIn"> LinkedIn'de Paylaş
+        </button>
+        <button class="print-btn" onclick="window.print()">YAZDIR / PDF KAYDET</button>
+    </div>
+
+    <div class="certificate-container">
+        <div class="certificate-border-inner">
+            <div class="logo">HALK EÄİTİM MERKEZİ</div>
+            <div class="cert-header">BAÅARI SERTİFİKASI</div>
+            <div class="cert-sub">Eğitim Programı Tamamlama Belgesi</div>
+
+            <div class="presented-to" style="margin-top: 30px;">Bu belge aşağıdaki kişiye takdim edilmiştir:</div>
+            <div class="student-name">@Model.FirstName @Model.LastName</div>
+
+            <div class="cert-description">
+                Sayın @Model.FirstName @Model.LastName, kurumumuz bünyesinde düzenlenen 
+                <span class="course-name">@Model.Course?.CourseName</span> eğitimini 
+                başarıyla tamamlayarak bu sertifikayı almaya hak kazanmıştır.
+            </div>
+
+            <div class="footer-info">
+                <div class="signature-box">
+                    <div class="signature-name">Sistem Yöneticisi</div>
+                    <div class="signature-title">HEM Kurum Müdürü</div>
+                </div>
+                <div style="text-align: center;">
+                    <div style="font-weight: 700;">@DateTime.Now.ToLongDateString()</div>
+                    <div style="font-size: 0.8rem; color: #64748b;">Belge Tarihi</div>
+                </div>
+                <div class="signature-box">
+                    <div class="signature-name">@Model.Course?.CourseName Eğitmeni</div>
+                    <div class="signature-title">Uzman Öğretici</div>
+                </div>
+            </div>
+
+            <div class="cert-code">DOÄRULAMA KODU: @(Model.CertificateCode ?? "GEÇERSİZ")</div>
+            
+            <svg class="stamp" viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="45" fill="none" stroke="#1e293b" stroke-width="2" />
+                <text x="50" y="45" text-anchor="middle" font-size="10" fill="#1e293b" font-weight="bold">ONAYLANDI</text>
+                <text x="50" y="60" text-anchor="middle" font-size="8" fill="#1e293b">HALK EÄİTİM</text>
+            </svg>
+        </div>
+    </div>
+</body>
+</html>
+
+

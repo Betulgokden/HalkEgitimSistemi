@@ -1,0 +1,147 @@
+﻿@model IEnumerable<HalkEgitimSistemi.Models.RecycleBinItem>
+@{
+    ViewData["Title"] = "Çöp Kutusu";
+    var isAdmin = User.IsInRole("Admin");
+}
+
+<div class="container py-5">
+    <!-- Header -->
+    <div class="page-header animate-fadeInDown">
+        <div class="page-header-content">
+            <div class="d-flex align-items-center">
+                <div class="page-header-icon" style="background: linear-gradient(135deg, #4b5563 0%, #1f2937 100%);">
+                    <i class="bi bi-trash3-fill"></i>
+                </div>
+                <div>
+                    <h1 class="page-header-title">Çöp Kutusu</h1>
+                    <p class="page-header-subtitle">Silinen kayıtları geri yükleyebilir veya kalıcı olarak temizleyebilirsiniz.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert animate-fadeIn mb-4" style="background: rgba(16,185,129,0.1); color: var(--success); border: 1px solid rgba(16,185,129,0.2); border-radius: var(--radius-md); padding: 1rem 1.5rem;">
+            <i class="bi bi-check-circle-fill me-2"></i> @TempData["Success"]
+        </div>
+    }
+
+    <div class="glass-card-static p-0 overflow-hidden animate-fadeInUp">
+        @if (!Model.Any())
+        {
+            <div class="p-5 text-center">
+                <div style="width: 80px; height: 80px; margin: 0 auto 1.5rem; background: rgba(107,114,128,0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                    <i class="bi bi-trash" style="font-size: 2.5rem; color: var(--text-muted);"></i>
+                </div>
+                <h3 style="color: var(--text-primary); font-family: 'Outfit'; font-weight: 800;">Çöp Kutusu Boş</h3>
+                <p style="color: var(--text-muted);">Burada görüntülenecek silinmiş bir kayıt bulunamadı.</p>
+            </div>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table class="table table-premium mb-0">
+                    <thead>
+                        <tr>
+                            <th>Tür</th>
+                            <th>Başlık / İsim</th>
+                            <th>Ayrıntı</th>
+                            <th>Silinme Tarihi</th>
+                            <th>Silen</th>
+                            <th class="text-end">İşlemler</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @switch (item.Type)
+                                    {
+                                        case "Course":
+                                            <span class="badge bg-primary text-white"><i class="bi bi-journal-bookmark me-1"></i> Kurs</span>
+                                            break;
+                                        case "Instructor":
+                                            <span class="badge bg-info text-white"><i class="bi bi-person-badge me-1"></i> Eğitmen</span>
+                                            break;
+                                        case "News":
+                                            <span class="badge bg-success text-white"><i class="bi bi-newspaper me-1"></i> Haber</span>
+                                            break;
+                                        case "Application":
+                                            <span class="badge bg-warning text-dark"><i class="bi bi-person-plus me-1"></i> Başvuru</span>
+                                            break;
+                                        case "Category":
+                                            <span class="badge bg-secondary text-white"><i class="bi bi-tags me-1"></i> Kategori</span>
+                                            break;
+                                        case "Gallery":
+                                            <span class="badge bg-dark text-white"><i class="bi bi-images me-1"></i> Galeri</span>
+                                            break;
+                                    }
+                                </td>
+                                <td style="font-weight: 700; color: var(--text-primary);">@item.Title</td>
+                                <td style="color: var(--text-muted); font-size: 0.85rem;">@item.Details</td>
+                                <td style="color: var(--text-secondary);">@item.DeletedAt?.ToString("dd.MM.yyyy HH:mm")</td>
+                                <td>
+                                    <span class="badge-premium badge-secondary" style="font-size: 0.75rem;">@item.DeletedBy</span>
+                                </td>
+                                <td class="text-end">
+                                    <div class="d-flex justify-content-end gap-2">
+                                        <form asp-action="Restore" method="post">
+                                            <input type="hidden" name="id" value="@item.Id" />
+                                            <input type="hidden" name="type" value="@item.Type" />
+                                            <button type="submit" class="btn btn-sm btn-premium btn-success-glow" title="Geri Yükle">
+                                                <i class="bi bi-arrow-counterclockwise"></i>
+                                            </button>
+                                        </form>
+                                        <button type="button" class="btn btn-sm btn-premium btn-danger-glow" 
+                                                title="Kalıcı Sil"
+                                                onclick="confirmPermanentDelete(@item.Id, '@item.Type', '@item.Title')">
+                                            <i class="bi bi-x-circle"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>
+
+<!-- Permanent Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="background: var(--bg-dark); border: 1px solid var(--border-glass); border-radius: var(--radius-lg);">
+            <div class="modal-header border-bottom-0 p-4 pb-0">
+                <h5 class="modal-title" style="font-family: 'Outfit'; font-weight: 800; color: var(--text-primary);">Kalıcı Olarak Silinsin Mi?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                <p style="color: var(--text-muted);">
+                    <strong id="deleteItemTitle" style="color: var(--danger);"></strong> kaydını kalıcı olarak silmek istediğinize emin misiniz? Bu işlem geri alınamaz.
+                </p>
+            </div>
+            <div class="modal-footer border-top-0 p-4 pt-0">
+                <form id="permanentDeleteForm" asp-action="PermanentDelete" method="post" class="w-100 d-flex gap-2">
+                    <input type="hidden" name="id" id="deleteId" />
+                    <input type="hidden" name="type" id="deleteType" />
+                    <button type="button" class="btn btn-premium btn-secondary-glass flex-grow-1" data-bs-dismiss="modal">Vazgeç</button>
+                    <button type="submit" class="btn btn-premium btn-danger-glow flex-grow-1">Kalıcı Olarak Sil</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function confirmPermanentDelete(id, type, title) {
+            document.getElementById('deleteId').value = id;
+            document.getElementById('deleteType').value = type;
+            document.getElementById('deleteItemTitle').textContent = title;
+            new bootstrap.Modal(document.getElementById('deleteModal')).show();
+        }
+    </script>
+}

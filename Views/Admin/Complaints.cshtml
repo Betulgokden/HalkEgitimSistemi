@@ -1,0 +1,192 @@
+﻿@model List<HalkEgitimSistemi.Models.Complaint>
+@{
+    ViewData["Title"] = "Åikayetler";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid py-4">
+    <div class="d-flex align-items-center justify-content-between mb-4">
+        <div>
+            <h1 class="h3 mb-1 fw-bold">
+                <i class="bi bi-shield-exclamation text-danger me-2"></i>Åikayet Yönetimi
+            </h1>
+            <p class="text-muted mb-0">Yalnızca yönetici görebilir.</p>
+        </div>
+        <span class="badge bg-danger fs-6 px-3 py-2">@ViewBag.PendingCount Bekliyor</span>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show">@TempData["Success"]<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>
+    }
+
+    <!-- Filtreler -->
+    <div class="d-flex gap-2 mb-4 flex-wrap">
+        <a href="/Admin/Complaints" class="btn btn-sm @(ViewBag.StatusFilter == null ? "btn-dark" : "btn-outline-secondary")">Tümü</a>
+        <a href="/Admin/Complaints?status=Pending" class="btn btn-sm btn-outline-danger">â³ Bekliyor</a>
+        <a href="/Admin/Complaints?status=Reviewing" class="btn btn-sm btn-outline-warning">ğŸ” İnceleniyor</a>
+        <a href="/Admin/Complaints?status=Resolved" class="btn btn-sm btn-outline-success">✅ Çözüldü</a>
+        <a href="/Admin/Complaints?status=Dismissed" class="btn btn-sm btn-outline-secondary">ğŸš« Reddedildi</a>
+    </div>
+
+    <div class="glass-card-static border-0 shadow-lg animate-fadeInUp">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0 text-primary-theme">
+                    <thead>
+                        <tr class="border-bottom border-white-10">
+                            <th class="py-3 px-4">#</th>
+                            <th class="py-3">Åikayetçi</th>
+                            <th class="py-3">Konu</th>
+                            <th class="py-3">Kategori</th>
+                            <th class="py-3">Tarih</th>
+                            <th class="py-3">Durum</th>
+                            <th class="py-3 px-4">İşlem</th>
+                        </tr>
+                    </thead>
+                    <tbody class="border-0">
+                        @foreach (var c in Model)
+                        {
+                            <tr class="border-bottom border-white-5 transition-all hover-bg-glass">
+                                <td class="px-4 text-muted-premium small">@c.Id</td>
+                                <td>
+                                    <div class="fw-bold">@c.ReporterName</div>
+                                    <div class="text-muted-premium small">@c.ReporterEmail</div>
+                                    @if (!string.IsNullOrEmpty(c.ReportedPersonName))
+                                    {
+                                        <div class="text-danger-light small fw-semibold">â†’ @c.ReportedPersonName</div>
+                                    }
+                                </td>
+                                <td>
+                                    <div class="fw-semibold">@c.Subject</div>
+                                    <div class="text-muted-premium small" style="max-width:250px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">@c.Description</div>
+                                </td>
+                                <td>
+                                    @{
+                                        string catLabel = c.Category switch {
+                                            HalkEgitimSistemi.Models.ComplaintCategory.InappropriateContent => "Uygunsuz İçerik",
+                                            HalkEgitimSistemi.Models.ComplaintCategory.Harassment => "Hakaret / Küfür",
+                                            HalkEgitimSistemi.Models.ComplaintCategory.TechnicalIssue => "Teknik Sorun",
+                                            HalkEgitimSistemi.Models.ComplaintCategory.InstructorComplaint => "Eğitmen Åikayeti",
+                                            HalkEgitimSistemi.Models.ComplaintCategory.CourseContent => "Kurs İçeriği",
+                                            _ => "Diğer"
+                                        };
+                                    }
+                                    <span class="badge bg-glass border-glass text-secondary">@catLabel</span>
+                                </td>
+                                <td class="small text-muted-premium">@c.CreatedAt.ToString("dd.MM.yyyy HH:mm")</td>
+                                <td>
+                                    @switch (c.Status)
+                                    {
+                                        case HalkEgitimSistemi.Models.ComplaintStatus.Pending:
+                                            <span class="badge bg-danger-glow rounded-pill px-3">Bekliyor</span>
+                                            break;
+                                        case HalkEgitimSistemi.Models.ComplaintStatus.Reviewing:
+                                            <span class="badge bg-warning-glow rounded-pill px-3 text-dark">İnceleniyor</span>
+                                            break;
+                                        case HalkEgitimSistemi.Models.ComplaintStatus.Resolved:
+                                            <span class="badge bg-success-glow rounded-pill px-3">Çözüldü</span>
+                                            break;
+                                        default:
+                                            <span class="badge bg-glass border-glass rounded-pill px-3">Reddedildi</span>
+                                            break;
+                                    }
+                                </td>
+                                <td class="px-4">
+                                    <button class="btn btn-sm btn-premium-sm btn-primary-glow" data-bs-toggle="modal" data-bs-target="#modal-@c.Id">
+                                        <i class="bi bi-eye"></i> İncele
+                                    </button>
+                                </td>
+                            </tr>
+
+                            <!-- Detay Modal -->
+                            <div class="modal fade" id="modal-@c.Id" tabindex="-1">
+                                <div class="modal-dialog modal-lg">
+                                    <div class="modal-content bg-glass-strong border-glass shadow-2xl backdrop-blur-xl">
+                                        <div class="modal-header border-white-10">
+                                            <h5 class="modal-title fw-bold"><i class="bi bi-shield-exclamation text-danger me-2"></i>Åikayet İnceleme #@c.Id</h5>
+                                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="row g-4">
+                                                <div class="col-md-6">
+                                                    <label class="fw-bold text-primary-light small mb-1">ÅİKAYETÇİ</label>
+                                                    <p class="mb-0">@c.ReporterName <br><span class="text-muted-premium small">@c.ReporterEmail</span></p>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label class="fw-bold text-danger-light small mb-1">ÅİKAYET EDİLEN</label>
+                                                    <p class="mb-0 fw-bold">@(c.ReportedPersonName ?? "Belirtilmemiş")</p>
+                                                </div>
+                                                <div class="col-12">
+                                                    <label class="fw-bold text-primary-light small mb-1">KONU</label>
+                                                    <p class="fw-bold fs-5 mb-0">@c.Subject</p>
+                                                </div>
+                                                <div class="col-12">
+                                                    <label class="fw-bold text-primary-light small mb-1">ÅİKAYET DETAYI</label>
+                                                    <div class="p-3 rounded-3 bg-white-5 border border-white-10">
+                                                        <p class="mb-0" style="white-space:pre-wrap;">@c.Description</p>
+                                                    </div>
+                                                </div>
+                                                @if (!string.IsNullOrEmpty(c.AdminNote))
+                                                {
+                                                    <div class="col-12">
+                                                        <label class="fw-bold text-info small mb-1">ÖNCEKİ YÖNETİCİ NOTU</label>
+                                                        <p class="text-info bg-info-soft p-2 rounded small border border-info-20">@c.AdminNote</p>
+                                                    </div>
+                                                }
+                                            </div>
+                                            <hr class="my-4 border-white-10">
+                                            <form method="post" action="/Admin/ReviewComplaint">
+                                                @Html.AntiForgeryToken()
+                                                <input type="hidden" name="id" value="@c.Id" />
+                                                <div class="row g-3 bg-white-5 p-3 rounded-4 border border-white-5">
+                                                    <div class="col-md-4">
+                                                        <label class="form-label fw-bold small text-muted-premium">Durum Güncelle</label>
+                                                        <select name="status" class="form-select bg-glass border-glass text-primary-theme">
+                                                            <option value="Pending" selected="@(c.Status == HalkEgitimSistemi.Models.ComplaintStatus.Pending)">Bekliyor</option>
+                                                            <option value="Reviewing" selected="@(c.Status == HalkEgitimSistemi.Models.ComplaintStatus.Reviewing)">İnceleniyor</option>
+                                                            <option value="Resolved" selected="@(c.Status == HalkEgitimSistemi.Models.ComplaintStatus.Resolved)">Çözüldü</option>
+                                                            <option value="Dismissed" selected="@(c.Status == HalkEgitimSistemi.Models.ComplaintStatus.Dismissed)">Reddedildi</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-8">
+                                                        <label class="form-label fw-bold small text-muted-premium">Yönetici Yanıtı / Notu</label>
+                                                        <input type="text" name="adminNote" class="form-control bg-glass border-glass text-primary-theme" value="@c.AdminNote" placeholder="İnceleme sonucunu buraya yazın..." />
+                                                    </div>
+                                                    <div class="col-12 d-flex justify-content-end gap-2 mt-3">
+                                                        <button type="button" class="btn btn-ghost btn-sm" data-bs-dismiss="modal">İptal</button>
+                                                        <button type="submit" class="btn btn-primary-glow btn-sm px-4">Değişiklikleri Uygula</button>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        @if (!Model.Any())
+                        {
+                            <tr>
+                                <td colspan="7" class="text-center py-5 text-muted-premium">
+                                    <div class="mb-3">
+                                        <i class="bi bi-shield-check display-1 opacity-25 text-success"></i>
+                                    </div>
+                                    <h5 class="fw-bold opacity-50">Åu an incelenmesi gereken bir şikayet bulunmuyor.</h5>
+                                    <p class="small text-success">Harika! Her şey yolunda görünüyor. ğŸ‰</p>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+// Extension method workaround for Razor
+</script>
+}
+
+

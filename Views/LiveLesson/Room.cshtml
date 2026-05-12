@@ -1,0 +1,368 @@
+﻿@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Canlı Ders Odası";
+}
+
+<div class="live-lesson-wrapper">
+    <div class="container-fluid h-100 p-4">
+        <div class="row h-100 g-4">
+            <!-- Sol Panel: Öğrenciler -->
+            <div class="col-lg-2">
+                <div class="glass-card-static h-100 p-3 d-flex flex-column">
+                    <h6 class="fw-bold mb-3 border-bottom border-white-10 pb-2"><i class="bi bi-people me-2"></i>Katılımcılar</h6>
+                    <div id="student-list" class="flex-grow-1 overflow-auto">
+                        <!-- Katılımcılar SignalR ile buraya dolacak -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Orta Panel: Ana Ekran -->
+            <div class="col-lg-8">
+                <div class="main-stage glass-card-static h-100 overflow-hidden position-relative">
+                    <div id="jitsi-container" style="height: 100%; width: 100%; display: none;"></div>
+                    
+                    <!-- Beyaz Tahta (Canvas) -->
+                    <canvas id="whiteboard" class="position-absolute top-0 start-0 w-100 h-100" style="z-index: 5; display: none; background: white; cursor: crosshair;"></canvas>
+
+                    <!-- Başlangıç Ekranı -->
+                    <div id="start-screen" class="d-flex flex-column align-items-center justify-content-center h-100 text-center animate-fadeIn">
+                        <div class="broadcast-icon-glow mb-4">
+                            <i class="bi bi-broadcast" style="font-size: 5rem; color: var(--primary-light);"></i>
+                        </div>
+                        <h2 class="text-white mb-2 fw-900">SANAL SINIF</h2>
+                        
+                        @if (ViewBag.IsInstructor)
+                        {
+                            <p class="text-muted-premium mb-4 fs-5">Eğitim portalına hoş geldiniz. Dersi başlatmak için hazırsınız.</p>
+                            <button id="btnStartLesson" class="btn btn-premium btn-success-glow px-5 py-3 fs-5 rounded-pill pulse-animation">
+                                <i class="bi bi-play-circle-fill me-2"></i> Dersi Başlat
+                            </button>
+                        }
+                        else
+                        {
+                            <p class="text-muted-premium mb-4 fs-5">Öğretmeninizin dersi başlatmasını bekleyiniz.</p>
+                            <button id="btnStartLesson" class="btn btn-premium btn-primary-glow px-5 py-3 fs-5 rounded-pill">
+                                <i class="bi bi-box-arrow-in-right me-2"></i> Sınıfa Katıl
+                            </button>
+                        }
+                    </div>
+
+                    <!-- Floating Controls -->
+                    <div class="stage-controls p-3" id="jitsi-controls" style="display: none;">
+                        <button class="btn btn-lesson-action" id="btnMute" title="Sesi Aç/Kapat"><i class="bi bi-mic-fill"></i></button>
+                        <button class="btn btn-lesson-action" id="btnVideo" title="Görüntüyü Aç/Kapat"><i class="bi bi-camera-video-fill"></i></button>
+                        
+                        <button class="btn btn-lesson-action" id="btnRaiseHand" title="El Kaldır"><i class="bi bi-hand-index-thumb"></i></button>
+                        
+                        @if (ViewBag.IsInstructor)
+                        {
+                            <button class="btn btn-lesson-action btn-share-special" id="btnShare" title="Ekran Paylaş"><i class="bi bi-display"></i></button>
+                            <button class="btn btn-lesson-action btn-warning-glow" id="btnWhiteboard" title="Beyaz Tahta"><i class="bi bi-brush"></i></button>
+                            <button class="btn btn-lesson-action btn-info-glow" id="btnAttendance" title="Yoklama Al"><i class="bi bi-clipboard-check"></i></button>
+                        }
+                        
+                        <button class="btn btn-danger-glow rounded-pill px-4 ms-3" id="btnEnd"><i class="bi bi-telephone-x-fill me-2"></i>Ayrıl</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sağ Panel: Eğitmen Paneli -->
+            <div class="col-lg-2">
+                <div class="glass-card-static h-100 p-3 d-flex flex-column">
+                    <h6 class="fw-bold mb-3 border-bottom border-white-10 pb-2"><i class="bi bi-mortarboard-fill me-2"></i>Eğitmen Paneli</h6>
+                    
+                    <div id="instructor-view" class="instructor-preview mb-3">
+                        <div class="ratio ratio-4x3 bg-dark rounded-4 overflow-hidden border border-primary shadow-glow-sm position-relative">
+                            <div id="local-video-container" class="d-flex align-items-center justify-content-center h-100">
+                                <video id="selfView" autoplay muted playsinline class="w-100 h-100 object-fit-cover" style="display:none;"></video>
+                                <i class="bi bi-person-video3 text-white-10" id="video-placeholder-icon" style="font-size: 3rem;"></i>
+                                <div class="spinner-border text-primary position-absolute" role="status" id="video-loader" style="display:none;"></div>
+                            </div>
+                        </div>
+                        <p class="mt-2 fw-bold text-center small text-primary-light">@ViewBag.DisplayName</p>
+                    </div>
+                    
+                    <div class="chat-mini flex-grow-1 glass-card-static p-3 mt-auto" style="height: 450px; background: rgba(0,0,0,0.3);">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <small class="fw-bold text-uppercase" style="letter-spacing: 1px;">Ders Sohbeti</small>
+                            <span class="badge bg-success rounded-pill x-small pulse-opacity">Canlı</span>
+                        </div>
+                        <div id="lessonChatHistory" class="chat-history small h-75 overflow-auto p-1 mt-1 mb-2">
+                            <div class="mb-2"><span class="text-primary-light fw-bold">Sistem:</span> Hoş geldiniz!</div>
+                        </div>
+                        <div class="input-group input-group-sm chat-input-group mt-auto">
+                            <input type="text" id="lessonChatInput" class="form-control glass-input chat-input" placeholder="Yazın...">
+                            <button id="btnSendChat" class="btn btn-primary-glow" type="button"><i class="bi bi-send-fill"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .live-lesson-wrapper { height: calc(100vh - 100px); background: radial-gradient(circle at 50% 50%, #1e1e3f 0%, #0f0f23 100%); overflow: hidden; }
+    .main-stage { background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.05); box-shadow: inset 0 0 50px rgba(0,0,0,0.5); }
+    .btn-share-special { background: var(--gradient-purple) !important; border: none !important; box-shadow: 0 0 15px rgba(197, 160, 89, 0.4); }
+    .stage-controls { position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 15px; z-index: 100; background: rgba(15, 15, 35, 0.8); backdrop-filter: blur(15px); padding: 12px 25px !important; border-radius: 100px; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
+    .btn-lesson-action { width: 44px; height: 44px; border-radius: 50%; background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; font-size: 1.1rem; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+    .btn-lesson-action:hover { background: var(--primary); color: #fff; transform: translateY(-3px) scale(1.1); box-shadow: 0 5px 15px var(--primary-glow); }
+    .btn-lesson-action.active { background: #ff4757; color: white; border-color: #ff4757; }
+    .avatar-sm { width: 32px; height: 32px; border-radius: 50%; background: var(--primary-light); color: #000; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.75rem; }
+    .broadcast-icon-glow { filter: drop-shadow(0 0 20px var(--primary-glow)); animation: glowPulse 2s infinite alternate; }
+    
+    /* Yeni CSS Dokunuşları */
+    .chat-input {
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        background-color: rgba(255, 255, 255, 0.05) !important;
+        color: white !important;
+    }
+    
+    @@keyframes pulse-green {
+        0% { box-shadow: 0 0 0 0 rgba(46, 213, 115, 0.7); }
+        70% { box-shadow: 0 0 0 10px rgba(46, 213, 115, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(46, 213, 115, 0); }
+    }
+    .speaking-active { border-radius: 50%; animation: pulse-green 1.5s infinite; }
+    
+    .hand-raised { background: #f1c40f !important; color: #000 !important; animation: bounce 0.5s infinite alternate; }
+    @@keyframes bounce { from { transform: translateY(0); } to { transform: translateY(-5px); } }
+
+    @@keyframes glowPulse { from { filter: drop-shadow(0 0 10px var(--primary-glow)); } to { filter: drop-shadow(0 0 30px var(--primary-glow)); } }
+    @@keyframes pulse-opacity { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+    .pulse-opacity { animation: pulse-opacity 2s infinite; }
+    .chat-history::-webkit-scrollbar { width: 4px; }
+    .chat-history::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
+    .object-fit-cover { object-fit: cover; }
+
+    /* GLITCH EFFECT & SHAKE */
+    @@keyframes glitch-shake {
+        0% { transform: translate(0,0) rotate(0deg); }
+        20% { transform: translate(-5px, 2px) rotate(-1deg); filter: hue-rotate(90deg); }
+        40% { transform: translate(5px, -2px) rotate(1deg); filter: contrast(150%); }
+        60% { transform: translate(-3px, 1px) rotate(0deg); }
+        80% { transform: translate(3px, -1px) rotate(1deg); }
+        100% { transform: translate(0,0) rotate(0deg); }
+    }
+    .glitch-active { animation: glitch-shake 0.3s cubic-bezier(.36,.07,.19,.97) both; border: 2px solid var(--danger) !important; box-shadow: 0 0 20px var(--danger) !important; }
+    
+    .system-bot-msg { 
+        background: linear-gradient(90deg, rgba(239,68,68,0.1), transparent); 
+        border-left: 3px solid var(--danger); 
+        padding: 5px 10px; 
+        margin: 5px 0; 
+        font-weight: 800; 
+        color: #ff4757; 
+        animation: slideInLeft 0.5s ease;
+    }
+    @@keyframes slideInLeft { from { opacity: 0; transform: translateX(-20px); } to { opacity: 1; transform: translateX(0); } }
+</style>
+
+<script src="https://meet.jit.si/external_api.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.1/signalr.min.js"></script>
+
+<script>
+    const roomId = "@ViewBag.RoomId";
+    const displayName = "@ViewBag.DisplayName";
+    const isInstructor = "@ViewBag.IsInstructor" === "True";
+    
+    // --- SignalR Connection ---
+    const connection = new signalR.HubConnectionBuilder()
+        .withUrl("/liveLessonHub")
+        .build();
+
+    // 1. El Kaldırma Dinleyici
+    connection.on("ReceiveHandRaise", (user) => {
+        const history = document.getElementById('lessonChatHistory');
+        history.innerHTML += `<div class="mb-1"><i class="bi bi-hand-index-thumb-fill text-warning"></i> <span class="text-warning fw-bold">${user}</span> el kaldırdı!</div>`;
+        history.scrollTop = history.scrollHeight;
+        
+        // Katılımcı listesinde el ikonunu göster
+        const p = Array.from(document.querySelectorAll('.participant-mini')).find(el => el.innerText.includes(user));
+        if(p) {
+            let hand = p.querySelector('.hand-icon');
+            if(!hand) {
+                hand = document.createElement('i');
+                hand.className = 'bi bi-hand-index-thumb-fill text-warning hand-icon ms-2';
+                p.appendChild(hand);
+                setTimeout(() => hand.remove(), 5000);
+            }
+        }
+    });
+
+    // 2. Beyaz Tahta Dinleyici
+    connection.on("ReceiveDraw", (data) => {
+        drawOnCanvas(data);
+    });
+    
+    connection.on("ClearBoard", () => {
+        const canvas = document.getElementById('whiteboard');
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    });
+
+    // 3. Sohbet Dinleyici
+    connection.on("ReceiveMessage", (user, msg, time, isCensored) => {
+        const history = document.getElementById('lessonChatHistory');
+        const color = user === displayName ? 'text-primary-light' : 'text-success';
+        
+        const censoredClass = isCensored ? 'text-danger fw-bold opacity-75' : '';
+        history.innerHTML += `<div class="mb-1 ${isCensored ? 'border-start border-danger ps-2' : ''}"><small class="text-muted">${time}</small> <span class="${color} fw-bold">${user}:</span> <span class="${censoredClass}">${msg}</span></div>`;
+        history.scrollTop = history.scrollHeight;
+    });
+
+    // 4. Sistem Uyarı Dinleyicisi
+    connection.on("ReceiveSystemWarning", (msg) => {
+        const history = document.getElementById('lessonChatHistory');
+        history.innerHTML += `<div class="system-bot-msg"><i class="bi bi-robot me-2"></i>${msg}</div>`;
+        history.scrollTop = history.scrollHeight;
+
+        // Glitch efekti tetikle
+        const chatBox = document.querySelector('.chat-mini');
+        chatBox.classList.add('glitch-active');
+        setTimeout(() => chatBox.classList.remove('glitch-active'), 500);
+    });
+
+    // Katılımcı Listesi Güncelleme
+    connection.on("UpdateUserList", (users) => {
+        const list = document.getElementById('student-list');
+        list.innerHTML = '';
+        users.forEach(u => {
+            const initials = u.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+            list.innerHTML += `
+                <div class="participant-mini mb-2 p-2 rounded bg-white-5 d-flex align-items-center gap-2">
+                    <div class="avatar-sm">${initials}</div>
+                    <span class="small">${u}</span>
+                </div>`;
+        });
+    });
+
+    connection.start().then(() => {
+        connection.invoke("JoinRoom", roomId, displayName);
+    });
+
+    // --- UI Logic ---
+    const btnStart = document.getElementById('btnStartLesson');
+    const startScreen = document.getElementById('start-screen');
+    const jitsiContainer = document.getElementById('jitsi-container');
+    const whiteboard = document.getElementById('whiteboard');
+    const jitsiControls = document.getElementById('jitsi-controls');
+    
+    // El Kaldır
+    document.getElementById('btnRaiseHand').onclick = function() {
+        connection.invoke("RaiseHand", roomId, displayName);
+        this.classList.add('hand-raised');
+        setTimeout(() => this.classList.remove('hand-raised'), 3000);
+    };
+
+    // Chat Gönder
+    const chatInput = document.getElementById('lessonChatInput');
+    const btnSendChat = document.getElementById('btnSendChat');
+    
+    function sendMsg() {
+        const msg = chatInput.value.trim();
+        if(msg) {
+            connection.invoke("SendMessage", roomId, displayName, msg);
+            chatInput.value = '';
+        }
+    }
+    btnSendChat.onclick = sendMsg;
+    chatInput.onkeypress = (e) => { if(e.key === 'Enter') sendMsg(); };
+
+    // --- Whiteboard Logic ---
+    let drawing = false;
+    let ctx = whiteboard.getContext('2d');
+    
+    function resizeCanvas() {
+        whiteboard.width = whiteboard.offsetWidth;
+        whiteboard.height = whiteboard.offsetHeight;
+    }
+    
+    if(isInstructor) {
+        document.getElementById('btnWhiteboard').onclick = function() {
+            const active = whiteboard.style.display === 'block';
+            whiteboard.style.display = active ? 'none' : 'block';
+            this.classList.toggle('active');
+            if(!active) resizeCanvas();
+        };
+
+        whiteboard.onmousedown = (e) => { drawing = true; draw(e, 'start'); };
+        whiteboard.onmousemove = (e) => { if(drawing) draw(e, 'move'); };
+        whiteboard.onmouseup = () => { drawing = false; };
+        
+        function draw(e, type) {
+            const rect = whiteboard.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            const data = { x, y, type, color: 'black', width: 2 };
+            drawOnCanvas(data);
+            connection.invoke("Draw", roomId, data);
+        }
+        
+        // Yoklama Al
+        document.getElementById('btnAttendance').onclick = () => {
+            fetch('/LiveLesson/TakeAttendance?roomId=' + roomId, { method: 'POST' })
+                .then(r => r.json())
+                .then(d => alert(d.message));
+        };
+    }
+
+    function drawOnCanvas(data) {
+        ctx.lineWidth = data.width;
+        ctx.lineCap = 'round';
+        ctx.strokeStyle = data.color;
+        
+        if(data.type === 'start') {
+            ctx.beginPath();
+            ctx.moveTo(data.x, data.y);
+        } else if(data.type === 'move') {
+            ctx.lineTo(data.x, data.y);
+            ctx.stroke();
+        }
+    }
+
+    // --- Jitsi Logic ---
+    let jitsiApi = null;
+
+    document.getElementById('btnEnd').onclick = () => {
+        const confirmMsg = isInstructor ? "Dersi sonlandırıp paneline dönmek istediğine emin misin?" : "Dersten ayrılmak istediğine emin misin?";
+        if(confirm(confirmMsg)) {
+            if (jitsiApi) jitsiApi.executeCommand('hangup');
+            
+            if (isInstructor) {
+                // Turn off live status in DB for instructor
+                fetch('/Teacher/ToggleLive?start=false', { method: 'POST' })
+                    .then(() => {
+                        window.location.href = '/Teacher/Dashboard';
+                    });
+            } else {
+                window.location.href = '/Student/Dashboard';
+            }
+        }
+    };
+
+    btnStart.addEventListener('click', () => {
+        startScreen.style.display = 'none';
+        jitsiContainer.style.display = 'block';
+        jitsiControls.style.display = 'flex';
+        
+        const options = {
+            roomName: 'HalkEgitim_Room_' + roomId.replace(/[^a-zA-Z0-9]/g, ''),
+            width: '100%', height: '100%',
+            parentNode: jitsiContainer,
+            userInfo: { displayName: displayName },
+            configOverwrite: { prejoinPageEnabled: false },
+            interfaceConfigOverwrite: { SHOW_JITSI_WATERMARK: false }
+        };
+
+        jitsiApi = new JitsiMeetExternalAPI('meet.jit.si', options);
+        
+        document.getElementById('btnMute').onclick = () => jitsiApi.executeCommand('toggleAudio');
+        document.getElementById('btnVideo').onclick = () => jitsiApi.executeCommand('toggleVideo');
+        if(isInstructor) document.getElementById('btnShare').onclick = () => jitsiApi.executeCommand('toggleShareScreen');
+    });
+</script>
+
+

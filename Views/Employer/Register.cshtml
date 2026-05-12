@@ -1,0 +1,161 @@
+@model HalkEgitimSistemi.Models.Employer
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "İşveren Kaydı";
+}
+
+<div class="container py-5 mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="glass-card p-5 animate-scaleIn shadow-2xl" style="border-radius: 30px; background: rgba(15, 23, 42, 0.95) !important; border: 1px solid rgba(255,255,255,0.05) !important;">
+                <div class="text-center mb-5">
+                    <div class="icon-box-lg bg-institutional mx-auto mb-3 shadow-lg">
+                        <i class="bi bi-shield-lock-fill text-white fs-1"></i>
+                    </div>
+                    <h2 class="text-white fw-bold hero-main-title tracking-tight">BORÇKA <span class="text-neutral-400">YETENEK HAVUZU</span></h2>
+                    <p class="text-white-50 small uppercase letter-spacing-1">Kurumsal Doğrulama ve İşveren Kayıt Portalı</p>
+                </div>
+
+                <form asp-action="Register" method="post" enctype="multipart/form-data" class="needs-validation">
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <label class="modern-label text-white-50 mb-2"><i class="bi bi-building me-2"></i> Şirket Adı</label>
+                            <input asp-for="CompanyName" class="cyber-input" placeholder="Örn: Borçka Tekstil A.Ş." required />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="modern-label text-white-50 mb-2"><i class="bi bi-hash me-2"></i> Vergi No</label>
+                            <input asp-for="TaxNumber" class="cyber-input" placeholder="10 Haneli Vergi No" required />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="modern-label text-white-50 mb-2"><i class="bi bi-person-badge me-2"></i> Yetkili Kişi</label>
+                            <input asp-for="AuthorizedPerson" class="cyber-input" placeholder="Ad Soyad" required />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="modern-label text-white-50 mb-2"><i class="bi bi-cpu me-2"></i> Sektör</label>
+                            <select asp-for="Sector" class="cyber-input">
+                                <option value="Turizm">Turizm / Otelcilik</option>
+                                <option value="Tekstil">Tekstil / Moda</option>
+                                <option value="Mobilya">Mobilya / Tasarım</option>
+                                <option value="Bilişim">Bilişim / Teknoloji</option>
+                                <option value="Gıda">Gıda / Restoran</option>
+                                <option value="Diğer">Diğer</option>
+                            </select>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="modern-label text-white-50 mb-2"><i class="bi bi-envelope-at me-2"></i> Kurumsal E-Posta</label>
+                            <input asp-for="Email" type="email" class="cyber-input" placeholder="info@sirket.com" required />
+                        </div>
+                        <div class="col-md-12">
+                            <label class="modern-label text-white-50 mb-2"><i class="bi bi-key me-2"></i> Güvenli Şifre</label>
+                            <input asp-for="Password" type="password" class="cyber-input" placeholder="••••••••" required />
+                        </div>
+                        
+                        <!-- DOĞRULAMA MERKEZİ -->
+                        <div class="col-md-12">
+                            <div class="verification-vault p-4 rounded-4 text-center mt-3">
+                                <div class="vault-header mb-3">
+                                    <i class="bi bi-fingerprint text-info fs-1"></i>
+                                    <h6 class="text-white fw-bold mt-2">GÜVENLİ BELGE DOĞRULAMA</h6>
+                                </div>
+                                <p class="text-white-50 x-small mb-4 px-lg-5">Sistem güvenliği ve KVKK uyumluluğu için güncel <b>Vergi Levhası</b> belgenizi (.pdf veya .jpg) yüklemeniz zorunludur. Tüm veriler uçtan uca şifrelenir.</p>
+                                
+                                <div class="file-upload-wrapper">
+                                    <input type="file" name="taxPlate" id="taxPlate" class="d-none" accept=".pdf,.jpg,.jpeg,.png" required onchange="updateFileName(this)" />
+                                    <label for="taxPlate" class="btn btn-outline-info rounded-pill px-5 py-2 fw-bold">
+                                        <i class="bi bi-cloud-upload me-2"></i> BELGE SEÇİN
+                                    </label>
+                                    <div id="fileName" class="text-info small mt-2 fw-bold"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-5">
+                        <button type="submit" class="btn-cyber-submit w-100 py-3 fs-5 fw-bold">
+                            KAYIT OL VE DOĞRULAMAYI BAŞLAT <i class="bi bi-shield-check ms-2"></i>
+                        </button>
+                    </div>
+                </form>
+                
+                <div class="text-center mt-4">
+                    <p class="text-white-50 small">Zaten bir kurumsal hesabınız var mı? <a href="/Account/Login" class="text-info fw-bold text-decoration-none border-bottom border-info">Giriş Yapın</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .bg-institutional { background: #1e293b !important; }
+    
+    .cyber-input {
+        background: rgba(30, 41, 59, 0.5) !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        border-radius: 12px !important;
+        color: white !important;
+        padding: 12px 20px !important;
+        width: 100%;
+        transition: all 0.3s;
+    }
+    .cyber-input:focus {
+        background: rgba(30, 41, 59, 0.8) !important;
+        border-color: #0ea5e9 !important;
+        box-shadow: 0 0 15px rgba(14, 165, 233, 0.2) !important;
+        outline: none;
+    }
+    
+    .verification-vault {
+        background: rgba(15, 23, 42, 0.5);
+        border: 1px solid rgba(14, 165, 233, 0.2);
+        position: relative;
+        overflow: hidden;
+    }
+    .verification-vault::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, #0ea5e9, transparent);
+        animation: scan 3s linear infinite;
+    }
+    @@keyframes scan {
+        0% { left: -100%; }
+        100% { left: 100%; }
+    }
+    
+    .btn-cyber-submit {
+        background: #0ea5e9;
+        color: white;
+        border: none;
+        border-radius: 15px;
+        transition: all 0.3s;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    .btn-cyber-submit:hover {
+        background: #0284c7;
+        box-shadow: 0 0 30px rgba(14, 165, 233, 0.4);
+        transform: translateY(-2px);
+    }
+    
+    .icon-box-lg {
+        width: 80px;
+        height: 80px;
+        border-radius: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .letter-spacing-1 { letter-spacing: 2px; }
+</style>
+
+<script>
+    function updateFileName(input) {
+        const fileName = input.files[0] ? input.files[0].name : '';
+        document.getElementById('fileName').textContent = fileName ? 'Seçilen Belge: ' + fileName : '';
+    }
+</script>
+

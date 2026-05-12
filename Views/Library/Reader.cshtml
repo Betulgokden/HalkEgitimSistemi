@@ -1,0 +1,289 @@
+﻿@model HalkEgitimSistemi.Models.LibraryBook
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="tr" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@Model.Title - Okuma Modu | Halk Eğitim</title>
+    
+    <!-- Premium Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- PageFlip.js & PDF.js -->
+    <script src="https://cdn.jsdelivr.net/npm/page-flip@2.0.7/dist/js/page-flip.browser.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+
+    <style>
+        :root {
+            --primary: #f59e0b;
+            --bg-dark: #0f172a;
+            --glass: rgba(30, 41, 59, 0.7);
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-dark);
+            color: #fff;
+            margin: 0;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        .reader-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 20px 40px;
+            background: linear-gradient(to bottom, rgba(15, 23, 42, 0.9), transparent);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        .reader-controls {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+            background: var(--glass);
+            padding: 15px 30px;
+            border-radius: 50px;
+            border: 1px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(20px);
+            z-index: 100;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+        }
+
+        .flipbook-viewport {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding-top: 60px;
+        }
+
+        #flipbook-container {
+            box-shadow: 0 30px 100px rgba(0,0,0,0.8);
+        }
+
+        .page {
+            background-color: #f8fafc;
+            width: 450px;
+            height: 600px;
+            overflow: hidden;
+            box-shadow: inset 5px 0 15px rgba(0,0,0,0.1);
+        }
+
+        .page-content {
+            padding: 50px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            color: #1e293b;
+            position: relative;
+        }
+
+        .page-text {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            margin-top: 20px;
+            text-align: justify;
+        }
+
+        .page-number {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-weight: 800;
+            color: var(--primary);
+            opacity: 0.5;
+        }
+
+        .btn-control {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255,255,255,0.05);
+            color: #fff;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .btn-control:hover {
+            background: var(--primary);
+            color: #000;
+            transform: translateY(-5px);
+        }
+
+        .btn-control.active {
+            background: var(--primary);
+            color: #000;
+            animation: pulse 2s infinite;
+        }
+
+        @@keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(245, 158, 11, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
+        }
+
+        #loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-dark);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="loading-overlay">
+        <div class="spinner-border text-warning mb-4" style="width: 4rem; height: 4rem;"></div>
+        <h2 style="font-weight: 800; letter-spacing: 2px;">OKUMA MODU HAZIRLANIYOR</h2>
+    </div>
+
+    <header class="reader-header">
+        <div class="d-flex align-items-center">
+            <a href="/Library/Virtual" class="btn btn-outline-light rounded-pill me-4">
+                <i class="bi bi-arrow-left me-2"></i> Geri Dön
+            </a>
+            <h3 class="m-0" style="font-weight: 800;">@Model.Title</h3>
+        </div>
+        <div class="badge bg-warning text-dark px-3 py-2 rounded-pill fw-bold">AI SESLİ OKUMA AKTİF</div>
+    </header>
+
+    <div class="flipbook-viewport">
+        <div id="flipbook-container"></div>
+    </div>
+
+    <div class="reader-controls">
+        <button onclick="prevPage()" class="btn-control"><i class="bi bi-chevron-left"></i></button>
+        <button id="btn-play-pause" onclick="toggleSpeech()" class="btn-control mx-2"><i class="bi bi-play-fill" style="font-size: 1.5rem;"></i></button>
+        <button onclick="nextPage()" class="btn-control"><i class="bi bi-chevron-right"></i></button>
+        <div class="vr mx-3" style="opacity: 0.2;"></div>
+        <button onclick="toggleFullscreen()" class="btn-control"><i class="bi bi-arrows-fullscreen"></i></button>
+    </div>
+
+    <audio id="flipSound" src="https://www.soundjay.com/misc/sounds/page-flip-01a.mp3" preload="auto"></audio>
+
+    <script>
+        let pageFlip = null;
+        let synth = window.speechSynthesis;
+        let isSpeaking = false;
+        const bookId = @Model.Id;
+
+        window.onload = loadBook;
+
+        async function loadBook() {
+            const res = await fetch(`/Library/GetBookPages/${bookId}`);
+            const data = await res.json();
+            
+            if (data.pdfUrl) {
+                renderPdf(data.pdfUrl);
+            } else {
+                render(data);
+            }
+            document.getElementById('loading-overlay').style.display = 'none';
+        }
+
+        async function renderPdf(url) {
+            const container = document.getElementById('flipbook-container');
+            container.innerHTML = `<iframe src="${url}" style="width: 100%; height: 80vh; border: none; border-radius: 12px; background: white;"></iframe>`;
+            // Hide flip controls for PDF mode
+            document.querySelector('.reader-controls').style.display = 'none';
+        }
+
+        function render(pages) {
+            const container = document.getElementById('flipbook-container');
+            let html = `<div class="page page-cover" style="background: #1e293b; color: #f59e0b; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 40px;">
+                            <img src="@Model.CoverImageUrl" style="width: 100%; height: 100%; position: absolute; opacity: 0.3; object-fit: cover; z-index: 0;" />
+                            <h1 style="z-index: 1;">@Model.Title</h1>
+                            <p style="z-index: 1;">@Model.Author</p>
+                        </div>`;
+
+            pages.forEach((p, i) => {
+                html += `<div class="page" data-text="${(p.textContent || "").replace(/"/g, '&quot;')}">
+                            <div class="page-content">
+                                ${p.imageUrl ? `<img src="${p.imageUrl}" style="width: 100%; height: 200px; object-fit: cover; border-radius: 8px;" />` : ''}
+                                <div class="page-text">${p.textContent || "İçerik..."}</div>
+                                <div class="page-number">${i + 1}</div>
+                            </div>
+                        </div>`;
+            });
+
+            container.innerHTML = html;
+            pageFlip = new St.PageFlip(container, { width: 450, height: 600, size: "fixed", showCover: true });
+            pageFlip.loadFromHTML(document.querySelectorAll('.page'));
+
+            pageFlip.on('flip', (e) => {
+                document.getElementById('flipSound').play().catch(() => {});
+                if (isSpeaking) { synth.cancel(); startReading(); }
+            });
+        }
+
+        function toggleSpeech() {
+            if (isSpeaking) {
+                synth.cancel(); isSpeaking = false;
+                document.getElementById('btn-play-pause').innerHTML = '<i class="bi bi-play-fill" style="font-size: 1.5rem;"></i>';
+                document.getElementById('btn-play-pause').classList.remove('active');
+            } else { startReading(); }
+        }
+
+        function startReading() {
+            const idx = pageFlip.getCurrentPageIndex();
+            const pages = document.querySelectorAll('.page');
+            let text = (pages[idx]?.getAttribute('data-text') || "") + " " + (pages[idx+1]?.getAttribute('data-text') || "");
+
+            if (text.trim()) {
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'tr-TR';
+                utterance.onstart = () => {
+                    isSpeaking = true;
+                    document.getElementById('btn-play-pause').innerHTML = '<i class="bi bi-pause-fill" style="font-size: 1.5rem;"></i>';
+                    document.getElementById('btn-play-pause').classList.add('active');
+                };
+                utterance.onend = () => {
+                    if (isSpeaking && idx + 2 < pages.length) {
+                        setTimeout(() => pageFlip.flipNext(), 1000);
+                    } else {
+                        isSpeaking = false;
+                        document.getElementById('btn-play-pause').innerHTML = '<i class="bi bi-play-fill" style="font-size: 1.5rem;"></i>';
+                    }
+                };
+                synth.speak(utterance);
+            }
+        }
+
+        function nextPage() { pageFlip.flipNext(); }
+        function prevPage() { pageFlip.flipPrev(); }
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+            else document.exitFullscreen();
+        }
+    </script>
+</body>
+</html>
+

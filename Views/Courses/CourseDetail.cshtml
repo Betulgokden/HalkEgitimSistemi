@@ -1,0 +1,565 @@
+@model HalkEgitimSistemi.Models.Course
+
+@{
+    ViewData["Title"] = Model.CourseName;
+    int remainingQuota = ViewBag.RemainingQuota;
+    bool isFull = remainingQuota <= 0;
+}
+
+<!-- Hero Section -->
+<section style="position: relative; min-height: 50vh; display: flex; align-items: flex-end; padding-bottom: 4rem;">
+    <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; z-index: -2;">
+        <img src="@(string.IsNullOrEmpty(Model.ImageUrl) ? "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1920&q=80" : Model.ImageUrl)" alt="@Model.CourseName" style="width: 100%; height: 100%; object-fit: cover;" />
+    </div>
+    <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; z-index: -1; background: linear-gradient(180deg, var(--bg-hero-overlay-1) 0%, var(--bg-hero-overlay-2) 100%);"></div>
+
+    <div class="container animate-fadeInUp">
+        <div class="row">
+            <div class="col-lg-8">
+                <span class="badge-premium badge-glass mb-3" style="font-size: 0.9rem; padding: 0.5rem 1rem;">
+                    <i class="bi @(Model.Category?.IconClass ?? "bi-tag")"></i> @Model.Category?.CategoryName
+                </span>
+                <h1 style="font-family: 'Outfit', sans-serif; font-size: 3.5rem; font-weight: 900; color: white; margin-bottom: 1rem; line-height: 1.2;">
+                    @Model.CourseName
+                </h1>
+                
+                <div class="d-flex flex-wrap gap-4 mt-4" style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1.5rem;">
+                    <div class="d-flex align-items-center gap-2">
+                        @for (int i = 1; i <= 5; i++)
+                        {
+                            <i class="bi @(i <= ViewBag.AverageRating ? "bi-star-fill text-warning" : "bi-star text-muted")"></i>
+                        }
+                        <span class="text-white ms-2">(@(ViewBag.AverageRating?.ToString("0.0") ?? "0.0"))</span>
+                    </div>
+                    
+                    <div class="d-flex align-items-center gap-3">
+                        <div style="width: 45px; height: 45px; border-radius: 50%; background: rgba(197, 160, 89, 0.2); display: flex; align-items: center; justify-content: center; color: var(--primary-light); font-size: 1.2rem;">
+                            <i class="bi bi-clock-fill"></i>
+                        </div>
+                        <div>
+                            <div style="color: var(--text-secondary); font-size: 0.8rem; text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em;">Süre</div>
+                            <div style="color: white; font-weight: 600;">@Model.DurationHours Saat</div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex align-items-center gap-3">
+                        <div style="width: 45px; height: 45px; border-radius: 50%; background: rgba(88, 28, 28, 0.2); display: flex; align-items: center; justify-content: center; color: #581C1C; font-size: 1.2rem;">
+                            <i class="bi bi-calendar-event-fill"></i>
+                        </div>
+                        <div>
+                            <div style="color: var(--text-secondary); font-size: 0.8rem; text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em;">Başlangıç</div>
+                            <div style="color: white; font-weight: 600;">@Model.StartDate.ToString("dd MMMM yyyy")</div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex align-items-center gap-3">
+                        <div style="width: 45px; height: 45px; border-radius: 50%; background: rgba(197, 160, 89, 0.2); display: flex; align-items: center; justify-content: center; color: #C5A059; font-size: 1.2rem;">
+                            <i class="bi bi-person-x-fill"></i>
+                        </div>
+                        <div>
+                            <div style="color: var(--text-secondary); font-size: 0.8rem; text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em;">Devamsızlık Hak.</div>
+                            <div style="color: white; font-weight: 600;">@Model.MaxAbsenceLimit Hak</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="container" style="margin-top: -2rem; padding-bottom: 5rem;">
+    <div class="row g-5">
+        <!-- Content -->
+        <div class="col-lg-8">
+            <!-- Hakkında -->
+            <div class="glass-card-static p-4 p-md-5 animate-fadeInUp delay-200" style="margin-bottom: 2rem;">
+                <h3 style="font-family: 'Outfit'; font-weight: 800; color: var(--text-primary); margin-bottom: 1.5rem;">
+                    Kurs Hakkında
+                </h3>
+                <div style="color: var(--text-secondary); font-size: 1.1rem; line-height: 1.8; margin-bottom: 2rem;">
+                    @Html.Raw(Model.Description.Replace("\n", "<br/>"))
+                </div>
+
+                @if (!string.IsNullOrEmpty(Model.LearningOutcomes))
+                {
+                    <h4 style="font-family: 'Outfit'; font-weight: 700; color: var(--text-primary); margin-top: 3rem; margin-bottom: 1.5rem;">
+                        <i class="bi bi-stars me-2" style="color: var(--warning);"></i>Neler Öğreneceksiniz?
+                    </h4>
+                    <div class="row g-3">
+                        @foreach (var outcome in Model.LearningOutcomes.Split('\n', StringSplitOptions.RemoveEmptyEntries))
+                        {
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-start gap-3 p-3" style="background: rgba(255,255,255,0.03); border-radius: 12px; border: 1px solid rgba(255,255,255,0.05);">
+                                    <i class="bi bi-patch-check-fill gold-text" style="font-size: 1.2rem;"></i>
+                                    <span style="color: var(--text-secondary); font-size: 0.95rem;">@outcome.Trim()</span>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+
+                @if (!string.IsNullOrEmpty(Model.Curriculum))
+                {
+                    <h4 style="font-family: 'Outfit'; font-weight: 700; color: var(--text-primary); margin-top: 3rem; margin-bottom: 1.5rem;">
+                        <i class="bi bi-calendar3 me-2" style="color: var(--primary-light);"></i>Haftalık Ders Programı
+                    </h4>
+                    
+                    <div class="row g-3">
+                        @{
+                            var modules = Model.Curriculum.Split('\n', StringSplitOptions.RemoveEmptyEntries);
+                            for (int i = 0; i < modules.Length; i++)
+                            {
+                                var weekStartDate = Model.StartDate.AddDays(i * 7);
+                                var weekEndDate = weekStartDate.AddDays(5);
+                                var isPast = DateTime.Now > weekEndDate;
+                                var isCurrent = DateTime.Now >= weekStartDate && DateTime.Now <= weekEndDate;
+
+                                <div class="col-12">
+                                    <div class="glass-card-static p-4 d-flex align-items-center gap-4 transition-all hover-translate-x" 
+                                         style="border-radius: 20px; border-left: 5px solid @(isCurrent ? "#C5A059" : isPast ? "#C5A059" : "rgba(255,255,255,0.1)"); 
+                                                background: @(isCurrent ? "rgba(197, 160, 89, 0.08)" : "rgba(255,255,255,0.02)") !important; margin-bottom: 1rem;">
+                                        
+                                        <div class="week-number text-center" style="min-width: 70px;">
+                                            <div class="h3 fw-900 mb-0" style="color: @(isCurrent ? "var(--primary-light)" : "var(--text-muted)");">@(i + 1)</div>
+                                            <div class="small text-uppercase fw-bold opacity-50">Hafta</div>
+                                        </div>
+
+                                        <div class="flex-grow-1">
+                                            <div class="d-flex justify-content-between align-items-start mb-1">
+                                                <h5 class="fw-bold text-white mb-0">@modules[i].Trim()</h5>
+                                                @if (isPast) {
+                                                    <span class="badge-premium badge-success"><i class="bi bi-check2-all"></i> Tamamlandı</span>
+                                                } else if (isCurrent) {
+                                                    <span class="badge-premium badge-primary animate-pulse"><i class="bi bi-play-fill"></i> Åu An İşleniyor</span>
+                                                } else {
+                                                    <span class="badge-premium badge-glass opacity-50"><i class="bi bi-clock"></i> Gelecek Hafta</span>
+                                                }
+                                            </div>
+                                            <div class="small text-muted-premium">
+                                                <i class="bi bi-calendar-event me-1"></i> @weekStartDate.ToString("dd MMM") - @weekEndDate.ToString("dd MMM")
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        }
+                    </div>
+                }
+
+                <div class="row g-4 mt-4">
+                    <div class="col-md-6">
+                        <div class="p-4" style="background: rgba(255,159,67,0.05); border-radius: var(--radius-lg); border: 1px solid rgba(255,159,67,0.1);">
+                            <h5 style="color: #ff9f43; font-weight: 700; margin-bottom: 1rem;"><i class="bi bi-info-circle-fill me-2"></i>Gereksinimler</h5>
+                            <p style="color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 0;">@Model.Requirements</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="p-4" style="background: rgba(99,102,241,0.05); border-radius: var(--radius-lg); border: 1px solid rgba(99,102,241,0.1);">
+                            <h5 style="color: var(--primary-light); font-weight: 700; margin-bottom: 1rem;"><i class="bi bi-people-fill me-2"></i>Bu Kurs Kimler İçin?</h5>
+                            <p style="color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 0;">@Model.WhoIsItFor</p>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="divider-premium my-5" />
+
+                <h4 style="font-family: 'Outfit'; font-weight: 700; color: var(--text-primary); margin-top: 3rem; margin-bottom: 1.5rem;">
+                    <i class="bi bi-journal-text me-2" style="color: var(--info);"></i>Eğitim Materyalleri ve Konu Rehberi
+                </h4>
+                
+                <div class="row g-3 mb-5">
+                    @if (Model.Resources != null && Model.Resources.Any())
+                    {
+                        foreach (var resource in Model.Resources.OrderBy(r => r.Id))
+                        {
+                            var isLink = resource.FilePath == "#";
+                            <div class="col-md-6">
+                                <div class="glass-card-static d-flex align-items-center p-3 hover-lift" style="background: rgba(255,255,255,0.02); border-left: 4px solid @(isLink ? "var(--primary-light)" : "#C5A059");">
+                                    <div class="p-2 rounded @(isLink ? "bg-primary" : "bg-info") bg-opacity-10 @(isLink ? "text-primary-light" : "text-info") me-3">
+                                        <i class="bi @(isLink ? "bi-journal-bookmark-fill" : "bi-file-earmark-arrow-down") fs-4"></i>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <div style="font-weight: 600; color: var(--text-primary); font-size: 0.95rem;">@resource.Title</div>
+                                        <small style="color: var(--text-muted);">@(isLink ? "Haftalık Konu Rehberi" : resource.FileType) • @resource.UploadDate.ToShortDateString()</small>
+                                    </div>
+                                    @if (!isLink)
+                                    {
+                                        <a href="@resource.FilePath" target="_blank" class="btn btn-sm btn-icon btn-secondary-glass">
+                                            <i class="bi bi-download"></i>
+                                        </a>
+                                    }
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="col-12">
+                            <div class="glass-card-static text-center p-4" style="border-style: dashed; background: transparent;">
+                                <p style="color: var(--text-muted); margin: 0; font-size: 0.9rem;">Bu kurs için henüz dijital materyal yüklenmemiştir.</p>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                <hr class="divider-premium my-5" />
+
+                <h4 style="font-family: 'Outfit'; font-weight: 700; color: var(--text-primary); margin-bottom: 1.5rem;">
+                    <i class="bi bi-person-video3 me-2" style="color: var(--primary-light);"></i>Eğitmen
+                </h4>
+                
+                @if (ViewBag.Instructor != null)
+                {
+                    <div class="d-flex align-items-center gap-4 p-4" style="background: var(--bg-glass); border: 1px solid var(--border-glass); border-radius: var(--radius-lg);">
+                        <div style="width: 80px; height: 80px; border-radius: 50%; background: var(--gradient-card); border: 2px solid var(--primary-light); display: flex; align-items: center; justify-content: center; font-size: 2.5rem; color: white; overflow: hidden;">
+                             @if (!string.IsNullOrEmpty(ViewBag.Instructor.ImageUrl))
+                             {
+                                 <img src="@ViewBag.Instructor.ImageUrl" style="width:100%; height:100%; object-fit:cover;" />
+                             }
+                             else
+                             {
+                                 <i class="bi bi-person-fill"></i>
+                             }
+                        </div>
+                        <div>
+                            <h5 style="color: var(--text-primary); font-weight: 700; margin-bottom: 0.3rem;">@ViewBag.Instructor.FullName</h5>
+                            <div class="instructor-title-text" style="color: var(--text-muted); font-size: 0.95rem;">@ViewBag.Instructor.Title</div>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="p-3" style="background: rgba(255,255,255,0.02); border: 1px dashed var(--border-glass); border-radius: var(--radius-md); color: var(--text-muted);">
+                        Eğitmen ataması süreci devam etmektedir.
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- Sticky Sidebar -->
+        <div class="col-lg-4">
+            <div class="glass-card-static p-4 sticky-top animate-fadeInUp delay-300" style="top: 100px;">
+                <div class="text-center mb-4">
+                    <div style="font-size: 0.9rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em; margin-bottom: 0.5rem;">Kontenjan Durumu</div>
+                    
+                    <div style="position: relative; width: 120px; height: 120px; margin: 0 auto; display: flex; align-items: center; justify-content: center;">
+                        <svg class="w-100 h-100" viewBox="0 0 36 36" style="position: absolute; top:0; left:0; transform: rotate(-90deg);">
+                            <path class="circle-bg"
+                                  d="M18 2.0845
+                                      a 15.9155 15.9155 0 0 1 0 31.831
+                                      a 15.9155 15.9155 0 0 1 0 -31.831"
+                                  fill="none" stroke="var(--border-glass)" stroke-width="3" />
+                            @{
+                                var dashVal = Model.Quota > 0 ? (int)(((double)ViewBag.ApprovedCount / Model.Quota) * 100) : 0;
+                            }
+                            <path class="circle"
+                                  stroke-dasharray="@dashVal, 100"
+                                  d="M18 2.0845
+                                      a 15.9155 15.9155 0 0 1 0 31.831
+                                      a 15.9155 15.9155 0 0 1 0 -31.831"
+                                  fill="none" stroke="@(isFull ? "var(--danger)" : "#C5A059")" stroke-width="3" style="transition: stroke-dasharray 1s ease-out; stroke-linecap: round;" />
+                        </svg>
+                        <div class="text-center">
+                            <div style="font-family: 'Outfit'; font-weight: 900; font-size: 1.8rem; line-height: 1; color: @(isFull ? "var(--danger)" : "var(--text-primary)");">
+                                @remainingQuota
+                            </div>
+                            <div style="font-size: 0.75rem; color: var(--text-muted);">Boş Yer</div>
+                        </div>
+                    </div>
+                    
+                    <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 1rem;">
+                        Toplam <strong>@Model.Quota</strong> Kişilik Sınıf
+                    </div>
+                </div>
+
+                <hr class="divider-premium mb-4" />
+
+                <div class="d-flex flex-column gap-3 mb-4">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span style="color: var(--text-muted);"><i class="bi bi-calendar-check me-2"></i>Bitiş</span>
+                        <strong style="color: var(--text-primary);">@Model.EndDate.ToString("dd MMM yyyy")</strong>
+                    </div>
+                    @if (Model.ExamDate.HasValue)
+                    {
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span style="color: var(--text-muted);"><i class="bi bi-journal-check me-2"></i>Sınav Tarihi</span>
+                            <strong style="color: var(--accent-light);">@Model.ExamDate.Value.ToString("dd MMM yyyy")</strong>
+                        </div>
+                    }
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span style="color: var(--text-muted);"><i class="bi bi-award me-2"></i>Sertifika</span>
+                        <strong style="color: #C5A059;">MEB Onaylı</strong>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span style="color: var(--text-muted);"><i class="bi bi-person-x me-2"></i>Devamsızlık Sınırı</span>
+                        <strong style="color: var(--danger);">@Model.MaxAbsenceLimit Hak</strong>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span style="color: var(--text-muted);"><i class="bi bi-cash-stack me-2"></i>Ücret</span>
+                        @if (Model.Price > 0)
+                        {
+                            <strong style="color: var(--warning); font-size: 1.1rem;">@Model.Price.ToString("N2") ₺</strong>
+                        }
+                        else
+                        {
+                            <strong style="color: var(--warning); font-size: 1.1rem;">750,00 ₺</strong>
+                        }
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span style="color: var(--text-muted);"><i class="bi bi-shield-lock me-2"></i>E-Devlet</span>
+                        <strong style="color: var(--info);">Entegre</strong>
+                    </div>
+                </div>
+
+                @if (isFull)
+                {
+                    <a asp-controller="Applications" asp-action="Create" asp-route-courseId="@Model.Id" class="btn btn-premium btn-secondary-glass btn-lg w-100 mb-2">
+                        <i class="bi bi-hourglass-split me-1"></i> Yedek Listesine Katıl
+                    </a>
+                    <p class="small text-center text-warning mt-2">
+                        <i class="bi bi-info-circle"></i> Kontenjan dolmuştur. Başvurunuz yedek listesine alınacaktır.
+                    </p>
+                }
+                else
+                {
+                    <a asp-controller="Applications" asp-action="Create" asp-route-courseId="@Model.Id" class="btn btn-premium btn-primary-glow btn-lg w-100" style="box-shadow: 0 5px 20px rgba(245,158,11,0.4);">
+                        <i class="bi bi-rocket-takeoff flex-shrink-0"></i> Hemen Başvur
+                    </a>
+                }
+                
+                <div class="text-center mt-3">
+                    <a href="#reviewsSection" class="text-muted small text-decoration-none hover-primary">
+                        <i class="bi bi-star-fill text-warning me-1"></i> Tüm Değerlendirmeleri Gör
+                    </a>
+                </div>
+                
+                <div class="mt-4 p-3" style="background: rgba(255,255,255,0.02); border-radius: 12px; border: 1px solid rgba(255,255,255,0.05);">
+                    <div class="d-flex align-items-center gap-2 mb-2">
+                        <i class="bi bi-lightning-charge-fill text-warning"></i>
+                        <span style="color: var(--text-primary); font-weight: 700; font-size: 0.9rem;">Hızlı Bilgi</span>
+                    </div>
+                    <ul style="list-style: none; padding: 0; margin: 0; font-size: 0.85rem; color: var(--text-muted);">
+                        <li class="mb-2"><i class="bi bi-check2 me-2"></i> %80 Devam Zorunluluğu</li>
+                        <li class="mb-2"><i class="bi bi-check2 me-2"></i> Uygulamalı Eğitimler</li>
+                        <li><i class="bi bi-check2 me-2"></i> Kariyer Desteği</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Başarı Hikayeleri Bölümü (İlişkisel Veritabanı Åovu) -->
+    @if (ViewBag.SuccessStories != null && ((List<HalkEgitimSistemi.Models.SuccessStory>)ViewBag.SuccessStories).Any())
+    {
+        <div class="row mt-5">
+            <div class="col-lg-12">
+                <div class="glass-card-static p-4 p-md-5 animate-fadeInUp">
+                    <h3 style="font-family: 'Outfit'; font-weight: 800; color: var(--text-primary); margin-bottom: 2rem;">
+                        <i class="bi bi-award-fill me-2" style="color: #f59e0b;"></i> Bu Kurstan Çıkan Başarı Hikayeleri
+                    </h3>
+                    <div class="row g-4">
+                        @foreach (var story in (List<HalkEgitimSistemi.Models.SuccessStory>)ViewBag.SuccessStories)
+                        {
+                            <div class="col-md-4">
+                                <div class="glass-card-static h-100 p-0 overflow-hidden" style="background: rgba(255,255,255,0.02);">
+                                    <img src="@(story.CoverImage ?? "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=600")" class="w-100" style="height: 150px; object-fit: cover;" />
+                                    <div class="p-3">
+                                        <h5 class="text-primary-theme fw-bold">@story.Title</h5>
+                                        <p class="text-muted small mb-3">@story.Summary</p>
+                                        <a asp-controller="SuccessStories" asp-action="Details" asp-route-id="@story.Id" class="btn btn-premium btn-secondary-glass btn-sm w-100">Hikayeyi Oku</a>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    <!-- Değerlendirmeler Bölümü (HERKESE AÇIK) -->
+    <div class="row mt-5" id="reviewsSection">
+        <div class="col-lg-8">
+            <div class="glass-card-static p-4 p-md-5 animate-fadeInUp">
+                <div class="d-flex justify-content-between align-items-center mb-5">
+                    <div>
+                        <h3 style="font-family: 'Outfit'; font-weight: 800; color: var(--text-primary); margin: 0;">
+                            <i class="bi bi-chat-heart me-2" style="color: #581C1C;"></i> Katılımcı Yorumları
+                        </h3>
+                        <p class="text-muted small mb-0 mt-1">Bu kurs hakkında neler söylendi?</p>
+                    </div>
+                    <div class="text-end">
+                        <div class="d-flex align-items-center justify-content-end gap-2">
+                            <div style="font-size: 2rem; font-weight: 900; color: var(--text-primary);">@(ViewBag.AverageRating?.ToString("0.0") ?? "0.0")</div>
+                            <div class="text-warning fs-4">
+                                @for (int i = 1; i <= 5; i++)
+                                {
+                                    <i class="bi @(i <= (int)Math.Round(ViewBag.AverageRating ?? 0.0) ? "bi-star-fill" : "bi-star")"></i>
+                                }
+                            </div>
+                        </div>
+                        <div class="small text-muted">@ViewBag.CommentCount Değerlendirme</div>
+                    </div>
+                </div>
+
+                <!-- Yorum Yapma Formu (Herkese Açık) -->
+                <div class="p-4 mb-5 shadow-sm" style="background: var(--bg-glass); border-radius: 20px; border: 1px solid var(--border-glass);">
+                    <h5 class="mb-4 fw-bold text-primary-theme"><i class="bi bi-pencil-square me-2 text-primary"></i> Deneyiminizi Paylaşın</h5>
+                    <form asp-controller="Comments" asp-action="AddComment" method="post">
+                        <input type="hidden" name="CourseId" value="@Model.Id" />
+                        
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label small fw-bold text-muted">E-POSTA ADRESİNİZ</label>
+                                <input type="email" name="UserEmail" class="form-premium-control" placeholder="Örn: ahmet@mail.com" required 
+                                       value="@(User.Identity?.IsAuthenticated == true ? User.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value : "")" />
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label small fw-bold text-muted-theme">PUANINIZ</label>
+                                 <div class="rating-input-modern">
+                                     <input type="hidden" name="Rating" id="ratingValue" value="0" />
+                                     @for (int i = 1; i <= 5; i++)
+                                     {
+                                         <i class="bi star-icon" data-value="@i" onclick="setRating(@i)"></i>
+                                     }
+                                 </div>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label small fw-bold text-muted">MESAJINIZ</label>
+                                <textarea name="Content" class="form-premium-control" rows="3" placeholder="Eğitim kalitesi, hoca ilgisi ve içerik hakkındaki düşünceleriniz..." required></textarea>
+                            </div>
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-premium btn-primary-glow px-5 py-3 w-100 w-md-auto">
+                                    Yorumu Gönder <i class="bi bi-send-fill ms-2"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="reviews-list">
+                    @if (Model.Comments != null && Model.Comments.Any())
+                    {
+                        foreach (var comment in Model.Comments.OrderByDescending(c => c.CreatedAt))
+                        {
+                            <div class="review-card mb-4 p-4 animate-fadeInUp" style="background: rgba(255,255,255,0.01); border-radius: 15px; border-left: 4px solid @(comment.Rating >= 4 ? "#C5A059" : comment.Rating <= 2 ? "var(--danger)" : "var(--warning)");">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="avatar-circle">@(string.IsNullOrEmpty(comment.UserEmail) ? "M" : comment.UserEmail[0].ToString().ToUpper())</div>
+                                        <div>
+                                            <div class="fw-bold text-primary-theme">@comment.UserEmail</div>
+                                            <div class="small text-muted">@comment.CreatedAt.ToString("dd MMMM yyyy")</div>
+                                        </div>
+                                    </div>
+                                    <div class="text-warning">
+                                        @for (int i = 1; i <= 5; i++)
+                                        {
+                                            <i class="bi @(i <= comment.Rating ? "bi-star-fill" : "bi-star text-muted")"></i>
+                                        }
+                                    </div>
+                                </div>
+                                <p class="mb-0 text-muted-premium" style="line-height: 1.7; font-style: @(comment.Rating <= 2 ? "italic" : "normal")">
+                                    @comment.Content
+                                </p>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="text-center py-5">
+                            <div class="icon-box mx-auto mb-3"><i class="bi bi-chat-dots fs-1"></i></div>
+                            <h5 class="text-primary-theme">Henüz Yorum Yapılmamış</h5>
+                            <p class="text-muted">Bu kurs hakkında ilk yorumu siz yaparak diğerlerine rehberlik edin!</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .rating-input-modern { 
+        display: flex;
+        gap: 8px;
+    }
+    .rating-input-modern .star-icon { 
+        color: var(--text-muted); 
+        opacity: 0.6;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+        cursor: pointer; 
+        font-family: 'bootstrap-icons' !important;
+        font-size: 2.8rem;
+        margin: 0 5px;
+    }
+    
+    [data-theme="light"] .rating-input-modern .star-icon {
+        color: #94a3b8 !important;
+        opacity: 1;
+    }
+    
+    .rating-input-modern .star-icon:hover {
+        transform: scale(1.2);
+        color: #f59e0b !important;
+    }
+
+    .rating-input-modern .star-icon::before { 
+        content: "\F588"; /* bi-star (empty) */
+    }
+    .rating-input-modern .star-icon.active { 
+        color: #f59e0b !important; 
+        opacity: 1;
+        text-shadow: 0 0 15px rgba(245,158,11,0.5);
+    }
+    .rating-input-modern .star-icon.active::before { 
+        content: "\F586" !important; /* bi-star-fill (filled) */
+    }
+
+    .avatar-circle {
+        width: 45px; height: 45px; border-radius: 50%;
+        background: linear-gradient(135deg, #C5A059 0%, #581C1C 100%);
+        display: flex; align-items: center; justify-content: center;
+        color: white !important; font-weight: 800; font-size: 1.2rem;
+    }
+    .text-muted-premium { color: var(--text-secondary) !important; }
+    .review-card { transition: all 0.3s ease; }
+    .review-card:hover { background: var(--bg-card-hover) !important; transform: translateX(10px); }
+    .icon-box {
+        width: 100px; height: 100px; border-radius: 50%; background: var(--bg-glass);
+        display: flex; align-items: center; justify-content: center; color: var(--text-muted);
+    }
+</style>
+
+<script>
+    function setRating(val) {
+        document.getElementById('ratingValue').value = val;
+        const stars = document.querySelectorAll('.star-icon');
+        stars.forEach((star, index) => {
+            if (index < val) {
+                star.classList.add('active');
+            } else {
+                star.classList.remove('active');
+            }
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const stars = document.querySelectorAll('.star-icon');
+        stars.forEach(star => {
+            star.addEventListener('mouseover', function() {
+                const val = this.getAttribute('data-value');
+                stars.forEach((s, i) => {
+                    if (i < val) s.style.color = '#f59e0b';
+                });
+            });
+            star.addEventListener('mouseout', function() {
+                const currentRating = document.getElementById('ratingValue').value;
+                stars.forEach((s, i) => {
+                    if (!s.classList.contains('active')) s.style.color = '';
+                });
+            });
+        });
+    });
+</script>
+
+

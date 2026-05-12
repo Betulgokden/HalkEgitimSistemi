@@ -1,0 +1,51 @@
+﻿@model HalkEgitimSistemi.Models.Instructor
+
+@{
+    ViewData["Title"] = "Eğitmen Silme Onayı";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8">
+            <div class="delete-card animate-scaleIn">
+                <!-- Delete Header -->
+                <div class="delete-header">
+                    <div class="delete-icon">
+                        <i class="bi bi-person-x-fill"></i>
+                    </div>
+                    <h2 style="font-family: 'Outfit', sans-serif; font-weight: 800; color: var(--danger); margin: 0; font-size: 1.5rem;">Eğitmeni Silmek İstediğinize Emin Misiniz?</h2>
+                    <p style="color: var(--text-muted); margin-top: 0.5rem; font-size: 0.85rem;">Bu işlem geri alınamaz ve eğitmen kaydı sistemden kalıcı olarak silinir.</p>
+                </div>
+
+                <!-- Instructor Card Preview -->
+                <div style="padding: 1.5rem 2rem; background: rgba(239, 68, 68, 0.03); border-bottom: 1px solid rgba(239, 68, 68, 0.1);">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="instructor-avatar" style="width: 60px; height: 60px; margin: 0; flex-shrink: 0; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2);">
+                            <i class="bi bi-person-slash" style="color: var(--danger); font-size: 1.5rem;"></i>
+                        </div>
+                        <div>
+                            <h4 style="margin: 0; color: var(--text-primary); font-weight: 700; font-size: 1.1rem;">@Model.FullName</h4>
+                            <p style="margin: 0; color: var(--text-muted); font-size: 0.82rem;">@Model.Title</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Button -->
+                <div style="padding: 2rem;">
+                    <form asp-action="Delete">
+                        <input type="hidden" asp-for="Id" />
+                        
+                        <div class="d-flex gap-3">
+                            <a asp-action="Index" class="btn btn-premium btn-secondary-glass flex-fill justify-content-center">
+                                <i class="bi bi-arrow-left"></i> Vazgeç
+                            </a>
+                            <button type="submit" class="btn btn-premium btn-danger-glow flex-fill justify-content-center">
+                                <i class="bi bi-trash3-fill"></i> Eğitmeni Sil
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

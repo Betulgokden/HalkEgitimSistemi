@@ -1,0 +1,109 @@
+﻿@{
+    ViewData["Title"] = "Dijital Bülten";
+}
+
+<div class="container-fluid py-5 bg-dark min-vh-100 d-flex flex-column align-items-center">
+    <div class="mb-5 text-center">
+        <h1 class="section-title-gradient h2 fw-bold">Aylık Eğitim Bülteni</h1>
+        <p class="text-white-50">Sayfaları köşelerinden tutarak çevirebilirsiniz.</p>
+    </div>
+
+    <!-- Magazine Container -->
+    <div id="magazine" class="shadow-lg">
+        <!-- Kapak -->
+        <div class="page bg-primary-theme d-flex flex-column align-items-center justify-content-center p-5 text-center">
+            <i class="bi bi-book-half display-1 text-white mb-4"></i>
+            <h2 class="text-white fw-bold">HALK EÄİTİM</h2>
+            <p class="text-white-50">MAYIS 2026 BÜLTENİ</p>
+            <div class="mt-auto small text-white-50">Sayı: 42</div>
+        </div>
+
+        <!-- İçerik Sayfası 1 -->
+        <div class="page bg-glass p-5">
+            <h3 class="text-primary-light fw-bold border-bottom pb-2" style="border-color: rgba(255,255,255,0.1) !important;">Editörden</h3>
+            <p class="text-white">Değerli kursiyerlerimiz, bu ay merkezimizde gerçekleşen yenilikleri ve başarı hikayelerini sizinle paylaşıyoruz.</p>
+            <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400" class="img-fluid rounded mb-3" />
+            <p class="text-white-50 small">Eğitim her yerde, öğrenme her yaşta sloganıyla yolumuza devam ediyoruz.</p>
+        </div>
+
+        <!-- İçerik Sayfası 2 -->
+        <div class="page bg-glass p-5">
+            <h3 class="text-primary-light fw-bold border-bottom pb-2" style="border-color: rgba(255,255,255,0.1) !important;">Yeni Branşlar</h3>
+            <div class="mb-3">
+                <h6 class="fw-bold mb-1 text-white">Yapay Zeka ve Veri Analizi</h6>
+                <p class="small text-white-50">Geleceğin teknolojilerini öğrenmeye hazır mısınız?</p>
+            </div>
+            <div class="mb-3">
+                <h6 class="fw-bold mb-1 text-white">Modern Gastronomi</h6>
+                <p class="small text-white-50">Dünya mutfağının sırlarını profesyonel hocalardan öğrenin.</p>
+            </div>
+            <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400" class="img-fluid rounded" />
+        </div>
+
+        <!-- Başarı Hikayesi Sayfası -->
+        <div class="page bg-glass text-white p-5 d-flex flex-column justify-content-center">
+            <div class="badge bg-warning text-dark mb-2 w-fit">AYIN BAÅARISI</div>
+            <h2 class="fw-bold">Fatma Hanım'ın Atölyesi</h2>
+            <p class="lead">"Halk Eğitim sayesinde kendi markamı kurdum ve şimdi 3 kişiye istihdam sağlıyorum."</p>
+            <div class="mt-4">
+                <i class="bi bi-quote fs-1 text-primary-light"></i>
+            </div>
+        </div>
+
+        <!-- Arka Kapak -->
+        <div class="page bg-dark d-flex flex-column align-items-center justify-content-center p-5 text-center border-start border-glass">
+            <img src="/img/logo.png" style="width: 80px;" class="mb-4" />
+            <h4 class="text-white">Bizi Takip Edin</h4>
+            <div class="d-flex gap-3 mt-3">
+                <i class="bi bi-instagram fs-4 text-white-50"></i>
+                <i class="bi bi-facebook fs-4 text-white-50"></i>
+                <i class="bi bi-twitter fs-4 text-white-50"></i>
+            </div>
+            <p class="mt-5 text-muted small">Â© 2026 Halk Eğitim Merkezi</p>
+        </div>
+    </div>
+
+    <div class="mt-5 d-flex gap-3">
+        <button class="btn btn-secondary-glass" onclick="$('#magazine').turn('previous')"><i class="bi bi-arrow-left"></i> Önceki</button>
+        <button class="btn btn-secondary-glass" onclick="$('#magazine').turn('next')">Sonraki <i class="bi bi-arrow-right"></i></button>
+    </div>
+</div>
+
+<style>
+    #magazine {
+        width: 800px;
+        height: 500px;
+    }
+    .page {
+        background: rgba(20, 22, 30, 0.95);
+        backdrop-filter: blur(10px);
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        overflow: hidden;
+        border: 1px solid rgba(255,255,255,0.1);
+    }
+    .w-fit { width: fit-content; }
+</style>
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<!-- Turn.js is typically a single file. For demo, we'll use a CDN or local script -->
+<script src="https://cdn.jsdelivr.net/gh/blasten/turn.js/turn.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        $("#magazine").turn({
+            width: 800,
+            height: 500,
+            autoCenter: true,
+            display: 'double',
+            acceleration: true,
+            gradients: true,
+            elevation: 50,
+            when: {
+                turned: function(e, page) {
+                    console.log('Current page: ', page);
+                }
+            }
+        });
+    });
+</script>
+

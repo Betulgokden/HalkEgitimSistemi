@@ -1,0 +1,582 @@
+@model HalkEgitimSistemi.Models.MasterTrainerApplication
+
+@{
+    ViewData["Title"] = "Usta Öğretici Başvurusu";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="glass-card-static p-4 p-md-5 animate-fadeInUp overflow-hidden">
+                
+                <!-- Progress Stepper -->
+                <div class="stepper-wrapper mb-5">
+                    <div class="stepper-item active" id="step1-header">
+                        <div class="step-counter">1</div>
+                        <div class="step-name">Kimlik & İletişim</div>
+                    </div>
+                    <div class="stepper-item" id="step2-header">
+                        <div class="step-counter">2</div>
+                        <div class="step-name">Uzmanlık & Müsaitlik</div>
+                    </div>
+                    <div class="stepper-item" id="step3-header">
+                        <div class="step-counter">3</div>
+                        <div class="step-name">Belge Yükleme</div>
+                    </div>
+                </div>
+
+                @if (ViewBag.Error != null)
+                {
+                    <div class="alert alert-danger-glass animate-shake mb-4">
+                        <i class="bi bi-exclamation-triangle-fill me-2"></i> @ViewBag.Error
+                    </div>
+                }
+
+                <form asp-action="Apply" method="post" enctype="multipart/form-data" id="multiStepForm">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" asp-for="AvailabilityJson" id="AvailabilityJson" />
+
+                    <!-- STEP 1: Kimlik ve İletişim -->
+                    <div class="step-content active" id="step1">
+                        <div class="row g-4">
+                            <div class="col-md-6">
+                                <label asp-for="TcNo" class="form-label text-primary-theme small fw-bold"></label>
+                                <input asp-for="TcNo" class="form-control bg-glass-input" placeholder="11 haneli T.C. No" maxlength="11" required>
+                                <span asp-validation-for="TcNo" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="FullName" class="form-label text-primary-theme small fw-bold"></label>
+                                <input asp-for="FullName" class="form-control bg-glass-input" placeholder="Ad Soyad (Kimlikteki gibi)" required>
+                                <span asp-validation-for="FullName" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-4">
+                                <label asp-for="BirthYear" class="form-label text-primary-theme small fw-bold"></label>
+                                <input asp-for="BirthYear" type="number" class="form-control bg-glass-input" placeholder="Örn: 1990" min="1950" max="2010" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label asp-for="Email" class="form-label text-primary-theme small fw-bold"></label>
+                                <input asp-for="Email" class="form-control bg-glass-input" placeholder="eposta@adresiniz.com" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label asp-for="Phone" class="form-label text-primary-theme small fw-bold"></label>
+                                <input asp-for="Phone" class="form-control bg-glass-input" placeholder="05xx xxx xx xx" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="Address" class="form-label text-primary-theme small fw-bold"></label>
+                                <textarea asp-for="Address" rows="2" class="form-control bg-glass-input" placeholder="İkametgah adresi..." required></textarea>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label text-primary-theme small fw-bold">Vesikalık Fotoğraf (.jpg, .png)</label>
+                                <input type="file" name="photoFile" class="form-control bg-glass-input" accept="image/*" required>
+                                <div class="form-text small text-white-50">Kimlik onayı için vesikalık fotoğraf gereklidir.</div>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-end mt-5">
+                            <button type="button" class="btn btn-premium btn-primary-glow px-5 py-3" onclick="nextStep(2)" style="background: linear-gradient(135deg, #C5A059, #581C1C) !important; color: #ffffff !important; opacity: 1 !important; font-weight: 900 !important; font-size: 1.1rem !important; border: none !important; border-radius: 15px !important; box-shadow: 0 10px 30px rgba(197, 160, 89, 0.6) !important; transition: all 0.3s ease;">
+                                SONRAKİ ADIM <i class="bi bi-arrow-right ms-2"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- STEP 2: Uzmanlık ve Müsaitlik -->
+                    <div class="step-content" id="step2">
+                        <div class="row g-4">
+                            <div class="col-md-6">
+                                <label asp-for="CategoryId" class="form-label text-primary-theme small fw-bold"></label>
+                                <select asp-for="CategoryId" class="form-control bg-glass-input" id="CategorySelect" required>
+                                    <option value="">--- Kategori Seçiniz ---</option>
+                                    @if (ViewBag.Categories != null)
+                                    {
+                                        foreach (var cat in ViewBag.Categories)
+                                        {
+                                            <option value="@cat.Id">@cat.CategoryName</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="CourseId" class="form-label text-primary-theme small fw-bold"></label>
+                                <select asp-for="CourseId" class="form-control bg-glass-input" id="CourseSelect" required disabled>
+                                    <option value="">--- Önce Kategori Seçiniz ---</option>
+                                </select>
+                            </div>
+
+                            <div class="col-12 mt-4">
+                                <h5 class="text-primary-theme fw-bold mb-3"><i class="bi bi-calendar-week me-2"></i>Haftalık Müsaitlik Matrisi</h5>
+                                <p class="text-muted small mb-4">Ders verebileceğiniz gün ve saat dilimlerini işaretleyiniz.</p>
+                                
+                                <style>
+                                    #availabilityMatrix {
+                                        border-collapse: separate !important;
+                                        border-spacing: 0;
+                                        border: 2px solid #C5A059 !important;
+                                        border-radius: 15px;
+                                        overflow: hidden;
+                                        background: rgba(197, 160, 89, 0.1) !important; /* Soft Gold Tint */
+                                        backdrop-filter: blur(10px);
+                                    }
+                                    #availabilityMatrix th {
+                                        background: #581C1C !important; /* Maroon Header */
+                                        color: #C5A059 !important; /* Gold Text */
+                                        border-bottom: 2px solid #C5A059 !important;
+                                        border-right: 1px solid rgba(197, 160, 89, 0.3) !important;
+                                        padding: 18px !important;
+                                        font-family: 'Outfit';
+                                        text-transform: uppercase;
+                                        font-size: 0.85rem;
+                                        letter-spacing: 1px;
+                                    }
+                                    #availabilityMatrix td {
+                                        border-right: 1px solid rgba(197, 160, 89, 0.2) !important;
+                                        border-bottom: 1px solid rgba(197, 160, 89, 0.2) !important;
+                                        padding: 15px !important;
+                                        color: #581C1C !important; /* Maroon Text for Days */
+                                    }
+                                    #availabilityMatrix td.fw-bold {
+                                        background: rgba(197, 160, 89, 0.2) !important; /* Stronger Gold for Days column */
+                                        color: #581C1C !important;
+                                    }
+                                    #availabilityMatrix th:last-child, #availabilityMatrix td:last-child {
+                                        border-right: none !important;
+                                    }
+                                    #availabilityMatrix tr:last-child td {
+                                        border-bottom: none !important;
+                                    }
+                                </style>
+                                <div class="table-responsive">
+                                    <table class="table table-bordered border-glass text-center align-middle" id="availabilityMatrix">
+                                        <thead class="bg-glass">
+                                            <tr>
+                                                <th class="text-primary-theme">Günler</th>
+                                                <th class="text-primary-theme">08:00 - 12:00</th>
+                                                <th class="text-primary-theme">13:00 - 16:00</th>
+                                                <th class="text-primary-theme">16:00 - 19:00</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @{
+                                                var days = new[] { "Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma", "Cumartesi", "Pazar" };
+                                                var times = new[] { "08:00-12:00", "13:00-16:00", "16:00-19:00" };
+                                            }
+                                            @foreach (var day in days)
+                                            {
+                                                <tr>
+                                                    <td class="fw-bold">@day</td>
+                                                    @foreach (var time in times)
+                                                    {
+                                                        <td>
+                                                            <div class="form-check d-flex justify-content-center">
+                                                                  <input class="form-check-input matrix-checkbox" type="checkbox" data-day="@day" data-time="@time">
+                                                            </div>
+                                                        </td>
+                                                    }
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-between mt-5">
+                            <button type="button" class="btn btn-premium btn-secondary-glass px-5 py-3" onclick="nextStep(1)" style="background: rgba(255,255,255,0.05) !important; color: #ffffff !important; border: 1px solid rgba(255,255,255,0.2) !important; border-radius: 15px !important; font-weight: 700 !important;">
+                                <i class="bi bi-arrow-left me-2"></i> GERİ
+                            </button>
+                            <button type="button" class="btn btn-premium btn-primary-glow px-5 py-3" onclick="nextStep(3)" style="background: linear-gradient(135deg, #C5A059, #581C1C) !important; color: #ffffff !important; opacity: 1 !important; font-weight: 900 !important; font-size: 1.1rem !important; border: none !important; border-radius: 15px !important; box-shadow: 0 10px 30px rgba(197, 160, 89, 0.6) !important; transition: all 0.3s ease;">
+                                SONRAKİ ADIM <i class="bi bi-arrow-right ms-2"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- STEP 3: Belge Yükleme -->
+                    <div class="step-content" id="step3">
+                        <div class="row g-4">
+                            <div class="col-md-4">
+                                <label class="form-label text-primary-theme small fw-bold">Özgeçmiş (CV)</label>
+                                <div class="drop-zone" id="cvDropZone">
+                                    <span class="drop-zone__prompt"><i class="bi bi-file-earmark-pdf mb-2 d-block fs-3"></i>CV Yükle (.pdf)</span>
+                                    <input type="file" name="cvFile" class="drop-zone__input" accept=".pdf" required>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label text-primary-theme small fw-bold">Adli Sicil Kaydı</label>
+                                <div class="drop-zone" id="criminalDropZone">
+                                    <span class="drop-zone__prompt"><i class="bi bi-shield-lock mb-2 d-block fs-3"></i>Belge Yükle (.pdf)</span>
+                                    <input type="file" name="criminalRecordFile" class="drop-zone__input" accept=".pdf" required>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label text-primary-theme small fw-bold">Diploma / Sertifika</label>
+                                <div class="drop-zone" id="diplomaDropZone">
+                                    <span class="drop-zone__prompt"><i class="bi bi-mortarboard mb-2 d-block fs-3"></i>Belge Yükle (.pdf)</span>
+                                    <input type="file" name="diplomaFile" class="drop-zone__input" accept=".pdf" required>
+                                </div>
+                            </div>
+                            
+                            <div class="col-12 mt-4">
+                                <div class="alert alert-info border-0 bg-glass text-primary-theme small">
+                                    <i class="bi bi-info-circle-fill me-2"></i> Maksimum dosya boyutu her bir belge için 5MB'dır. Sadece PDF formatı kabul edilmektedir.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-between mt-5">
+                            <button type="button" class="btn btn-premium btn-secondary-glass px-5 py-3" onclick="nextStep(2)" style="background: rgba(255,255,255,0.05) !important; color: #ffffff !important; border: 1px solid rgba(255,255,255,0.2) !important; border-radius: 15px !important; font-weight: 700 !important;">
+                                <i class="bi bi-arrow-left me-2"></i> GERİ
+                            </button>
+                            <button type="submit" class="btn btn-premium btn-success-glow px-5 py-3" style="background: linear-gradient(135deg, #C5A059, #34d399) !important; color: #ffffff !important; font-weight: 900 !important; font-size: 1.1rem !important; border: none !important; border-radius: 15px !important; box-shadow: 0 10px 30px rgba(16, 185, 129, 0.4) !important;">
+                                BAŞVURUYU TAMAMLA <i class="bi bi-check-all ms-2"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Stepper Styling */
+    .stepper-wrapper {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 3rem;
+        position: relative;
+    }
+    .stepper-wrapper::before {
+        content: "";
+        position: absolute;
+        top: 25px;
+        left: 50px;
+        right: 50px;
+        height: 2px;
+        background: rgba(255,255,255,0.1);
+        z-index: 1;
+    }
+    .stepper-item {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        flex: 1;
+    }
+    .step-counter {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: var(--bg-dark);
+        border: 2px solid rgba(255,255,255,0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+        margin-bottom: 10px;
+        transition: all 0.3s ease;
+    }
+    .stepper-item.active .step-counter {
+        background: var(--primary);
+        border-color: var(--primary-light);
+        box-shadow: 0 0 20px rgba(197, 160, 89, 0.4);
+    }
+    .stepper-item.completed .step-counter {
+        background: #C5A059;
+        border-color: #C5A059;
+    }
+    .step-name {
+        color: var(--text-muted);
+        font-size: 0.85rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    .stepper-item.active .step-name {
+        color: var(--text-primary);
+    }
+
+    /* Form & Step Transitions */
+    .step-content {
+        display: none;
+    }
+    .step-content.active {
+        display: block;
+        animation: fadeInRight 0.4s ease-out;
+    }
+
+    /* Drop Zone Styling */
+    .drop-zone {
+        height: 180px;
+        padding: 25px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        cursor: pointer;
+        color: rgba(255,255,255,0.4);
+        border: 2px dashed rgba(255,255,255,0.1);
+        border-radius: 15px;
+        background: rgba(255,255,255,0.02);
+        transition: all 0.3s ease;
+        position: relative;
+    }
+    .drop-zone:hover {
+        border-color: var(--primary-light);
+        background: rgba(197, 160, 89, 0.05);
+        color: white;
+    }
+    .drop-zone__input {
+        display: none;
+    }
+    .drop-zone--over {
+        border-style: solid;
+        border-color: var(--primary-light);
+        background: rgba(197, 160, 89, 0.1);
+    }
+    .drop-zone__thumb {
+        width: 100%;
+        height: 100%;
+        border-radius: 10px;
+        overflow: hidden;
+        background-color: #cccccc;
+        background-size: cover;
+        position: relative;
+    }
+    .drop-zone__thumb::after {
+        content: attr(data-label);
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        padding: 5px 0;
+        color: #ffffff;
+        background: rgba(0, 0, 0, 0.75);
+        font-size: 14px;
+        text-align: center;
+    }
+
+    /* Table Matrix */
+    .matrix-checkbox {
+        width: 28px;
+        height: 28px;
+        cursor: pointer;
+        background-color: rgba(88, 28, 28, 0.05) !important;
+        border: 2px solid #581C1C !important;
+        border-radius: 8px !important;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        appearance: none !important;
+        -webkit-appearance: none !important;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto;
+    }
+    .matrix-checkbox:checked {
+        background: #581C1C !important; /* Maroon Tick */
+        border-color: #581C1C !important;
+        box-shadow: 0 0 15px rgba(88, 28, 28, 0.4) !important;
+    }
+    .matrix-checkbox:checked::after {
+        content: '\F26E'; /* Bootstrap icons check */
+        font-family: 'bootstrap-icons' !important;
+        color: #C5A059 !important; /* Gold Icon inside Maroon Box */
+        font-size: 1.1rem;
+        font-weight: bold;
+    }
+    .matrix-checkbox:hover {
+        border-color: #C5A059 !important;
+        transform: scale(1.1);
+        background-color: rgba(88, 28, 28, 0.1) !important;
+    }
+    
+    #availabilityMatrix td {
+        cursor: pointer;
+        transition: background-color 0.2s;
+    }
+    #availabilityMatrix td:hover:not(.fw-bold) {
+        background-color: rgba(255,255,255,0.02);
+    }
+
+    /* Fix for Select Options Visibility */
+    select.bg-glass-input option {
+        background-color: #1a1a2e; /* Dark background for options */
+        color: white;
+    }
+    
+    /* Availability Matrix Contrast Fix */
+    #availabilityMatrix {
+        background: rgba(197, 160, 89, 0.15) !important;
+        border: 2px solid #C5A059 !important;
+    }
+    #availabilityMatrix tbody tr:hover {
+        background: rgba(88, 28, 28, 0.05) !important;
+    }
+    #availabilityMatrix td.fw-bold {
+        background: rgba(197, 160, 89, 0.2) !important;
+        color: #581C1C !important;
+        border-right: 1px solid rgba(88, 28, 28, 0.2) !important;
+    }
+    
+    .bg-glass-input {
+        background: rgba(15, 23, 42, 0.8) !important;
+        border: 1px solid rgba(255, 255, 255, 0.15) !important;
+        color: white !important;
+        padding: 15px 20px !important;
+        border-radius: 15px !important;
+    }
+    .bg-glass-input::placeholder {
+        color: rgba(255, 255, 255, 0.5) !important;
+        font-weight: 400;
+    }
+    .bg-glass-input:focus {
+        background: rgba(15, 23, 42, 1) !important;
+        border-color: #C5A059 !important;
+        color: white !important;
+        box-shadow: 0 0 20px rgba(197, 160, 89, 0.3) !important;
+    }
+
+    /* Step Button Overrides */
+    .btn-primary-glow {
+        background: linear-gradient(135deg, #C5A059, #581C1C) !important;
+        color: white !important;
+        opacity: 1 !important;
+        font-weight: 800 !important;
+        box-shadow: 0 10px 20px rgba(197, 160, 89, 0.4) !important;
+    }
+    .btn-secondary-glass {
+        background: rgba(255, 255, 255, 0.05) !important;
+        color: white !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    }
+
+    @@keyframes fadeInRight {
+        from { opacity: 0; transform: translateX(20px); }
+        to { opacity: 1; transform: translateX(0); }
+    }
+</style>
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script>
+    // 1. Multi-Step Navigation
+    function nextStep(step) {
+        $('.step-content').removeClass('active');
+        $('#step' + step).addClass('active');
+        
+        $('.stepper-item').removeClass('active');
+        for(let i=1; i<=step; i++) {
+            if(i < step) $('#step' + i + '-header').addClass('completed');
+            if(i == step) $('#step' + i + '-header').addClass('active');
+        }
+        
+        window.scrollTo(0, 0);
+    }
+
+    // 2. Cascading Dropdowns
+    $('#CategorySelect').on('change', function() {
+        const categoryId = $(this).val();
+        const $courseSelect = $('#CourseSelect');
+        
+        if (!categoryId) {
+            $courseSelect.empty().append('<option value="">--- Önce Kategori Seçiniz ---</option>').prop('disabled', true);
+            return;
+        }
+
+        $courseSelect.empty().append('<option value="">Yükleniyor...</option>').prop('disabled', false);
+
+        $.getJSON('/InstructorApplications/GetCoursesByCategory', { categoryId: categoryId }, function(data) {
+            $courseSelect.empty().append('<option value="">--- Branş Seçiniz ---</option>');
+            data.forEach(function(item) {
+                $courseSelect.append($('<option>', { value: item.id, text: item.name }));
+            });
+        });
+    });
+
+    // 3. Availability Matrix Logic
+    $('.matrix-checkbox').on('change', function(e) {
+        e.stopPropagation();
+        updateAvailabilityJson();
+    });
+
+    // Toggle checkbox when clicking the cell
+    $('#availabilityMatrix td').on('click', function(e) {
+        const $checkbox = $(this).find('.matrix-checkbox');
+        if ($checkbox.length && e.target !== $checkbox[0]) {
+            $checkbox.prop('checked', !$checkbox.prop('checked')).trigger('change');
+        }
+    });
+
+    function updateAvailabilityJson() {
+        const availability = [];
+        $('.matrix-checkbox:checked').each(function() {
+            availability.push({
+                day: $(this).data('day'),
+                time: $(this).data('time')
+            });
+        });
+        $('#AvailabilityJson').val(JSON.stringify(availability));
+    }
+
+    // 4. Drag and Drop Functionality
+    document.querySelectorAll(".drop-zone__input").forEach((inputElement) => {
+        const dropZoneElement = inputElement.closest(".drop-zone");
+
+        dropZoneElement.addEventListener("click", (e) => {
+            inputElement.click();
+        });
+
+        inputElement.addEventListener("change", (e) => {
+            if (inputElement.files.length) {
+                updateThumbnail(dropZoneElement, inputElement.files[0]);
+            }
+        });
+
+        dropZoneElement.addEventListener("dragover", (e) => {
+            e.preventDefault();
+            dropZoneElement.classList.add("drop-zone--over");
+        });
+
+        ["dragleave", "dragend"].forEach((type) => {
+            dropZoneElement.addEventListener(type, (e) => {
+                dropZoneElement.classList.remove("drop-zone--over");
+            });
+        });
+
+        dropZoneElement.addEventListener("drop", (e) => {
+            e.preventDefault();
+
+            if (e.dataTransfer.files.length) {
+                inputElement.files = e.dataTransfer.files;
+                updateThumbnail(dropZoneElement, e.dataTransfer.files[0]);
+            }
+
+            dropZoneElement.classList.remove("drop-zone--over");
+        });
+    });
+
+    function updateThumbnail(dropZoneElement, file) {
+        let thumbnailElement = dropZoneElement.querySelector(".drop-zone__thumb");
+
+        if (dropZoneElement.querySelector(".drop-zone__prompt")) {
+            dropZoneElement.querySelector(".drop-zone__prompt").remove();
+        }
+
+        if (!thumbnailElement) {
+            thumbnailElement = document.createElement("div");
+            thumbnailElement.classList.add("drop-zone__thumb");
+            dropZoneElement.appendChild(thumbnailElement);
+        }
+
+        thumbnailElement.dataset.label = file.name;
+
+        // Show PDF icon for PDF files
+        if (file.type === "application/pdf") {
+            thumbnailElement.style.backgroundImage = null;
+            thumbnailElement.innerHTML = '<i class="bi bi-file-earmark-pdf-fill text-danger fs-1"></i><div class="mt-2 text-white small">' + file.name + '</div>';
+            thumbnailElement.style.display = 'flex';
+            thumbnailElement.style.flexDirection = 'column';
+            thumbnailElement.style.alignItems = 'center';
+            thumbnailElement.style.justifyContent = 'center';
+        }
+    }
+</script>
+
+

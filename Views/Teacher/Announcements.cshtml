@@ -1,0 +1,86 @@
+﻿@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Duyuru Yayınla";
+    var course = ViewBag.Course as HalkEgitimSistemi.Models.Course;
+}
+
+<div class="container py-4" style="max-width:700px;">
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert animate-fadeIn mb-4" style="background:rgba(16,185,129,0.1);color:var(--success);border:1px solid rgba(16,185,129,0.2);border-radius:var(--radius-md);padding:1rem 1.5rem;">
+            <i class="bi bi-check-circle-fill me-2"></i>@TempData["Success"]
+        </div>
+    }
+
+    <div class="glass-card-static overflow-hidden animate-scaleIn">
+        <div style="padding:2rem 2rem 1.5rem;border-bottom:1px solid var(--border-glass);background:linear-gradient(135deg,rgba(245,158,11,0.08),rgba(239,68,68,0.04));text-align:center;">
+            <div style="width:70px;height:70px;display:inline-flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#f59e0b,#ef4444);border-radius:var(--radius-xl);margin-bottom:1rem;">
+                <i class="bi bi-megaphone-fill" style="font-size:1.8rem;color:white;"></i>
+            </div>
+            <h2 style="font-family:'Outfit';font-weight:800;margin:0;color:var(--text-primary);">Duyuru Yayınla</h2>
+            <p style="color:var(--text-muted);margin:0.3rem 0 0;font-size:0.85rem;">
+                <i class="bi bi-people-fill me-1"></i>
+                <strong style="color:var(--warning);">@ViewBag.StudentCount</strong> onaylı öğrenciye gönderilecek — @course?.CourseName
+            </p>
+        </div>
+
+        <div style="padding:2rem;">
+            <form asp-action="SendAnnouncement" method="post">
+                @Html.AntiForgeryToken()
+                <div class="row g-3">
+                    <div class="col-12">
+                        <div class="form-premium-group">
+                            <label class="form-premium-label"><i class="bi bi-card-heading me-1"></i>Duyuru Başlığı</label>
+                            <input type="text" name="subject" class="form-premium-control" placeholder="Örn: Yarın ders iptal edildi" required maxlength="200" />
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="form-premium-group">
+                            <label class="form-premium-label"><i class="bi bi-chat-square-text me-1"></i>Duyuru Mesajı</label>
+                            <textarea name="message" class="form-premium-control" rows="6"
+                                placeholder="Duyuru içeriğini buraya yazın. Öğrenciler bu mesajı mesaj kutularında görecek." required maxlength="1000"></textarea>
+                            <small style="color:var(--text-muted);font-size:0.75rem;">Maksimum 1000 karakter</small>
+                        </div>
+                    </div>
+
+                    <!-- Şablonlar -->
+                    <div class="col-12">
+                        <p style="color:var(--text-muted);font-size:0.8rem;margin-bottom:0.5rem;">⚡ Hızlı Şablonlar:</p>
+                        <div class="d-flex gap-2 flex-wrap">
+                            <button type="button" class="btn btn-sm btn-secondary-glass py-1 px-2"
+                                onclick="setTemplate('Ders İptali', 'Yarın @DateTime.Now.AddDays(1).ToString("dd.MM.yyyy") tarihli dersimiz iptal edilmiştir. Bir sonraki ders hakkında bilgi verilecektir.')">
+                                📅 Ders İptali
+                            </button>
+                            <button type="button" class="btn btn-sm btn-secondary-glass py-1 px-2"
+                                onclick="setTemplate('Sınav Hatırlatması', 'Sınav tarihi yaklaşmaktadır. Lütfen konuları tekrar edin ve eksiklerinizi tamamlayın.')">
+                                📝 Sınav Hatırlatma
+                            </button>
+                            <button type="button" class="btn btn-sm btn-secondary-glass py-1 px-2"
+                                onclick="setTemplate('Ödev Teslim Tarihi', 'Ödevinizin teslim tarihi yaklaşmaktadır. Lütfen zamanında teslim edin.')">
+                                ⏰ Ödev Hatırlatma
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex gap-3 mt-4">
+                    <a asp-action="Dashboard" class="btn btn-premium btn-secondary-glass flex-fill justify-content-center">
+                        <i class="bi bi-arrow-left"></i> Geri
+                    </a>
+                    <button type="submit" class="btn btn-premium btn-warning-glow flex-fill justify-content-center">
+                        <i class="bi bi-send-fill"></i> Duyuruyu Gönder
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+function setTemplate(subject, msg) {
+    document.querySelector('input[name="subject"]').value = subject;
+    document.querySelector('textarea[name="message"]').value = msg;
+}
+</script>
+}

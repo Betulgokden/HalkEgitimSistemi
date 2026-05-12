@@ -1,0 +1,232 @@
+﻿@model HalkEgitimSistemi.Models.News
+
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="glass-card-static p-4 p-md-5 animate-fadeInUp">
+                <div class="mb-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <span class="badge-premium badge-primary"><i class="bi bi-megaphone me-1"></i> Güncel Haber</span>
+                        
+                        <!-- Text-to-Speech (Erişilebilirlik Åovu) -->
+                        <button class="btn btn-premium btn-secondary-glass btn-sm" id="ttsBtn" onclick="toggleTTS()">
+                            <i class="bi bi-volume-up-fill me-2"></i> <span id="ttsText">Haberi Dinle</span>
+                            <div class="tts-wave" id="ttsWave" style="display: none;">
+                                <span></span><span></span><span></span>
+                            </div>
+                        </button>
+                    </div>
+                    <h1 class="display-5 fw-bold text-primary-theme">@Model.Title</h1>
+                    <p class="text-muted small">Yayınlanma: @Model.PublishDate.ToString("dd MMMM yyyy HH:mm")</p>
+                </div>
+
+                @if (Model.Title.Contains("Dergi") || Model.Title.Contains("Özel Sayı") || Model.Title.Contains("Yaşam Boyu Öğrenme"))
+                {
+                    <div class="magazine-news-header mb-5">
+                        <partial name="~/Views/Magazines/_MagazinePartial.cshtml" />
+                        <hr class="border-glass my-5" />
+                    </div>
+                }
+
+                @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                {
+                    <img src="@Model.ImageUrl" class="img-fluid rounded-4 mb-4 w-100 shadow-lg" alt="@Model.Title">
+                }
+
+                <div class="news-content text-white-50 lead mb-5" id="newsBody" style="white-space: pre-line; line-height: 1.8;">
+                    @Model.Content
+                </div>
+
+                <!-- Like Section -->
+                <div class="d-flex align-items-center gap-4 border-top border-bottom border-glass py-4 mb-5">
+                    <div class="like-container">
+                        @{
+                            bool isLiked = Model.Likes.Any(l => l.UserEmail == User.Identity?.Name);
+                        }
+                        <button class="btn-like @(isLiked ? "active" : "")" onclick="toggleLike(@Model.Id)">
+                            <i class="bi @(isLiked ? "bi-heart-fill" : "bi-heart")"></i>
+                            <span id="likeCount">@Model.Likes.Count</span> Beğeni
+                        </button>
+                    </div>
+                    <div class="share-container">
+                        <span class="text-muted small me-2">Paylaş:</span>
+                        <button class="btn btn-icon-glass"><i class="bi bi-whatsapp"></i></button>
+                        <button class="btn btn-icon-glass ms-2"><i class="bi bi-twitter-x"></i></button>
+                    </div>
+                </div>
+
+                <!-- Comments Section -->
+                <div class="comments-section">
+                    <h4 class="text-primary-theme fw-bold mb-4"><i class="bi bi-chat-left-text me-2"></i> Yorumlar (@Model.Comments.Count)</h4>
+                    
+                    <div class="comment-form mb-5">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <input type="email" id="commentEmail" class="form-control bg-glass-input" placeholder="E-posta adresiniz" value="@User.Identity?.Name">
+                            </div>
+                            <div class="col-12">
+                                <textarea id="commentContent" class="form-control bg-glass-input" rows="3" placeholder="Yorumunuzu buraya yazın..."></textarea>
+                            </div>
+                            <div class="col-12 text-end">
+                                <button class="btn btn-premium btn-primary-glow px-4" onclick="addComment(@Model.Id)">
+                                    Yorum Yap <i class="bi bi-send ms-2"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="commentsList">
+                        @foreach (var comment in Model.Comments.OrderByDescending(c => c.CreatedAt))
+                        {
+                            <div class="comment-item mb-4 p-3 rounded-3" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05);">
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span class="fw-bold text-primary-light">@comment.UserEmail</span>
+                                    <small class="text-muted">@comment.CreatedAt.ToString("dd.MM.yyyy HH:mm")</small>
+                                </div>
+                                <p class="mb-0 text-white-50">@comment.Content</p>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .btn-like {
+        background: rgba(255,255,255,0.05);
+        border: 1px solid rgba(255,255,255,0.1);
+        color: white;
+        padding: 8px 20px;
+        border-radius: 30px;
+        transition: all 0.3s ease;
+    }
+    .btn-like.active {
+        background: rgba(220, 53, 69, 0.1);
+        border-color: #dc3545;
+        color: #dc3545;
+    }
+    .btn-like:hover {
+        transform: scale(1.05);
+    }
+    .btn-icon-glass {
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.05);
+        border: 1px solid rgba(255,255,255,0.1);
+        color: white;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    /* TTS Wave Effect */
+    .tts-wave {
+        display: inline-flex;
+        align-items: flex-end;
+        gap: 2px;
+        height: 15px;
+        margin-left: 5px;
+    }
+    .tts-wave span {
+        width: 3px;
+        background: var(--primary);
+        animation: wave 1s infinite ease-in-out;
+    }
+    .tts-wave span:nth-child(2) { animation-delay: 0.2s; height: 100%; }
+    .tts-wave span:nth-child(3) { animation-delay: 0.4s; height: 60%; }
+    @@keyframes wave {
+        0%, 100% { height: 30%; }
+        50% { height: 100%; }
+    }
+</style>
+
+<script>
+    // 1. Text-to-Speech
+    let speech = new SpeechSynthesisUtterance();
+    speech.lang = 'tr-TR';
+    speech.rate = 1;
+
+    function toggleTTS() {
+        const btn = document.getElementById('ttsBtn');
+        const wave = document.getElementById('ttsWave');
+        const text = document.getElementById('ttsText');
+
+        if (window.speechSynthesis.speaking) {
+            window.speechSynthesis.cancel();
+            wave.style.display = 'none';
+            text.innerText = 'Haberi Dinle';
+            btn.classList.remove('btn-primary-glow');
+        } else {
+            speech.text = document.getElementById('newsBody').innerText;
+            window.speechSynthesis.speak(speech);
+            wave.style.display = 'inline-flex';
+            text.innerText = 'Durdur';
+            btn.classList.add('btn-primary-glow');
+            
+            speech.onend = () => {
+                wave.style.display = 'none';
+                text.innerText = 'Haberi Dinle';
+                btn.classList.remove('btn-primary-glow');
+            };
+        }
+    }
+
+    // 2. Like (AJAX)
+    function toggleLike(newsId) {
+        const email = document.getElementById('commentEmail').value;
+        if (!email) {
+            alert('Beğenmek için e-posta giriniz veya giriş yapınız.');
+            return;
+        }
+
+        $.post('/News/ToggleLike', { newsId: newsId, email: email }, function(res) {
+            if (res.success) {
+                const btn = document.querySelector('.btn-like');
+                const count = document.getElementById('likeCount');
+                if (res.liked) {
+                    btn.classList.add('active');
+                    btn.querySelector('i').classList.replace('bi-heart', 'bi-heart-fill');
+                    count.innerText = parseInt(count.innerText) + 1;
+                } else {
+                    btn.classList.remove('active');
+                    btn.querySelector('i').classList.replace('bi-heart-fill', 'bi-heart');
+                    count.innerText = parseInt(count.innerText) - 1;
+                }
+            }
+        });
+    }
+
+    // 3. Comment (AJAX)
+    function addComment(newsId) {
+        const email = document.getElementById('commentEmail').value;
+        const content = document.getElementById('commentContent').value;
+        
+        if (!email || !content) {
+            alert('Lütfen tüm alanları doldurunuz.');
+            return;
+        }
+
+        $.post('/News/AddComment', { newsId: newsId, email: email, content: content }, function(res) {
+            if (res.success) {
+                const html = `
+                    <div class="comment-item mb-4 p-3 rounded-3 animate-fadeInUp" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05);">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="fw-bold text-primary-light">${res.user}</span>
+                            <small class="text-muted">${res.date}</small>
+                        </div>
+                        <p class="mb-0 text-white-50">${res.content}</p>
+                    </div>`;
+                $('#commentsList').prepend(html);
+                document.getElementById('commentContent').value = '';
+            }
+        });
+    }
+</script>
+

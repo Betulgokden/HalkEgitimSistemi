@@ -1,0 +1,103 @@
+﻿@model IEnumerable<HalkEgitimSistemi.Models.EmailLog>
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "E-Posta Günlükleri";
+}
+
+<div class="container py-5">
+    <div class="glass-card-static p-4 mb-4 animate-fadeInUp">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <div>
+                <h2 class="section-title mb-1" style="font-family: 'Outfit';">
+                    <i class="bi bi-envelope-paper-fill me-2" style="color: var(--primary-light);"></i>E-Posta Bildirim Günlükleri
+                </h2>
+                <p class="text-muted mb-0">Sistem tarafından gönderilen tüm e-posta bildirimlerini buradan takip edebilirsiniz.</p>
+            </div>
+            <div class="hero-stat d-inline-flex px-4 py-2" style="border-radius: 15px;">
+                <span class="hero-stat-number text-primary-light" style="font-size: 1.5rem;">@Model.Count()</span>
+                <span class="hero-stat-label ms-2">Toplam Gönderim</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="glass-card-static p-0 overflow-hidden animate-fadeInUp" style="animation-delay: 0.1s;">
+        <div class="table-responsive">
+            <table class="table table-premium mb-0">
+                <thead>
+                    <tr>
+                        <th>Alıcı</th>
+                        <th>Konu</th>
+                        <th>Tarih</th>
+                        <th>Durum</th>
+                        <th class="text-end">Detay</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var log in Model)
+                    {
+                        <tr>
+                            <td>
+                                <div class="fw-bold text-white">@log.ToEmail</div>
+                            </td>
+                            <td class="text-white-50 small">@log.Subject</td>
+                            <td class="text-white-50 small">@log.SentDate.ToString("dd.MM.yyyy HH:mm")</td>
+                            <td>
+                                @if (log.IsSuccess)
+                                {
+                                    <span class="badge-premium badge-success"><i class="bi bi-check-circle me-1"></i>Başarılı</span>
+                                }
+                                else
+                                {
+                                    <span class="badge-premium badge-danger" title="@log.ErrorMessage"><i class="bi bi-exclamation-triangle me-1"></i>Hata</span>
+                                }
+                            </td>
+                            <td class="text-end">
+                                <button type="button" class="btn btn-sm btn-premium btn-secondary-glass" 
+                                        onclick="showEmailContent('@log.ToEmail', '@Html.Raw(log.Subject)', '@Html.Raw(log.Body.Replace("'", "\\'").Replace("\n", " "))')">
+                                    <i class="bi bi-eye"></i> İçerik
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Email Content Modal -->
+<div class="modal fade" id="emailModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content" style="background:var(--bg-dark); border:1px solid var(--border-glass); border-radius: var(--radius-lg);">
+            <div class="modal-header border-bottom border-glass">
+                <h5 class="modal-title fw-800" id="modalTitle">E-Posta İçeriği</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4">
+                <div class="mb-3">
+                    <label class="text-white-50 small fw-bold">Alıcı:</label>
+                    <div id="modalTo" class="text-white fw-bold"></div>
+                </div>
+                <div class="mb-3">
+                    <label class="text-white-50 small fw-bold">Konu:</label>
+                    <div id="modalSubject" class="text-primary-light fw-bold"></div>
+                </div>
+                <hr class="border-glass">
+                <div id="modalBody" class="p-4 rounded" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); color: rgba(255,255,255,0.8);">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+function showEmailContent(to, subject, body) {
+    document.getElementById('modalTo').innerText = to;
+    document.getElementById('modalSubject').innerText = subject;
+    document.getElementById('modalBody').innerHTML = body;
+    var myModal = new bootstrap.Modal(document.getElementById('emailModal'));
+    myModal.show();
+}
+</script>
+}

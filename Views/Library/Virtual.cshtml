@@ -1,0 +1,366 @@
+﻿@model IEnumerable<HalkEgitimSistemi.Models.LibraryBook>
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Ders Notları Arşivi | Kursiyer Notları";
+    string currentCategory = ViewBag.CurrentCategory ?? "Hepsi";
+}
+
+<style>
+    :root {
+        --primary-vibrant: #C5A059;
+        --secondary-vibrant: #581C1C;
+        --glass-bg: rgba(255, 255, 255, 0.05);
+        --glass-border: rgba(255, 255, 255, 0.1);
+        --premium-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+        --vibrant-gradient: linear-gradient(135deg, #C5A059 0%, #581C1C 100%);
+    }
+
+    body {
+        background: #0f111a !important; /* Ana sayfa ile birebir aynı derin lacivert */
+    }
+
+    .library-wrapper {
+        min-height: 100vh;
+        padding: 150px 0 100px 0; /* Navbar için daha fazla boşluk */
+        font-family: 'Inter', 'Outfit', sans-serif;
+        position: relative;
+        z-index: 10;
+    }
+
+    .sidebar-glass {
+        background: var(--glass-bg);
+        backdrop-filter: blur(25px);
+        border: 1px solid var(--glass-border);
+        border-radius: 20px;
+        padding: 30px;
+        position: sticky;
+        top: 120px;
+        box-shadow: var(--premium-shadow);
+    }
+
+    .category-link {
+        display: flex;
+        align-items: center;
+        padding: 14px 20px;
+        color: #94a3b8 !important;
+        text-decoration: none;
+        border-radius: 12px;
+        margin-bottom: 10px;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        font-weight: 600;
+        border: 1px solid transparent;
+    }
+
+    .category-link:hover, .category-link.active {
+        background: linear-gradient(90deg, rgba(197, 160, 89, 0.15), transparent);
+        color: white !important;
+        border-left: 4px solid var(--secondary-vibrant);
+        transform: translateX(12px);
+        box-shadow: -10px 0 20px rgba(197, 160, 89, 0.1);
+    }
+
+    .book-card {
+        background: rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(15px);
+        border: 1px solid rgba(197, 160, 89, 0.2);
+        border-radius: 28px;
+        overflow: hidden;
+        transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        position: relative;
+    }
+
+    .book-card:hover {
+        transform: translateY(-20px) scale(1.02);
+        border-color: var(--secondary-vibrant);
+        box-shadow: 0 25px 60px rgba(88, 28, 28, 0.25);
+    }
+
+    .book-card::before {
+        content: '';
+        position: absolute;
+        top: 0; left: -100%;
+        width: 100%; height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
+        transition: 0.5s;
+        z-index: 2;
+    }
+    .book-card:hover::before { left: 100%; }
+
+    .book-thumb-wrapper {
+        position: relative;
+        height: 280px;
+        overflow: hidden;
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .book-thumb {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: all 0.8s ease;
+        filter: brightness(0.7) grayscale(0.2);
+    }
+
+    .book-card:hover .book-thumb {
+        transform: scale(1.15) rotate(2deg);
+        filter: brightness(1.1) grayscale(0);
+    }
+
+    .book-badge {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background: var(--vibrant-gradient);
+        color: white;
+        padding: 8px 18px;
+        border-radius: 12px;
+        font-size: 0.75rem;
+        font-weight: 900;
+        letter-spacing: 1.5px;
+        box-shadow: 0 8px 20px rgba(88, 28, 28, 0.4);
+        z-index: 5;
+    }
+
+    .book-info {
+        padding: 25px;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.4));
+    }
+
+    .book-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        margin-bottom: 12px;
+        color: #ffffff;
+        letter-spacing: -0.5px;
+    }
+
+    .btn-preview {
+        background: var(--vibrant-gradient);
+        color: white !important;
+        border: none;
+        border-radius: 12px;
+        padding: 12px 24px;
+        font-weight: 700;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-size: 0.85rem;
+    }
+
+    .btn-preview:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0 20px rgba(88, 28, 28, 0.4);
+        filter: brightness(1.2);
+    }
+
+    .search-box {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 20px;
+        padding: 10px 10px 10px 30px;
+        display: flex;
+        align-items: center;
+        margin-bottom: 50px;
+        backdrop-filter: blur(25px);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        transition: all 0.3s ease;
+    }
+
+    .search-box:focus-within {
+        border-color: var(--secondary-vibrant);
+        box-shadow: 0 0 30px rgba(88, 28, 28, 0.15);
+    }
+
+    .search-box input { background: transparent; border: none; color: white; flex-grow: 1; padding: 12px; outline: none; font-weight: 500; }
+    .btn-search { background: var(--bronze-gold); color: #000; border: none; border-radius: 10px; padding: 12px 35px; font-weight: 800; transition: all 0.3s; }
+    .btn-search:hover { background: white; transform: translateY(-2px); }
+
+    .library-header { text-align: center; margin-bottom: 80px; }
+    .library-header h1 { 
+        font-size: 4rem; 
+        font-weight: 900; 
+        background: linear-gradient(to right, #fff, var(--secondary-vibrant)); 
+        -webkit-background-clip: text; 
+        background-clip: text; 
+        -webkit-text-fill-color: transparent;
+        letter-spacing: -2px;
+    }
+    .library-header p { color: #94a3b8; font-size: 1.1rem; }
+
+    .rank-num { font-family: 'Outfit'; font-weight: 900; background: var(--vibrant-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+    .artist-link {
+        color: #94a3b8;
+        text-decoration: none;
+        transition: color 0.3s;
+        font-weight: 500;
+    }
+    .artist-link:hover { color: var(--bronze-gold); }
+
+    .animate-in { animation: fadeInUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; opacity: 0; }
+    @@keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+</style>
+
+<div class="library-wrapper">
+    
+    <div class="container hero-content text-center">
+        <!-- Header -->
+        <div class="library-header animate-in">
+            <h1>Eğitim <span style="color: var(--secondary-vibrant); -webkit-text-fill-color: var(--secondary-vibrant);">Arşivi</span></h1>
+            <p>Bilgi Paylaştıkça Çoğalır, Başarı Birlikte Gelir</p>
+        </div>
+
+        <!-- Campaign Banner -->
+        <div class="sidebar-glass mb-5 p-4 animate-in" style="animation-delay: 0.1s; border-left: 4px solid var(--bronze-gold);">
+            <div class="d-flex align-items-center justify-content-between flex-wrap gap-4">
+                <div class="d-flex align-items-center">
+                    <div style="background: var(--metallic-gradient); color: white; width: 60px; height: 60px; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; box-shadow: 0 10px 20px rgba(0,0,0,0.3);">
+                        <i class="bi bi-trophy-fill"></i>
+                    </div>
+                    <div class="ms-4">
+                        <h4 class="m-0 fw-bold text-white">Yıldızların Yarışı!</h4>
+                        <p class="m-0 text-muted">En çok yıldız alan 3 not sahibine özel eğitim bursu ve sertifika seti.</p>
+                    </div>
+                </div>
+                <a asp-controller="Student" asp-action="UploadNote" class="btn-preview">NOTUNU PAYLAÅ VE YARIÅ</a>
+            </div>
+        </div>
+
+        <!-- Search Bar -->
+        <form asp-action="Virtual" method="get" class="search-box animate-in" style="animation-delay: 0.2s;">
+            <i class="bi bi-search" style="color: var(--secondary-vibrant);"></i>
+            <input type="text" name="category" placeholder="Arşivde derinlemesine arama yapın..." value="@currentCategory">
+            <button type="submit" class="btn-search" style="background: var(--vibrant-gradient); color: white;">KEÅFET</button>
+        </form>
+
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-lg-3 mb-5">
+                <div class="sidebar-glass animate-in" style="animation-delay: 0.3s;">
+                    <h5 class="mb-4 fw-bold text-white"><i class="bi bi-grid-1x2-fill me-2" style="color: var(--secondary-vibrant);"></i> BÖLÜMLER</h5>
+                    <a href="?category=Hepsi" class="category-link @(currentCategory == "Hepsi" ? "active" : "")"><i class="bi bi-layers me-2"></i> Tüm Arşiv</a>
+                    <a href="?category=Yazılım" class="category-link @(currentCategory == "Yazılım" ? "active" : "")"><i class="bi bi-code-square me-2"></i> Yazılım Teknolojileri</a>
+                    <a href="?category=Sanat" class="category-link @(currentCategory == "Sanat" ? "active" : "")"><i class="bi bi-palette2 me-2"></i> Güzel Sanatlar</a>
+                    <a href="?category=Dil Eğitimi" class="category-link @(currentCategory == "Dil Eğitimi" ? "active" : "")"><i class="bi bi-translate me-2"></i> Dünya Dilleri</a>
+                    <a href="?category=Aşçılık" class="category-link @(currentCategory == "Aşçılık" ? "active" : "")"><i class="bi bi-egg-fried me-2"></i> Mutfak Sanatları</a>
+                    <a href="?category=Spor ve Sağlık" class="category-link @(currentCategory == "Spor ve Sağlık" ? "active" : "")"><i class="bi bi-activity me-2"></i> Sağlıklı Yaşam</a>
+                </div>
+
+                <div class="sidebar-glass mt-4 animate-in" style="animation-delay: 0.4s;">
+                    <h5 class="mb-4 fw-bold text-white"><i class="bi bi-stars me-2" style="color: var(--secondary-vibrant);"></i> LİDERLİK TABLOSU</h5>
+                    @{
+                        var topNotes = Model?.OrderByDescending(n => n.StarCount).Take(5).ToList();
+                        int rank = 1;
+                    }
+                    @if (topNotes != null && topNotes.Any())
+                    {
+                        foreach (var topNote in topNotes)
+                        {
+                            <div class="d-flex align-items-center mb-4 p-2 rounded transition" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05);">
+                                <div class="rank-num me-3" style="font-size: 1.4rem;">#@rank</div>
+                                <div class="flex-grow-1 overflow-hidden">
+                                    <div class="small fw-bold text-white text-truncate">@topNote.Title</div>
+                                    <div style="font-size: 0.75rem; color: var(--secondary-vibrant);">@topNote.StarCount Yıldız</div>
+                                </div>
+                            </div>
+                            rank++;
+                        }
+                    }
+                </div>
+            </div>
+
+            <!-- Content -->
+            <div class="col-lg-9">
+                <div class="row g-5">
+                    @if (Model != null && Model.Any())
+                    {
+                        int delay = 0;
+                        foreach (var note in Model)
+                        {
+                            <div class="col-md-6 col-xl-4 animate-in" style="animation-delay: @(0.5 + (delay * 0.1))s;">
+                                <div class="book-card">
+                                    <div class="book-thumb-wrapper">
+                                        <img src="@(string.IsNullOrEmpty(note.CoverImageUrl) ? "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=600" : note.CoverImageUrl)" class="book-thumb" alt="@note.Title">
+                                        <div class="book-badge">DERS NOTU</div>
+                                        <div style="position:absolute; bottom:15px; left:15px; background:rgba(0,0,0,0.7); backdrop-filter:blur(10px); color:var(--secondary-vibrant); padding:6px 15px; border-radius:10px; font-weight:800; border: 1px solid rgba(255, 255, 255, 0.1);">
+                                            <i class="bi bi-star-fill me-1"></i> <span id="stars-@note.Id">@note.StarCount</span>
+                                        </div>
+                                    </div>
+                                    <div class="book-info">
+                                        <h3 class="book-title">@note.Title</h3>
+                                        <div class="d-flex align-items-center mb-3">
+                                            @if (note.StudentId > 0) {
+                                                <a href="/Student/PublicCV/@note.StudentId" class="artist-link small">
+                                                    <i class="bi bi-person-circle me-1"></i> @(note.Student?.FirstName + " " + note.Student?.LastName ?? note.Author)
+                                                </a>
+                                            } else {
+                                                <span class="small text-muted"><i class="bi bi-person me-1"></i> @note.Author</span>
+                                            }
+                                        </div>
+                                        <div class="badge bg-transparent border border-secondary text-muted small px-0 mb-4" style="border:none !important;">
+                                            <i class="bi bi-bookmark-fill me-1"></i> @note.Category
+                                        </div>
+                                        
+                                        <div class="d-flex gap-2 mt-auto">
+                                            <a asp-action="Reader" asp-route-id="@note.Id" class="btn-preview flex-grow-1">
+                                                <i class="bi bi-eye-fill"></i> İNCELE
+                                            </a>
+                                            <button onclick="starNote(@note.Id)" class="btn btn-outline-bronze" style="border-radius:12px; border: 1px solid var(--bronze-gold); color: var(--bronze-gold); padding: 10px 15px;">
+                                                <i class="bi bi-star"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            delay++;
+                        }
+                    }
+                    else
+                    {
+                        <div class="col-12 text-center py-5">
+                            <div class="display-1 text-muted mb-4"><i class="bi bi-journal-x"></i></div>
+                            <h3 class="text-white">Henüz kayıtlı bir not bulunamadı.</h3>
+                            <p class="text-muted">Arama kriterlerinizi değiştirmeyi deneyin.</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    async function starNote(id) {
+        try {
+            const response = await fetch('/Library/StarNote/' + id, { method: 'POST' });
+            const data = await response.json();
+            if (data.success) {
+                document.getElementById('stars-' + id).innerText = data.stars;
+                // Sparkle effect or something cool
+                confetti({
+                    particleCount: 100,
+                    spread: 70,
+                    origin: { y: 0.6 },
+                    colors: ['#f59e0b', '#fbbf24', '#ffffff']
+                });
+            }
+        } catch (e) {
+            console.error(e);
+        }
+    }
+</script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+

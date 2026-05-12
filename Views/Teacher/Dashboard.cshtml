@@ -1,0 +1,724 @@
+@model IEnumerable<HalkEgitimSistemi.Models.Application>
+@using HalkEgitimSistemi.Models
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Eğitmen Paneli";
+    var course = ViewBag.Course as Course;
+}
+
+<div class="container py-4">
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert animate-fadeIn mb-4" style="background: rgba(16,185,129,0.1); color: var(--success); border: 1px solid rgba(16,185,129,0.2); border-radius: var(--radius-md); padding: 1rem 1.5rem;">
+            <i class="bi bi-check-circle-fill me-2"></i> @TempData["Success"]
+        </div>
+    }
+
+    <!-- Header -->
+    <div class="glass-card-static p-4 mb-4 animate-fadeInUp">
+        <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+            <div>
+                <h2 class="section-title mb-1" style="font-family: 'Outfit';">
+                    <i class="bi bi-mortarboard-fill me-2" style="color: var(--primary-light);"></i>Hoş Geldiniz, @User.Identity?.Name
+                </h2>
+                <p class="mb-0" style="color: var(--text-muted);">
+                    <i class="bi bi-book me-1"></i>Sorumlu kursunuz:
+                    <span class="badge-premium badge-primary" style="font-size: 0.95rem;">@ViewBag.CourseName</span>
+                </p>
+            </div>
+            <div class="d-flex gap-2 flex-wrap">
+                <a asp-controller="TeacherChat" asp-action="Index"
+                   class="btn btn-premium btn-primary-glow">
+                    <i class="bi bi-people-fill me-1"></i> Öğretmen Odası
+                </a>
+                @if (course != null)
+                {
+                    <a asp-controller="CourseChat" asp-action="Index" asp-route-courseId="@course.Id"
+                       class="btn btn-premium btn-warning-glow">
+                        <i class="bi bi-chat-dots-fill me-1"></i> Sınıf Sohbeti
+                    </a>
+                }
+                <a asp-action="Attendance"
+                   class="btn btn-premium btn-success-glow">
+                    <i class="bi bi-calendar-check-fill me-1"></i> Yoklama Al
+                </a>
+                <a asp-action="EditCourse" class="btn btn-premium btn-primary-glow">
+                    <i class="bi bi-gear-fill me-1"></i> Kurs Düzenle
+                </a>
+                <a asp-action="MyProfile" class="btn btn-premium btn-warning-glow">
+                    <i class="bi bi-person-circle me-1"></i> Profilim
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hızlı Erişim Kısayolları (Modern Tiles) -->
+    <div class="row g-3 mb-5 stagger-children">
+        <div class="col-6 col-md-4 col-lg-2">
+            <a asp-action="Attendance" class="text-decoration-none h-100 d-block">
+                <div class="action-tile-modern" style="--tile-color: #C5A059; --tile-bg: rgba(197, 160, 89, 0.15);">
+                    <div class="icon-box"><i class="bi bi-calendar-check"></i></div>
+                    <span class="tile-label">YOKLAMA AL</span>
+                    <div class="tile-glow" style="background: radial-gradient(circle at center, rgba(197, 160, 89, 0.2), transparent 70%);"></div>
+                </div>
+            </a>
+        </div>
+        <div class="col-6 col-md-4 col-lg-2">
+            <a asp-action="Grading" class="text-decoration-none h-100 d-block">
+                <div class="action-tile-modern" style="--tile-color: #C5A059; --tile-bg: rgba(197, 160, 89, 0.15);">
+                    <div class="icon-box"><i class="bi bi-journal-check"></i></div>
+                    <span class="tile-label">NOT GİRİŞİ</span>
+                    <div class="tile-glow" style="background: radial-gradient(circle at center, rgba(197, 160, 89, 0.2), transparent 70%);"></div>
+                </div>
+            </a>
+        </div>
+        <div class="col-6 col-md-4 col-lg-2">
+            <a asp-action="Materials" class="text-decoration-none h-100 d-block">
+                <div class="action-tile-modern" style="--tile-color: #C5A059; --tile-bg: rgba(197, 160, 89, 0.15);">
+                    <div class="icon-box"><i class="bi bi-files"></i></div>
+                    <span class="tile-label">MATERYALLER</span>
+                    <div class="tile-glow" style="background: radial-gradient(circle at center, rgba(197, 160, 89, 0.2), transparent 70%);"></div>
+                </div>
+            </a>
+        </div>
+        <div class="col-6 col-md-4 col-lg-2">
+            @if (course != null)
+            {
+                <a asp-controller="CourseChat" asp-action="Index" asp-route-courseId="@course.Id" class="text-decoration-none h-100 d-block">
+                    <div class="action-tile-modern" style="--tile-color: #C5A059; --tile-bg: rgba(197, 160, 89, 0.15);">
+                        <div class="icon-box"><i class="bi bi-chat-quote"></i></div>
+                        <span class="tile-label">SINIF SOHBETİ</span>
+                        <div class="tile-glow" style="background: radial-gradient(circle at center, rgba(197, 160, 89, 0.2), transparent 70%);"></div>
+                    </div>
+                </a>
+            }
+            else
+            {
+                <div class="action-tile-modern opacity-50" style="--tile-color: #94a3b8; --tile-bg: rgba(148, 163, 184, 0.1); cursor: not-allowed;" onclick="alert('Atanmış bir kursunuz bulunmamaktadır.')">
+                    <div class="icon-box"><i class="bi bi-chat-quote"></i></div>
+                    <span class="tile-label">SINIF SOHBETİ</span>
+                </div>
+            }
+        </div>
+        <div class="col-6 col-md-4 col-lg-2">
+            <a asp-action="ExhibitionSubmit" class="text-decoration-none h-100 d-block">
+                <div class="action-tile-modern" style="--tile-color: #C5A059; --tile-bg: rgba(197, 160, 89, 0.15);">
+                    <div class="icon-box"><i class="bi bi-image"></i></div>
+                    <span class="tile-label">ESER YÜKLE</span>
+                    <div class="tile-glow" style="background: radial-gradient(circle at center, rgba(197, 160, 89, 0.2), transparent 70%);"></div>
+                </div>
+            </a>
+        </div>
+        <div class="col-6 col-md-4 col-lg-2">
+            <a asp-action="MaterialRequest" class="text-decoration-none h-100 d-block">
+                <div class="action-tile-modern" style="--tile-color: #C5A059; --tile-bg: rgba(197, 160, 89, 0.15);">
+                    <div class="icon-box"><i class="bi bi-box-seam"></i></div>
+                    <span class="tile-label">MALZEME TALEBİ</span>
+                    <div class="tile-glow" style="background: radial-gradient(circle at center, rgba(197, 160, 89, 0.2), transparent 70%);"></div>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <style>
+        /* Modern Action Tiles */
+        .action-tile-modern {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 1.5rem 1rem;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        .action-tile-modern:hover {
+            transform: translateY(-10px) scale(1.05);
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--tile-color);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5), 0 0 20px var(--tile-bg);
+        }
+        .action-tile-modern .icon-box {
+            width: 60px;
+            height: 60px;
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            background: var(--tile-bg);
+            color: var(--tile-color);
+            position: relative;
+            z-index: 2;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px rgba(0,0,0,0.2);
+        }
+        .action-tile-modern:hover .icon-box {
+            transform: scale(1.15) rotate(8deg);
+            background: var(--tile-color);
+            color: white;
+            box-shadow: 0 0 25px var(--tile-bg);
+        }
+        .tile-label {
+            font-size: 0.8rem;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+            color: rgba(255, 255, 255, 0.6);
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        .action-tile-modern:hover .tile-label {
+            color: white;
+            transform: scale(1.1);
+            text-shadow: 0 0 10px rgba(255,255,255,0.5);
+        }
+        .tile-glow {
+            position: absolute;
+            top: 50%; left: 50%;
+            width: 150%; height: 150%;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            pointer-events: none;
+            z-index: 1;
+        }
+        .action-tile-modern:hover .tile-glow {
+            opacity: 0.8;
+        }
+    </style>
+
+    <!-- Kurs Bilgi Kartı -->
+    @if (course != null)
+    {
+        <div class="glass-card-static p-4 mb-4 animate-fadeInUp" style="animation-delay: 0.1s;">
+            <div class="row align-items-center">
+                <div class="col-md-3 text-center mb-3 mb-md-0">
+                    <img src="@(string.IsNullOrEmpty(course.ImageUrl) ? "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=300" : course.ImageUrl)"
+                         alt="@course.CourseName"
+                         style="width: 100%; max-width: 200px; border-radius: var(--radius-lg); border: 2px solid var(--border-glass);" />
+                </div>
+                <div class="col-md-9">
+                    <h4 style="font-family: 'Outfit'; font-weight: 800; color: var(--text-primary);">@course.CourseName</h4>
+                    <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.7;">@course.Description</p>
+                    <div class="d-flex flex-wrap gap-3" style="font-size: 0.85rem; color: var(--text-secondary);">
+                        <span><i class="bi bi-clock-fill me-1" style="color: var(--primary-light);"></i>@course.DurationHours saat</span>
+                        <span><i class="bi bi-people-fill me-1" style="color: var(--success);"></i>Kontenjan: @course.Quota</span>
+                        <span><i class="bi bi-calendar-event-fill me-1" style="color: var(--secondary);"></i>@course.StartDate.ToString("dd MMM") - @course.EndDate.ToString("dd MMM yyyy")</span>
+                        @if (course.IsActive)
+                        {
+                            <span class="badge-premium badge-success"><i class="bi bi-check-circle me-1"></i>Aktif</span>
+                        }
+                        else
+                        {
+                            <span class="badge-premium badge-danger"><i class="bi bi-x-circle me-1"></i>Pasif</span>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    <!-- Canlı Ders Kontrol Paneli -->
+    <div class="glass-card-static p-4 mb-4 animate-fadeInUp" style="animation-delay: 0.15s; border-left: 5px solid @(course?.IsLive == true ? "#ef4444" : "#581C1C");">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <div class="d-flex align-items-center gap-3">
+                <div class="live-pulse-container @(course?.IsLive == true ? "" : "d-none")" id="livePulse">
+                    <div class="live-pulse"></div>
+                </div>
+                <div>
+                    <h5 class="mb-1 fw-bold" style="font-family: 'Outfit';">
+                        <i class="bi bi-broadcast me-2 @(course?.IsLive == true ? "text-danger" : "text-primary")"></i>
+                        Canlı Ders Durumu: <span id="liveStatusText" class="@(course?.IsLive == true ? "text-danger" : "text-muted")">@(course?.IsLive == true ? "YAYINDA" : "Kapalı")</span>
+                    </h5>
+                    <p class="mb-0 small text-muted">Öğrencilerinizle anlık görüntülü görüşme başlatın.</p>
+                </div>
+            </div>
+            <div class="d-flex gap-2">
+                <button onclick="toggleLive(true)" id="startLiveBtn" class="btn btn-premium btn-danger-glow @(course?.IsLive == true ? "d-none" : "")" style="background: linear-gradient(45deg, #ef4444, #581C1C) !important; border: none !important; box-shadow: 0 0 25px rgba(239, 68, 68, 0.4) !important;">
+                    <i class="bi bi-broadcast me-1"></i> Canlı Yayını Başlat
+                </button>
+                <button onclick="toggleLive(false)" id="stopLiveBtn" class="btn btn-premium btn-secondary-glass @(course?.IsLive == true ? "" : "d-none")">
+                    <i class="bi bi-stop-circle me-1"></i> Yayını Durdur
+                </button>
+                @if(course?.IsLive == true) {
+                    <a id="joinLiveBtn" href="/LiveLesson/Room?roomId=@course?.LiveRoomId" target="_blank" class="btn btn-premium btn-primary-glow">
+                        <i class="bi bi-box-arrow-in-right me-1"></i> Odaya Gir
+                    </a>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- İstatistikler -->
+    <div class="row g-4 mb-4">
+        <div class="col-6 col-md-3">
+            <div class="hero-stat animate-scaleIn">
+                <span class="hero-stat-number" style="font-size: 2rem;">@Model.Count()</span>
+                <span class="hero-stat-label">Toplam Kursiyer</span>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="hero-stat animate-scaleIn" style="animation-delay: 0.1s;">
+                <span class="hero-stat-number" style="font-size: 2rem; background: linear-gradient(135deg, #C5A059, #581C1C); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">@ViewBag.UnreadCount</span>
+                <span class="hero-stat-label">Yeni Mesaj</span>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="hero-stat animate-scaleIn" style="animation-delay: 0.2s;">
+                <span class="hero-stat-number" style="font-size: 2rem; background: linear-gradient(135deg, #C5A059, #C5A059); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">@Model.Count(a => a.Status == ApplicationStatus.Approved)</span>
+                <span class="hero-stat-label">Onaylanan</span>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="hero-stat animate-scaleIn" style="animation-delay: 0.3s;">
+                <span class="hero-stat-number" style="font-size: 2rem; background: linear-gradient(135deg, #ef4444, #dc2626); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">@Model.Count(a => a.Status == ApplicationStatus.Rejected)</span>
+                <span class="hero-stat-label">Reddedilen</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gelen Mesajlar (Ticket Sistemi) -->
+    <div class="glass-card-static p-0 overflow-hidden mb-4 animate-fadeInUp" style="animation-delay: 0.2s;">
+        <div class="p-4 border-bottom d-flex justify-content-between align-items-center" style="border-color: var(--border-glass) !important;">
+            <h4 class="mb-0" style="font-family: 'Outfit'; font-weight: 800;">
+                <i class="bi bi-chat-left-text-fill me-2" style="color: var(--primary-light);"></i>Öğrenci Mesajları
+            </h4>
+            @if (ViewBag.UnreadCount > 0)
+            {
+                <span class="badge rounded-pill bg-danger">@ViewBag.UnreadCount Yeni</span>
+            }
+        </div>
+
+        <div class="p-0">
+            @{
+                var messages = ViewBag.Messages as List<Message>;
+            }
+            @if (messages == null || !messages.Any())
+            {
+                <div class="p-4 text-center">
+                    <p class="text-muted mb-0">Henüz bir mesaj almadınız.</p>
+                </div>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table table-premium mb-0">
+                        <thead>
+                            <tr>
+                                <th>Gönderen</th>
+                                <th>Konu</th>
+                                <th>Tarih</th>
+                                <th class="text-end">İşlem</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var msg in messages.Take(10))
+                            {
+                                <tr style="@(msg.IsRead ? "" : "background: rgba(99,102,241,0.03); font-weight: bold;")">
+                                    <td>@msg.SenderUsername</td>
+                                    <td>
+                                        <div class="text-truncate" style="max-width: 300px;">@msg.Subject</div>
+                                        @if (!msg.IsRead) { <span class="badge bg-primary ms-1" style="font-size: 0.6rem;">YENİ</span> }
+                                    </td>
+                                    <td style="font-size: 0.8rem;">@msg.Date.ToString("dd.MM HH:mm")</td>
+                                    <td class="text-end">
+                                        <button class="btn btn-sm btn-premium btn-secondary-glass" onclick="openMessageModal(@msg.Id, '@msg.SenderUsername', '@msg.Subject', `@msg.Content`)">
+                                            <i class="bi bi-reply-fill"></i> Cevapla
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+    </div>
+    <!-- Öğrenci Listesi (Modern Glass Card) -->
+    <div class="glass-card-static p-0 overflow-hidden animate-fadeInUp shadow-2xl" style="animation-delay: 0.4s; background: rgba(15, 23, 42, 0.6) !important; border: 1px solid rgba(255, 255, 255, 0.1) !important; backdrop-filter: blur(20px);">
+        <div class="p-4 border-bottom d-flex align-items-center gap-3" style="border-color: rgba(255,255,255,0.1) !important; background: rgba(255,255,255,0.03);">
+            <div class="icon-box-sm bg-primary-glow" style="width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem;">
+                <i class="bi bi-people-fill text-white"></i>
+            </div>
+            <h4 class="mb-0 fw-900" style="font-family: 'Outfit'; color: white !important; letter-spacing: 0.5px;">Kursa Başvuran Öğrenciler</h4>
+        </div>
+
+        @if (!Model.Any())
+        {
+            <div class="p-5 text-center" style="background: transparent !important;">
+                <div style="width: 80px; height: 80px; margin: 0 auto 1.5rem; background: rgba(88, 28, 28, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                    <i class="bi bi-people" style="font-size: 2.5rem; color: var(--primary-light);"></i>
+                </div>
+                <h5 class="text-white fw-bold" style="font-family: 'Outfit';">Henüz öğrenci bulunmamaktadır</h5>
+                <p class="text-white-50">Kursunuza başvuran öğrenci kaydı henüz bulunmuyor.</p>
+            </div>
+        }
+        else
+        {
+            <div class="table-responsive" style="background: transparent !important; border: none !important;">
+                <table class="table table-premium mb-0" style="background: transparent !important; color: white !important; border-collapse: separate; border-spacing: 0;">
+                    <thead style="background: rgba(197, 160, 89, 0.1) !important;">
+                        <tr style="background: transparent !important;">
+                            <th class="ps-4 border-0 text-primary-light small fw-bold">Öğrenci</th>
+                            <th class="border-0 text-primary-light small fw-bold">T.C. No</th>
+                            <th class="border-0 text-primary-light small fw-bold">Telefon</th>
+                            <th class="border-0 text-primary-light small fw-bold">Tarih</th>
+                            <th class="border-0 text-primary-light small fw-bold">Devamsızlık</th>
+                            <th class="border-0 text-primary-light small fw-bold">Durum</th>
+                            <th class="text-end pe-4 border-0 text-primary-light small fw-bold">İşlem</th>
+                        </tr>
+                    </thead>
+                    <tbody style="background: transparent !important;">
+                        @foreach (var item in Model)
+                        {
+                            <tr class="align-middle border-bottom border-white-5 transition-all hover-bg-glass" style="background: transparent !important;">
+                                <td class="ps-4 py-3">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="avatar-sm rounded-circle d-flex align-items-center justify-content-center" style="width:40px; height:40px; background: rgba(197, 160, 89, 0.1); border: 1px solid rgba(197, 160, 89, 0.2);">
+                                            <i class="bi bi-person-fill text-primary-light"></i>
+                                        </div>
+                                        <div>
+                                            <div class="fw-bold text-white">@item.FirstName @item.LastName</div>
+                                            <div class="small text-white-50">@item.Email</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="text-white-50 small">@item.TcNo</td>
+                                <td class="text-white-50 small">@item.PhoneNumber</td>
+                                <td class="text-white-50 small">@item.ApplyDate.ToString("dd.MM.yyyy")</td>
+                                <td>
+                                    @{
+                                        var absenceCount = item.Attendances?.Count(at => !at.IsPresent) ?? 0;
+                                        var maxAbsence = course?.MaxAbsenceLimit ?? 4;
+                                        var isDangerous = absenceCount >= maxAbsence - 1;
+                                        var isFailed = absenceCount >= maxAbsence;
+                                    }
+                                    <div class="d-flex align-items-center gap-2">
+                                        <div class="progress" style="width: 60px; height: 6px; background: rgba(255,255,255,0.05); border-radius: 10px; overflow: hidden;">
+                                            <div class="progress-bar @(isFailed ? "bg-danger" : (isDangerous ? "bg-warning" : "bg-success"))" 
+                                                 style="width: @(Math.Min(100, (absenceCount * 100 / maxAbsence)))%; box-shadow: 0 0 10px currentColor;"></div>
+                                        </div>
+                                        <span class="small fw-bold" style="color: @(isFailed ? "#ef4444" : (isDangerous ? "#f59e0b" : "#C5A059"));">
+                                            @absenceCount/@maxAbsence
+                                        </span>
+                                    </div>
+                                </td>
+                                <td>
+                                    @if (item.Status == ApplicationStatus.Pending)
+                                    {
+                                        <span class="badge-modern bg-warning text-dark" style="font-size: 0.65rem;">BEKLİYOR</span>
+                                    }
+                                    else if (item.Status == ApplicationStatus.Approved)
+                                    {
+                                        <span class="badge-modern bg-success text-white" style="font-size: 0.65rem;">ONAYLANDI</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge-modern bg-danger text-white" style="font-size: 0.65rem;">REDDEDİLDİ</span>
+                                    }
+                                </td>
+                                <td class="text-end pe-4">
+                                    <div class="d-flex justify-content-end gap-2">
+                                        <button type="button" class="btn btn-sm btn-premium btn-secondary-glass rounded-pill px-3"
+                                                data-bs-toggle="modal" data-bs-target="#modal-@item.Id">
+                                            <i class="bi bi-pencil-square"></i>
+                                        </button>
+                                        <form asp-action="DeleteStudent" method="post" onsubmit="return confirm('Silmek istediğinize emin misiniz?');">
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="id" value="@item.Id" />
+                                            <button type="submit" class="btn btn-sm btn-premium btn-danger-glow rounded-circle" style="width:32px; height:32px; padding:0;">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div><!-- MESAJ CEVAPLAMA MODALI -->
+<div class="modal fade" id="messageReplyModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="background:var(--bg-dark); border:1px solid var(--border-glass); border-radius:var(--radius-lg);">
+            <div class="modal-header border-bottom border-glass p-3">
+                <h5 class="modal-title fw-bold" id="msgModalTitle">Mesaj Detayı</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form asp-controller="Message" asp-action="CevapGonder" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="messageId" id="modalMsgId" />
+                <div class="modal-body p-4">
+                    <div class="mb-3 p-3 bg-glass-strong rounded border-glass">
+                        <small class="text-muted d-block mb-1">Gelen Mesaj:</small>
+                        <p id="modalMsgBody" class="mb-0 text-primary-theme" style="white-space: pre-wrap; font-size: 0.95rem;"></p>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold small">Cevabınız</label>
+                        <textarea name="content" rows="4" class="form-control bg-glass border-glass text-primary-theme" placeholder="Öğrenciye cevabınızı yazın..." required></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer border-top border-glass">
+                    <button type="button" class="btn btn-premium btn-secondary-glass" data-bs-dismiss="modal">Kapat</button>
+                    <button type="submit" class="btn btn-premium btn-primary-glow">
+                        <i class="bi bi-send-fill me-1"></i> Cevapla
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@if (Model != null && Model.Any())
+{
+    foreach (var item in Model)
+    {
+        <div class="modal fade" id="modal-@item.Id" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content" style="background:var(--bg-dark);border:1px solid var(--border-glass);border-radius:var(--radius-lg);box-shadow:0 25px 60px rgba(0,0,0,0.5);">
+                    
+                    <div class="modal-header" style="border-bottom:1px solid var(--border-glass);flex-shrink:0;padding:1rem 1.5rem;">
+                        <h5 class="modal-title" style="font-family:'Outfit';font-weight:800;color:var(--text-primary);font-size:1.15rem;">
+                            <i class="bi bi-person-fill me-2" style="color:var(--primary-light);"></i>
+                            @item.FirstName @item.LastName — Öğrenci Yönetimi
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+
+                    <form method="post" action="/Teacher/UpdateStudentStatus">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="id" value="@item.Id" />
+
+                        <div class="modal-body p-4" style="overflow-y:auto; overflow-x:hidden;">
+                            <!-- KİŞİSEL BİLGİLER -->
+                            <div class="mb-3">
+                                <div class="d-flex align-items-center gap-2 mb-2">
+                                    <i class="bi bi-person-vcard-fill" style="color:var(--primary-light);font-size:1.1rem;"></i>
+                                    <strong style="color:var(--text-primary);font-size:0.95rem;font-family:'Outfit';">Kişisel Bilgiler</strong>
+                                </div>
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label class="info-label mb-1">Ad</label>
+                                        <input type="text" name="firstName" value="@item.FirstName" class="form-premium-control" placeholder="Ad" />
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="info-label mb-1">Soyad</label>
+                                        <input type="text" name="lastName" value="@item.LastName" class="form-premium-control" placeholder="Soyad" />
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="info-label mb-1">E-Posta</label>
+                                        <input type="email" name="email" value="@item.Email" class="form-premium-control" placeholder="E-posta" />
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="info-label mb-1">Telefon</label>
+                                        <input type="text" name="phoneNumber" value="@item.PhoneNumber" class="form-premium-control" placeholder="05XX XXX XX XX" />
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="info-label mb-1">T.C. Kimlik No</label>
+                                        <input type="text" name="tcNo" value="@item.TcNo" class="form-premium-control" placeholder="11 haneli T.C. No" maxlength="11" />
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="info-label mb-1">Doğum Yeri</label>
+                                        <input type="text" name="birthPlace" value="@item.BirthPlace" class="form-premium-control" placeholder="Doğum yeri" />
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="info-label mb-1">Doğum Tarihi</label>
+                                        <input type="date" name="dateOfBirth" value="@item.DateOfBirth.ToString("yyyy-MM-dd")" class="form-premium-control" />
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="info-label mb-1">Eğitim Durumu</label>
+                                        <input type="text" name="educationLevel" value="@item.EducationLevel" class="form-premium-control" placeholder="Eğitim Durumu" />
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <hr style="border-color:var(--border-glass);margin:1rem 0;" />
+                            
+                            <!-- BAŞVURU DURUMU -->
+                            <div class="mb-3">
+                                <div class="d-flex align-items-center gap-2 mb-2">
+                                    <i class="bi bi-flag-fill" style="color:var(--primary-light);font-size:1.1rem;"></i>
+                                    <strong style="color:var(--text-primary);font-size:0.95rem;font-family:'Outfit';">Başvuru Durumu</strong>
+                                </div>
+                                <div class="d-flex gap-2 flex-wrap">
+                                    @if (item.Status == ApplicationStatus.Approved)
+                                    {
+                                        <label class="status-choice-btn active-approve"><input type="radio" name="status" value="Approved" checked> ✅ Onayla</label>
+                                        <label class="status-choice-btn"><input type="radio" name="status" value="Pending"> ⏳ Beklet</label>
+                                        <label class="status-choice-btn"><input type="radio" name="status" value="Rejected"> ❌ Reddet</label>
+                                    }
+                                    else if (item.Status == ApplicationStatus.Pending)
+                                    {
+                                        <label class="status-choice-btn"><input type="radio" name="status" value="Approved"> ✅ Onayla</label>
+                                        <label class="status-choice-btn active-pending"><input type="radio" name="status" value="Pending" checked> ⏳ Beklet</label>
+                                        <label class="status-choice-btn"><input type="radio" name="status" value="Rejected"> ❌ Reddet</label>
+                                    }
+                                    else
+                                    {
+                                        <label class="status-choice-btn"><input type="radio" name="status" value="Approved"> ✅ Onayla</label>
+                                        <label class="status-choice-btn"><input type="radio" name="status" value="Pending"> ⏳ Beklet</label>
+                                        <label class="status-choice-btn active-reject"><input type="radio" name="status" value="Rejected" checked> ❌ Reddet</label>
+                                    }
+                                </div>
+                            </div>
+                            
+                            <!-- ÖĞRENCİYE NOT -->
+                            <div>
+                                <div class="d-flex align-items-center gap-2 mb-1">
+                                    <i class="bi bi-chat-dots-fill" style="color:var(--primary-light);font-size:1.1rem;"></i>
+                                    <strong style="color:var(--text-primary);font-size:0.95rem;font-family:'Outfit';">Öğrenciye Not</strong>
+                                    <span style="font-size:0.75rem;color:var(--text-muted);">(Öğrenci bu notu görecek)</span>
+                                </div>
+                                <textarea name="adminNote" class="form-premium-control" rows="2" placeholder="Not ekleyin...">@item.AdminNote</textarea>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer" style="border-top:1px solid var(--border-glass);flex-shrink:0;gap:0.75rem;padding:1rem 1.5rem;">
+                            <div class="me-auto">
+                                <button type="button" class="btn btn-sm btn-outline-danger" onclick="deleteStudentDirectly(@item.Id)">
+                                    <i class="bi bi-trash me-1"></i>Öğrenciyi Sil
+                                </button>
+                            </div>
+                            <button type="button" class="btn btn-premium btn-secondary-glass" data-bs-modal-dismiss="modal" data-bs-dismiss="modal">
+                                <i class="bi bi-x-lg me-1"></i>Vazgeç
+                            </button>
+                            <button type="submit" class="btn btn-premium btn-primary-glow">
+                                <i class="bi bi-floppy-fill me-1"></i>Kaydet ve Güncelle
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    }
+}
+
+@section Scripts {
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+document.querySelectorAll('.status-choice-btn input[type="radio"]').forEach(function(radio) {
+    radio.addEventListener('change', function() {
+        var group = this.closest('.d-flex');
+        group.querySelectorAll('.status-choice-btn').forEach(function(btn) {
+            btn.classList.remove('active-approve', 'active-pending', 'active-reject');
+        });
+        var val = this.value;
+        var parent = this.closest('.status-choice-btn');
+        if (val === 'Approved') parent.classList.add('active-approve');
+        else if (val === 'Pending') parent.classList.add('active-pending');
+        else if (val === 'Rejected') parent.classList.add('active-reject');
+    });
+});
+</script>
+
+<form id="hiddenDeleteForm" asp-action="DeleteStudent" method="post" style="display:none;">
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="id" id="hiddenDeleteId" />
+</form>
+
+<script>
+function deleteStudentDirectly(id) {
+    if (confirm('Bu öğrenciyi çöp kutusuna taşımak istediğinize emin misiniz?')) {
+        document.getElementById('hiddenDeleteId').value = id;
+        document.getElementById('hiddenDeleteForm').submit();
+    }
+}
+
+function openMessageModal(id, sender, subject, content) {
+    document.getElementById('modalMsgId').value = id;
+    document.getElementById('msgModalTitle').innerText = sender + " - " + subject;
+    document.getElementById('modalMsgBody').innerText = content;
+    
+    // Modalı aç
+    var myModal = new bootstrap.Modal(document.getElementById('messageReplyModal'));
+    myModal.show();
+    
+    // Mesajı okundu olarak işaretle (arka planda)
+    fetch('/Message/MarkAsRead/' + id, { method: 'POST' });
+}
+
+function toggleLive(start) {
+    const actionText = start ? "başlatmak" : "sonlandırmak";
+    const confirmBtnText = start ? "Onaylıyorum" : "Durdur";
+    const cancelBtnText = "Vazgeç";
+    
+    Swal.fire({
+        title: `Canlı Yayını ${actionText.charAt(0).toUpperCase() + actionText.slice(1)}?`,
+        text: `Bu işlem ile kursiyerlerinizle anlık görüşme oturumunu ${actionText} üzeresiniz.`,
+        icon: start ? 'question' : 'warning',
+        showCancelButton: true,
+        confirmButtonColor: start ? '#C5A059' : '#ef4444',
+        cancelButtonColor: '#6b7280',
+        confirmButtonText: `<i class="bi bi-check-circle-fill me-1"></i> ${confirmBtnText}`,
+        cancelButtonText: `<i class="bi bi-x-circle-fill me-1"></i> Reddediyorum`,
+        background: 'rgba(15, 23, 42, 0.95)',
+        color: '#fff',
+        backdrop: `rgba(0,0,123,0.4) blur(4px)`,
+        customClass: {
+            popup: 'glass-card-static border-glass',
+            title: 'text-white fw-bold',
+            htmlContainer: 'text-white-50'
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+            fetch('/Teacher/ToggleLive?start=' + start, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-XSRF-TOKEN': token
+                }
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (data.success) {
+                    Swal.fire({
+                        title: 'Başarılı!',
+                        text: `Canlı yayın başarıyla ${start ? 'başlatıldı' : 'durduruldu'}.`,
+                        icon: 'success',
+                        timer: 1500,
+                        showConfirmButton: false,
+                        background: 'rgba(15, 23, 42, 0.95)',
+                        color: '#fff'
+                    }).then(() => {
+                        location.reload();
+                    });
+                }
+            });
+        }
+    });
+}
+</script>
+
+<style>
+    .live-pulse {
+        width: 15px;
+        height: 15px;
+        background: #ef4444;
+        border-radius: 50%;
+        box-shadow: 0 0 0 rgba(239, 68, 68, 0.4);
+        animation: pulse 2s infinite;
+    }
+
+    @@keyframes pulse {
+        0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+        70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+    }
+</style>
+}
+
+
+

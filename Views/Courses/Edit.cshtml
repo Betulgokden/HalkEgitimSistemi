@@ -1,0 +1,197 @@
+﻿@model HalkEgitimSistemi.Models.Course
+
+@{
+    ViewData["Title"] = "Kurs Düzenle";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10 col-xl-9">
+            <div class="glass-card-static animate-scaleIn overflow-hidden shadow-2xl" style="border: 1px solid rgba(197, 160, 89, 0.2);">
+                <!-- Header Section -->
+                <div class="p-4 p-md-5 border-bottom border-white-10" style="background: linear-gradient(165deg, rgba(197, 160, 89, 0.1), transparent);">
+                    <div class="d-flex align-items-center gap-4">
+                        <div class="page-header-icon shadow-glow" style="width: 70px; height: 70px; font-size: 2rem; background: var(--gradient-premium); border-radius: 20px;">
+                            <i class="bi bi-pencil-square"></i>
+                        </div>
+                        <div>
+                            <h1 style="font-family: 'Outfit', sans-serif; font-weight: 800; margin: 0; color: var(--text-primary); font-size: 2.2rem; letter-spacing: -0.5px;">Kurs Bilgilerini Düzenle</h1>
+                            <p style="color: var(--text-muted); margin: 0; font-size: 1rem; opacity: 0.8;">Sorumlu olduğunuz kursun tüm özelliklerini güncelleyebilirsiniz.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Form Section -->
+                <div class="p-4 p-md-5">
+                    <form asp-action="Edit" enctype="multipart/form-data" class="stagger-children">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger-glow mb-4"></div>
+                        <input type="hidden" asp-for="Id" />
+
+                        <!-- Section: Genel Bilgiler -->
+                        <div class="form-section-divider">
+                            <span class="form-section-title">TEMEL BİLGİLER</span>
+                        </div>
+
+                        <div class="row g-4">
+                            <div class="col-md-8">
+                                <div class="form-premium-group">
+                                    <label asp-for="CourseName" class="form-premium-label">
+                                        <i class="bi bi-bookmark-fill me-2 text-primary-light"></i>Kurs Adı
+                                    </label>
+                                    <input asp-for="CourseName" class="form-premium-control" placeholder="Örn: Yapay Zeka Destekli Python Eğitimi" />
+                                    <span asp-validation-for="CourseName" class="field-validation-error"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-premium-group">
+                                    <label asp-for="CategoryId" class="form-premium-label">
+                                        <i class="bi bi-tag-fill me-2 text-info"></i>Kategori
+                                    </label>
+                                    <select asp-for="CategoryId" class="form-premium-control" asp-items="ViewBag.CategoryId"></select>
+                                    <span asp-validation-for="CategoryId" class="field-validation-error"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-premium-group">
+                            <label asp-for="Description" class="form-premium-label">
+                                <i class="bi bi-justify-left me-2 text-success"></i>Kurs Açıklaması
+                            </label>
+                            <textarea asp-for="Description" class="form-premium-control" rows="4" placeholder="Kurs hakkında detaylı bilgi yazın..."></textarea>
+                            <span asp-validation-for="Description" class="field-validation-error"></span>
+                        </div>
+
+                        <div class="form-premium-group">
+                            <label class="form-premium-label">
+                                <i class="bi bi-image-fill me-2 text-warning"></i>Kurs Görseli (Dosya Yükle)
+                            </label>
+                            <div class="custom-file-upload glass-card-static p-3 d-flex align-items-center gap-3" style="border-style: dashed; border-color: rgba(255,255,255,0.15);">
+                                <input type="file" name="courseImage" class="form-premium-control border-0 bg-transparent p-0" accept="image/*" style="box-shadow: none !important;" />
+                                @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                                {
+                                    <div class="badge bg-success small">Yüklü: @Model.ImageUrl.Split('/').Last()</div>
+                                }
+                            </div>
+                            <input type="hidden" asp-for="ImageUrl" />
+                        </div>
+
+                        <!-- Section: Zamanlama & Kota -->
+                        <div class="form-section-divider">
+                            <span class="form-section-title">PLANLAMA & ÜCRETLENDİRME</span>
+                        </div>
+
+                        <div class="row g-4">
+                            <div class="col-md-4">
+                                <div class="form-premium-group">
+                                    <label asp-for="Quota" class="form-premium-label"><i class="bi bi-people-fill me-2"></i>Kontenjan</label>
+                                    <input asp-for="Quota" type="number" class="form-premium-control" />
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-premium-group">
+                                    <label asp-for="DurationHours" class="form-premium-label"><i class="bi bi-clock-history me-2"></i>Süre (Saat)</label>
+                                    <input asp-for="DurationHours" type="number" class="form-premium-control" />
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-premium-group">
+                                    <label asp-for="IsActive" class="form-premium-label"><i class="bi bi-toggle-on me-2"></i>Durum</label>
+                                    <select asp-for="IsActive" class="form-premium-control">
+                                        <option value="true">Aktif</option>
+                                        <option value="false">Pasif</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row g-4">
+                            <div class="col-md-6">
+                                <div class="form-premium-group">
+                                    <label asp-for="StartDate" class="form-premium-label"><i class="bi bi-calendar-plus-fill me-2 text-success"></i>Başlangıç Tarihi</label>
+                                    <input asp-for="StartDate" type="date" class="form-premium-control" value="@Model.StartDate.ToString("yyyy-MM-dd")" />
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-premium-group">
+                                    <label asp-for="EndDate" class="form-premium-label"><i class="bi bi-calendar-check-fill me-2 text-danger"></i>Bitiş Tarihi</label>
+                                    <input asp-for="EndDate" type="date" class="form-premium-control" value="@Model.EndDate.ToString("yyyy-MM-dd")" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row g-4">
+                            <div class="col-md-4">
+                                <div class="form-premium-group">
+                                    <label asp-for="Price" class="form-premium-label"><i class="bi bi-currency-dollar me-2 text-warning"></i>Kurs Ücreti (₺)</label>
+                                    <input asp-for="Price" type="number" step="0.01" class="form-premium-control" />
+                                    <small class="text-white-50" style="font-size: 0.7rem;">Ücretsiz ise 0.00 yazın.</small>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-premium-group">
+                                    <label asp-for="MaxAbsenceLimit" class="form-premium-label"><i class="bi bi-person-x-fill me-2 text-danger"></i>Maks. Devamsızlık (Saat)</label>
+                                    <input asp-for="MaxAbsenceLimit" type="number" class="form-premium-control" />
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-premium-group">
+                                    <label asp-for="ExamDate" class="form-premium-label"><i class="bi bi-pencil-fill me-2 text-info"></i>Sınav Tarihi</label>
+                                    <input asp-for="ExamDate" type="date" class="form-premium-control" value="@(Model.ExamDate?.ToString("yyyy-MM-dd") ?? "")" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Section: Müfredat -->
+                        <div class="form-section-divider">
+                            <span class="form-section-title">MÜFREDAT & İÇERİK BİLGİLERİ</span>
+                        </div>
+
+                        <div class="form-premium-group">
+                            <label asp-for="LearningOutcomes" class="form-premium-label">
+                                <i class="bi bi-lightning-charge-fill me-2 text-warning"></i>Neler Öğreneceksiniz?
+                            </label>
+                            <textarea asp-for="LearningOutcomes" class="form-premium-control" rows="3" placeholder="Kurs bitiminde elde edilecek kazanımları listeleyin..."></textarea>
+                        </div>
+
+                        <div class="form-premium-group">
+                            <label asp-for="Curriculum" class="form-premium-label">
+                                <i class="bi bi-journal-text me-2 text-primary-light"></i>Eğitim Müfredatı
+                            </label>
+                            <textarea asp-for="Curriculum" class="form-premium-control" rows="6" placeholder="Haftalık veya modüler ders programını detaylandırın..."></textarea>
+                        </div>
+
+                        <div class="row g-4">
+                            <div class="col-md-6">
+                                <div class="form-premium-group">
+                                    <label asp-for="Requirements" class="form-premium-label"><i class="bi bi-shield-lock-fill me-2 text-danger"></i>Gereksinimler</label>
+                                    <textarea asp-for="Requirements" class="form-premium-control" rows="3" placeholder="Örn: Temel bilgisayar bilgisi, 18 yaş sınırı..."></textarea>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-premium-group">
+                                    <label asp-for="WhoIsItFor" class="form-premium-label"><i class="bi bi-people-fill me-2 text-success"></i>Kimler İçin?</label>
+                                    <textarea asp-for="WhoIsItFor" class="form-premium-control" rows="3" placeholder="Örn: Kariyerine yeni başlamak isteyenler..."></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex flex-wrap gap-3 mt-5 pt-4 border-top border-white-10">
+                            <a asp-action="Index" class="btn btn-premium btn-secondary-glass flex-fill justify-content-center py-3">
+                                <i class="bi bi-arrow-left"></i> Listeye Dön
+                            </a>
+                            <button type="submit" class="btn btn-premium btn-success-glow flex-fill justify-content-center py-3">
+                                <i class="bi bi-save2-fill"></i> DEÄİÅİKLİKLERİ KAYDET
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+

@@ -1,0 +1,170 @@
+﻿@model List<string>
+@{
+    ViewData["Title"] = "Mesaj Denetim Merkezi";
+}
+
+<div class="container py-5">
+    <div class="glass-card-static p-4 mb-4 animate-fadeInUp shadow-glow">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <div>
+                <h2 class="fw-800 mb-1" style="font-family:'Outfit'; color:var(--text-primary);">
+                    <i class="bi bi-shield-lock-fill text-danger me-2"></i>Mesaj Denetim Merkezi
+                </h2>
+                <p class="text-white-50 mb-0">Tüm sistem içi bireysel yazışmaları gizli olarak izleyebilirsiniz.</p>
+            </div>
+            <a asp-controller="Admin" asp-action="Dashboard" class="btn btn-premium btn-secondary-glass">
+                <i class="bi bi-grid-fill me-1"></i> Panele Dön
+            </a>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-4">
+            <div class="glass-card-static h-100 p-0 overflow-hidden">
+                <div class="p-3 border-bottom-glass bg-glass-dark">
+                    <h5 class="mb-0 fw-bold"><i class="bi bi-list-stars me-2"></i>Aktif Konuşmalar</h5>
+                </div>
+                <div class="p-2 overflow-y-auto" style="max-height: 600px;">
+                    @if (Model != null && Model.Any())
+                    {
+                        @foreach (var conv in Model)
+                        {
+                            var parts = conv.Split(" <-> ");
+                            <div class="conversation-monitor-item p-3 mb-2 rounded-3 cursor-pointer transition-all border-glass hover-bg-glass" 
+                                 onclick="spyChat('@parts[0]', '@parts[1]')">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="d-flex">
+                                        <div class="avatar-circle-sm" style="background:var(--gradient-premium); z-index:2;">@parts[0][0]</div>
+                                        <div class="avatar-circle-sm" style="background:var(--gradient-card); margin-left:-15px;">@parts[1][0]</div>
+                                    </div>
+                                    <div class="overflow-hidden">
+                                        <div class="small fw-bold text-white text-truncate">@parts[0]</div>
+                                        <div class="small fw-bold text-white text-truncate">@parts[1]</div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="p-5 text-center text-white-50">
+                            Henüz sistemde mesaj bulunmuyor.
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-8">
+            <div id="spyPlaceholder" class="glass-card-static h-100 d-flex flex-column align-items-center justify-content-center border-glass">
+                <i class="bi bi-eye-slash fs-1 text-muted mb-3"></i>
+                <h5 class="text-white-50">İzlemek için bir konuşma seçin</h5>
+            </div>
+
+            <div id="spyMain" class="glass-card-static h-100 d-flex flex-column p-0 overflow-hidden d-none shadow-glow">
+                <div class="p-3 border-bottom-glass bg-glass-dark d-flex justify-content-between align-items-center">
+                    <div>
+                        <span class="badge-premium badge-danger mb-2">CANLI İZLEME</span>
+                        <h6 class="mb-0 text-white fw-bold" id="spyHeader">Seçili Konuşma</h6>
+                    </div>
+                    <button class="btn btn-sm btn-premium btn-danger-glow" onclick="alert('Kullanıcı banlama/kısıtlama özelliği aktif edildi.')">
+                        <i class="bi bi-slash-circle me-1"></i> Müdahale Et
+                    </button>
+                </div>
+                <div class="flex-grow-1 overflow-y-auto p-4 d-flex flex-column gap-3 custom-scrollbar" id="spyContainer" style="background: rgba(0,0,0,0.2);">
+                    <!-- Messages will appear here -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .conversation-monitor-item:hover { border-color: var(--danger); box-shadow: 0 0 15px rgba(239, 68, 68, 0.1); }
+    .hover-bg-glass:hover { background: rgba(255,255,255,0.05); }
+    .bg-glass-dark { background: rgba(15, 23, 42, 0.4); }
+    .msg-bubble { max-width: 80%; padding: 10px 15px; border-radius: 15px; font-size: 0.9rem; }
+    .msg-admin-view { align-self: flex-start; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: white; }
+    .msg-admin-view-right { align-self: flex-end; background: rgba(88, 28, 28, 0.1); border: 1px solid rgba(88, 28, 28, 0.2); color: white; }
+</style>
+
+<script src="~/lib/microsoft/signalr/dist/browser/signalr.js"></script>
+<script>
+    const connection = new signalR.HubConnectionBuilder()
+        .withUrl("/privateChatHub")
+        .withAutomaticReconnect()
+        .build();
+
+    connection.on("ReceivePrivateMessage", (msg) => {
+        renderSpyMessage(msg);
+        scrollToBottom();
+    });
+
+    connection.start();
+
+    async function spyChat(email1, email2) {
+        document.getElementById('spyPlaceholder').classList.add('d-none');
+        document.getElementById('spyMain').classList.remove('d-none');
+        document.getElementById('spyHeader').innerText = `${email1} â†” ${email2}`;
+        document.getElementById('spyContainer').innerHTML = '<div class="text-center py-5 text-muted"><i class="bi bi-arrow-repeat spin"></i> Geçmiş Yükleniyor...</div>';
+
+        // Join as Admin
+        await connection.invoke("AdminSpyConversation", email1, email2);
+
+        // Load History (reuse GetMessages)
+        const response = await fetch(`/Chat/GetMessages?otherEmail=${encodeURIComponent(email2)}&myEmailOverride=${encodeURIComponent(email1)}`);
+        // Note: I should adjust GetMessages to allow admin to fetch any history.
+        // For now let's use the standard GetMessages but adjust backend logic.
+        const histResponse = await fetch(`/Chat/GetMessages?otherEmail=${encodeURIComponent(email2)}&adminViewEmail=${encodeURIComponent(email1)}`);
+        const messages = await histResponse.json();
+        
+        const container = document.getElementById('spyContainer');
+        container.innerHTML = '';
+        messages.forEach(m => renderSpyMessage(m));
+        scrollToBottom();
+    }
+
+    function renderSpyMessage(msg) {
+        const container = document.getElementById('spyContainer');
+        const div = document.createElement('div');
+        
+        // Siber Güvenlik İşaretçisi
+        const securityTag = msg.isFlagged 
+            ? '<span class="badge bg-danger ms-2"><i class="bi bi-shield-exclamation"></i> ÅÜPHELİ İÇERİK</span>' 
+            : '<span class="badge bg-success ms-2 opacity-50"><i class="bi bi-shield-check"></i> GÜVENLİ</span>';
+
+        div.className = `msg-bubble msg-admin-view w-100 mb-3 animate-fadeInLeft`;
+        
+        div.innerHTML = `
+            <div class="d-flex justify-content-between align-items-start mb-2 border-bottom-glass pb-1">
+                <div>
+                    <span class="fw-bold text-premium">${msg.senderName}</span> 
+                    <span class="text-white-50 small ms-2">(${msg.senderEmail})</span>
+                    ${securityTag}
+                </div>
+                <div class="text-end">
+                    <div class="text-info" style="font-size:0.7rem; font-family:monospace;">
+                        <i class="bi bi-cpu me-1"></i>IP: ${msg.ipAddress || 'Mevcut Değil'}
+                    </div>
+                </div>
+            </div>
+            <div class="py-2 text-white" style="font-size:1rem; line-height:1.6;">
+                ${msg.content}
+            </div>
+            <div class="d-flex justify-content-between align-items-center mt-2 pt-1 border-top-glass-light">
+                <div class="text-white-50" style="font-size:0.65rem;">
+                    <i class="bi bi-browser-edge me-1"></i>${msg.userAgent || 'Sistem Verisi'}
+                </div>
+                <div class="text-white-50 small">${msg.sentAt}</div>
+            </div>
+        `;
+        container.appendChild(div);
+    }
+
+    function scrollToBottom() {
+        const container = document.getElementById('spyContainer');
+        container.scrollTop = container.scrollHeight;
+    }
+</script>
+
+

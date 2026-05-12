@@ -1,0 +1,208 @@
+﻿@model IEnumerable<HalkEgitimSistemi.Models.SiteSettings>
+@{
+    ViewData["Title"] = "Kurumsal Ayarlar";
+    string GetVal(string key, string def) => Model.FirstOrDefault(s => s.Key == key)?.Value ?? def;
+}
+
+<div class="container py-5">
+    <div class="page-header animate-fadeInDown mb-5">
+        <div class="d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center">
+                <div class="page-header-icon bg-success-glow">
+                    <i class="bi bi-gear-wide-connected"></i>
+                </div>
+                <div>
+                    <h1 class="page-header-title text-primary-theme">Kurumsal Ayarlar</h1>
+                    <p class="page-header-subtitle text-muted">Liderlik kadrosu, harita ve sistem parametrelerini dinamik olarak yönetin</p>
+                </div>
+            </div>
+            <a asp-action="Dashboard" class="btn btn-outline-primary rounded-pill px-4">
+                <i class="bi bi-arrow-left me-2"></i> Panele Dön
+            </a>
+        </div>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success-glass animate-fadeInUp mb-4 rounded-4">
+            <i class="bi bi-check-circle-fill me-2"></i> @TempData["Success"]
+        </div>
+    }
+
+    <form asp-action="SaveGlobalSettings" method="post">
+        <div class="row g-4 stagger-children">
+            <!-- ğŸ‘¥ ÜST YÖNETİM (KAYMAKAM & BELEDİYE BAÅKANI) -->
+            <div class="col-lg-12">
+                <div class="glass-card-static p-4">
+                    <h5 class="text-primary-theme fw-bold mb-4 border-bottom border-glass pb-3">
+                        <i class="bi bi-people-fill me-2 text-primary-light"></i> Protokol ve Liderlik Kadrosu
+                    </h5>
+                    
+                    <div class="row g-5">
+                        <!-- Kaymakamlık Bölümü -->
+                        <div class="col-md-6 border-end border-glass">
+                            <div class="text-center mb-4">
+                                <div class="position-relative d-inline-block">
+                                    <img src="@GetVal("Gov_Img", "/images/governor.png")" class="rounded-circle border border-4 border-vibrant-purple shadow-sm mb-3" style="width: 130px; height: 130px; object-fit: cover;">
+                                    <div class="position-absolute bottom-0 end-0 bg-vibrant-purple rounded-circle p-2 shadow-sm" style="transform: translate(10%, 10%);">
+                                        <i class="bi bi-camera text-white"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="text-muted x-small fw-bold uppercase mb-1">Kaymakam İsim</label>
+                                <input type="text" name="settings[Gov_Name]" value="@GetVal("Gov_Name", "Betül Büyükkılıç")" class="cyber-input py-3" placeholder="İsim Soyisim" />
+                            </div>
+                            <div class="mb-3">
+                                <label class="text-muted x-small fw-bold uppercase mb-1">Kaymakam Ünvan</label>
+                                <input type="text" name="settings[Gov_Title]" value="@GetVal("Gov_Title", "BORÇKA KAYMAKAMI")" class="cyber-input py-3" placeholder="Ünvan" />
+                            </div>
+                            <div class="mb-3">
+                                <label class="text-muted x-small fw-bold uppercase mb-1">Kaymakam Fotoğraf URL</label>
+                                <input type="text" name="settings[Gov_Img]" value="@GetVal("Gov_Img", "/images/governor.png")" class="cyber-input py-3" placeholder="/images/governor.png" />
+                            </div>
+                        </div>
+
+                        <!-- Belediye Bölümü -->
+                        <div class="col-md-6">
+                            <div class="text-center mb-4">
+                                <div class="position-relative d-inline-block">
+                                    <img src="@GetVal("Mayor_Img", "/images/mayor.png")" class="rounded-circle border border-4 border-vibrant-pink shadow-sm mb-3" style="width: 130px; height: 130px; object-fit: cover;">
+                                    <div class="position-absolute bottom-0 end-0 bg-vibrant-pink rounded-circle p-2 shadow-sm" style="transform: translate(10%, 10%);">
+                                        <i class="bi bi-camera text-white"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="text-muted x-small fw-bold uppercase mb-1">Belediye Başkanı İsim</label>
+                                <input type="text" name="settings[Mayor_Name]" value="@GetVal("Mayor_Name", "Ercan Orhan")" class="cyber-input py-3" placeholder="İsim Soyisim" />
+                            </div>
+                            <div class="mb-3">
+                                <label class="text-muted x-small fw-bold uppercase mb-1">Belediye Başkanı Ünvan</label>
+                                <input type="text" name="settings[Mayor_Title]" value="@GetVal("Mayor_Title", "BELEDİYE BAÅKANI")" class="cyber-input py-3" placeholder="Ünvan" />
+                            </div>
+                            <div class="mb-3">
+                                <label class="text-muted x-small fw-bold uppercase mb-1">Belediye Başkanı Fotoğraf URL</label>
+                                <input type="text" name="settings[Mayor_Img]" value="@GetVal("Mayor_Img", "/images/mayor.png")" class="cyber-input py-3" placeholder="/images/mayor.png" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ğŸ—ºï¸ HARİTA VE BÖLGESEL PARAMETRELER -->
+            <div class="col-lg-8">
+                <div class="glass-card-static p-4 h-100">
+                    <h5 class="text-primary-theme fw-bold mb-4 border-bottom border-glass pb-3">
+                        <i class="bi bi-geo-alt-fill me-2 text-danger"></i> Canlı Harita (Google Earth) Konfigürasyonu
+                    </h5>
+                    
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label class="text-muted x-small fw-bold uppercase mb-1">Merkez Enlem (Lat)</label>
+                            <input type="text" name="settings[Map_Lat]" value="@GetVal("Map_Lat", "41.2583")" class="cyber-input py-3" />
+                        </div>
+                        <div class="col-md-4">
+                            <label class="text-muted x-small fw-bold uppercase mb-1">Merkez Boylam (Lng)</label>
+                            <input type="text" name="settings[Map_Lng]" value="@GetVal("Map_Lng", "41.6781")" class="cyber-input py-3" />
+                        </div>
+                        <div class="col-md-4">
+                            <label class="text-muted x-small fw-bold uppercase mb-1">Zoom Seviyesi</label>
+                            <input type="text" name="settings[Map_Zoom]" value="@GetVal("Map_Zoom", "14.5")" class="cyber-input py-3" />
+                        </div>
+                        <div class="col-12 mt-3">
+                            <div class="p-3 rounded-4 bg-glass-dark border border-glass">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="icon-box-sm bg-danger">
+                                        <i class="bi bi-palette-fill"></i>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <label class="text-primary-theme small fw-bold">Harita Stil Teması (CSS-HEX)</label>
+                                        <input type="text" name="settings[Map_Theme]" value="@GetVal("Map_Theme", "#C5A059")" class="cyber-input py-2 mt-1" />
+                                    </div>
+                                    <div class="rounded-circle border border-muted" style="width: 40px; height: 40px; background: @GetVal("Map_Theme", "#C5A059");"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 rounded-4 overflow-hidden border border-glass" style="height: 180px; background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/Bor%C3%A7ka_Merkez.jpg/1200px-Bor%C3%A7ka_Merkez.jpg') center/cover; opacity: 0.6;">
+                        <div class="w-100 h-100 d-flex align-items-center justify-content-center text-dark fw-bold">
+                            HARİTA ÖNİZLEME (AKTİF KONUM)
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ğŸ›ï¸ LOGO VE SİSTEM -->
+            <div class="col-lg-4">
+                <div class="glass-card-static p-4 h-100">
+                    <h5 class="text-primary-theme fw-bold mb-4 border-bottom border-glass pb-3">
+                        <i class="bi bi-shield-check me-2 text-success"></i> Kurumsal Varlıklar
+                    </h5>
+
+                    <div class="mb-4">
+                        <label class="text-muted x-small fw-bold uppercase mb-1">Kaymakamlık Logo URL</label>
+                        <input type="text" name="settings[Gov_Logo]" value="@GetVal("Gov_Logo", "/images/governor_logo.png")" class="cyber-input py-3" />
+                        <div class="text-center mt-2 p-2 bg-glass-dark rounded-3">
+                            <img src="@GetVal("Gov_Logo", "/images/governor_logo.png")" height="40">
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="text-white-50 x-small fw-bold uppercase mb-1">Belediye Logo URL</label>
+                        <input type="text" name="settings[Mayor_Logo]" value="@GetVal("Mayor_Logo", "/images/borcka_logo.png")" class="cyber-input py-3" />
+                        <div class="text-center mt-2 p-2 bg-glass-dark rounded-3">
+                            <img src="@GetVal("Mayor_Logo", "/images/borcka_logo.png")" height="40">
+                        </div>
+                    </div>
+
+                    <h5 class="text-white fw-bold mb-3 border-bottom border-glass pb-2 mt-4 small uppercase tracking-widest">
+                        <i class="bi bi-tree-fill text-vibrant-pink me-2"></i> Sosyal Sorumluluk
+                    </h5>
+                    <div class="row g-2 mb-4">
+                        <div class="col-6">
+                            <label class="text-white-50 x-small fw-bold uppercase mb-1">Mevcut Fidan</label>
+                            <input type="number" name="settings[KaragolGoalProgress]" value="@GetVal("KaragolGoalProgress", "342")" class="cyber-input py-2" />
+                        </div>
+                        <div class="col-6">
+                            <label class="text-white-50 x-small fw-bold uppercase mb-1">Hedef Fidan</label>
+                            <input type="number" name="settings[KaragolGoalTarget]" value="@GetVal("KaragolGoalTarget", "500")" class="cyber-input py-2" />
+                        </div>
+                    </div>
+
+                    <div class="d-grid mt-auto">
+                        <button type="submit" class="btn btn-vibrant-glow py-3 fw-bold rounded-pill shadow-lg">
+                            <i class="bi bi-cloud-arrow-up-fill me-2"></i> TÜM DEÄİÅİKLİKLERİ KAYDET
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<style>
+    .alert-success-glass { background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.2); color: #C5A059; }
+    .icon-box-sm { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-size: 0.9rem; }
+    
+    .cyber-input {
+        background: var(--bg-card) !important;
+        border: 1px solid var(--border-glass) !important;
+        border-radius: 15px !important;
+        color: var(--text-primary) !important;
+        padding-left: 20px !important;
+        width: 100%;
+        transition: all 0.3s ease;
+        font-family: 'Outfit', sans-serif;
+    }
+    .cyber-input:focus {
+        border-color: var(--primary) !important;
+        box-shadow: 0 0 15px rgba(88, 28, 28, 0.2) !important;
+        outline: none;
+        background: var(--bg-card-hover) !important;
+    }
+    .bg-glass-dark { background: var(--bg-glass) !important; }
+</style>
+
+

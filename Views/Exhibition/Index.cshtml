@@ -1,0 +1,370 @@
+@model IEnumerable<HalkEgitimSistemi.Models.ExhibitionItem>
+@using HalkEgitimSistemi.Models
+
+@{
+    ViewData["Title"] = "Sanal Sergi";
+}
+
+<div class="container py-5">
+    <!-- Header -->
+    <div class="p-5 mb-5 text-center animate-fadeInDown" style="background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(10px); border-radius: 30px; border: 1px solid rgba(255,255,255,0.05); position: relative; z-index: 20;">
+        <span class="badge-premium badge-primary mb-3"><i class="bi bi-stars"></i> Sanatın Dijital Geleceği</span>
+        <h1 class="display-3 fw-bold mb-3" style="font-family: 'Outfit';">Sanal <span class="section-title-gradient">E-Sergi & Pazar</span></h1>
+        <p class="text-muted mx-auto fs-5" style="max-width: 700px;">
+            Geleneksel el sanatlarını dijital dünyanın sınırsız imkanlarıyla birleştiriyoruz. 
+            Eserleri 3D odalarda inceleyin, videolarını izleyin ve el emeğine destek olun.
+        </p>
+        <div class="d-flex justify-content-center gap-3 mt-4 flex-wrap">
+            <a asp-action="Virtual" class="btn btn-premium btn-primary-glow btn-lg px-5 py-3">
+                <i class="bi bi-box-fill me-2"></i> 3D SANAL SERGİYE GİR
+            </a>
+            @if (User.IsInRole("Admin") || User.IsInRole("Instructor"))
+            {
+                <a asp-action="Create" class="btn btn-premium btn-success-glow btn-lg px-4">
+                    <i class="bi bi-plus-circle-fill me-2"></i> ESER / VİDEO YÜKLE
+                </a>
+            }
+            <a href="#videoArt" class="btn btn-premium btn-secondary-glass btn-lg px-4">
+                <i class="bi bi-play-circle-fill me-2"></i> VİDEO ART
+            </a>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- SOL TARAF: Tematik Sanat Odaları -->
+        <div class="col-lg-6">
+            <h2 class="text-center mb-4 fw-bold">Tematik <span class="section-title-gradient">Sanat Odaları</span></h2>
+            
+            <div class="row g-4 stagger-children">
+            @{
+                var rooms = new[] {
+                    new { Id = 1, Name = "Ebru Sanatı Odası", Desc = "Süzülen renkler ve neon ışıklı motifler.", Icon = "bi-water", Img = "/images/exhibition/ebru.png" },
+                    new { Id = 2, Name = "Takı Tasarımı Kasası", Desc = "Siyah kadife duvarlar ve cam fanuslu mücevherler.", Icon = "bi-gem", Img = "/images/exhibition/jewelry.png" },
+                    new { Id = 3, Name = "Ahşap Yakma & Sedef", Desc = "Ateş çatırtısı ve sıcak turuncu aydınlatma.", Icon = "bi-fire", Img = "/images/exhibition/wood_burning.png" },
+                    new { Id = 4, Name = "Robotik & Kodlama", Desc = "Siberpunk atmosfer and akan kodlar.", Icon = "bi-cpu", Img = "/images/exhibition/robotics.png" },
+                    new { Id = 5, Name = "İşaret Dili (Video Art)", Desc = "Siyah-beyaz video projeksiyonları.", Icon = "bi-hands-up", Img = "/images/exhibition/sign_language.png" },
+                    new { Id = 6, Name = "Çini İşlemeciliği", Desc = "Kobalt mavisi parıltılar ve dev panolar.", Icon = "bi-flower1", Img = "/images/exhibition/cini.png" },
+                    new { Id = 7, Name = "Hasır Örücülüğü", Desc = "Tavandan sarkan sepetler ve gölge oyunları.", Icon = "bi-basket", Img = "/images/exhibition/wicker.png" },
+                    new { Id = 8, Name = "Ahşap Oyma Sanatı", Desc = "Ahşap rölyef ve oyma işçiliği.", Icon = "bi-hammer", Img = "/images/exhibition/wood_carving.png" }
+                };
+            }
+
+            @foreach (var room in rooms)
+            {
+                <div class="col-md-6 animate-fadeInUp">
+                    <div class="room-card glass-card-static p-0 overflow-hidden h-100">
+                        <div class="room-img-wrapper" style="background: var(--glass-bg);">
+                            <img src="@room.Img" class="room-img" alt="@room.Name" style="object-fit: contain; width: 100%; height: 200px;">
+                            <div class="room-badge">
+                                <i class="@room.Icon"></i>
+                            </div>
+                        </div>
+                        <div class="p-4 text-center">
+                            <h4 class="fw-bold mb-2">@room.Name</h4>
+                            <p class="text-muted small mb-4">@room.Desc</p>
+                            <a asp-action="Virtual" asp-route-roomId="@room.Id" class="btn btn-outline-premium w-100">
+                                <i class="bi bi-door-open-fill me-2"></i> Odayı Keşfet
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+            </div>
+        </div>
+
+        <!-- SAÄ TARAF: Pazar Yeri -->
+        <div class="col-lg-6">
+            <h2 class="mb-4 fw-bold text-center"><i class="bi bi-grid-3x3-gap-fill me-2 text-primary"></i> Kursiyer El Emeği Pazarı</h2>
+            @if (!Model.Any())
+            {
+                <div class="empty-state glass-card-static p-5 text-center">
+                    <i class="bi bi-images display-1 text-muted mb-3"></i>
+                    <h3>Henüz sergilenen bir eser yok.</h3>
+                </div>
+            }
+            else
+            {
+                <div class="exhibition-grid stagger-children">
+                    @foreach (var item in Model.Where(m => m.Type != ExhibitionType.Video))
+                    {
+                        <div class="exhibition-item animate-fadeInUp">
+                            <div class="exhibition-card glass-card-static p-0 overflow-hidden" style="background: var(--glass-bg);">
+                                <div class="exhibition-img-wrapper">
+                                    <img src="@item.ImageUrl" alt="@item.Title" class="exhibition-img" loading="lazy" style="object-fit: contain; width: 100%; max-height: 300px; background-color: rgba(0,0,0,0.1);">
+                                    
+                                    <!-- Fiyat Etiketi -->
+                                    <div class="exhibition-price-tag @(item.IsSold ? "bg-secondary" : "")">
+                                        @(item.IsSold ? "SATILDI" : item.Price + " ₺")
+                                    </div>
+
+                                    @if (!item.IsSold) {
+                                        <div class="exhibition-overlay-premium">
+                                            <div class="d-flex flex-column gap-2 p-3">
+                                                <button class="btn btn-warning-glow w-100 fw-bold" onclick="examineItem('@item.Id', '@item.Title', '@item.ImageUrl', '@item.ArtistName', '@item.Price', '@item.Material', '@item.Color', '@item.Dimensions', '@item.Story', '@item.StudentId')">
+                                                    <i class="bi bi-search me-2"></i> İNCELE
+                                                </button>
+                                                <button class="btn btn-success-glow w-100 fw-bold" onclick="openBuyModal('@item.Title', '@item.Price', '@item.Id')">
+                                                    <i class="bi bi-cart-check me-2"></i> SATIN AL
+                                                </button>
+                                            </div>
+                                        </div>
+                                    } else {
+                                        <div class="exhibition-overlay-premium d-flex align-items-center justify-content-center">
+                                            <span class="badge bg-danger p-3 fs-5 fw-bold"><i class="bi bi-lock-fill me-2"></i>BU ESER SATILMIÅTIR</span>
+                                        </div>
+                                    }
+                                </div>
+                                <div class="p-3">
+                                    <h5 class="text-white fw-bold mb-1">@item.Title</h5>
+                                    <p class="text-primary-light small mb-0"><i class="bi bi-person-heart me-1"></i> @item.ArtistName</p>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- ğŸ¬ VIDEO ART SECTION -->
+    <div id="videoArt" class="mt-5 pt-5">
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold" style="font-family: 'Outfit';">Video <span class="section-title-gradient">Art & Belgesel</span></h2>
+            <p class="text-muted">Kursiyer hikayeleri ve sanatsal süreçler videolarda hayat buluyor.</p>
+        </div>
+        <div class="row g-4">
+            @foreach (var video in Model.Where(m => m.Type == ExhibitionType.Video))
+            {
+                <div class="col-lg-4 col-md-6 animate-fadeInUp">
+                    <div class="glass-card-static p-0 overflow-hidden h-100" style="border: 1px solid rgba(255,255,255,0.1);">
+                        <div class="position-relative">
+                            <video class="w-100" style="height: 250px; object-fit: cover;" poster="@video.ImageUrl">
+                                <source src="@video.VideoUrl" type="video/mp4">
+                            </video>
+                            <div class="position-absolute top-50 start-50 translate-middle">
+                                <button class="btn btn-primary-glow rounded-circle p-3" style="width: 60px; height: 60px;" onclick="playVideo(this)">
+                                    <i class="bi bi-play-fill fs-2"></i>
+                                </button>
+                            </div>
+                            <div class="exhibition-price-tag">@video.Price ₺</div>
+                        </div>
+                        <div class="p-4">
+                            <h4 class="fw-bold text-white mb-2">@video.Title</h4>
+                            <p class="text-muted small mb-3">@video.ArtistName</p>
+                            <button class="btn btn-outline-premium w-100" onclick="examineItem('@video.Id', '@video.Title', '@video.ImageUrl', '@video.ArtistName', '@video.Price', '', '', '', '@video.Story', '@video.StudentId')">
+                                <i class="bi bi-search me-1"></i> İNCELE
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- ğŸ” DETAYLI İNCELE MODALI -->
+    <div class="modal fade" id="examineModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content glass-card-static border-0">
+                <div class="modal-body p-0 overflow-hidden">
+                    <div class="row g-0">
+                        <div class="col-md-6">
+                            <img id="examineImg" src="" class="img-fluid h-100" style="object-fit: cover;">
+                        </div>
+                        <div class="col-md-6 p-4">
+                            <button type="button" class="btn-close btn-close-white float-end" data-bs-dismiss="modal"></button>
+                            <h2 id="examineTitle" class="fw-bold mb-1 text-warning"></h2>
+                            <a id="examineArtistLink" href="#" class="text-decoration-none">
+                                <p id="examineArtist" class="text-warning mb-4" style="font-weight: 700;"></p>
+                            </a>
+                            
+                            <div class="detail-row mb-3">
+                                <label class="text-primary-light small fw-bold text-uppercase">Kullanılan Malzeme</label>
+                                <p id="examineMaterial" class="m-0"></p>
+                            </div>
+                            <div class="detail-row mb-3">
+                                <label class="text-primary-light small fw-bold text-uppercase">Renk Paleti</label>
+                                <p id="examineColor" class="m-0"></p>
+                            </div>
+                            <div class="detail-row mb-3">
+                                <label class="text-primary-light small fw-bold text-uppercase">Eser Boyutu</label>
+                                <p id="examineDimensions" class="m-0"></p>
+                            </div>
+                            <div class="detail-row mb-4">
+                                <label class="text-primary-light small fw-bold text-uppercase">Eserin Hikayesi</label>
+                                <p id="examineStory" class="small text-white-50"></p>
+                            </div>
+                            
+                            <div class="d-flex justify-content-between align-items-center mt-auto">
+                                <h3 id="examinePrice" class="m-0 fw-bold"></h3>
+                                <button class="btn btn-success-glow px-4" onclick="closeExamineAndBuy()">
+                                    <i class="bi bi-cart-plus me-2"></i> ÅİMDİ AL
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ğŸ’³ SATIN ALMA FORMU MODALI -->
+    <div class="modal fade" id="buyModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content glass-card-static">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title fw-bold"><i class="bi bi-shield-lock me-2 text-success"></i> Güvenli Sipariş</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="buyProductInfo" class="alert bg-primary-dark text-white border-0 mb-4"></div>
+                    <form onsubmit="confirmPurchase(event)">
+                        <div class="mb-3">
+                            <label class="form-label small text-muted-theme">Ad Soyad</label>
+                            <input type="text" class="form-control glass-input" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small text-muted-theme">Telefon Numarası</label>
+                            <input type="tel" class="form-control glass-input" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small text-muted-theme">Teslimat Adresi</label>
+                            <textarea class="form-control glass-input" rows="3" required></textarea>
+                        </div>
+                        <div class="row g-3 mb-4">
+                            <div class="col-6">
+                                <label class="form-label small text-muted-theme">Kart No</label>
+                                <input type="text" class="form-control glass-input" placeholder="**** **** **** ****">
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label small text-muted-theme">SKT / CVC</label>
+                                <input type="text" class="form-control glass-input" placeholder="AA/YY - ***">
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-success-glow w-100 py-3 fw-bold">
+                            ÖDEMEYİ TAMAMLA VE SİPARİÅ VER
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<!-- Simple Lightbox -->
+<div id="exhibitionLightbox" class="exhibition-lightbox" onclick="closeLightbox()">
+    <span class="close-lightbox">&times;</span>
+    <img class="lightbox-content" id="lightboxImg">
+    <div id="lightboxCaption"></div>
+</div>
+
+<style>
+    .exhibition-grid { column-count: 3; column-gap: 1.5rem; }
+    @@media (max-width: 992px) { .exhibition-grid { column-count: 2; } }
+    @@media (max-width: 576px) { .exhibition-grid { column-count: 1; } }
+
+    .exhibition-item { break-inside: avoid; margin-bottom: 1.5rem; }
+    .exhibition-card { transition: all 0.3s ease; border: 1px solid rgba(255,255,255,0.1); }
+    .exhibition-card:hover { transform: translateY(-5px); border-color: var(--primary-light); }
+
+    .exhibition-img-wrapper { position: relative; overflow: hidden; }
+    .exhibition-img { width: 100%; transition: transform 0.5s ease; }
+    .exhibition-card:hover .exhibition-img { transform: scale(1.05); }
+
+    .exhibition-price-tag {
+        position: absolute; top: 15px; right: 15px;
+        background: rgba(245, 158, 11, 0.9); color: #000;
+        padding: 5px 15px; border-radius: 50px; font-weight: 800;
+        backdrop-filter: blur(5px); box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    }
+
+    .exhibition-overlay-premium {
+        position: absolute; bottom: 0; left: 0; right: 0;
+        background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+        opacity: 0; transition: opacity 0.3s ease;
+    }
+    .exhibition-card:hover .exhibition-overlay-premium { opacity: 1; }
+
+    .glass-input {
+        background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+        color: #fff; border-radius: 10px; padding: 10px 15px;
+    }
+    .glass-input:focus { background: rgba(255,255,255,0.1); color: #fff; border-color: var(--primary-light); box-shadow: none; }
+
+    .detail-row label { display: block; margin-bottom: 2px; opacity: 0.7; }
+    
+    .btn-warning-glow { background: #f59e0b; color: #000; border: none; box-shadow: 0 0 15px rgba(245, 158, 11, 0.3); }
+    .btn-success-glow { background: #C5A059; color: #fff; border: none; box-shadow: 0 0 15px rgba(16, 185, 129, 0.3); }
+</style>
+
+<script>
+    function playVideo(btn) {
+        const video = btn.closest('.position-relative').querySelector('video');
+        if (video.paused) {
+            video.play();
+            btn.innerHTML = '<i class="bi bi-pause-fill fs-2"></i>';
+            btn.style.opacity = '0.5';
+        } else {
+            video.pause();
+            btn.innerHTML = '<i class="bi bi-play-fill fs-2"></i>';
+            btn.style.opacity = '1';
+        }
+    }
+
+    function examineItem(id, title, img, artist, price, material, color, dim, story, studentId) {
+        document.getElementById('examineImg').src = img;
+        document.getElementById('examineTitle').innerText = title;
+        document.getElementById('examineArtist').innerText = artist + " (Öz Geçmişi Gör)";
+        
+        const artistLink = document.getElementById('examineArtistLink');
+        if (studentId && studentId > 0) {
+            artistLink.href = '/Student/PublicCV/' + studentId;
+            artistLink.style.display = 'block';
+        } else {
+            artistLink.href = 'javascript:void(0)';
+            artistLink.style.display = 'block';
+        }
+
+        document.getElementById('examineMaterial').innerText = material || "Belirtilmedi";
+        document.getElementById('examineColor').innerText = color || "Belirtilmedi";
+        document.getElementById('examineDimensions').innerText = dim || "Belirtilmedi";
+        document.getElementById('examineStory').innerText = story || "Bu eşsiz eser kursiyerimizin uzun süren el emeği ile üretilmiştir.";
+        document.getElementById('examinePrice').innerText = price + " ₺";
+        
+        new bootstrap.Modal(document.getElementById('examineModal')).show();
+    }
+
+    function openBuyModal(title, price, id) {
+        currentItemId = id;
+        document.getElementById('buyProductInfo').innerHTML = `<strong>Ürün:</strong> ${title} <br> <strong>Ödenecek Tutar:</strong> ${price} ₺`;
+        new bootstrap.Modal(document.getElementById('buyModal')).show();
+    }
+
+    function closeExamineAndBuy() {
+        const title = document.getElementById('examineTitle').innerText;
+        const price = document.getElementById('examinePrice').innerText;
+        bootstrap.Modal.getInstance(document.getElementById('examineModal')).hide();
+        openBuyModal(title, price);
+    }
+
+    function confirmPurchase(e) {
+        e.preventDefault();
+        const name = e.target.querySelector('input[type="text"]').value;
+        const phone = e.target.querySelector('input[type="tel"]').value;
+
+        fetch('/Exhibition/ProcessPurchase', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: `id=${currentItemId}&name=${encodeURIComponent(name)}&phone=${encodeURIComponent(phone)}`
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.success) {
+                alert("Siparişiniz Başarıyla Alındı!\n\nEser sahibi kursiyerimize bildirim gönderildi. El emeği pazarımıza destek olduğunuz için teşekkür ederiz.");
+                location.reload(); // Sayfayı yenile ki 'SATILDI' görünsün
+            } else {
+                alert(data.message);
+            }
+        });
+    }
+</script>
+
+

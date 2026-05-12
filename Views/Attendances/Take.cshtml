@@ -1,0 +1,135 @@
+@model IEnumerable<HalkEgitimSistemi.Models.Application>
+@{
+    var course = (HalkEgitimSistemi.Models.Course)ViewBag.Course;
+    var selectedDate = (DateTime)ViewBag.SelectedDate;
+    var existingAttendances = (Dictionary<int, bool>)ViewBag.ExistingAttendances;
+    ViewData["Title"] = course.CourseName + " - Yoklama";
+}
+
+<div class="container py-5">
+    <div class="page-header animate-fadeInDown">
+        <div class="page-header-content">
+            <div class="d-flex align-items-center">
+                @{
+                    var backUrl = User.IsInRole("Admin") ? Url.Action("Index", "Attendances") : Url.Action("Dashboard", "Teacher");
+                }
+                <a href="@backUrl" class="btn btn-premium btn-secondary-glass me-3" style="width: 45px; height: 45px; padding: 0; display: flex; align-items: center; justify-content: center; border-radius: 12px;">
+                    <i class="bi bi-chevron-left" style="font-size: 1.2rem;"></i>
+                </a>
+                <div>
+                    <h1 class="page-header-title">@course.CourseName</h1>
+                    <p class="page-header-subtitle">@selectedDate.ToString("dd MMMM yyyy") Tarihli Yoklama Listesi</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success-premium mb-4 animate-fadeInDown" style="background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.3); color: var(--success); padding: 1rem; border-radius: 12px;">
+            <i class="bi bi-check-circle-fill me-2"></i>@TempData["Success"]
+        </div>
+    }
+
+    <div class="row g-4">
+        <div class="col-lg-4">
+            <div class="glass-card-static p-4 animate-fadeInLeft" style="border-radius: 25px;">
+                <h5 class="gold-text" style="font-weight: 800; margin-bottom: 1.5rem; font-family: 'Outfit';">Tarih Seçimi</h5>
+                <form id="dateForm" method="get" asp-action="Take">
+                    <input type="hidden" name="courseId" value="@course.Id" />
+                    <div class="form-premium-group">
+                        <label class="form-premium-label gold-text">Yoklama Tarihi</label>
+                        <input type="date" name="date" class="form-premium-control modern-control" value="@selectedDate.ToString("yyyy-MM-dd")" onchange="this.form.submit()" />
+                    </div>
+                </form>
+                <div class="mt-4 p-3" style="background: rgba(197, 160, 89, 0.05); border-radius: 12px; border: 1px dashed var(--theme-card-border);">
+                    <small class="gold-text" style="display: block; margin-bottom: 0.5rem; font-weight: 700;">
+                        <i class="bi bi-info-circle me-1"></i> Bilgilendirme
+                    </small>
+                    <p class="text-white-50" style="font-size: 0.8rem; margin: 0; line-height: 1.6;">
+                        Öğrencilerin durumlarını hızlıca işaretleyebilir ve sistemi güncel tutabilirsiniz. Kaydet butonuna basmayı unutmayın.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-8">
+            <div class="glass-card-static p-0 overflow-hidden animate-fadeInRight" style="background: rgba(197, 160, 89, 0.1) !important; border: 2px solid #C5A059 !important; border-radius: 30px;">
+                <form asp-action="Save" method="post">
+                    <input type="hidden" name="courseId" value="@course.Id" />
+                    <input type="hidden" name="date" value="@selectedDate.ToString("yyyy-MM-dd")" />
+                    
+                    @if (!Model.Any())
+                    {
+                        <div class="p-5 text-center">
+                            <div style="width: 80px; height: 80px; margin: 0 auto 1.5rem; background: rgba(88, 28, 28, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                                <i class="bi bi-people" style="font-size: 2.5rem; color: #581C1C;"></i>
+                            </div>
+                            <h5 style="font-family: 'Outfit'; font-weight: 800; color: #581C1C;">Henüz öğrenci bulunamamaktadır</h5>
+                            <p style="color: #581C1C; opacity: 0.7;">Bu kursa ait onaylanmış öğrenci kaydı henüz mevcut değil.</p>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="table-responsive">
+                            <table class="table w-100 m-0">
+                                <thead style="background: #581C1C !important;">
+                                    <tr>
+                                        <th style="padding: 1.2rem 1.5rem; border: none; color: #C5A059; font-family: 'Outfit'; font-weight: 900; letter-spacing: 1px;">ÖĞRENCİ BİLGİLERİ</th>
+                                        <th class="text-center" style="padding: 1.2rem 1.5rem; border: none; color: #C5A059; font-family: 'Outfit'; font-weight: 900; letter-spacing: 1px;">KATILIM DURUMU</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var student in Model)
+                                    {
+                                        <tr style="border-bottom: 1px solid var(--theme-card-border) !important;">
+                                            <td style="padding: 1.2rem 1.5rem; border: none;">
+                                                <div class="d-flex align-items-center gap-3">
+                                                    <div class="avatar-sm rounded-circle d-flex align-items-center justify-content-center" style="width:40px; height:40px; background: var(--maroon); border: 1px solid var(--gold);">
+                                                        <i class="bi bi-person-fill" style="color: var(--gold);"></i>
+                                                    </div>
+                                                    <div>
+                                                        <div class="text-white" style="font-weight: 800;">@student.FirstName @student.LastName</div>
+                                                        <small class="text-white-50">TC: @(student.TcNo ?? "---")</small>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-center" style="padding: 1.2rem 1.5rem; border: none;">
+                                                <div class="form-check form-switch d-inline-block">
+                                                    <input type="hidden" name="attendanceData[@student.Id]" value="false" />
+                                                    <input class="form-check-input attendance-switch" type="checkbox" name="attendanceData[@student.Id]" value="true" @(existingAttendances.ContainsKey(student.Id) && existingAttendances[student.Id] ? "checked" : (!existingAttendances.ContainsKey(student.Id) ? "checked" : "")) style="width: 3.5rem; height: 1.7rem; cursor: pointer;" />
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="p-4 border-top" style="background: rgba(88, 28, 28, 0.05) !important; border-color: rgba(88, 28, 28, 0.1) !important;">
+                            <button type="submit" class="btn btn-premium w-100 justify-content-center py-3" style="background: #581C1C !important; color: #C5A059 !important; border: 1px solid #C5A059 !important; font-weight: 800; font-size: 1.1rem; border-radius: 15px;">
+                                <i class="bi bi-check2-circle me-2"></i> Yoklamayı Sisteme Kaydet
+                            </button>
+                        </div>
+                    }
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .attendance-switch {
+        background-color: rgba(88, 28, 28, 0.2) !important;
+        border-color: #581C1C !important;
+    }
+    .attendance-switch:checked {
+        background-color: #581C1C !important;
+        border-color: #C5A059 !important;
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%23C5A059'/%3e%3c/svg%3e") !important;
+    }
+</style>) !important;
+    }
+</style>
+
+

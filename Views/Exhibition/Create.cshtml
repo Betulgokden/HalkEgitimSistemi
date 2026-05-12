@@ -1,0 +1,133 @@
+﻿@model HalkEgitimSistemi.Models.ExhibitionItem
+@{
+    ViewData["Title"] = "Eser Yükle | Sanal Sergi";
+    Layout = "_Layout";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="glass-card p-5 animate__animated animate__fadeInUp">
+                <div class="text-center mb-5">
+                    <div class="icon-circle mb-3 mx-auto" style="width: 80px; height: 80px; background: rgba(245, 158, 11, 0.1); color: #f59e0b; display: flex; align-items: center; justify-content: center; border-radius: 50%; font-size: 2rem;">
+                        <i class="bi bi-cloud-upload-fill"></i>
+                    </div>
+                    <h2 class="fw-bold text-white">Sanal Sergiye Eser Ekle</h2>
+                    <p class="text-muted">Görsel, Video veya 3D Model (.glb) yükleyerek eserinizi dünyayla paylaşın.</p>
+                </div>
+
+                <form asp-action="Create" method="post" enctype="multipart/form-data">
+                    <div class="row g-4">
+                        <div class="col-md-12">
+                            <div class="form-premium-group">
+                                <label asp-for="Title" class="form-label text-white-50">Eser Adı</label>
+                                <input asp-for="Title" class="form-control form-premium-control" placeholder="Örn: Modern Ebru Çalışması" required />
+                                <span asp-validation-for="Title" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-premium-group">
+                                <label asp-for="ArtistName" class="form-label text-white-50">Sanatçı / Kursiyer Adı</label>
+                                <input asp-for="ArtistName" class="form-control form-premium-control" placeholder="Ad Soyad" required />
+                                <span asp-validation-for="ArtistName" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-premium-group">
+                                <label class="form-label text-white-50">Eser Fiyatı (TL)</label>
+                                <input name="Price" type="number" class="form-control form-premium-control" placeholder="Örn: 1250" />
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="form-premium-group">
+                                <label class="form-label text-white-50">Medya Dosyası (Görsel veya MP4 Video)</label>
+                                <div class="file-upload-wrapper">
+                                    <input type="file" name="mediaFile" id="mediaFile" class="file-upload-input" accept="image/*,video/mp4" required />
+                                    <div class="file-upload-design">
+                                        <i class="bi bi-file-earmark-arrow-up fs-1 mb-2"></i>
+                                        <p class="m-0" id="fileNameDisplay">Dosyayı buraya sürükleyin veya seçin</p>
+                                        <span class="text-white-50 small">PNG, JPG, MP4 (Maks: 50MB)</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="form-premium-group">
+                                <label class="form-label text-white-50">3D Model Dosyası (.glb - Opsiyonel)</label>
+                                <input type="file" name="modelFile" class="form-control form-premium-control" accept=".glb" />
+                            </div>
+                        </div>
+
+                        <div class="col-md-12 mt-5">
+                            <button type="submit" class="btn btn-warning w-100 py-3 rounded-pill fw-bold shadow-lg">
+                                <i class="bi bi-check-circle-fill me-2"></i> ESERİ SERGİYE GÖNDER
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .glass-card {
+        background: rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 30px;
+    }
+    .form-premium-control {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: white;
+        border-radius: 15px;
+        padding: 12px 20px;
+    }
+    .form-premium-control:focus {
+        background: rgba(255, 255, 255, 0.08);
+        border-color: #f59e0b;
+        color: white;
+        box-shadow: 0 0 15px rgba(245, 158, 11, 0.2);
+    }
+    .file-upload-wrapper {
+        position: relative;
+        width: 100%;
+        height: 180px;
+        border: 2px dashed rgba(255, 255, 255, 0.1);
+        border-radius: 20px;
+        transition: all 0.3s ease;
+    }
+    .file-upload-input {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        cursor: pointer;
+        z-index: 2;
+    }
+    .file-upload-design {
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 100%;
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
+        color: white;
+    }
+    .file-upload-wrapper:hover {
+        border-color: #f59e0b;
+        background: rgba(245, 158, 11, 0.05);
+    }
+</style>
+
+@section Scripts {
+    <script>
+        document.getElementById('mediaFile').addEventListener('change', function(e) {
+            const fileName = e.target.files[0] ? e.target.files[0].name : "Dosyayı buraya sürükleyin veya seçin";
+            document.getElementById('fileNameDisplay').innerText = fileName;
+        });
+    </script>
+}
+

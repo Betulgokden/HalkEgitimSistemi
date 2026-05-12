@@ -1,0 +1,44 @@
+﻿@model HalkEgitimSistemi.Models.Category
+
+@{
+    ViewData["Title"] = "Kategori Detayları";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8">
+            <div class="detail-card animate-scaleIn">
+                <!-- Header -->
+                <div class="detail-header">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="section-icon section-icon-primary" style="width: 50px; height: 50px; font-size: 1.3rem;">
+                            <i class="bi bi-tag-fill"></i>
+                        </div>
+                        <div>
+                            <h2 style="font-family: 'Outfit', sans-serif; font-weight: 800; margin: 0; color: var(--text-primary); font-size: 1.5rem;">Kategori Detayları</h2>
+                            <p style="color: var(--text-muted); margin: 0; font-size: 0.85rem;">Branş bilgileri</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Details -->
+                <div class="detail-row">
+                    <div class="detail-label">
+                        <i class="bi bi-hash me-1"></i>@Html.DisplayNameFor(model => model.CategoryName)
+                    </div>
+                    <div class="detail-value">@Html.DisplayFor(model => model.CategoryName)</div>
+                </div>
+
+                <!-- Actions -->
+                <div style="padding: 1.5rem 2rem; border-top: 1px solid var(--border-glass); display: flex; gap: 0.8rem;">
+                    <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-premium btn-primary-glow flex-fill justify-content-center">
+                        <i class="bi bi-pencil"></i> Düzenle
+                    </a>
+                    <a asp-action="Index" class="btn btn-premium btn-secondary-glass flex-fill justify-content-center">
+                        <i class="bi bi-arrow-left"></i> Listeye Dön
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

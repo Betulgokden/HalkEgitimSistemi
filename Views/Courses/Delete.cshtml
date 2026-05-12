@@ -1,0 +1,52 @@
+﻿@model HalkEgitimSistemi.Models.Course
+
+@{
+    ViewData["Title"] = "Kurs Sil";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-5 col-md-7">
+            <div class="delete-card animate-scaleIn">
+                <!-- Header -->
+                <div class="delete-header">
+                    <div class="delete-icon">
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+                    </div>
+                    <h3 style="color: var(--danger); font-family: 'Outfit', sans-serif; font-weight: 800; margin: 0;">Kursu Silmek İstiyor Musunuz?</h3>
+                    <p style="color: var(--text-muted); font-size: 0.9rem; margin: 0.5rem 0 0;">Bu işlem geri alınamaz!</p>
+                </div>
+
+                <!-- Details -->
+                <div style="padding: 1.5rem 2rem;">
+                    <div style="background: var(--bg-glass); border: 1px solid var(--border-glass); border-radius: var(--radius-lg); padding: 1.2rem; margin-bottom: 1.5rem;">
+                        <div style="margin-bottom: 0.8rem;">
+                            <small style="color: var(--text-muted); text-transform: uppercase; font-weight: 600; letter-spacing: 0.05em;">Kurs Adı</small>
+                            <div style="color: var(--text-primary); font-weight: 700; font-size: 1.1rem;">@Html.DisplayFor(model => model.CourseName)</div>
+                        </div>
+                        <div style="margin-bottom: 0.8rem;">
+                            <small style="color: var(--text-muted); text-transform: uppercase; font-weight: 600; letter-spacing: 0.05em;">Açıklama</small>
+                            <div style="color: var(--text-secondary);">@Html.DisplayFor(model => model.Description)</div>
+                        </div>
+                        <div>
+                            <small style="color: var(--text-muted); text-transform: uppercase; font-weight: 600; letter-spacing: 0.05em;">Kategori</small>
+                            <div><span class="badge-premium badge-primary">@(Model.Category?.CategoryName ?? "Genel")</span></div>
+                        </div>
+                    </div>
+
+                    <form asp-action="Delete">
+                        <input type="hidden" asp-for="Id" />
+                        <div class="d-flex gap-3">
+                            <a asp-action="Index" class="btn btn-premium btn-secondary-glass flex-fill justify-content-center">
+                                <i class="bi bi-x-lg"></i> Vazgeç
+                            </a>
+                            <button type="submit" class="btn btn-premium btn-danger-glow flex-fill justify-content-center">
+                                <i class="bi bi-trash3"></i> Evet, Sil
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

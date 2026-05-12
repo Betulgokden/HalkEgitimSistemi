@@ -1,0 +1,553 @@
+@{
+    ViewData["Title"] = "Yönetim Paneli";
+}
+
+<div class="container py-5">
+    <!-- Page Header -->
+    <div class="page-header animate-fadeInDown">
+        <div class="page-header-content">
+            <div class="d-flex align-items-center">
+                <div class="page-header-icon" style="background: var(--gradient-hero);">
+                    <i class="bi bi-speedometer2"></i>
+                </div>
+                <div>
+                    <h1 class="page-header-title">Yönetim Paneli</h1>
+                    <p class="page-header-subtitle">Sistem istatistikleri ve raporlama</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row g-4 mb-5 stagger-children">
+        <div class="col-md-3">
+            <a asp-controller="Applications" asp-action="Index" class="text-decoration-none">
+                <div class="action-card-modern warning-theme">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="action-icon">
+                            <i class="bi bi-clipboard-check"></i>
+                        </div>
+                        <div>
+                            <h5 class="mb-1 fw-900 text-premium">Kurs Başvuruları</h5>
+                            <p class="mb-0 text-white-50 small">Öğrenci taleplerini yönetin.</p>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-3">
+            <a asp-controller="Admin" asp-action="InstructorApplications" class="text-decoration-none">
+                <div class="action-card-modern primary-theme">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="action-icon">
+                            <i class="bi bi-person-badge"></i>
+                        </div>
+                        <div>
+                            <h5 class="mb-1 fw-900 text-premium">Eğitmen Masası</h5>
+                            <p class="mb-0 text-white-50 small">Aday başvurularını inceleyin.</p>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-3">
+            <a asp-controller="Employer" asp-action="Dashboard" class="text-decoration-none">
+                <div class="action-card-modern success-theme">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="action-icon">
+                            <i class="bi bi-buildings-fill"></i>
+                        </div>
+                        <div>
+                            <h5 class="mb-1 fw-900 text-premium">İşveren Paneli</h5>
+                            <p class="mb-0 text-white-50 small">İstihdam ve iş ilanları takibi.</p>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-3">
+            <a asp-controller="Admin" asp-action="GlobalSettings" class="text-decoration-none">
+                <div class="action-card-modern info-theme">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="action-icon">
+                            <i class="bi bi-gear-wide-connected"></i>
+                        </div>
+                        <div>
+                            <h5 class="mb-1 fw-900 text-premium">Sistem Ayarları</h5>
+                            <p class="mb-0 text-white-50 small">Logolar ve kurumsal kimlik.</p>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="row g-3 mb-4 stagger-children">
+        <div class="col-6 col-lg-3">
+            <div class="stat-box-modern" style="--box-glow: rgba(59, 130, 246, 0.4);" onclick="showDetails('students', 'Tüm Kayıtlı Öğrenciler')">
+                <div class="stat-icon-wrap bg-primary-glow" style="background: rgba(59, 130, 246, 0.2); color: #3b82f6;">
+                    <i class="bi bi-people-fill"></i>
+                </div>
+                <div class="stat-number-modern text-primary-light" style="color: #3b82f6 !important;">@ViewBag.TotalStudents</div>
+                <div class="stat-label-modern">ÖĞRENCİ</div>
+            </div>
+        </div>
+        <div class="col-6 col-lg-3">
+            <div class="stat-box-modern" style="--box-glow: rgba(16, 185, 129, 0.4);" onclick="showDetails('courses', 'Aktif Yayındaki Kurslar')">
+                <div class="stat-icon-wrap bg-success-glow" style="background: rgba(16, 185, 129, 0.2); color: #10b981;">
+                    <i class="bi bi-journal-check"></i>
+                </div>
+                <div class="stat-number-modern text-success" style="color: #10b981 !important;">@ViewBag.TotalCourses</div>
+                <div class="stat-label-modern">KURS</div>
+            </div>
+        </div>
+        <div class="col-6 col-lg-3">
+            <div class="stat-box-modern" style="--box-glow: rgba(197, 160, 89, 0.4);" onclick="showDetails('instructors', 'Onaylı Eğitmen Kadrosu')">
+                <div class="stat-icon-wrap bg-warning-glow" style="background: rgba(197, 160, 89, 0.2); color: #C5A059;">
+                    <i class="bi bi-person-badge-fill"></i>
+                </div>
+                <div class="stat-number-modern text-warning" style="color: #C5A059 !important;">@ViewBag.TotalInstructors</div>
+                <div class="stat-label-modern">EĞİTMEN</div>
+            </div>
+        </div>
+        <div class="col-6 col-lg-3">
+            <div class="stat-box-modern" style="--box-glow: rgba(239, 68, 68, 0.4);" onclick="showDetails('apps', 'Bekleyen Kurs Başvuruları')">
+                <div class="stat-icon-wrap bg-danger-glow" style="background: rgba(239, 68, 68, 0.2); color: #ef4444;">
+                    <i class="bi bi-hourglass-split"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-4 col-lg-2">
+            <div class="stat-box-modern" style="--box-glow: rgba(16, 185, 129, 0.4);" onclick="showDetails('approved', 'Kesin Kaydı Yapılanlar')">
+                <div class="stat-icon-wrap bg-success-glow">
+                    <i class="bi bi-check-circle-fill"></i>
+                </div>
+                <div class="stat-number-modern text-success">@ViewBag.ApprovedCount</div>
+                <div class="stat-label-modern">ONAYLI</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-4 col-lg-2">
+            <a asp-controller="Admin" asp-action="LiveLessons" class="text-decoration-none">
+                <div class="stat-box-modern live-theme" style="--box-glow: rgba(239, 68, 68, 0.4);">
+                    <div class="stat-icon-wrap bg-danger-glow">
+                        <i class="bi bi-broadcast animate-pulse"></i>
+                    </div>
+                    <div class="stat-number-modern text-danger">@(ViewBag.ActiveLiveCount ?? 0)</div>
+                    <div class="stat-label-modern">CANLI</div>
+                </div>
+            </a>
+        </div>
+    </div>
+
+
+    <div class="row g-4 mt-1 mb-5">
+        <!-- Başvuru Trend Analizi (Chart.js) -->
+        <div class="col-lg-7">
+            <div class="glass-card-static p-4 animate-fadeInUp delay-300 shadow-gold">
+                <h5 style="color: var(--text-primary); font-weight: 700; margin-bottom: 1.5rem;">
+                    <i class="bi bi-graph-up-arrow me-2" style="color: var(--success);"></i>Son 7 Günlük Başvuru Trendi
+                </h5>
+                <div style="height: 300px;">
+                    <canvas id="trendChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sistem İşlem Günlüğü (Audit Logs) -->
+        <div class="col-lg-5">
+            <div class="glass-card-static p-4 animate-fadeInUp delay-400 shadow-gold">
+                <h5 style="color: var(--text-primary); font-weight: 700; margin-bottom: 1.5rem;">
+                    <i class="bi bi-shield-lock-fill me-2" style="color: var(--primary-light);"></i>Sistem İşlem Günlüğü
+                </h5>
+                <div style="max-height: 300px; overflow-y: auto; padding-right: 5px;">
+                    @if (ViewBag.RecentLogs != null)
+                    {
+                        foreach (var log in (IEnumerable<HalkEgitimSistemi.Models.LogEntry>)ViewBag.RecentLogs)
+                        {
+                            <div class="mb-3 p-3 log-item-premium" style="background: var(--bg-card); border-radius: 12px; border-left: 3px solid var(--primary); border: 1px solid var(--border-glass);">
+                                <div class="d-flex justify-content-between mb-1">
+                                    <strong style="color: var(--text-primary); font-size: 0.85rem;">@log.Action</strong>
+                                    <small style="color: var(--text-muted);">@log.Timestamp.ToString("HH:mm")</small>
+                                </div>
+                                <div style="font-size: 0.8rem; color: var(--text-secondary);">@log.Message</div>
+                                <div class="mt-1 d-flex justify-content-between align-items-center">
+                                    <small style="color: var(--primary-light);">@log.UserEmail</small>
+                                    <small style="color: var(--text-muted); font-size: 0.7rem;">@log.IpAddress</small>
+                                </div>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Details Modal -->
+    <div class="modal fade" id="detailsModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content border-glass bg-glass-strong backdrop-blur-xl shadow-2xl" style="border-radius: 24px;">
+                <div class="modal-header border-white-10 p-4">
+                    <h5 class="modal-title fw-900 text-white" id="detailsTitle">Detaylar</h5>
+                    <button type="button" class="btn-close btn-close-white opacity-50" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-0 custom-scrollbar" style="max-height: 60vh; overflow-y: auto;">
+                    <div id="detailsList" class="p-4">
+                        <!-- AJAX content will be loaded here -->
+                        <div class="text-center py-5">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Yükleniyor...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer border-white-10 p-3">
+                    <button type="button" class="btn btn-secondary-glass rounded-pill px-4" data-bs-dismiss="modal">Kapat</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .cursor-pointer { cursor: pointer; }
+        .backdrop-blur-xl { backdrop-filter: blur(40px); -webkit-backdrop-filter: blur(40px); }
+        .text-premium { color: var(--text-primary) !important; }
+        [data-theme="light"] .text-white { color: #1e293b !important; }
+        [data-theme="light"] .text-white-50 { color: #475569 !important; }
+        
+        /* Modern Stat Boxes */
+        .stat-box-modern {
+            background: var(--bg-card);
+            border: 1px solid var(--border-glass);
+            border-radius: 24px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .stat-box-modern:hover {
+            transform: translateY(-8px);
+            background: var(--bg-card-hover);
+            border-color: var(--border-glass-hover);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+        .stat-box-modern::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at center, var(--box-glow), transparent 70%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            pointer-events: none;
+        }
+        .stat-box-modern:hover::before { opacity: 0.15; }
+
+        .stat-icon-wrap {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 12px;
+            font-size: 1.4rem;
+            position: relative;
+            z-index: 2;
+        }
+        .stat-number-modern {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.2rem;
+            font-weight: 900;
+            line-height: 1;
+            margin-bottom: 4px;
+            position: relative;
+            z-index: 2;
+        }
+        .stat-label-modern {
+            color: var(--text-muted);
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Action Cards Modern */
+        .action-card-modern {
+            background: var(--bg-card);
+            border: 1px solid var(--border-glass);
+            border-radius: 24px;
+            padding: 1.8rem;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+            height: 100%;
+        }
+        .action-card-modern:hover {
+            transform: translateY(-8px);
+            background: var(--bg-card-hover);
+            border-color: var(--border-glass-hover);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+        .action-card-modern .action-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            margin-bottom: 0;
+            flex-shrink: 0;
+        }
+        .warning-theme .action-icon { background: #f59e0b; color: #fff; box-shadow: 0 0 15px rgba(245, 158, 11, 0.4); }
+        .primary-theme .action-icon { background: #581C1C; color: #fff; box-shadow: 0 0 15px rgba(88, 28, 28, 0.4); }
+        .success-theme .action-icon { background: #10b981; color: #fff; box-shadow: 0 0 15px rgba(16, 185, 129, 0.4); }
+        .info-theme .action-icon { background: #06b6d4; color: #fff; box-shadow: 0 0 15px rgba(6, 182, 212, 0.4); }
+        .vibrant-purple-theme .action-icon { background: #8b5cf6; color: #fff; box-shadow: 0 0 15px rgba(139, 92, 246, 0.4); }
+        .vibrant-red-theme .action-icon { background: #ef4444; color: #fff; box-shadow: 0 0 15px rgba(239, 68, 68, 0.4); }
+
+        .badge-modern {
+            padding: 0.5rem 1rem;
+            border-radius: 10px;
+            font-weight: 800;
+            font-size: 0.75rem;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+            display: inline-block;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .detail-item {
+            transition: all 0.3s;
+            border-radius: 16px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-glass);
+        }
+        .detail-item:hover {
+            background: var(--bg-card-hover);
+            transform: translateX(10px);
+            border-color: var(--primary);
+        }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: var(--border-glass); border-radius: 10px; }
+    </style>
+
+
+    <!-- Kurs Bazında Başvuru İstatistikleri ve Kategori İstatistikleri -->
+    <div class="row g-4 mt-1">
+        <div class="col-lg-8">
+            <!-- Mevcut Kurs Stats... (Keep the old block but update its header) -->
+            <div class="glass-card-static p-4 animate-fadeInUp delay-200">
+                <h5 style="color: var(--text-primary); font-weight: 700; margin-bottom: 1.5rem;">
+                    <i class="bi bi-bar-chart-fill me-2" style="color: var(--primary-light);"></i>Kurs Doluluk Oranları
+                </h5>
+                @if (ViewBag.CourseStats != null)
+                {
+                    @foreach (var stat in (dynamic)ViewBag.CourseStats)
+                    {
+                        <div style="margin-bottom: 1.2rem;">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <span style="color: var(--text-primary); font-weight: 600; font-size: 0.9rem;">@stat.CourseName</span>
+                                <span style="color: var(--text-muted); font-size: 0.8rem;">
+                                    @stat.ApprovedCount / @stat.Quota kayıt
+                                </span>
+                            </div>
+                            <div style="background: var(--bg-glass); border-radius: var(--radius-full); height: 10px; overflow: hidden; border: 1px solid var(--border-glass);">
+                                @{
+                                    var pct = stat.Quota > 0 ? (int)((double)stat.ApprovedCount / stat.Quota * 100) : 0;
+                                    var barColor = pct >= 80 ? "var(--danger)" : pct >= 50 ? "var(--accent)" : "var(--primary)";
+                                }
+                                <div style="width: @(pct)%; height: 100%; background: @barColor; border-radius: var(--radius-full); transition: width 1s ease-out;"></div>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="glass-card-static p-4 animate-fadeInUp delay-300">
+                <h5 style="color: var(--text-primary); font-weight: 700; margin-bottom: 1.5rem;">
+                    <i class="bi bi-grid-3x3-gap-fill me-2" style="color: var(--secondary);"></i>Kategori Dağılımı
+                </h5>
+                <div style="height: 250px;">
+                    <canvas id="categoryChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Son Başvurular -->
+    <div class="glass-card-static p-4 mt-4 animate-fadeInUp delay-500">
+        <!-- ... existing recent applications table ... -->
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 style="color: var(--text-primary); font-weight: 700; margin: 0;">
+                <i class="bi bi-clock-history me-2" style="color: var(--info);"></i>Son Başvurular
+            </h5>
+            <a asp-controller="Applications" asp-action="Index" class="btn-ghost" style="font-size: 0.85rem;">
+                Tümünü Gör <i class="bi bi-arrow-right"></i>
+            </a>
+        </div>
+        <div class="table-responsive">
+            <table class="table-premium w-100">
+                <thead>
+                    <tr>
+                        <th>Başvuran</th>
+                        <th>Kurs</th>
+                        <th>Tarih</th>
+                        <th>Durum</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (ViewBag.RecentApplications != null)
+                    {
+                        @foreach (var app in (IEnumerable<HalkEgitimSistemi.Models.Application>)ViewBag.RecentApplications)
+                        {
+                            <tr>
+                                <td>
+                                    <span style="font-weight: 600;">@app.FirstName @app.LastName</span>
+                                </td>
+                                <td>
+                                    <span class="badge-premium badge-primary">@(app.Course?.CourseName ?? "?")</span>
+                                </td>
+                                <td style="color: var(--text-muted);">@app.ApplyDate.ToShortDateString()</td>
+                                <td>
+                                    @if (app.Status == HalkEgitimSistemi.Models.ApplicationStatus.Pending)
+                                    {
+                                        <span class="badge-premium badge-warning"><i class="bi bi-hourglass-split"></i> Bekliyor</span>
+                                    }
+                                    else if (app.Status == HalkEgitimSistemi.Models.ApplicationStatus.Approved)
+                                    {
+                                        <span class="badge-premium badge-success"><i class="bi bi-check-circle-fill"></i> Onaylandı</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge-premium badge-danger"><i class="bi bi-x-circle-fill"></i> Reddedildi</span>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Trend Chart
+        const trendCtx = document.getElementById('trendChart').getContext('2d');
+        const trendData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.TrendData));
+        const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+        const labelColor = isLight ? '#0f172a' : 'rgba(255,255,255,0.7)';
+        const gridColor = isLight ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.1)';
+        
+        new Chart(trendCtx, {
+            type: 'line',
+            data: {
+                labels: trendData.map(d => new Date(d.Date).toLocaleDateString('tr-TR', { day: '2-digit', month: 'short' })),
+                datasets: [{
+                    label: 'Günlük Başvuru',
+                    data: trendData.map(d => d.Count),
+                    borderColor: '#581C1C',
+                    backgroundColor: 'rgba(88, 28, 28, 0.1)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 4,
+                    pointBackgroundColor: '#581C1C'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: { beginAtZero: true, grid: { color: gridColor }, ticks: { color: labelColor } },
+                    x: { grid: { display: false }, ticks: { color: labelColor } }
+                }
+            }
+        });
+
+        // Category Chart
+        const catCtx = document.getElementById('categoryChart').getContext('2d');
+        const catData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.CategoryStats));
+        
+        new Chart(catCtx, {
+            type: 'doughnut',
+            data: {
+                labels: catData.map(c => c.CategoryName),
+                datasets: [{
+                    data: catData.map(c => c.CourseCount),
+                    backgroundColor: ['#581C1C', '#581C1C', '#f59e0b', '#C5A059', '#06b6d4', '#C5A059', '#f97316'],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: { color: labelColor, font: { size: 10 } }
+                    }
+                },
+                cutout: '70%'
+            }
+        });
+
+        // Dashboard Detail Reveal Logic
+        const detailsModal = new bootstrap.Modal(document.getElementById('detailsModal'));
+        const detailsTitle = document.getElementById('detailsTitle');
+        const detailsList = document.getElementById('detailsList');
+
+        function showDetails(type, title) {
+            detailsTitle.innerText = title;
+            detailsList.innerHTML = '<div class="text-center py-5"><div class="spinner-border text-primary"></div><p class="mt-2 text-muted">Veriler getiriliyor...</p></div>';
+            detailsModal.show();
+
+            fetch(`/Admin/GetDashboardDetails?type=${type}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.length === 0) {
+                        detailsList.innerHTML = '<div class="text-center py-5"><i class="bi bi-info-circle display-4 opacity-20"></i><p class="mt-3 text-muted">Kayıt bulunamadı.</p></div>';
+                        return;
+                    }
+
+                    let html = '<div class="d-flex flex-column gap-3">';
+                    data.forEach(item => {
+                        html += `
+                            <div class="detail-item p-3 d-flex align-items-center justify-content-between">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="avatar-sm rounded-circle bg-${item.color}-glow d-flex align-items-center justify-content-center" style="width:40px; height:40px; background: rgba(var(--${item.color}-rgb), 0.1);">
+                                        <i class="bi bi-person-fill text-${item.color}"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-0 text-white fw-bold">${item.name}</h6>
+                                        <small class="text-muted-premium">${item.sub}</small>
+                                    </div>
+                                </div>
+                                <span class="badge bg-glass border-glass text-white-50 small">${item.meta}</span>
+                            </div>
+                        `;
+                    });
+                    html += '</div>';
+                    detailsList.innerHTML = html;
+                })
+                .catch(err => {
+                    detailsList.innerHTML = '<div class="alert alert-danger">Veriler yüklenirken bir hata oluştu.</div>';
+                    console.error(err);
+                });
+        }
+    </script>
+}
+
+

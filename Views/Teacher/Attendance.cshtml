@@ -1,0 +1,92 @@
+@model IEnumerable<HalkEgitimSistemi.Models.Application>
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Yoklama Sistemi";
+    DateTime selectedDate = ViewBag.SelectedDate;
+    var existing = ViewBag.ExistingAttendances as Dictionary<int, bool>;
+}
+
+<div class="container py-5">
+    <div class="glass-card-static p-4 mb-4 animate-fadeInUp">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <div>
+                <h2 class="section-title mb-1" style="font-family: 'Outfit';">
+                    <i class="bi bi-calendar-check-fill me-2" style="color: var(--primary);"></i>Yoklama Sistemi
+                </h2>
+                <p class="text-muted mb-0">@ViewBag.CourseName - Günlük katılım durumunu işaretleyin.</p>
+            </div>
+            <div class="d-flex gap-2">
+                <form method="get" class="d-flex gap-2 align-items-center">
+                    <label class="text-primary-light small fw-bold">Tarih:</label>
+                    <input type="date" name="date" value="@selectedDate.ToString("yyyy-MM-dd")" class="form-premium-control py-1 px-3" style="width: auto; border-color: var(--primary);" onchange="this.form.submit()" />
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <form asp-action="SaveAttendance" method="post">
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="date" value="@selectedDate.ToString("yyyy-MM-dd")" />
+
+        <div class="glass-card-static p-0 overflow-hidden animate-fadeInUp" style="animation-delay: 0.1s;">
+            <div class="table-responsive">
+                <table class="table table-premium mb-0">
+                    <thead style="background: rgba(197, 160, 89, 0.1) !important;">
+                        <tr>
+                            <th class="ps-4 border-0 text-primary-light small fw-bold">Öğrenci</th>
+                            <th class="border-0 text-primary-light small fw-bold">T.C. No</th>
+                            <th class="text-center border-0 text-primary-light small fw-bold">Durum</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var student in Model)
+                        {
+                            bool isPresent = existing != null && existing.ContainsKey(student.Id) ? existing[student.Id] : true;
+                            <tr class="align-middle border-bottom border-white-5">
+                                <td class="ps-4 py-3">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="avatar-circle-sm" style="background: rgba(197, 160, 89, 0.1); border-color: var(--primary);">
+                                            <span style="color: var(--primary);">@student.FirstName[0]@student.LastName[0]</span>
+                                        </div>
+                                        <div>
+                                            <div class="fw-bold text-white">@student.FirstName @student.LastName</div>
+                                            <div class="small text-white-50">@student.Email</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="text-white-50 small">@student.TcNo</td>
+                                <td class="text-center">
+                                    <div class="attendance-toggle-group">
+                                        <input type="radio" name="attendanceData[@student.Id]" value="true" id="p_@student.Id" class="btn-check" @(isPresent ? "checked" : "")>
+                                        <label class="btn btn-sm btn-outline-success px-3" for="p_@student.Id">GELDİ</label>
+
+                                        <input type="radio" name="attendanceData[@student.Id]" value="false" id="a_@student.Id" class="btn-check" @(!isPresent ? "checked" : "")>
+                                        <label class="btn btn-sm btn-outline-danger px-3" for="a_@student.Id">GELMEDİ</label>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="mt-4 text-end animate-fadeInUp" style="animation-delay: 0.2s;">
+            <button type="submit" class="btn btn-premium btn-primary-glow px-5 py-3">
+                <i class="bi bi-floppy-fill me-2"></i>Yoklamayı Kaydet
+            </button>
+        </div>
+    </form>
+</div>
+
+<style>
+    .avatar-circle-sm {
+        width: 32px; height: 32px; border-radius: 50%;
+        background: var(--gradient-card); border: 1px solid var(--border-glass);
+        display: flex; align-items: center; justify-content: center;
+        font-size: 0.75rem; font-weight: 800; color: var(--primary-light);
+    }
+    .attendance-toggle-group .btn-check:checked + .btn-outline-success { background-color: var(--success) !important; color: white !important; box-shadow: 0 0 15px rgba(16,185,129,0.3); }
+    .attendance-toggle-group .btn-check:checked + .btn-outline-danger { background-color: var(--danger) !important; color: white !important; box-shadow: 0 0 15px rgba(239,68,68,0.3); }
+    .attendance-toggle-group label { border-radius: 8px; font-weight: 700; font-size: 0.7rem; border-color: rgba(255,255,255,0.1); }
+</style>

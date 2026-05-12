@@ -1,0 +1,64 @@
+﻿@model IEnumerable<HalkEgitimSistemi.Models.Category>
+
+@{
+    ViewData["Title"] = "Eğitim Branşları";
+}
+
+<div class="container py-5">
+    <!-- Page Header -->
+    <div class="page-header animate-fadeInDown">
+        <div class="page-header-content">
+            <div class="d-flex align-items-center">
+                <div class="page-header-icon">
+                    <i class="bi bi-grid-3x3-gap-fill"></i>
+                </div>
+                <div>
+                    <h1 class="page-header-title">Kategori Yönetimi</h1>
+                    <p class="page-header-subtitle">Eğitim branşlarını tanımlayın ve yönetin.</p>
+                </div>
+            </div>
+            <a asp-action="Create" class="btn btn-premium btn-warning-glow">
+                <i class="bi bi-plus-circle"></i> Yeni Kategori
+            </a>
+        </div>
+    </div>
+
+    <!-- Categories Grid (Boxes) -->
+    <div class="row g-4 stagger-children">
+        @foreach (var item in Model) {
+            <div class="col-md-6 col-lg-4">
+                <div class="glass-card-static p-4 h-100 animate-fadeInUp d-flex flex-column" style="border-radius: 24px;">
+                    <div class="d-flex align-items-center gap-3 mb-4">
+                        <div class="section-icon section-icon-primary" style="width: 50px; height: 50px; font-size: 1.3rem; background: var(--gradient-primary); border-radius: 15px; color: white; display: flex; align-items: center; justify-content: center;">
+                            <i class="bi @(item.IconClass ?? "bi-tag-fill")"></i>
+                        </div>
+                        <div>
+                            <h5 class="fw-bold text-white mb-0">@item.CategoryName</h5>
+                            <span class="badge-premium badge-primary mt-1" style="font-size: 0.75rem;">
+                                <i class="bi bi-journal-bookmark me-1"></i> @(item.Courses?.Count() ?? 0) Kurs
+                            </span>
+                        </div>
+                    </div>
+
+                    <p class="text-muted-premium small mb-4 flex-grow-1">
+                        Bu kategori altında yer alan tüm eğitim programlarını, müfredatları ve eğitmen başvurularını buradan yönetebilirsiniz.
+                    </p>
+
+                    <div class="d-flex justify-content-between align-items-center mt-auto pt-3 border-top border-glass">
+                        <div class="d-flex gap-2">
+                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn-icon btn-icon-primary" data-tooltip="Düzenle">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn-icon btn-icon-danger" data-tooltip="Sil">
+                                <i class="bi bi-trash3"></i>
+                            </a>
+                        </div>
+                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-secondary-glass rounded-pill px-3">
+                            Detay <i class="bi bi-chevron-right ms-1"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

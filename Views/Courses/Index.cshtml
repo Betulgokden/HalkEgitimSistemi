@@ -1,0 +1,76 @@
+@model IEnumerable<HalkEgitimSistemi.Models.Course>
+
+@{
+    ViewData["Title"] = "Kurs Kataloğu";
+}
+
+<div class="container py-5">
+    <!-- Page Header -->
+    <div class="page-header animate-fadeInDown">
+        <div class="page-header-content">
+            <div class="d-flex align-items-center">
+                <div class="page-header-icon" style="background: var(--gradient-purple);">
+                    <i class="bi bi-journal-bookmark-fill"></i>
+                </div>
+                <div>
+                    <h1 class="page-header-title">Kurs Kataloğu</h1>
+                    <p class="page-header-subtitle">Tüm eğitim programlarını yönetin ve düzenleyin.</p>
+                </div>
+            </div>
+            <a asp-action="Create" class="btn btn-premium btn-warning-glow">
+                <i class="bi bi-plus-lg"></i> Yeni Kurs Ekle
+            </a>
+        </div>
+    </div>
+
+    <!-- Courses Grid (Boxes) -->
+    <div class="row g-4 stagger-children">
+        @foreach (var item in Model) {
+            <div class="col-md-6 col-lg-4">
+                <div class="glass-card-static p-0 h-100 animate-fadeInUp d-flex flex-column" style="border-radius: 24px; overflow: hidden;">
+                    <!-- Image Wrapper -->
+                    <div style="position: relative; height: 160px;">
+                        <img src="@(string.IsNullOrEmpty(item.ImageUrl) ? "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=600&q=80" : item.ImageUrl)" 
+                             alt="@item.CourseName" style="width: 100%; height: 100%; object-fit: cover;">
+                        <div style="position: absolute; top: 1rem; right: 1rem;">
+                            <span class="badge-premium badge-success shadow-lg">
+                                <i class="bi bi-check-circle-fill"></i> Aktif
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Content -->
+                    <div class="p-4 flex-grow-1 d-flex flex-column">
+                        <div class="mb-2">
+                            <span class="small fw-bold text-uppercase tracking-wider">@(item.Category?.CategoryName ?? "Genel")</span>
+                        </div>
+                        <h5 class="fw-bold mb-3" style="line-height: 1.4;">@item.CourseName</h5>
+                        
+                        <div class="d-flex gap-3 mb-4 text-muted small">
+                            <span><i class="bi bi-clock me-1"></i> @item.DurationHours Sa</span>
+                            <span><i class="bi bi-person-workspace me-1"></i> @(item.MaxAbsenceLimit) Hak</span>
+                        </div>
+
+                        <!-- Actions Area -->
+                        <div class="mt-auto pt-3 border-top border-glass d-flex justify-content-between align-items-center">
+                            <div class="d-flex gap-2">
+                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn-icon btn-icon-primary" data-tooltip="Düzenle">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <a asp-action="Details" asp-route-id="@item.Id" class="btn-icon btn-icon-info" data-tooltip="Detay">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                                <a asp-action="Delete" asp-route-id="@item.Id" class="btn-icon btn-icon-danger" data-tooltip="Sil">
+                                    <i class="bi bi-trash3"></i>
+                                </a>
+                            </div>
+                            <a asp-controller="TeacherChat" asp-action="CourseChat" asp-route-courseId="@item.Id" class="btn btn-sm btn-success-glow rounded-pill px-3">
+                                <i class="bi bi-chat-dots"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

@@ -1,0 +1,107 @@
+﻿@model HalkEgitimSistemi.Models.LibraryBook
+@{
+    ViewData["Title"] = "Konu Anlatımı Yükle";
+    Layout = "_Layout";
+}
+
+<div class="container py-5" style="margin-top: 100px;">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="glass-card p-5 animate__animated animate__fadeInUp" style="border-left: 5px solid #f59e0b;">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2 class="text-white m-0">ğŸ“– Konu Anlatımı Paylaş</h2>
+                    <span class="badge bg-warning text-dark px-3 py-2">Hediye Kurs Kampanyası!</span>
+                </div>
+                <p class="text-white-50 mb-5">Hazırladığınız ders notlarını PDF olarak yükleyin. Ayın en çok yıldızını alan öğrenciye istediği 1 kurs hediye!</p>
+
+                <form asp-action="UploadNote" method="post" enctype="multipart/form-data">
+                    <div class="mb-4">
+                        <label class="text-white form-label">Not Başlığı</label>
+                        <input asp-for="Title" class="form-control glass-input" placeholder="Örn: Python'da List Comprehension" required />
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="text-white form-label">Hangi Kursa Ait?</label>
+                        <select asp-for="CourseId" class="form-select glass-input" required>
+                            <option value="">Kurs Seçin</option>
+                            @if (ViewBag.Courses != null)
+                            {
+                                @foreach (var course in ViewBag.Courses)
+                                {
+                                    <option value="@course.Id">@course.CourseName</option>
+                                }
+                            }
+                        </select>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="text-white form-label">Not Kategorisi</label>
+                        <select asp-for="Category" class="form-select glass-input" required>
+                            <option value="Yazılım">Yazılım</option>
+                            <option value="Sanat">Sanat</option>
+                            <option value="Dil Eğitimi">Dil Eğitimi</option>
+                            <option value="Diğer">Diğer</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="text-white form-label">Not Dosyası (PDF)</label>
+                        <input type="file" name="pdfFile" class="form-control glass-input" accept=".pdf" required />
+                        <small class="text-white-50">Sadece PDF dosyaları kabul edilmektedir.</small>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="text-white form-label">Kısa Açıklama</label>
+                        <textarea asp-for="Description" class="form-control glass-input" rows="3" placeholder="Notun içeriği hakkında bilgi verin..."></textarea>
+                    </div>
+
+                    <div class="d-grid mt-5">
+                        <button type="submit" class="btn btn-warning-premium py-3">
+                            <i class="bi bi-star-fill me-2"></i> Konu Anlatımını Paylaş ve Yarışmaya Katıl
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .glass-card {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 24px;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    }
+
+    .glass-input {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: white;
+        border-radius: 12px;
+        padding: 12px 20px;
+    }
+
+    .glass-input:focus {
+        background: rgba(255, 255, 255, 0.1);
+        border-color: #f59e0b;
+        color: white;
+        box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.1);
+    }
+
+    .btn-warning-premium {
+        background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
+        border: none;
+        color: #000;
+        font-weight: 700;
+        border-radius: 12px;
+        transition: all 0.3s ease;
+    }
+
+    .btn-warning-premium:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px -5px rgba(245, 158, 11, 0.5);
+    }
+</style>
+
