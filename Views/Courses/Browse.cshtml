@@ -5,28 +5,28 @@
 }
 
 <!-- Hero Section -->
-<section class="hero-section" style="min-height: 30vh; padding-top: 100px; position: relative; overflow: hidden; background: transparent;">
+<section class="hero-section" style="min-height: 25vh; padding-top: 100px; position: relative; overflow: hidden; background: transparent;">
     <div class="hero-bg-image" style="display: none;"></div>
     <div class="hero-overlay" style="display: none;"></div>
     
     <div class="hero-content animate-fadeInUp text-center" style="max-width: 800px; padding: 0 1rem; position: relative; z-index: 10;">
-        <span class="badge-premium badge-primary mb-3"><i class="bi bi-stars"></i> Geleceğini Şekillendir</span>
+        <span class="badge-premium badge-primary mb-3"><i class="bi bi-stars"></i> <span data-i18n="hero_badge_short">Geleceğini Şekillendir</span></span>
         <h1 class="hero-title">
-            Eğitim <span class="section-title-gradient">Kataloğu</span>
+            <span data-i18n="nav_courses">Eğitim</span> <span class="section-title-gradient" data-i18n="nav_catalog">Kataloğu</span>
         </h1>
-        <p class="hero-subtitle">
+        <p class="hero-subtitle" data-i18n="courses_subtitle">
             Kendinize yatırım yapın. Yüzlerce ücretsiz kurs arasından size uygun olanı seçin ve hemen başlayın.
         </p>
 
         <!-- Search Form -->
         <form asp-action="Browse" method="get" class="animate-fadeInUp delay-300 mx-auto" style="max-width: 800px;">
-            <div style="display: flex; align-items: center; background: #581C1C; border: 3px solid #C5A059; padding: 5px; border-radius: 4px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
-                <i class="bi bi-search" style="color: #C5A059; font-size: 1.4rem; margin-left: 15px;"></i>
+            <div class="premium-search-container">
+                <i class="bi bi-search search-icon"></i>
                 <input type="text" name="search" value="@ViewBag.CurrentSearch" 
-                       style="flex: 1; background: transparent; border: none; color: #C5A059; padding: 15px 20px; font-size: 1.1rem; font-weight: 600; outline: none; font-family: 'Outfit', sans-serif;" 
-                       placeholder="Ne öğrenmek istersiniz? (Örn: İngilizce, Web Tasarım)" />
-                <button type="submit" 
-                        style="background: #C5A059; color: #581C1C; border: 2px solid #581C1C; padding: 12px 40px; font-weight: 900; letter-spacing: 2px; cursor: pointer; transition: all 0.3s ease; text-transform: uppercase; border-radius: 2px;">
+                       class="search-input"
+                       data-i18n-placeholder="search_placeholder"
+                       placeholder="Ne öğrenmek istersiniz?" />
+                <button type="submit" class="search-submit" data-i18n="search_btn">
                     ARA
                 </button>
             </div>
@@ -34,17 +34,62 @@
     </div>
 </section>
 
+<style>
+    .premium-search-container {
+        display: flex; 
+        align-items: center; 
+        background: var(--bg-card); 
+        border: 2px solid var(--primary-light); 
+        padding: 5px; 
+        border-radius: var(--radius-lg); 
+        box-shadow: var(--shadow-lg);
+        backdrop-filter: blur(10px);
+    }
+    .search-icon {
+        color: var(--primary-light); 
+        font-size: 1.4rem; 
+        margin-left: 15px;
+    }
+    .search-input {
+        flex: 1; 
+        background: transparent; 
+        border: none; 
+        color: var(--text-primary); 
+        padding: 12px 20px; 
+        font-size: 1.1rem; 
+        font-weight: 600; 
+        outline: none; 
+        font-family: 'Outfit', sans-serif;
+    }
+    .search-submit {
+        background: var(--primary-light); 
+        color: var(--bg-dark); 
+        border: none; 
+        padding: 10px 35px; 
+        font-weight: 900; 
+        letter-spacing: 1px; 
+        cursor: pointer; 
+        transition: all 0.3s ease; 
+        text-transform: uppercase; 
+        border-radius: var(--radius-md);
+    }
+    .search-submit:hover {
+        transform: scale(1.02);
+        box-shadow: 0 0 20px var(--primary-glow);
+    }
+</style>
+
 <div class="container py-5">
     <div class="row g-4">
         <!-- Sidebar Filters -->
         <div class="col-lg-3">
             <div class="glass-card-static p-4 sticky-top" style="top: 100px; z-index: 10;">
                 <h5 style="color: var(--text-primary); font-family: 'Outfit'; font-weight: 800; margin-bottom: 1.5rem;">
-                    <i class="bi bi-funnel-fill me-2" style="color: var(--primary-light);"></i>Kategoriler
+                    <i class="bi bi-funnel-fill me-2" style="color: var(--primary-light);"></i><span data-i18n="categories_title">Kategoriler</span>
                 </h5>
                 <div class="d-flex flex-column gap-2">
                     <a asp-action="Browse" asp-route-search="@ViewBag.CurrentSearch" class="btn text-start @((ViewBag.CurrentCategory == null || ViewBag.CurrentCategory == 0) ? "btn-warning" : "btn-premium btn-secondary-glass")" style="padding: 0.8rem 1.2rem; font-weight: 800; @((ViewBag.CurrentCategory == null || ViewBag.CurrentCategory == 0) ? "background: #C5A059 !important; color: #581C1C !important; border: 2px solid #581C1C !important;" : "")">
-                        <i class="bi bi-grid-fill me-2" style="color: @((ViewBag.CurrentCategory == null || ViewBag.CurrentCategory == 0) ? "#581C1C" : "#C5A059");"></i>Tüm Kurslar <span class="badge @((ViewBag.CurrentCategory == null || ViewBag.CurrentCategory == 0) ? "bg-white text-dark" : "bg-glass") ms-auto" style="float: right; @((ViewBag.CurrentCategory == null || ViewBag.CurrentCategory == 0) ? "" : "color: var(--text-primary); border: 1px solid var(--border-glass);")">@ViewBag.TotalCourses</span>
+                        <i class="bi bi-grid-fill me-2" style="color: @((ViewBag.CurrentCategory == null || ViewBag.CurrentCategory == 0) ? "#581C1C" : "#C5A059");"></i><span data-i18n="all_courses">Tüm Kurslar</span> <span class="badge @((ViewBag.CurrentCategory == null || ViewBag.CurrentCategory == 0) ? "bg-white text-dark" : "bg-glass") ms-auto" style="float: right; @((ViewBag.CurrentCategory == null || ViewBag.CurrentCategory == 0) ? "" : "color: var(--text-primary); border: 1px solid var(--border-glass);")">@ViewBag.TotalCourses</span>
                     </a>
                     
                     @if (ViewBag.Categories != null)
@@ -71,11 +116,11 @@
                 <h4 style="color: var(--text-primary); font-weight: 700; margin: 0;">
                     @if (Model.Any())
                     {
-                        <span><span style="color: #C5A059;">@Model.Count()</span> sonuç bulundu</span>
+                        <span><span style="color: #C5A059;">@Model.Count()</span> <span data-i18n="results_found">sonuç bulundu</span></span>
                     }
                     else
                     {
-                        <span>Sonuç bulunamadı</span>
+                        <span data-i18n="no_results_found">Sonuç bulunamadı</span>
                     }
                 </h4>
             </div>
@@ -86,9 +131,9 @@
                     <div class="empty-state-icon mx-auto mb-4" style="width: 80px; height: 80px; background: rgba(197, 160, 89, 0.1); color: #C5A059; display: flex; align-items: center; justify-content: center; border-radius: 50%; border: 1px solid rgba(197, 160, 89, 0.3); font-size: 2rem;">
                         <i class="bi bi-search"></i>
                     </div>
-                    <h3 style="color: var(--text-primary); font-family: 'Outfit'; font-weight: 800;">Arama kriterlerine uygun kurs bulunamadı.</h3>
-                    <p style="color: var(--text-muted); font-size: 1.1rem; margin-top: 0.5rem;">Farklı kelimelerle veya farklı kategorilerde arama yapmayı deneyin.</p>
-                    <a asp-action="Browse" class="btn btn-premium btn-primary-glow mt-3">Aramayı Temizle</a>
+                    <h3 style="color: var(--text-primary); font-family: 'Outfit'; font-weight: 800;" data-i18n="empty_search_title">Arama kriterlerine uygun kurs bulunamadı.</h3>
+                    <p style="color: var(--text-muted); font-size: 1.1rem; margin-top: 0.5rem;" data-i18n="empty_search_subtitle">Farklı kelimelerle veya farklı kategorilerde arama yapmayı deneyin.</p>
+                    <a asp-action="Browse" class="btn btn-premium btn-primary-glow mt-3" data-i18n="clear_search">Aramayı Temizle</a>
                 </div>
             }
             else
@@ -112,7 +157,8 @@
                                         </div>
                                         <div class="badge-premium badge-glass" style="backdrop-filter: blur(10px); background: rgba(0,0,0,0.4);">
                                             <i class="bi bi-star-fill text-warning me-1"></i>
-                                            <span class="text-white fw-bold">@(item.AverageRating > 0 ? item.AverageRating.ToString("0.0") : "Yeni")</span>
+                                            <span class="text-white fw-bold">@(item.AverageRating > 0 ? item.AverageRating.ToString("0.0") : "")</span>
+                                            @if (!(item.AverageRating > 0)) { <span class="text-white fw-bold" data-i18n="new_label">Yeni</span> }
                                         </div>
                                     </div>
                                     <div style="position: absolute; bottom: 0; left: 0; right: 0; height: 50%; background: linear-gradient(to top, var(--bg-dark), transparent);"></div>
@@ -140,12 +186,12 @@
                                     </div>
                                     
                                     <div class="mb-3" style="font-size: 0.75rem; color: var(--text-muted);">
-                                        <i class="bi bi-journal-check text-info me-1"></i> Haftalık Müfredat ve Sınav Takvimi Mevcut
+                                        <i class="bi bi-journal-check text-info me-1"></i> <span data-i18n="weekly_curriculum">Haftalık Müfredat ve Sınav Takvimi Mevcut</span>
                                     </div>
 
                                     <!-- Action -->
                                     <a asp-action="CourseDetail" asp-route-id="@item.Id" class="btn btn-premium btn-secondary-glass w-100" style="transition: all 0.3s ease;">
-                                        İncele ve Başvur <i class="bi bi-arrow-right ms-1"></i>
+                                        <span data-i18n="examine_apply">İncele ve Başvur</span> <i class="bi bi-arrow-right ms-1"></i>
                                     </a>
                                 </div>
                             </div>

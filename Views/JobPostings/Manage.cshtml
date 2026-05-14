@@ -14,16 +14,16 @@
         </a>
     </div>
 
-    <div class="glass-card shadow-2xl overflow-hidden" style="border-radius: 30px; border: 1.5px solid var(--theme-card-border);">
+    <div class="glass-card shadow-2xl overflow-hidden @(!Model.Any() ? "d-none" : "")" style="border-radius: 30px; border: 1.5px solid var(--theme-card-border); background: var(--bg-glass);">
         <div class="table-responsive">
             <table class="table table-hover align-middle mb-0" style="color: white;">
                 <thead class="bg-glass-strong">
                     <tr>
-                        <th class="ps-4 py-4 border-0 gold-text small fw-900">İLAN BAŞLIĞI</th>
-                        <th class="py-4 border-0 gold-text small fw-900">KONUM / TÜR</th>
-                        <th class="py-4 border-0 gold-text small fw-900">TARİH</th>
-                        <th class="py-4 border-0 gold-text small fw-900">DURUM</th>
-                        <th class="pe-4 py-4 border-0 gold-text small fw-900 text-end">İŞLEMLER</th>
+                        <th class="ps-4 py-4 border-0 gold-text small fw-900" data-i18n="job_title">İLAN BAŞLIĞI</th>
+                        <th class="py-4 border-0 gold-text small fw-900" data-i18n="job_location">KONUM / TÜR</th>
+                        <th class="py-4 border-0 gold-text small fw-900" data-i18n="job_date">TARİH</th>
+                        <th class="py-4 border-0 gold-text small fw-900" data-i18n="job_status">DURUM</th>
+                        <th class="pe-4 py-4 border-0 gold-text small fw-900 text-end" data-i18n="job_actions">İŞLEMLER</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -75,6 +75,20 @@
             </table>
         </div>
     </div>
+
+    @if (!Model.Any())
+    {
+        <div class="glass-card p-5 text-center" style="border-radius: 30px; border: 1.5px solid var(--theme-card-border); background: var(--bg-glass);">
+            <div class="py-5">
+                <i class="bi bi-briefcase text-white-25 display-1 mb-4 d-block"></i>
+                <h3 class="text-white-50 fw-bold" data-i18n="no_jobs_title">Henüz iş ilanları yok</h3>
+                <p class="text-white-25" data-i18n="no_jobs_subtitle">Yayınladığınız bir ilan bulunmuyor. Yeni bir ilan ekleyerek başlayabilirsiniz.</p>
+                <a asp-action="Create" class="btn btn-premium px-5 mt-3">
+                    <i class="bi bi-plus-lg me-2"></i>İLK İLANINI OLUŞTUR
+                </a>
+            </div>
+        </div>
+    }
 </div>
 
 <style>

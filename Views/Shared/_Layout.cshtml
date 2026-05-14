@@ -5,265 +5,18 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@300;400;500;600;700;800;900&display=swap">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/HalkEgitimSistemi.styles.css" asp-append-version="true" />
     @RenderSection("Styles", required: false)
     <!-- Theme Initialization Script (Prevents white flicker) -->
     <script>
-        const translations = {
-            'TR': {
-                'brand_name': 'Artvin / Borçka Halk Eğitim Merkezi',
-                'active_text': 'Aktif',
-                'login_btn': 'Giriş',
-                'login_student': 'Öğrenci Girişi',
-                'login_instructor': 'Eğitmen Girişi',
-                'login_employer': 'İşveren Girişi',
-                'login_admin': 'Yönetici Paneli',
-                'nav_home': 'Ana Sayfa',
-                'nav_courses': 'Kurslar',
-                'nav_instructors': 'Eğitmenler',
-                'nav_instructor_apply': 'Eğitmen Başvurusu',
-                'nav_academic': 'Akademik Portal',
-                'nav_inquiries': 'Talep / Başvuru',
-                'nav_future': 'Gelecek & Etki',
-                'nav_digital_campus': 'Dijital Kampüs',
-                'nav_media': 'Medya & Haber',
-                'nav_track_application': 'Başvuru Takibi',
-                'nav_cert': 'Sertifika Sorgulama',
-                'nav_exhibition': 'Metaverse Kampüs',
-                'nav_library': 'Ders Notu Kütüphanesi',
-                'nav_gallery': 'Galeri',
-                'nav_events': 'Etkinlik Takvimi',
-                'nav_workshop': 'Gelecek Atölyesi',
-                'nav_ideabank': 'Fikir Kumbarası',
-                'nav_impact': 'Toplumsal Etki',
-                'nav_quiz': 'Bilgi Yarışması',
-                'nav_notes': 'Konu Anlatımı',
-                'nav_tests': 'Test Soruları',
-                'nav_corporate': 'Kurumsal',
-                'nav_contact': 'İletişim',
-                'logout': 'Güvenli Çıkış',
-                'bot_title': 'HalkBot Pro',
-                'bot_subtitle': 'Yapay Zeka Asistanı',
-                'bot_welcome': 'Merhaba! Ben <strong>HalkBot Pro</strong>. Borçka\'daki eğitimler, sertifikalar veya kariyer fırsatları hakkında size yardımcı olabilirim!',
-                'bot_placeholder': 'Bana her şeyi sorabilirsiniz...',
-                'footer_text': 'Artvin Borçka Halk Eğitim Merkezi olarak toplumun her kesimine kaliteli ve erişilebilir eğitim hizmeti sunmayı amaçlıyoruz.',
-                'quick_access': 'Hızlı Erişim',
-                'corporate': 'Kurumsal',
-                'contact': 'İletişim',
-                'hero_badge': '✅ MEB Onaylı Sertifika • 🛡️ %100 Kurumsal Güvence',
-                'hero_title_1': 'Potansiyelini Keşfet,',
-                'hero_title_2': 'Kendi Geleceğinin Mimarı Ol',
-                'hero_subtitle': 'Eğitim sürecinizi resmi ve geçerli bir kariyere bağlayın. Gelecek Atölyesi ve Fikir Bankası ile vizyonunuzu profesyonel hayata taşıyın, geleceğin mimarı olun.',
-                'hero_btn_start': 'Hemen Başla',
-                'hero_btn_about': 'Kurumsal Güvence',
-                'home_announcements': 'Son Duyurular',
-                'home_view_all': 'Tümünü Gör',
-                'home_read': 'Devamını Oku',
-                'home_new_gen': 'YENİ NESİL ÖĞRENME',
-                'home_quiz_title': 'Bilgini Göster, Ücretsiz Kurs Kazan!',
-                'home_quiz_text': 'Yarışmaya katılın, puanları toplayın ve dilediğiniz kursa ücretsiz kayıt olma şansı yakalayın.',
-                'home_points_target': 'Hedef Puan',
-                'home_join_quiz': 'Yarışmaya Katıl',
-                'ticker_1': 'Gündoğdu Mahallesi bu hafta Python kursunda lider! 🏆',
-                'ticker_2': 'Karagöl fidan hedefi: 342 / 500 Tamamlandı! 🌲',
-                'ticker_3': 'Merkez Mahallesi en çok \'Ders Notu\' paylaşan mahalle oldu! ⚡',
-                'ticker_4': 'Aksu Mahallesi dijital okuryazarlıkta %15 artış Gösterdi! 📈',
-                'ticker_5': 'Borçka HEM: Hükümet Caddesi üzerinde vizyoner eğitim! 📍',
-                'home_visionary_title': 'BORÇKA\'NIN <span class="gold-text">VİZYONER YÜZÜ</span>',
-                'home_visionary_text': 'Eğitimin her alanında görsel bir şölen ve siber gelişim.',
-                'home_showcase_1_title': 'Modern Kampüs',
-                'home_showcase_1_text': 'Artvin\'in Kalbinde Eğitim',
-                'home_showcase_2_title': 'Siber Laboratuvar',
-                'home_showcase_2_text': 'Yazılım ve Yapay Zeka',
-                'home_showcase_3_title': 'Geleneksel Sanatlar',
-                'home_showcase_3_text': 'Ustaların İzinden',
-                'home_vault_title': 'BİLGİ KİLİDİ: <span class="gold-text">Hazineyi Açın!</span>',
-                'home_vault_text': 'Her onaylı ders notu, bu dijital kasanın kilidini biraz daha açar. Topluluk olarak %100\'e ulaştığımızda, ayın en popüler kursu herkese <span class="text-warning fw-bold">ücretsiz</span> olacak!',
-                'home_vault_hint': 'Not yükle ve kasanın kilidini aç!',
-                'home_vault_btn': 'NOT YÜKLE',
-                'home_freelance_title': 'FREELANCE KÖPRÜSÜ',
-                'home_employer_panel': 'İŞVEREN PANELİ',
-                'home_employer_text': 'Borçka\'nın sertifikalı yeteneklerine ulaşın.',
-                'home_employer_register': 'KAYIT OL',
-                'home_employer_login': 'GİRİŞ YAP',
-                'home_spotlight_title': 'HAFTANIN <span class="gold-text">YETENEKLERİ</span>',
-                'home_spotlight_text': 'Üstün başarı gösteren ve işverenlerin radarındaki kursiyerlerimiz.',
-                'home_masters_title': 'BORÇKA\'NIN <span class="gold-text">USTALARI</span>',
-                'home_masters_text': 'Mezun olup kendi işini kuran gurur tablolarımız.',
-                'home_value_title': 'BORÇKA\'YA DEĞER: <span class="text-danger">Karagöl\'ü Yeşertiyoruz!</span>',
-                'home_gallery_title': 'DİJİTAL <span class="gold-text">GALERİ</span>',
-                'home_gallery_text': 'Kampüsümüzden anlık kesitler ve görsel başarılar.',
-                'home_map_title': 'BORÇKA <span class="gold-text">3D EARTH</span>',
-                'home_map_text': 'Borçka\'nın mahallelerini 3D uydu teknolojisiyle keşfedin.',
-                'home_jobs_title': 'BORÇKA <span class="gold-text">İş İlanları</span>',
-                'home_jobs_text': 'Sertifikalı kursiyerlerimiz için en güncel kariyer fırsatları.',
-                'nav_jobs': 'İş İlanları',
-                'job_examine': 'İncele',
-                'job_apply': 'Başvuru Yap',
-                'job_requirements': 'Şartlar',
-                'job_salary': 'Maaş Aralığı',
-                'job_location': 'Konum',
-                'form_full_name': 'Ad Soyad',
-                'form_email': 'E-Posta',
-                'form_phone': 'Telefon',
-                'form_experience': 'Deneyim Özeti',
-                'form_signature': 'Dijital İmza',
-                'form_clear_signature': 'İmzayı Temizle',
-                'form_submit': 'Başvuruyu Tamamla & PDF Al',
-                'login_title_admin': 'Yönetici Paneli',
-                'login_title_teacher': 'Eğitmen Paneli',
-                'login_title_student': 'Kursiyer Paneli',
-                'login_title_employer': 'İşveren Paneli',
-                'login_header_text': 'Sisteme erişmek için kimliğinizi doğrulayın',
-                'login_role_admin': 'Yönetici',
-                'login_role_teacher': 'Eğitmen',
-                'login_role_student': 'Kursiyer',
-                'login_role_employer': 'İşveren',
-                'login_label_identity': 'Kimlik',
-                'login_label_username': 'Kullanıcı Adı',
-                'login_label_fullname': 'Ad Soyad',
-                'login_label_email': 'E-Posta veya Ad Soyad',
-                'login_label_employer_email': 'Kurumsal E-Posta',
-                'login_label_branch': 'Branş',
-                'login_label_password': 'Şifre',
-                'login_forgot_password': 'Şifremi Unuttum',
-                'login_btn_submit': 'Oturum Aç',
-                'login_btn_loading': 'Sisteme Giriş Yapılıyor...',
-                'login_jet_title': 'JET HIZINDA GİRİŞ',
-                'login_ql_admin': 'ADMIN',
-                'login_ql_teacher': 'EĞİTMEN',
-                'login_ql_student': 'KURSİYER',
-                'login_ql_register': 'KAYIT OL'
-            },
-            'EN': {
-                'brand_name': 'Borcka Public Education Center',
-                'active_text': 'Active',
-                'login_btn': 'Login',
-                'login_student': 'Student Login',
-                'login_instructor': 'Instructor Login',
-                'login_employer': 'Employer Login',
-                'login_admin': 'Admin Panel',
-                'nav_home': 'Home',
-                'nav_courses': 'Courses',
-                'nav_instructors': 'Instructors',
-                'nav_instructor_apply': 'Instructor Application',
-                'nav_academic': 'Academic Portal',
-                'nav_jobs': 'Career Center',
-                'nav_inquiries': 'Inquiries',
-                'nav_future': 'Future & Impact',
-                'nav_digital_campus': 'Digital Campus',
-                'nav_media': 'Media',
-                'nav_track_application': 'Track Application',
-                'nav_cert': 'Certificate Inquiry',
-                'nav_exhibition': 'Metaverse Campus',
-                'nav_library': 'Library',
-                'nav_gallery': 'Gallery',
-                'nav_events': 'Event Calendar',
-                'nav_workshop': 'Future Workshop',
-                'nav_ideabank': 'Idea Bank',
-                'nav_impact': 'Social Impact',
-                'nav_quiz': 'Quiz Bowl',
-                'nav_notes': 'Lecture Notes',
-                'nav_tests': 'Test Questions',
-                'nav_corporate': 'Corporate',
-                'nav_contact': 'Contact',
-                'logout': 'Secure Logout',
-                'bot_title': 'HalkBot Pro',
-                'bot_subtitle': 'AI Assistant',
-                'bot_welcome': 'Hello! I am <strong>HalkBot Pro</strong>. I can help you with courses, certificates, or career opportunities in Borcka!',
-                'bot_placeholder': 'Ask me anything...',
-                'footer_text': 'As Borcka Public Education Center, we aim to provide quality and accessible education services to all segments of society.',
-                'quick_access': 'Quick Access',
-                'corporate': 'Corporate',
-                'contact': 'Contact',
-                'hero_badge': '✅ MEB Approved Certificate • 🛡️ 100% Institutional Assurance',
-                'hero_title_1': 'Discover Your Potential,',
-                'hero_title_2': 'Be the Architect of Your Own Future',
-                'hero_subtitle': 'Connect your educational process to an official and valid career. Carry your vision to professional life with Future Workshop and Idea Bank.',
-                'hero_btn_start': 'Start Now',
-                'hero_btn_about': 'Institutional Assurance',
-                'home_announcements': 'Latest Announcements',
-                'home_view_all': 'View All',
-                'home_read': 'Read More',
-                'home_new_gen': 'NEW GEN LEARNING',
-                'home_quiz_title': 'Show Your Knowledge, Win Free Course!',
-                'home_quiz_text': 'Join the quiz, collect points, and get a chance to register for any course for free.',
-                'home_points_target': 'Target Points',
-                'home_join_quiz': 'Join Quiz',
-                'ticker_1': 'Gündoğdu Neighborhood leads the Python course this week! 🏆',
-                'ticker_2': 'Karagöl tree goal: 342 / 500 Completed! 🌲',
-                'ticker_3': 'Merkez Neighborhood is the most active in \'Course Notes\' sharing! ⚡',
-                'ticker_4': 'Aksu Neighborhood showed 15% increase in digital literacy! 📈',
-                'ticker_5': 'Borçka PEC: Visionary education on Government Street! 📍',
-                'home_visionary_title': 'BORCKA\'S <span class="gold-text">VISIONARY FACE</span>',
-                'home_visionary_text': 'A visual feast and cyber development in every field of education.',
-                'home_showcase_1_title': 'Modern Campus',
-                'home_showcase_1_text': 'Education in the Heart of Artvin',
-                'home_showcase_2_title': 'Cyber Laboratory',
-                'home_showcase_2_text': 'Software and Artificial Intelligence',
-                'home_showcase_3_title': 'Traditional Arts',
-                'home_showcase_3_text': 'In the Footsteps of Masters',
-                'home_vault_title': 'KNOWLEDGE LOCK: <span class="gold-text">Open the Treasure!</span>',
-                'home_vault_text': 'Each approved lecture note opens this digital vault a bit more. When we reach 100% as a community, the most popular course of the month will be <span class="text-warning fw-bold">free</span> for everyone!',
-                'home_vault_hint': 'Upload notes and unlock the vault!',
-                'home_vault_btn': 'UPLOAD NOTES',
-                'home_freelance_title': 'FREELANCE BRIDGE',
-                'home_employer_panel': 'EMPLOYER PANEL',
-                'home_employer_text': 'Reach out to Borcka\'s certified talents.',
-                'home_employer_register': 'REGISTER',
-                'home_employer_login': 'LOGIN',
-                'home_spotlight_title': 'TALENTS OF THE <span class="gold-text">WEEK</span>',
-                'home_spotlight_text': 'Our students who show outstanding success and are on the radar of employers.',
-                'home_masters_title': 'BORCKA\'S <span class="gold-text">MASTERS</span>',
-                'home_masters_text': 'Our pride tables who graduated and started their own businesses.',
-                'home_value_title': 'VALUE FOR BORCKA: <span class="text-danger">Greening Karagol!</span>',
-                'home_gallery_title': 'DIGITAL <span class="gold-text">GALLERY</span>',
-                'home_gallery_text': 'Instant slices and visual successes from our campus.',
-                'home_map_title': 'BORCKA <span class="gold-text">3D EARTH</span>',
-                'home_map_text': 'Discover Borcka\'s neighborhoods with 3D satellite technology.',
-                'home_jobs_title': 'BORCKA <span class="gold-text">JOB POSTINGS</span>',
-                'home_jobs_text': 'Latest career opportunities for our certified students.',
-                'job_examine': 'Examine',
-                'job_apply': 'Apply Now',
-                'job_requirements': 'Requirements',
-                'job_salary': 'Salary Range',
-                'job_location': 'Location',
-                'form_full_name': 'Full Name',
-                'form_email': 'Email',
-                'form_phone': 'Phone',
-                'form_experience': 'Experience Summary',
-                'form_signature': 'Digital Signature',
-                'form_clear_signature': 'Clear Signature',
-                'form_submit': 'Complete Application & Get PDF',
-                'login_title_admin': 'Admin Panel',
-                'login_title_teacher': 'Instructor Panel',
-                'login_title_student': 'Student Panel',
-                'login_title_employer': 'Employer Panel',
-                'login_header_text': 'Verify your identity to access the system',
-                'login_role_admin': 'Admin',
-                'login_role_teacher': 'Instructor',
-                'login_role_student': 'Student',
-                'login_role_employer': 'Employer',
-                'login_label_identity': 'Identity',
-                'login_label_username': 'Username',
-                'login_label_fullname': 'Full Name',
-                'login_label_email': 'Email or Full Name',
-                'login_label_employer_email': 'Corporate Email',
-                'login_label_branch': 'Branch',
-                'login_label_password': 'Password',
-                'login_forgot_password': 'Forgot Password',
-                'login_btn_submit': 'Sign In',
-                'login_btn_loading': 'Logging into System...',
-                'login_jet_title': 'JET-SPEED LOGIN',
-                'login_ql_admin': 'ADMIN',
-                'login_ql_teacher': 'INSTRUCTOR',
-                'login_ql_student': 'STUDENT',
-                'login_ql_register': 'REGISTER'
-            }
-        };
-
         (function() {
             const savedTheme = localStorage.getItem('theme') || 'dark';
             document.documentElement.setAttribute('data-theme', savedTheme);
@@ -426,11 +179,18 @@
                 }
             });
 
+            document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+                const key = el.getAttribute('data-i18n-placeholder');
+                if (dict[key]) {
+                    el.placeholder = dict[key];
+                }
+            });
+
             // Update Active Language Indicator
             document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active-lang'));
             document.getElementById('lang-btn-' + lang)?.classList.add('active-lang');
 
-            // Update Placeholder
+            // Update Bot Placeholder if exists
             const robotInput = document.getElementById('robotInput');
             if (robotInput) robotInput.placeholder = dict['bot_placeholder'];
         }
@@ -443,7 +203,7 @@
     <meta name="description" content="Halk Eğitim Sistemi - Modern eğitim programları, kurslar ve başvurular. Kendinizi geliştirin, geleceğinize değer katın." />
     <meta name="theme-color" content="#0f0f23" />
     <title>@ViewData["Title"] - Halk Eğitim Sistemi</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <!-- Removed duplicate bootstrap link -->
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <style>
         .nav-link-premium, .nav-link-premium-sm {
@@ -1022,18 +782,31 @@
                     <a class="header-logo" asp-controller="Home" asp-action="Index" style="text-decoration: none;">
                         <h1 class="m-0" style="font-family: 'Outfit', sans-serif; font-weight: 900; letter-spacing: 2px; font-size: 1.8rem; display: flex; align-items: center; justify-content: center;">
                             <i class="bi bi-mortarboard-fill me-2 float-slow gold-text"></i>
-                            <span class="gold-text">Artvin / Borçka Halk Eğitim Merkezi</span>
+                            <span class="gold-text" data-i18n="brand_name">Artvin / Borçka Halk Eğitim Merkezi</span>
                         </h1>
                     </a>
                 </div>
 
                 <!-- Right: Auth & Counter -->
                 <div class="col-4 col-lg-3 text-end d-flex align-items-center justify-content-end gap-3">
-                    <div class="live-counter-header d-none d-md-flex align-items-center gap-2 px-3 py-1 bg-glass-sm rounded-pill border-glass" style="margin-right: 15px; border-color: var(--theme-card-border) !important;">
-                        <span class="pulse-dot-green" style="width: 8px; height: 8px; background: var(--gold); border-radius: 50%; display: inline-block; box-shadow: 0 0 10px var(--gold); animation: pulse-active 2s infinite;"></span>
-                        <span id="liveCounterTextLayout" class="small" style="font-weight: 700; color: var(--theme-text); white-space: nowrap;">
-                            <span id="liveActiveCount" class="gold-text">144</span> <span data-i18n="active_text">Active</span>
-                        </span>
+                    <!-- Halk Point & Active Counter -->
+                    <div class="header-status-group d-none d-md-flex align-items-center gap-2">
+                        <!-- Halk Point Display (Only for Students) -->
+                        @if (User.IsInRole("Student"))
+                        {
+                            var userPoints = User.Claims.FirstOrDefault(c => c.Type == "Points")?.Value ?? "0";
+                            <div class="status-badge-premium hp-badge px-3 py-1 bg-glass-sm rounded-pill border-glass d-flex align-items-center gap-2" style="border-color: rgba(197, 160, 89, 0.4) !important; background: rgba(197, 160, 89, 0.1) !important;">
+                                <i class="bi bi-coin gold-text" style="filter: drop-shadow(0 0 5px var(--primary-glow));"></i>
+                                <span class="gold-text fw-900 small">@userPoints HP</span>
+                            </div>
+                        }
+
+                        <div class="status-badge-premium active-badge px-3 py-1 bg-glass-sm rounded-pill border-glass d-flex align-items-center gap-2" style="border-color: rgba(16, 185, 129, 0.4) !important; background: rgba(16, 185, 129, 0.1) !important;">
+                            <span class="pulse-dot-green" style="width: 8px; height: 8px; background: #10b981; border-radius: 50%; display: inline-block; box-shadow: 0 0 10px #10b981; animation: pulse-active 2s infinite;"></span>
+                            <span class="small fw-900" style="color: #10b981; white-space: nowrap;">
+                                <span id="liveActiveCount">144</span> <span data-i18n="nav_hp_aktif">Aktif</span>
+                            </span>
+                        </div>
                     </div>
 
                     <!-- Accessibility & Language Bar -->
@@ -1065,7 +838,7 @@
                                 @if (User.IsInRole("Admin"))
                                 {
                                     <button class="btn btn-premium btn-success-glow dropdown-toggle d-flex align-items-center gap-2" type="button" data-bs-toggle="dropdown" style="background: linear-gradient(135deg, #C5A059, #581C1C) !important; border: none !important; font-weight: 800 !important; border-radius: 12px; padding: 8px 18px;">
-                                        <i class="bi bi-shield-lock-fill"></i> <span style="font-family: 'Outfit';">Yönetici</span>
+                                        <i class="bi bi-shield-lock-fill"></i> <span style="font-family: 'Outfit';" data-i18n="role_admin">Yönetici</span>
                                     </button>
                                 }
                                 else
@@ -1073,7 +846,9 @@
                                     <button class="btn btn-premium dropdown-toggle d-flex align-items-center gap-2" type="button" data-bs-toggle="dropdown" style="background: rgba(255,255,255,0.05); border: 1.5px solid rgba(197, 160, 89, 0.4); border-radius: 12px; padding: 8px 16px;">
                                         <i class="bi bi-person-circle" style="background: linear-gradient(135deg, #C5A059, #581C1C); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 1.2rem;"></i>
                                         <span style="background: linear-gradient(135deg, #C5A059, #581C1C); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 800; font-family: 'Outfit';">
-                                            @(User.IsInRole("Admin") ? "Yönetici" : (User.IsInRole("Instructor") ? "Eğitmen" : "Kursiyer"))
+                                            @if(User.IsInRole("Admin")) { <span data-i18n="role_admin">Yönetici</span> }
+                                            else if(User.IsInRole("Instructor")) { <span data-i18n="role_instructor">Eğitmen</span> }
+                                            else { <span data-i18n="role_student">Kursiyer</span> }
                                         </span>
                                     </button>
                                 }
@@ -1083,7 +858,7 @@
                                     <li>
                                         <a class="dropdown-item rounded-12 p-2 d-flex align-items-center gap-3" asp-controller="@(User.IsInRole("Admin") ? "Admin" : (User.IsInRole("Instructor") ? "Teacher" : "Student"))" asp-action="Dashboard">
                                             <div class="icon-box-sm bg-primary-glow" style="width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center; background: rgba(197, 160, 89, 0.2); color: #C5A059;"><i class="bi bi-grid-1x2-fill"></i></div>
-                                            <span class="fw-bold">Kontrol Paneli</span>
+                                            <span class="fw-bold" data-i18n="nav_dashboard">Kontrol Paneli</span>
                                         </a>
                                     </li>
                                     <li>
@@ -1091,13 +866,13 @@
                                            asp-controller="@(User.IsInRole("Admin") ? "Admin" : (User.IsInRole("Instructor") ? "Teacher" : "Student"))" 
                                            asp-action="@(User.IsInRole("Student") ? "Profile" : "MyProfile")">
                                             <div class="icon-box-sm" style="width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center; background: rgba(197, 160, 89, 0.2); color: #C5A059;"><i class="bi bi-person-gear"></i></div>
-                                            <span class="fw-bold">Profil Ayarları</span>
+                                            <span class="fw-bold" data-i18n="nav_profile">Profil Ayarları</span>
                                         </a>
                                     </li>
                                     <li>
-                                        <a class="dropdown-item rounded-12 p-2 d-flex align-items-center gap-3" asp-controller="Messages" asp-action="Index">
+                                        <a class="dropdown-item rounded-12 p-2 d-flex align-items-center gap-3" asp-controller="Message" asp-action="Index">
                                             <div class="icon-box-sm" style="width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center; background: rgba(197, 160, 89, 0.2); color: #C5A059;"><i class="bi bi-envelope-at-fill"></i></div>
-                                            <span class="fw-bold">Mesaj Kutusu</span>
+                                            <span class="fw-bold" data-i18n="nav_messages">Mesaj Kutusu</span>
                                         </a>
                                     </li>
                                     
@@ -1109,6 +884,12 @@
                                             <a class="dropdown-item rounded-12 p-2 d-flex align-items-center gap-3" asp-controller="Applications" asp-action="Index">
                                                 <div class="icon-box-sm" style="color: #f59e0b; width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center; background: rgba(245, 158, 11, 0.1);"><i class="bi bi-file-earmark-plus"></i></div>
                                                 <span class="fw-bold">Başvuruları Yönet</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item rounded-12 p-2 d-flex align-items-center gap-3" asp-controller="Employer" asp-action="ManageEmployers">
+                                                <div class="icon-box-sm" style="color: #8b5cf6; width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center; background: rgba(139, 92, 246, 0.1);"><i class="bi bi-shield-check"></i></div>
+                                                <span class="fw-bold">İşveren Onayları</span>
                                             </a>
                                         </li>
                                         <li>
@@ -1253,7 +1034,7 @@
                                         <form asp-controller="Account" asp-action="Logout" method="post">
                                             <button class="dropdown-item rounded-12 p-2 d-flex align-items-center gap-3 text-danger">
                                                 <div class="icon-box-sm" style="color: #ef4444;"><i class="bi bi-box-arrow-right"></i></div>
-                                                <span class="fw-bold">Güvenli Çıkış</span>
+                                                <span class="fw-bold" data-i18n="nav_logout">Güvenli Çıkış</span>
                                             </button>
                                         </form>
                                     </li>
@@ -1292,6 +1073,7 @@
                                 <li><a class="dropdown-item py-2" asp-controller="Quiz" asp-action="Index"><i class="bi bi-trophy-fill text-warning"></i><span data-i18n="nav_quiz">Bilgi Yarışması</span></a></li>
                                 <li><a class="dropdown-item py-2" asp-controller="Academic" asp-action="Notes"><i class="bi bi-journal-bookmark-fill text-info"></i><span data-i18n="nav_notes">Konu Anlatımı</span></a></li>
                                 <li><a class="dropdown-item py-2" asp-controller="Academic" asp-action="Tests"><i class="bi bi-pencil-square text-success"></i><span data-i18n="nav_tests">Test Soruları</span></a></li>
+                                <li><a class="dropdown-item py-2" asp-controller="HalkPoint" asp-action="Guide"><i class="bi bi-star-fill text-warning"></i> <span data-i18n="nav_hp_guide">Halk Point Rehberi</span></a></li>
                             </ul>
                         </li>
 
@@ -1330,7 +1112,7 @@
                         <li class="nav-item dropdown">
                             <a class="nav-link nav-link-premium dropdown-toggle" href="#" id="mediaDropdown" data-bs-toggle="dropdown" data-i18n="nav_media">Medya</a>
                             <ul class="dropdown-menu dropdown-menu-dark bg-glass border-glass shadow-lg">
-                                <li><a class="dropdown-item py-2" asp-controller="News" asp-action="Index" data-i18n="nav_media">Haberler</a></li>
+                                <li><a class="dropdown-item py-2" asp-controller="News" asp-action="Index" data-i18n="nav_news">Haberler</a></li>
                                 <li><a class="dropdown-item py-2" asp-controller="Gallery" asp-action="Index" data-i18n="nav_gallery">Galeri</a></li>
                                 <li><a class="dropdown-item py-2" asp-controller="Events" asp-action="Index" data-i18n="nav_events">Etkinlik Takvimi</a></li>
                             </ul>
@@ -1544,18 +1326,26 @@
     </script>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.12/signalr.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.12/signalr.min.js" defer></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script>
         // Jet Speed Loader Logic
         window.addEventListener('beforeunload', () => {
-            document.getElementById('globalLoader').style.width = '30%';
+            const loader = document.getElementById('globalLoader');
+            loader.style.width = '40%';
+            loader.style.opacity = '1';
         });
         window.addEventListener('load', () => {
             const loader = document.getElementById('globalLoader');
             loader.style.width = '100%';
-            setTimeout(() => { loader.style.opacity = '0'; }, 400);
+            setTimeout(() => { 
+                loader.style.opacity = '0'; 
+                // Delay heavy animations until loader is gone
+                setTimeout(() => {
+                    document.body.classList.add('ready-for-animations');
+                }, 500);
+            }, 300);
         });
 
         // Professional Fade-in for Main Content
@@ -1727,6 +1517,9 @@
                     <div id="typingIndicator" class="typing-indicator d-none">
                         <span></span><span></span><span></span>
                     </div>
+                    <div id="speakingIndicator" class="speaking-indicator d-none">
+                        <i class="bi bi-volume-up-fill text-gold" style="animation: pulse-gold-bot 1s infinite;"></i>
+                    </div>
                 </div>
                 <div id="chatHistory" class="chat-history mb-3" style="max-height: 250px; overflow-y: auto;">
                     <p id="robotMessage" class="text-premium" style="margin:0; line-height: 1.5; font-size: 1.15rem; font-weight: 500;" data-i18n="bot_welcome">Merhaba! Ben <strong>HalkBot Pro</strong>. Borçka'daki eğitimler, sertifikalar, Isı Haritası veya Karagöl projemiz hakkında size her şeyi anlatabilirim!</p>
@@ -1883,16 +1676,39 @@
                         botMsg.className = "mt-3 animate-fadeIn";
                         botMsg.innerHTML = `
                             <div style="background:${isLight ? 'rgba(0,0,0,0.02)' : 'rgba(255,255,255,0.03)'}; color:${isLight ? '#1e293b' : 'white'}; padding:12px 18px; border-radius:15px; border-left:3px solid #C5A059; font-size:0.95rem; line-height:1.6;">
-                                ${data.response}
+                                ${data.text}
                             </div>
                         `;
                         chatHistory.appendChild(botMsg);
+
+                        // --- HalkBot Actions ---
+                        if (data.action === "RedirectToLogin") {
+                            setTimeout(() => window.location.href = '/Account/Login', 2000);
+                        } else if (data.action === "OpenAdminApplications") {
+                            setTimeout(() => window.location.href = '/Applications/Index', 2000);
+                        }
                         
-                        if (window.isVoiceEnabled && window.speechSynthesis) {
-                            const utterance = new SpeechSynthesisUtterance(data.response);
+                        // --- Voice Support (TTS) ---
+                        if (data.voiceEnabled && window.speechSynthesis) {
+                            const speakText = data.voiceText || data.text.replace(/<[^>]*>?/gm, '');
+                            const utterance = new SpeechSynthesisUtterance(speakText);
+                            const speakingIndicator = document.getElementById('speakingIndicator');
+                            
                             utterance.lang = 'tr-TR';
+                            utterance.rate = 1.0;
+                            utterance.pitch = 1.1;
+
+                            utterance.onstart = () => speakingIndicator?.classList.remove('d-none');
+                            utterance.onend = () => speakingIndicator?.classList.add('d-none');
+                            
                             window.speechSynthesis.speak(utterance);
                         }
+
+                        // --- Data Processing (JSON handle) ---
+                        if (data.data) {
+                            console.log("HalkBot Data Payload:", data.data);
+                        }
+
                     } catch (error) {
                         console.error("Bot error:", error);
                         typingIndicator.classList.add('d-none');
@@ -1933,68 +1749,611 @@
             });
 
             // Global Icon Rain
-            document.addEventListener('DOMContentLoaded', function() {
+            window.addEventListener('load', function() {
+                // Delay animation start to ensure main content renders first
+                setTimeout(() => {
+                    const rainContainer = document.getElementById('globalRainContainer');
+                    if (!rainContainer) return;
 
-                const rainContainer = document.getElementById('globalRainContainer');
-                if (!rainContainer) return;
+                    const iconTypes = ['bi-book', 'bi-pencil', 'bi-mortarboard', 'bi-palette', 'bi-laptop', 'bi-globe', 'bi-stars', 'bi-cpu'];
+                    const icons = [];
+                    const iconCount = 250; // High density for a massive rain effect
 
-                const iconTypes = ['bi-book', 'bi-pencil', 'bi-mortarboard', 'bi-palette', 'bi-laptop', 'bi-globe', 'bi-stars', 'bi-cpu'];
-                const icons = [];
-                const iconCount = 200; // Increased for widespread effect
+                    // Check for reduced motion preference
+                    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+                    if (prefersReducedMotion) return;
 
-
-                for (let i = 0; i < iconCount; i++) {
-                    const iconEl = document.createElement('i');
-                    iconEl.className = `bi ${iconTypes[Math.floor(Math.random() * iconTypes.length)]} rain-icon`;
-                    iconEl.style.color = '#C5A059';
-                    iconEl.style.textShadow = '0 0 10px rgba(197, 160, 89, 0.6)';
-                    iconEl.style.opacity = '0.4';
-                    
-                    const iconObj = { 
-                        el: iconEl, 
-                        x: Math.random() * 100, 
-                        y: Math.random() * -2000, // More spread out vertically
-                        speed: 0.8 + Math.random() * 1.5, 
-                        rotation: Math.random() * 360,
-                        sway: Math.random() * 2, // Horizontal sway factor
-                        swaySpeed: 0.02 + Math.random() * 0.05
-                    };
-                    
-                    iconEl.style.willChange = 'transform';
-                    iconEl.style.left = iconObj.x + '%';
-                    rainContainer.appendChild(iconEl);
-                    icons.push(iconObj);
-                }
-
-                let time = 0;
-                let isTabVisible = true;
-                document.addEventListener('visibilitychange', () => { isTabVisible = !document.hidden; });
-
-                function updateRain() {
-                    if (!isTabVisible) {
-                        requestAnimationFrame(updateRain);
-                        return;
+                    for (let i = 0; i < iconCount; i++) {
+                        const iconEl = document.createElement('i');
+                        iconEl.className = `bi ${iconTypes[Math.floor(Math.random() * iconTypes.length)]} rain-icon`;
+                        iconEl.style.color = '#C5A059'; // Solid Gold
+                        iconEl.style.textShadow = '0 0 20px rgba(197, 160, 89, 0.9)';
+                        iconEl.style.opacity = '0.45';
+                        
+                        const iconObj = { 
+                            el: iconEl, 
+                            x: Math.random() * 100, 
+                            y: Math.random() * -1500, 
+                            speed: 0.5 + Math.random() * 1.5, // Reduced speed
+                            rotation: Math.random() * 360,
+                            sway: Math.random() * 3,
+                            swaySpeed: 0.02 + Math.random() * 0.05
+                        };
+                        
+                        iconEl.style.willChange = 'transform';
+                        iconEl.style.left = iconObj.x + '%';
+                        rainContainer.appendChild(iconEl);
+                        icons.push(iconObj);
                     }
-                    time += 0.05;
-                    icons.forEach(icon => {
-                        icon.y += icon.speed;
-                        
-                        // Horizontal sway for "yaygın" (widespread) effect
-                        const currentSway = Math.sin(time * icon.swaySpeed + icon.x) * 15; 
-                        
-                        if (icon.y > window.innerHeight + 100) {
-                            icon.y = -150;
-                            icon.x = Math.random() * 100; // Randomize horizontal position on reset
-                            icon.el.style.left = icon.x + '%';
+
+                    let time = 0;
+                    let isTabVisible = true;
+                    document.addEventListener('visibilitychange', () => { isTabVisible = !document.hidden; });
+
+                    function updateRain() {
+                        if (!isTabVisible) {
+                            requestAnimationFrame(updateRain);
+                            return;
                         }
-                        
-                        icon.el.style.transform = `translate3d(${currentSway}px, ${icon.y}px, 0) rotate(${icon.rotation + icon.y/5}deg)`;
-                    });
-                    requestAnimationFrame(updateRain);
-                }
-                updateRain();
+                        time += 0.05;
+                        icons.forEach(icon => {
+                            icon.y += icon.speed;
+                            const currentSway = Math.sin(time * icon.swaySpeed + icon.x) * 15; 
+                            
+                            if (icon.y > window.innerHeight + 100) {
+                                icon.y = -150;
+                                icon.x = Math.random() * 100;
+                                icon.el.style.left = icon.x + '%';
+                            }
+                            
+                            icon.el.style.transform = `translate3d(${currentSway}px, ${icon.y}px, 0) rotate(${icon.rotation + icon.y/5}deg)`;
+                        });
+                        requestAnimationFrame(updateRain);
+                    }
+                    updateRain();
+                }, 2000); // 2 second delay for max performance
             });
         </script>
+    <script>
+        const translations = {
+            'TR': {
+                'brand_name': 'Artvin / Borçka Halk Eğitim Merkezi',
+                'active_text': 'Aktif',
+                'login_btn': 'Giriş Yap',
+                'login_student': 'Öğrenci Girişi',
+                'login_instructor': 'Eğitmen Girişi',
+                'login_employer': 'İşveren Girişi',
+                'login_admin': 'Yönetici Paneli',
+                'role_admin': 'Yönetici',
+                'role_instructor': 'Eğitmen',
+                'role_student': 'Kursiyer',
+                'nav_dashboard': 'Kontrol Paneli',
+                'nav_profile': 'Profil Ayarları',
+                'nav_messages': 'Mesaj Kutusu',
+                'nav_logout': 'Güvenli Çıkış',
+                'nav_home': 'Ana Sayfa',
+                'nav_courses': 'Kurslar',
+                'nav_instructors': 'Eğitmenler',
+                'nav_instructor_list': 'Eğitmen Listesi',
+                'nav_instructor_apply': 'Eğitmen Başvurusu',
+                'nav_academic': 'Akademik Portal',
+                'nav_inquiries': 'Talep / Başvuru',
+                'nav_future': 'Gelecek & Etki',
+                'nav_digital_campus': 'Dijital Kampüs',
+                'nav_media': 'Medya',
+                'nav_news': 'Haberler',
+                'nav_track_application': 'Başvuru Takibi',
+                'nav_cert': 'Sertifika Sorgulama Sistemi',
+                'nav_exhibition': 'Metaverse Kampüs',
+                'nav_library': 'Ders Notu Kütüphanesi',
+                'nav_gallery': 'Galeri',
+                'nav_events': 'Etkinlik Takvimi',
+                'nav_workshop': 'Gelecek Atölyesi',
+                'nav_ideabank': 'Fikir Kumbarası',
+                'nav_impact': 'Toplumsal Etki',
+                'nav_quiz': 'Bilgi Yarışması',
+                'nav_notes': 'Konu Anlatımı',
+                'nav_tests': 'Test Soruları',
+                'nav_hp_guide': 'Halk Point Rehberi',
+                'nav_jobs': 'İş İlanları',
+                'inquiry_subtitle': 'T.C. Kimlik numaranız veya Sertifika kodunuz ile belgenizi doğrulayabilirsiniz.',
+                'inquiry_placeholder': 'T.C. No veya Sertifika No giriniz...',
+                'inquiry_btn': 'Sorgula',
+                'logout': 'Güvenli Çıkış',
+                'bot_title': 'HalkBot Pro',
+                'bot_subtitle': 'Yapay Zeka Asistanı',
+                'bot_welcome': 'Merhaba! Ben <strong>HalkBot Pro</strong>. Borçka\'daki eğitimler, sertifikalar veya kariyer fırsatları hakkında size yardımcı olabilirim!',
+                'bot_placeholder': 'Bana her şeyi sorabilirsiniz...',
+                'footer_text': 'Artvin Borçka Halk Eğitim Merkezi olarak toplumun her kesimine kaliteli ve erişilebilir eğitim hizmeti sunmayı amaçlıyoruz.',
+                'quick_access': 'Hızlı Erişim',
+                'corporate': 'Kurumsal',
+                'contact': 'İletişim',
+                'no_jobs_title': 'Henüz iş ilanları yok',
+                'no_jobs_subtitle': 'Yayınladığınız bir ilan bulunmuyor. Yeni bir ilan ekleyerek başlayabilirsiniz.',
+                'hp_guide_subtitle': 'Borçka Halk Eğitim Merkezi\'nin dijital para birimiyle tanışın! Sadece öğrenerek değil, sisteme katkı sağlayarak da kazanın.',
+                'hero_badge': '✅ MEB Onaylı Sertifika • 🛡️ %100 Kurumsal Güvence',
+                'hero_title_1': 'Potansiyelini Keşfet,',
+                'hero_title_2': 'Kendi Geleceğinin Mimarı Ol',
+                'hero_subtitle': 'Eğitim sürecinizi resmi ve geçerli bir kariyere bağlayın. Gelecek Atölyesi ve Fikir Bankası ile vizyonunuzu profesyonel hayata taşıyın, geleceğin mimarı olun.',
+                'hero_btn_start': 'Hemen Başla',
+                'hero_btn_about': 'Kurumsal Güvence',
+                'home_announcements': 'Son Duyurular',
+                'home_view_all': 'Tümünü Gör',
+                'home_read': 'Devamını Oku',
+                'home_new_gen': 'YENİ NESİL ÖĞRENME',
+                'home_quiz_title': 'Bilgini Göster, Ücretsiz Kurs Kazan!',
+                'home_quiz_text': 'Yarışmaya katılın, puanları toplayın ve dilediğiniz kursa ücretsiz kayıt olma şansı yakalayın.',
+                'home_points_target': 'Hedef Puan',
+                'home_join_quiz': 'Yarışmaya Katıl',
+                'ticker_1': 'Gündoğdu Mahallesi bu hafta Python kursunda lider! 🏆',
+                'ticker_2': 'Karagöl fidan hedefi: 342 / 500 Tamamlandı! 🌲',
+                'ticker_3': 'Merkez Mahallesi en çok \'Ders Notu\' paylaşan mahalle oldu! ⚡',
+                'ticker_4': 'Aksu Mahallesi dijital okuryazarlıkta %15 artış Gösterdi! 📈',
+                'ticker_5': 'Borçka HEM: Hükümet Caddesi üzerinde vizyoner eğitim! 📍',
+                'home_visionary_title': 'BORÇKA\'NIN <span class="gold-text">VİZYONER YÜZÜ</span>',
+                'home_visionary_text': 'Eğitimin her alanında görsel bir şölen ve siber gelişim.',
+                'home_showcase_1_title': 'Modern Kampüs',
+                'home_showcase_1_text': 'Artvin\'in Kalbinde Eğitim',
+                'home_showcase_2_title': 'Siber Laboratuvar',
+                'home_showcase_2_text': 'Yazılım ve Yapay Zeka',
+                'home_showcase_3_title': 'Geleneksel Sanatlar',
+                'home_showcase_3_text': 'Ustaların İzinden',
+                'home_vault_title': 'BİLGİ KİLİDİ: <span class="gold-text">Hazineyi Açın!</span>',
+                'home_vault_text': 'Her onaylı ders notu, bu dijital kasanın kilidini biraz daha açar. Topluluk olarak %100\'e ulaştığımızda, ayın en popüler kursu herkese <span class="text-warning fw-bold">ücretsiz</span> olacak!',
+                'home_vault_hint': 'Not yükle ve kasanın kilidini aç!',
+                'home_vault_btn': 'NOT YÜKLE',
+                'home_freelance_title': 'FREELANCE KÖPRÜSÜ',
+                'home_employer_panel': 'İŞVEREN PANELİ',
+                'home_employer_text': 'Borçka\'nın sertifikalı yeteneklerine ulaşın.',
+                'home_employer_register': 'KAYIT OL',
+                'home_employer_login': 'GİRİŞ YAP',
+                'home_spotlight_title': 'HAFTANIN <span class="gold-text">YETENEKLERİ</span>',
+                'home_spotlight_text': 'Üstün başarı gösteren ve işverenlerin radarındaki kursiyerlerimiz.',
+                'home_masters_title': 'BORÇKA\'NIN <span class="gold-text">USTALARI</span>',
+                'home_masters_text': 'Mezun olup kendi işini kuran gurur tablolarımız.',
+                'home_value_title': 'BORÇKA\'YA DEĞER: <span class="text-danger">Karagöl\'ü Yeşertiyoruz!</span>',
+                'home_gallery_title': 'DİJİTAL <span class="gold-text">GALERİ</span>',
+                'home_gallery_text': 'Kampüsümüzden anlık kesitler ve görsel başarılar.',
+                'home_map_title': 'BORÇKA <span class="gold-text">3D EARTH</span>',
+                'home_map_text': 'Borçka\'nın mahallelerini 3D uydu teknolojisiyle keşfedin.',
+                'home_jobs_title': 'BORÇKA <span class="gold-text">İş İlanları</span>',
+                'home_jobs_text': 'Sertifikalı kursiyerlerimiz için en güncel kariyer fırsatları.',
+                'job_examine': 'İncele',
+                'job_apply': 'Başvuru Yap',
+                'job_requirements': 'Aranan Nitelikler',
+                'job_salary': 'Maaş Aralığı',
+                'job_location': 'Konum',
+                'job_location_label': 'İş Konumu',
+                'job_title': 'İLAN BAŞLIĞI',
+                'job_date': 'TARİH',
+                'job_status': 'DURUM',
+                'job_actions': 'İŞLEMLER',
+                'manage_employers': 'İşveren Yönetimi',
+                'employer_approval_system': 'İşveren Onay Sistemi',
+                'employer_approval_subtitle': 'Kurumsal kayıtları ve vergi levhalarını doğrulayın.',
+                'company_info': 'Şirket Bilgileri',
+                'authorized_person': 'Yetkili Kişi',
+                'tax_plate': 'Vergi Levhası',
+                'approve_btn': 'Onayla',
+                'job_status_active': 'Onaylı',
+                'job_status_pending': 'Bekliyor',
+                'job_status_rejected': 'Reddedildi',
+                'active_text': 'Aktif',
+                'nav_hp_aktif': 'Aktif',
+                'active_lessons_none': 'Şu An Aktif Canlı Ders Bulunmamaktadır',
+                'form_full_name': 'Ad Soyad',
+                'form_email': 'E-Posta',
+                'form_phone': 'Telefon',
+                'form_experience': 'Deneyim Özeti',
+                'form_signature': 'Dijital İmza',
+                'form_clear_signature': 'İmzayı Temizle',
+                'form_submit': 'Başvuruyu Tamamla & PDF Al',
+                'login_title_admin': 'Yönetici Paneli',
+                'login_title_teacher': 'Eğitmen Paneli',
+                'login_title_student': 'Kursiyer Paneli',
+                'login_title_employer': 'İşveren Paneli',
+                'login_header_text': 'Sisteme erişmek için kimliğinizi doğrulayın',
+                'login_role_admin': 'Yönetici',
+                'login_role_teacher': 'Eğitmen',
+                'login_role_student': 'Kursiyer',
+                'login_role_employer': 'İşveren',
+                'login_label_identity': 'Kimlik',
+                'login_label_username': 'Kullanıcı Adı',
+                'login_label_fullname': 'Ad Soyad',
+                'login_label_email': 'E-Posta veya Ad Soyad',
+                'login_label_employer_email': 'Kurumsal E-Posta',
+                'login_label_branch': 'Branş',
+                'login_label_password': 'Şifre',
+                'login_forgot_password': 'Şifremi Unuttum',
+                'login_btn_submit': 'Oturum Aç',
+                'login_btn_loading': 'Sisteme Giriş Yapılıyor...',
+                'login_jet_title': 'JET HIZINDA GİRİŞ',
+                'login_ql_admin': 'ADMIN',
+                'login_ql_teacher': 'EĞİTMEN',
+                'login_ql_student': 'KURSİYER',
+                'login_ql_register': 'KAYIT OL',
+                'nav_catalog': 'Kataloğu',
+                'courses_subtitle': 'Kendinize yatırım yapın. Yüzlerce ücretsiz kurs arasından size uygun olanı seçin ve hemen başlayın.',
+                'search_btn': 'ARA',
+                'categories_title': 'Kategoriler',
+                'all_courses': 'Tüm Kurslar',
+                'results_found': 'sonuç bulundu',
+                'no_results_found': 'Sonuç bulunamadı',
+                'empty_search_title': 'Arama kriterlerine uygun kurs bulunamadı.',
+                'empty_search_subtitle': 'Farklı kelimelerle veya farklı kategorilerde arama yapmayı deneyin.',
+                'clear_search': 'Aramayı Temizle',
+                'examine_apply': 'İncele ve Başvur',
+                'new_label': 'Yeni',
+                'weekly_curriculum': 'Haftalık Müfredat ve Sınav Takvimi Mevcut',
+                'bot_placeholder': 'Bana her şeyi sorabilirsiniz...',
+                'search_placeholder': 'Ne öğrenmek istersiniz?',
+                'hero_badge_short': 'Geleceğini Şekillendir',
+                'duration_label': 'Süre',
+                'hours_suffix': 'Saat',
+                'start_date_label': 'Başlangıç',
+                'absence_limit_label': 'Devamsızlık Hak.',
+                'rights_suffix': 'Hak',
+                'about_course': 'Kurs Hakkında',
+                'what_will_you_learn': 'Neler Öğreneceksiniz?',
+                'weekly_curriculum_label': 'Haftalık Ders Programı',
+                'week_label': 'Hafta',
+                'completed_status': 'Tamamlandı',
+                'currently_processing': 'Şu An İşleniyor',
+                'next_week': 'Gelecek Hafta',
+                'requirements_label': 'Gereksinimler',
+                'who_is_it_for': 'Bu Kurs Kimler İçin?',
+                'materials_guide': 'Eğitim Materyalleri ve Konu Rehberi',
+                'no_materials_yet': 'Bu kurs için henüz dijital materyal yüklenmemiştir.',
+                'instructor_label': 'Eğitmen',
+                'instructor_process': 'Eğitmen ataması süreci devam etmektedir.',
+                'quota_status': 'Kontenjan Durumu',
+                'empty_seats': 'Boş Yer',
+                'total_class_size': 'Toplam {0} Kişilik Sınıf',
+                'end_date_label': 'Bitiş',
+                'exam_date_label': 'Sınav Tarihi',
+                'certificate_label': 'Sertifika',
+                'meb_approved': 'MEB Onaylı',
+                'price_label': 'Ücret',
+                'edevlet_integrated': 'Entegre',
+                'join_waiting_list': 'Yedek Listesine Katıl',
+                'quota_full_info': 'Kontenjan dolmuştur. Başvurunuz yedek listesine alınacaktır.',
+                'apply_now': 'Hemen Başvur',
+                'see_all_reviews': 'Tüm Değerlendirmeleri Gör',
+                'fast_info': 'Hızlı Bilgi',
+                'attendance_requirement': '%80 Devam Zorunluluğu',
+                'applied_training': 'Uygulamalı Eğitimler',
+                'career_support': 'Kariyer Desteği',
+                'success_stories_from_course': 'Bu Kurstan Çıkan Başarı Hikayeleri',
+                'read_story': 'Hikayeyi Oku',
+                'participant_reviews': 'Katılımcı Yorumları',
+                'what_was_said': 'Bu kurs hakkında neler söylendi?',
+                'share_experience': 'Deneyiminizi Paylaşın',
+                'your_email': 'E-POSTA ADRESİNİZ',
+                'your_rating': 'PUANINIZ',
+                'your_message': 'MESAJINIZ',
+                'message_placeholder': 'Eğitim kalitesi, hoca ilgisi ve içerik hakkındaki düşünceleriniz...',
+                'send_comment': 'Yorumu Gönder',
+                'no_reviews_yet': 'Henüz Yorum Yapılmamış',
+                'no_reviews_yet': 'Henüz Yorum Yapılmamış',
+                'be_the_first_reviewer': 'Bu kurs hakkında ilk yorumu siz yaparak diğerlerine rehberlik edin!',
+                'hero_badge': '✅ MEB Onaylı Sertifika • 🛡️ %100 Kurumsal Güvence',
+                'hero_title_1': 'Potansiyelini Keşfet,',
+                'hero_title_2': 'Kendi Geleceğinin Mimarı Ol',
+                'hero_subtitle': 'Eğitim sürecinizi resmi ve geçerli bir kariyere bağlayın. Gelecek Atölyesi ve Fikir Bankası ile vizyonunuzu profesyonel hayata taşıyın, geleceğin mimarı olun.',
+                'hero_btn_start': 'Hemen Başla',
+                'hero_btn_about': 'Kurumsal Güvence',
+                'home_announcements': 'Son Duyurular',
+                'home_view_all': 'Tümünü Gör',
+                'home_read': 'Devamını Oku',
+                'home_new_gen': 'YENİ NESİL ÖĞRENME',
+                'home_quiz_title': 'Bilgini Göster, <span class="gold-text">Ücretsiz Kurs</span> Kazan!',
+                'home_quiz_text': 'Yarışmaya katılın, puanları toplayın ve dilediğiniz kursa ücretsiz kayıt olma şansı yakalayın.',
+                'home_points_target': 'Hedef Puan',
+                'home_join_quiz': 'Yarışmaya Katıl',
+                'home_vault_title': 'BİLGİ KİLİDİ: <span class="gold-text">Hazineyi Açın!</span>',
+                'home_vault_text': 'Her onaylı ders notu, bu dijital kasanın kilidini biraz daha açar. Topluluk olarak %100 e ulaştığımızda, ayın en popüler kursu herkese <span class="text-warning fw-bold">ücretsiz</span> olacak!',
+                'home_vault_hint': 'Not yükle ve kasanın kilidini aç!',
+                'home_vault_btn': 'NOT YÜKLE',
+                'home_freelance_title': 'FREELANCE KÖPRÜSÜ',
+                'home_employer_panel': 'İŞVEREN PANELİ',
+                'home_employer_text': 'Borçka nın sertifikalı yeteneklerine ulaşın.',
+                'home_employer_register': 'KAYIT OL',
+                'home_employer_login': 'GİRİŞ YAP',
+                'home_spotlight_title': 'HAFTANIN <span class="gold-text">YETENEKLERİ</span>',
+                'home_spotlight_text': 'Üstün başarı gösteren ve işverenlerin radarındaki kursiyerlerimiz.',
+                'home_masters_title': 'BORÇKA NIN <span class="gold-text">USTALARI</span>',
+                'home_masters_text': 'Mezun olup kendi işini kuran gurur tablolarımız.',
+                'home_value_title': 'BORÇKA YA DEĞER: <span class="text-danger">Karagöl ü Yeşertiyoruz!</span>',
+                'home_gallery_title': 'DİJİTAL <span class="gold-text">GALERİ</span>',
+                'home_gallery_text': 'Kampüsümüzden anlık kesitler ve görsel başarılar.',
+                'home_map_title': 'BORÇKA <span class="gold-text">3D EARTH</span>',
+                'home_map_title': 'BORÇKA <span class="gold-text">3D EARTH</span>',
+                'home_map_text': 'Borçka nın mahallelerini 3D uydu teknolojisiyle keşfedin.',
+                'home_leaderboard': 'Liderlik Tablosu',
+                'home_job_postings': 'Güncel İş İlanları',
+                'home_examine_btn': 'İncele',
+                'home_career_matrix': 'KARİYER MATRİSİ',
+                'home_ready_to_work': 'ACİL İSTİHDAM'
+            },
+            'EN': {
+                'brand_name': 'Artvin / Borcka Public Education Center',
+                'active_text': 'Active',
+                'login_btn': 'Sign In',
+                'login_student': 'Student Login',
+                'login_instructor': 'Instructor Login',
+                'login_employer': 'Employer Login',
+                'login_admin': 'Admin Panel',
+                'role_admin': 'Admin',
+                'role_instructor': 'Instructor',
+                'role_student': 'Student',
+                'nav_dashboard': 'Dashboard',
+                'nav_profile': 'Profile Settings',
+                'nav_messages': 'Messages',
+                'nav_logout': 'Logout',
+                'nav_home': 'Home',
+                'nav_courses': 'Courses',
+                'nav_instructors': 'Instructors',
+                'nav_instructor_list': 'Instructor List',
+                'nav_instructor_apply': 'Instructor Application',
+                'nav_academic': 'Academic Portal',
+                'nav_inquiries': 'Inquiries',
+                'nav_future': 'Future & Impact',
+                'nav_digital_campus': 'Digital Campus',
+                'nav_media': 'Media',
+                'nav_news': 'News',
+                'nav_track_application': 'Track Application',
+                'nav_cert': 'Certificate Inquiry System',
+                'nav_exhibition': 'Metaverse Campus',
+                'nav_library': 'Lecture Note Library',
+                'nav_gallery': 'Gallery',
+                'nav_events': 'Event Calendar',
+                'nav_workshop': 'Future Workshop',
+                'nav_ideabank': 'Idea Bank',
+                'nav_impact': 'Social Impact',
+                'nav_quiz': 'Quiz Bowl',
+                'nav_notes': 'Lecture Notes',
+                'nav_tests': 'Test Questions',
+                'nav_hp_guide': 'Halk Point Guide',
+                'nav_jobs': 'Job Postings',
+                'no_jobs_title': 'No job postings yet',
+                'no_jobs_subtitle': 'You don\'t have any published postings. You can start by adding a new one.',
+                'job_title': 'JOB TITLE',
+                'job_location': 'LOCATION / TYPE',
+                'job_date': 'DATE',
+                'job_status': 'STATUS',
+                'job_actions': 'ACTIONS',
+                'job_examine': 'Examine',
+                'job_apply': 'Apply Now',
+                'job_requirements': 'Requirements',
+                'job_salary': 'Salary Range',
+                'job_location_label': 'Location',
+                'manage_employers': 'Employer Management',
+                'employer_approval_system': 'Employer Approval System',
+                'employer_approval_subtitle': 'Verify corporate registrations and tax documents.',
+                'company_info': 'Company Info',
+                'authorized_person': 'Authorized Person',
+                'tax_plate': 'Tax Plate',
+                'approve_btn': 'Approve',
+                'job_status_active': 'Approved',
+                'job_status_pending': 'Pending',
+                'job_status_rejected': 'Rejected',
+                'active_text': 'Active',
+                'active_lessons_none': 'No Active Live Lessons Currently Available',
+                'inquiry_subtitle': 'You can verify your document with your T.C. Identity number or Certificate code.',
+                'hp_guide_subtitle': 'Meet the digital currency of Borcka Public Education Center! Earn not only by learning but also by contributing to the system.',
+                'hero_badge': '✅ MEB Approved Certificate • 🛡️ 100% Institutional Assurance',
+                'hero_title_1': 'Discover Your Potential,',
+                'hero_title_2': 'Be the Architect of Your Own Future',
+                'hero_subtitle': 'Connect your educational process to an official and valid career. Carry your vision to professional life with Future Workshop and Idea Bank.',
+                'hero_btn_start': 'Start Now',
+                'hero_btn_about': 'Institutional Assurance',
+                'home_announcements': 'Latest Announcements',
+                'home_view_all': 'View All',
+                'home_read': 'Read More',
+                'home_new_gen': 'NEW GEN LEARNING',
+                'home_quiz_title': 'Show Your Knowledge, Win Free Course!',
+                'home_quiz_text': 'Join the quiz, collect points, and get a chance to register for any course for free.',
+                'home_points_target': 'Target Points',
+                'home_join_quiz': 'Join Quiz',
+                'ticker_1': 'Gündoğdu Neighborhood leads the Python course this week! 🏆',
+                'ticker_2': 'Karagöl tree goal: 342 / 500 Completed! 🌲',
+                'ticker_3': 'Merkez Neighborhood is the most active in \'Course Notes\' sharing! ⚡',
+                'ticker_4': 'Aksu Neighborhood showed 15% increase in digital literacy! 📈',
+                'ticker_5': 'Borçka PEC: Visionary education on Government Street! 📍',
+                'home_visionary_title': 'BORCKA\'S <span class="gold-text">VISIONARY FACE</span>',
+                'home_visionary_text': 'A visual feast and cyber development in every field of education.',
+                'home_showcase_1_title': 'Modern Campus',
+                'home_showcase_1_text': 'Education in the Heart of Artvin',
+                'home_showcase_2_title': 'Cyber Laboratory',
+                'home_showcase_2_text': 'Software and Artificial Intelligence',
+                'home_showcase_3_title': 'Traditional Arts',
+                'home_showcase_3_text': 'In the Footsteps of Masters',
+                'home_vault_title': 'KNOWLEDGE LOCK: <span class="gold-text">Open the Treasure!</span>',
+                'home_vault_text': 'Each approved lecture note opens this digital vault a bit more. When we reach 100% as a community, the most popular course of the month will be <span class="text-warning fw-bold">free</span> for everyone!',
+                'home_vault_hint': 'Upload notes and unlock the vault!',
+                'home_vault_btn': 'UPLOAD NOTES',
+                'home_freelance_title': 'FREELANCE BRIDGE',
+                'home_employer_panel': 'EMPLOYER PANEL',
+                'home_employer_text': 'Reach out to Borcka\'s certified talents.',
+                'home_employer_register': 'REGISTER',
+                'home_employer_login': 'LOGIN',
+                'home_spotlight_title': 'TALENTS OF THE <span class="gold-text">WEEK</span>',
+                'home_spotlight_text': 'Our students who show outstanding success and are on the radar of employers.',
+                'home_masters_title': 'BORCKA\'S <span class="gold-text">MASTERS</span>',
+                'home_masters_text': 'Our pride tables who graduated and started their own businesses.',
+                'home_value_title': 'VALUE FOR BORCKA: <span class="text-danger">Greening Karagol!</span>',
+                'home_gallery_title': 'DIGITAL <span class="gold-text">GALLERY</span>',
+                'home_gallery_text': 'Instant slices and visual successes from our campus.',
+                'home_map_title': 'BORCKA <span class="gold-text">3D EARTH</span>',
+                'home_map_text': 'Discover Borcka\'s neighborhoods with 3D satellite technology.',
+                'home_jobs_title': 'BORCKA <span class="gold-text">JOB POSTINGS</span>',
+                'home_jobs_text': 'Latest career opportunities for our certified students.',
+                'job_examine': 'Examine',
+                'job_apply': 'Apply Now',
+                'job_requirements': 'Requirements',
+                'job_salary': 'Salary Range',
+                'job_location': 'Location',
+                'form_full_name': 'Full Name',
+                'form_email': 'Email',
+                'form_phone': 'Phone',
+                'form_experience': 'Experience Summary',
+                'form_signature': 'Digital Signature',
+                'form_clear_signature': 'Clear Signature',
+                'form_submit': 'Complete Application & Get PDF',
+                'login_title_admin': 'Admin Panel',
+                'login_title_teacher': 'Instructor Panel',
+                'login_title_student': 'Student Panel',
+                'login_title_employer': 'Employer Panel',
+                'login_header_text': 'Verify your identity to access the system',
+                'login_role_admin': 'Admin',
+                'login_role_teacher': 'Instructor',
+                'login_role_student': 'Student',
+                'login_role_employer': 'Employer',
+                'login_label_identity': 'Identity',
+                'login_label_username': 'Username',
+                'login_label_fullname': 'Full Name',
+                'login_label_email': 'Email or Full Name',
+                'login_label_employer_email': 'Corporate Email',
+                'login_label_branch': 'Branch',
+                'login_label_password': 'Password',
+                'login_forgot_password': 'Forgot Password',
+                'login_btn_submit': 'Sign In',
+                'login_btn_loading': 'Logging into System...',
+                'login_jet_title': 'JET-SPEED LOGIN',
+                'login_ql_admin': 'ADMIN',
+                'login_ql_teacher': 'INSTRUCTOR',
+                'login_ql_student': 'STUDENT',
+                'login_ql_register': 'REGISTER',
+                'nav_catalog': 'Catalog',
+                'courses_subtitle': 'Invest in yourself. Choose from hundreds of free courses and start now.',
+                'search_btn': 'SEARCH',
+                'categories_title': 'Categories',
+                'all_courses': 'All Courses',
+                'results_found': 'results found',
+                'no_results_found': 'No results found',
+                'empty_search_title': 'No courses found for the search criteria.',
+                'empty_search_subtitle': 'Try searching with different words or in different categories.',
+                'clear_search': 'Clear Search',
+                'examine_apply': 'Examine & Apply',
+                'new_label': 'New',
+                'weekly_curriculum': 'Weekly Curriculum and Exam Schedule Available',
+                'bot_placeholder': 'Ask me anything...',
+                'search_placeholder': 'What do you want to learn?',
+                'hero_badge_short': 'Shape Your Future',
+                'duration_label': 'Duration',
+                'hours_suffix': 'Hours',
+                'start_date_label': 'Start Date',
+                'absence_limit_label': 'Absence Limit',
+                'rights_suffix': 'Rights',
+                'about_course': 'About Course',
+                'what_will_you_learn': 'What Will You Learn?',
+                'weekly_curriculum_label': 'Weekly Curriculum',
+                'week_label': 'Week',
+                'completed_status': 'Completed',
+                'currently_processing': 'Currently Processing',
+                'next_week': 'Next Week',
+                'requirements_label': 'Requirements',
+                'who_is_it_for': 'Who is it for?',
+                'materials_guide': 'Education Materials & Topic Guide',
+                'no_materials_yet': 'No digital materials have been uploaded for this course yet.',
+                'instructor_label': 'Instructor',
+                'instructor_process': 'Instructor assignment process is ongoing.',
+                'quota_status': 'Quota Status',
+                'empty_seats': 'Empty Seats',
+                'total_class_size': 'Total {0} Person Class',
+                'end_date_label': 'End Date',
+                'exam_date_label': 'Exam Date',
+                'certificate_label': 'Certificate',
+                'meb_approved': 'MEB Approved',
+                'price_label': 'Price',
+                'edevlet_integrated': 'Integrated',
+                'join_waiting_list': 'Join Waiting List',
+                'quota_full_info': 'Quota is full. Your application will be taken to the waiting list.',
+                'apply_now': 'Apply Now',
+                'see_all_reviews': 'See All Reviews',
+                'fast_info': 'Fast Information',
+                'attendance_requirement': '80% Attendance Requirement',
+                'applied_training': 'Applied Training',
+                'career_support': 'Career Support',
+                'success_stories_from_course': 'Success Stories From This Course',
+                'read_story': 'Read Story',
+                'participant_reviews': 'Participant Reviews',
+                'what_was_said': 'What was said about this course?',
+                'share_experience': 'Share Your Experience',
+                'your_email': 'YOUR EMAIL ADDRESS',
+                'your_rating': 'YOUR RATING',
+                'your_message': 'YOUR MESSAGE',
+                'message_placeholder': 'Your thoughts about education quality, instructor interest and content...',
+                'send_comment': 'Send Comment',
+                'no_reviews_yet': 'No reviews yet',
+                'be_the_first_reviewer': 'Be the first to review this course and guide others!',
+                'hero_badge': '✅ MEB Approved Certificate • 🛡️ 100% Institutional Guarantee',
+                'hero_title_1': 'Discover Your Potential,',
+                'hero_title_2': 'Become the Architect of Your Future',
+                'hero_subtitle': 'Connect your education process to a formal and valid career. With Future Workshop and Idea Bank, carry your vision to professional life.',
+                'hero_btn_start': 'Start Now',
+                'hero_btn_about': 'Institutional Guarantee',
+                'home_announcements': 'Recent Announcements',
+                'home_view_all': 'View All',
+                'home_read': 'Read More',
+                'home_new_gen': 'NEW GENERATION LEARNING',
+                'home_quiz_title': 'Show Your Knowledge, <span class="gold-text">Win Free Course!</span>',
+                'home_quiz_text': 'Join the competition, collect points and get a chance to register for any course for free.',
+                'home_points_target': 'Target Points',
+                'home_join_quiz': 'Join Competition',
+                'home_vault_title': 'INFO VAULT: <span class="gold-text">Unlock the Treasure!</span>',
+                'home_vault_text': 'Every approved lecture note unlocks this digital vault a bit more. When we reach 100% as a community, the most popular course of the month will be <span class="text-warning fw-bold">free</span> for everyone!',
+                'home_vault_hint': 'Upload notes and unlock the vault!',
+                'home_vault_btn': 'UPLOAD NOTES',
+                'home_freelance_title': 'FREELANCE BRIDGE',
+                'home_employer_panel': 'EMPLOYER PANEL',
+                'home_employer_text': 'Reach Borcka s certified talents.',
+                'home_employer_register': 'REGISTER',
+                'home_employer_login': 'LOGIN',
+                'home_spotlight_title': 'TALENTS OF THE <span class="gold-text">WEEK</span>',
+                'home_spotlight_text': 'Our students who show outstanding success and are on the radar of employers.',
+                'home_masters_title': 'BORCKA S <span class="gold-text">MASTERS</span>',
+                'home_masters_text': 'Our pride table who graduated and established their own business.',
+                'home_value_title': 'VALUE TO BORCKA: <span class="text-danger">Greening Karagol!</span>',
+                'home_gallery_title': 'DIGITAL <span class="gold-text">GALLERY</span>',
+                'home_gallery_text': 'Snapshots and visual successes from our campus.',
+                'home_map_title': 'BORCKA <span class="gold-text">3D EARTH</span>',
+                'home_map_title': 'BORCKA <span class="gold-text">3D EARTH</span>',
+                'home_map_text': 'Discover Borcka s neighborhoods with 3D satellite technology.',
+                'home_leaderboard': 'Leaderboard',
+                'home_job_postings': 'Current Job Postings',
+                'home_examine_btn': 'Examine',
+                'home_career_matrix': 'CAREER MATRIX',
+                'home_ready_to_work': 'READY TO WORK'
+            }
+        };
+
+        function applyLanguage(lang) {
+            const elements = document.querySelectorAll('[data-i18n]');
+            elements.forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[lang] && translations[lang][key]) {
+                    el.innerHTML = translations[lang][key];
+                }
+            });
+
+            const placeholders = document.querySelectorAll('[data-i18n-placeholder]');
+            placeholders.forEach(el => {
+                const key = el.getAttribute('data-i18n-placeholder');
+                if (translations[lang] && translations[lang][key]) {
+                    el.placeholder = translations[lang][key];
+                }
+            });
+
+            localStorage.setItem('language', lang);
+        }
+
+        // Initialize Language
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedLang = localStorage.getItem('language') || 'TR';
+            applyLanguage(savedLang);
+        });
+    </script>
     @await RenderSectionAsync("Scripts", required: false)
     </body>
 </html>

@@ -84,6 +84,12 @@ namespace HalkEgitimSistemi.Models
         [Display(Name = "İndirim Kodu")]
         public string? DiscountCode { get; set; }
 
+        [Display(Name = "Kullanılan Halk Point Kodu")]
+        public string? UsedHalkPointCode { get; set; }
+
+        [Display(Name = "Ödeme Tipi")]
+        public string? PaymentType { get; set; } // "Puan" veya "Nakit"
+
         // Öğrenci bağlantısı
         public int? StudentId { get; set; }
         public Student? Student { get; set; }

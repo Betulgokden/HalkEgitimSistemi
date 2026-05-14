@@ -1,98 +1,128 @@
-﻿@{
-    Layout = "_Layout";
-    ViewData["Title"] = "Canlı Ders Odası";
-}
-
 <div class="live-lesson-wrapper">
-    <div class="container-fluid h-100 p-4">
+    <!-- Premium Header -->
+    <div class="lesson-header d-flex justify-content-between align-items-center px-4 py-3">
+        <div class="d-flex align-items-center gap-3">
+            <div class="classroom-badge">
+                <i class="bi bi-mortarboard-fill"></i>
+                <span>SANAL SINIF</span>
+            </div>
+            <div class="h-separator"></div>
+            <h5 class="mb-0 fw-bold text-white" style="letter-spacing: 0.5px;">@ViewData["Title"]</h5>
+        </div>
+        <div class="d-flex align-items-center gap-3">
+            <div class="live-timer-container">
+                <span class="live-dot"></span>
+                <span id="lessonTimer">00:00:00</span>
+            </div>
+            <div id="connectionStatus" class="connection-status">
+                <i class="bi bi-reception-4 text-success"></i>
+                <small>BAĞLANTI STABİL</small>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid h-calc p-4">
         <div class="row h-100 g-4">
-            <!-- Sol Panel: Öğrenciler -->
+            <!-- Sol Panel: Katılımcılar -->
             <div class="col-lg-2">
-                <div class="glass-card-static h-100 p-3 d-flex flex-column">
-                    <h6 class="fw-bold mb-3 border-bottom border-white-10 pb-2"><i class="bi bi-people me-2"></i>Katılımcılar</h6>
-                    <div id="student-list" class="flex-grow-1 overflow-auto">
+                <div class="glass-card-static h-100 p-3 d-flex flex-column border-glass">
+                    <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom border-white-10">
+                        <h6 class="fw-bold mb-0"><i class="bi bi-people me-2 text-primary-light"></i>Katılımcılar</h6>
+                        <span class="badge bg-primary-light text-dark rounded-pill" id="participantCount">0</span>
+                    </div>
+                    <div id="student-list" class="flex-grow-1 overflow-auto custom-scrollbar">
                         <!-- Katılımcılar SignalR ile buraya dolacak -->
                     </div>
                 </div>
             </div>
 
             <!-- Orta Panel: Ana Ekran -->
-            <div class="col-lg-8">
-                <div class="main-stage glass-card-static h-100 overflow-hidden position-relative">
+            <div class="col-lg-10">
+                <div class="main-stage glass-card-static h-100 overflow-hidden position-relative border-glass shadow-glow-lg">
                     <div id="jitsi-container" style="height: 100%; width: 100%; display: none;"></div>
                     
+                    <!-- Floating Instructor Preview (Top-Right) -->
+                    <div id="floating-instructor" class="instructor-preview-floating animate-scaleIn" style="display: none;">
+                        <div class="instructor-video-wrapper shadow-glow-sm">
+                            <video id="selfView" autoplay muted playsinline class="w-100 h-100 object-fit-cover"></video>
+                            <div class="instructor-label">
+                                <span class="badge bg-danger rounded-pill me-1 small" style="font-size: 0.6rem;">CANLI</span>
+                                <span class="text-white small">@ViewBag.DisplayName</span>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Beyaz Tahta (Canvas) -->
                     <canvas id="whiteboard" class="position-absolute top-0 start-0 w-100 h-100" style="z-index: 5; display: none; background: white; cursor: crosshair;"></canvas>
 
                     <!-- Başlangıç Ekranı -->
                     <div id="start-screen" class="d-flex flex-column align-items-center justify-content-center h-100 text-center animate-fadeIn">
-                        <div class="broadcast-icon-glow mb-4">
-                            <i class="bi bi-broadcast" style="font-size: 5rem; color: var(--primary-light);"></i>
+                        <div class="broadcast-glow-wrap mb-4">
+                            <div class="glow-circle"></div>
+                            <i class="bi bi-broadcast"></i>
                         </div>
-                        <h2 class="text-white mb-2 fw-900">SANAL SINIF</h2>
+                        <h1 class="text-white mb-3 fw-900 tracking-wider">CANLI YAYIN PLATFORMU</h1>
                         
                         @if (ViewBag.IsInstructor)
                         {
-                            <p class="text-muted-premium mb-4 fs-5">Eğitim portalına hoş geldiniz. Dersi başlatmak için hazırsınız.</p>
+                            <p class="text-white-50 mb-4 fs-5 mx-auto" style="max-width: 500px;">Görüntünüz sağ üst köşede, ana ekranınız ise paylaşımınız için hazır olacaktır. Yayını başlatarak derse başlayabilirsiniz.</p>
                             <button id="btnStartLesson" class="btn btn-premium btn-success-glow px-5 py-3 fs-5 rounded-pill pulse-animation">
-                                <i class="bi bi-play-circle-fill me-2"></i> Dersi Başlat
+                                <i class="bi bi-play-circle-fill me-2"></i> YAYINI BAŞLAT
                             </button>
                         }
                         else
                         {
-                            <p class="text-muted-premium mb-4 fs-5">Öğretmeninizin dersi başlatmasını bekleyiniz.</p>
+                            <p class="text-white-50 mb-4 fs-5 mx-auto" style="max-width: 500px;">Eğitmeniniz dersi başlattığında ekran otomatik olarak açılacaktır.</p>
                             <button id="btnStartLesson" class="btn btn-premium btn-primary-glow px-5 py-3 fs-5 rounded-pill">
-                                <i class="bi bi-box-arrow-in-right me-2"></i> Sınıfa Katıl
+                                <i class="bi bi-box-arrow-in-right me-2"></i> SINIFA KATIL
                             </button>
                         }
                     </div>
 
                     <!-- Floating Controls -->
                     <div class="stage-controls p-3" id="jitsi-controls" style="display: none;">
-                        <button class="btn btn-lesson-action" id="btnMute" title="Sesi Aç/Kapat"><i class="bi bi-mic-fill"></i></button>
-                        <button class="btn btn-lesson-action" id="btnVideo" title="Görüntüyü Aç/Kapat"><i class="bi bi-camera-video-fill"></i></button>
+                        <div class="control-group">
+                            <button class="btn btn-lesson-action" id="btnMute" title="Sesi Aç/Kapat"><i class="bi bi-mic-fill"></i></button>
+                            <button class="btn btn-lesson-action" id="btnVideo" title="Görüntüyü Aç/Kapat"><i class="bi bi-camera-video-fill"></i></button>
+                        </div>
                         
-                        <button class="btn btn-lesson-action" id="btnRaiseHand" title="El Kaldır"><i class="bi bi-hand-index-thumb"></i></button>
+                        <div class="control-group">
+                            <button class="btn btn-lesson-action" id="btnRaiseHand" title="El Kaldır"><i class="bi bi-hand-index-thumb"></i></button>
+                            @if (ViewBag.IsInstructor)
+                            {
+                                <button class="btn btn-lesson-action btn-share-special" id="btnShare" title="EKRAN PAYLAŞ" style="background: #C5A059; color: #000; font-weight: bold; width: auto; padding: 0 15px; gap: 8px;">
+                                    <i class="bi bi-display"></i> <span>EKRAN PAYLAŞ</span>
+                                </button>
+                                <button class="btn btn-lesson-action btn-warning-glow" id="btnWhiteboard" title="Beyaz Tahta"><i class="bi bi-brush"></i></button>
+                                <button class="btn btn-lesson-action btn-info-glow" id="btnAttendance" title="Yoklama Al"><i class="bi bi-clipboard-check"></i></button>
+                            }
+                        </div>
                         
-                        @if (ViewBag.IsInstructor)
-                        {
-                            <button class="btn btn-lesson-action btn-share-special" id="btnShare" title="Ekran Paylaş"><i class="bi bi-display"></i></button>
-                            <button class="btn btn-lesson-action btn-warning-glow" id="btnWhiteboard" title="Beyaz Tahta"><i class="bi bi-brush"></i></button>
-                            <button class="btn btn-lesson-action btn-info-glow" id="btnAttendance" title="Yoklama Al"><i class="bi bi-clipboard-check"></i></button>
-                        }
-                        
-                        <button class="btn btn-danger-glow rounded-pill px-4 ms-3" id="btnEnd"><i class="bi bi-telephone-x-fill me-2"></i>Ayrıl</button>
+                        <button class="btn btn-danger-glow rounded-pill px-4" id="btnEnd"><i class="bi bi-telephone-x-fill me-2"></i>AYRIL</button>
                     </div>
                 </div>
             </div>
 
-            <!-- Sağ Panel: Eğitmen Paneli -->
+            <!-- Sağ Panel: Chat -->
             <div class="col-lg-2">
-                <div class="glass-card-static h-100 p-3 d-flex flex-column">
-                    <h6 class="fw-bold mb-3 border-bottom border-white-10 pb-2"><i class="bi bi-mortarboard-fill me-2"></i>Eğitmen Paneli</h6>
-                    
-                    <div id="instructor-view" class="instructor-preview mb-3">
-                        <div class="ratio ratio-4x3 bg-dark rounded-4 overflow-hidden border border-primary shadow-glow-sm position-relative">
-                            <div id="local-video-container" class="d-flex align-items-center justify-content-center h-100">
-                                <video id="selfView" autoplay muted playsinline class="w-100 h-100 object-fit-cover" style="display:none;"></video>
-                                <i class="bi bi-person-video3 text-white-10" id="video-placeholder-icon" style="font-size: 3rem;"></i>
-                                <div class="spinner-border text-primary position-absolute" role="status" id="video-loader" style="display:none;"></div>
+                <div class="h-100 d-flex flex-column">
+                    <!-- Sohbet -->
+                    <div class="chat-mini flex-grow-1 glass-card-static p-3 d-flex flex-column border-glass h-100">
+                        <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom border-white-10">
+                            <h6 class="fw-bold mb-0 x-small text-uppercase">Ders Sohbeti</h6>
+                            <span class="pulse-active-badge">CANLI</span>
+                        </div>
+                        <div id="lessonChatHistory" class="chat-history flex-grow-1 overflow-auto custom-scrollbar pe-2">
+                            <div class="system-bot-msg mb-2">
+                                <i class="bi bi-robot me-1"></i>
+                                <span>Sanal sınıfa hoş geldiniz!</span>
                             </div>
                         </div>
-                        <p class="mt-2 fw-bold text-center small text-primary-light">@ViewBag.DisplayName</p>
-                    </div>
-                    
-                    <div class="chat-mini flex-grow-1 glass-card-static p-3 mt-auto" style="height: 450px; background: rgba(0,0,0,0.3);">
-                        <div class="d-flex justify-content-between align-items-center mb-2">
-                            <small class="fw-bold text-uppercase" style="letter-spacing: 1px;">Ders Sohbeti</small>
-                            <span class="badge bg-success rounded-pill x-small pulse-opacity">Canlı</span>
-                        </div>
-                        <div id="lessonChatHistory" class="chat-history small h-75 overflow-auto p-1 mt-1 mb-2">
-                            <div class="mb-2"><span class="text-primary-light fw-bold">Sistem:</span> Hoş geldiniz!</div>
-                        </div>
-                        <div class="input-group input-group-sm chat-input-group mt-auto">
-                            <input type="text" id="lessonChatInput" class="form-control glass-input chat-input" placeholder="Yazın...">
-                            <button id="btnSendChat" class="btn btn-primary-glow" type="button"><i class="bi bi-send-fill"></i></button>
+                        <div class="chat-input-wrapper mt-3">
+                            <div class="input-group">
+                                <input type="text" id="lessonChatInput" class="form-control glass-input" placeholder="Mesajınızı yazın...">
+                                <button id="btnSendChat" class="btn btn-primary-glow"><i class="bi bi-send-fill"></i></button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -102,62 +132,70 @@
 </div>
 
 <style>
-    .live-lesson-wrapper { height: calc(100vh - 100px); background: radial-gradient(circle at 50% 50%, #1e1e3f 0%, #0f0f23 100%); overflow: hidden; }
-    .main-stage { background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.05); box-shadow: inset 0 0 50px rgba(0,0,0,0.5); }
-    .btn-share-special { background: var(--gradient-purple) !important; border: none !important; box-shadow: 0 0 15px rgba(197, 160, 89, 0.4); }
-    .stage-controls { position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 15px; z-index: 100; background: rgba(15, 15, 35, 0.8); backdrop-filter: blur(15px); padding: 12px 25px !important; border-radius: 100px; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
-    .btn-lesson-action { width: 44px; height: 44px; border-radius: 50%; background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; font-size: 1.1rem; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-    .btn-lesson-action:hover { background: var(--primary); color: #fff; transform: translateY(-3px) scale(1.1); box-shadow: 0 5px 15px var(--primary-glow); }
-    .btn-lesson-action.active { background: #ff4757; color: white; border-color: #ff4757; }
-    .avatar-sm { width: 32px; height: 32px; border-radius: 50%; background: var(--primary-light); color: #000; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.75rem; }
-    .broadcast-icon-glow { filter: drop-shadow(0 0 20px var(--primary-glow)); animation: glowPulse 2s infinite alternate; }
-    
-    /* Yeni CSS Dokunuşları */
-    .chat-input {
-        border: 1px solid rgba(255, 255, 255, 0.1) !important;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-        background-color: rgba(255, 255, 255, 0.05) !important;
-        color: white !important;
+    :root {
+        --classroom-bg: #0f1021;
+        --glass-border: rgba(255, 255, 255, 0.08);
     }
+    .live-lesson-wrapper { height: 100vh; background: var(--classroom-bg); overflow: hidden; font-family: 'Outfit', sans-serif; }
+    .h-calc { height: calc(100vh - 80px); }
+    .lesson-header { background: rgba(0,0,0,0.4); border-bottom: 1px solid var(--glass-border); backdrop-filter: blur(20px); }
     
-    @@keyframes pulse-green {
-        0% { box-shadow: 0 0 0 0 rgba(46, 213, 115, 0.7); }
-        70% { box-shadow: 0 0 0 10px rgba(46, 213, 115, 0); }
-        100% { box-shadow: 0 0 0 0 rgba(46, 213, 115, 0); }
-    }
-    .speaking-active { border-radius: 50%; animation: pulse-green 1.5s infinite; }
+    .classroom-badge { background: var(--gradient-premium); padding: 6px 15px; border-radius: 10px; color: white; font-weight: 800; font-size: 0.8rem; display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 15px rgba(197, 160, 89, 0.3); }
+    .h-separator { width: 1px; height: 25px; background: var(--glass-border); }
     
-    .hand-raised { background: #f1c40f !important; color: #000 !important; animation: bounce 0.5s infinite alternate; }
-    @@keyframes bounce { from { transform: translateY(0); } to { transform: translateY(-5px); } }
+    .live-timer-container { background: rgba(0,0,0,0.5); padding: 5px 15px; border-radius: 30px; border: 1px solid var(--glass-border); color: #C5A059; font-family: 'Courier New', monospace; font-weight: bold; display: flex; align-items: center; gap: 10px; }
+    .live-dot { width: 8px; height: 8px; background: #ef4444; border-radius: 50%; box-shadow: 0 0 10px #ef4444; animation: pulse-red 2s infinite; }
+    @@keyframes pulse-red { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
 
-    @@keyframes glowPulse { from { filter: drop-shadow(0 0 10px var(--primary-glow)); } to { filter: drop-shadow(0 0 30px var(--primary-glow)); } }
-    @@keyframes pulse-opacity { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
-    .pulse-opacity { animation: pulse-opacity 2s infinite; }
-    .chat-history::-webkit-scrollbar { width: 4px; }
-    .chat-history::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
-    .object-fit-cover { object-fit: cover; }
+    .main-stage { background: #000; border: 1px solid var(--glass-border); }
+    .broadcast-glow-wrap { position: relative; width: 120px; height: 120px; display: flex; align-items: center; justify-content: center; }
+    .broadcast-glow-wrap i { font-size: 4rem; color: #C5A059; z-index: 2; filter: drop-shadow(0 0 15px #C5A059); }
+    .glow-circle { position: absolute; width: 100%; height: 100%; background: radial-gradient(circle, rgba(197, 160, 89, 0.2) 0%, transparent 70%); border-radius: 50%; animation: grow-pulse 3s infinite; }
+    @@keyframes grow-pulse { 0% { transform: scale(0.8); opacity: 0.5; } 50% { transform: scale(1.3); opacity: 0.2; } 100% { transform: scale(0.8); opacity: 0.5; } }
 
-    /* GLITCH EFFECT & SHAKE */
-    @@keyframes glitch-shake {
-        0% { transform: translate(0,0) rotate(0deg); }
-        20% { transform: translate(-5px, 2px) rotate(-1deg); filter: hue-rotate(90deg); }
-        40% { transform: translate(5px, -2px) rotate(1deg); filter: contrast(150%); }
-        60% { transform: translate(-3px, 1px) rotate(0deg); }
-        80% { transform: translate(3px, -1px) rotate(1deg); }
-        100% { transform: translate(0,0) rotate(0deg); }
-    }
-    .glitch-active { animation: glitch-shake 0.3s cubic-bezier(.36,.07,.19,.97) both; border: 2px solid var(--danger) !important; box-shadow: 0 0 20px var(--danger) !important; }
+    .stage-controls { position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 20px; z-index: 100; background: rgba(10, 10, 25, 0.9); backdrop-filter: blur(20px); padding: 15px 30px !important; border-radius: 100px; border: 1px solid var(--glass-border); box-shadow: 0 15px 50px rgba(0,0,0,0.8); }
+    .control-group { display: flex; gap: 10px; padding-right: 20px; border-right: 1px solid var(--glass-border); }
+    .control-group:last-of-type { border-right: none; }
     
-    .system-bot-msg { 
-        background: linear-gradient(90deg, rgba(239,68,68,0.1), transparent); 
-        border-left: 3px solid var(--danger); 
-        padding: 5px 10px; 
-        margin: 5px 0; 
-        font-weight: 800; 
-        color: #ff4757; 
-        animation: slideInLeft 0.5s ease;
+    .btn-lesson-action { width: 48px; height: 48px; border-radius: 14px; background: rgba(255,255,255,0.05); color: white; border: 1px solid var(--glass-border); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+    .btn-lesson-action:hover { background: #C5A059; color: #000; transform: translateY(-3px); box-shadow: 0 10px 20px rgba(197, 160, 89, 0.3); }
+    
+    .pulse-active-badge { font-size: 0.65rem; background: rgba(46, 213, 115, 0.1); color: #2ed573; border: 1px solid rgba(46, 213, 115, 0.3); padding: 2px 8px; border-radius: 20px; font-weight: 800; animation: pulse-opacity 1.5s infinite; }
+    
+    .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
+    
+    .participant-mini { background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border); border-radius: 12px; transition: all 0.3s; }
+    .participant-mini:hover { background: rgba(255,255,255,0.08); border-color: #C5A059; }
+    .avatar-sm { width: 35px; height: 35px; background: var(--gradient-premium); color: white; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.8rem; }
+    
+    .system-bot-msg { background: rgba(197, 160, 89, 0.1); border-left: 3px solid #C5A059; padding: 8px 12px; border-radius: 0 8px 8px 0; font-size: 0.85rem; color: #C5A059; }
+
+    /* Floating Instructor Preview */
+    .instructor-preview-floating {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        width: 240px;
+        z-index: 1000;
+        border-radius: 20px;
+        overflow: hidden;
+        border: 2px solid #C5A059;
+        background: #000;
     }
-    @@keyframes slideInLeft { from { opacity: 0; transform: translateX(-20px); } to { opacity: 1; transform: translateX(0); } }
+    .instructor-video-wrapper { position: relative; width: 100%; aspect-ratio: 16/9; }
+    .instructor-label {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 5px 10px;
+        background: rgba(0,0,0,0.6);
+        backdrop-filter: blur(5px);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
 </style>
 
 <script src="https://meet.jit.si/external_api.js"></script>
@@ -228,13 +266,17 @@
     // Katılımcı Listesi Güncelleme
     connection.on("UpdateUserList", (users) => {
         const list = document.getElementById('student-list');
+        const countBadge = document.getElementById('participantCount');
+        if (countBadge) countBadge.innerText = users.length;
+        
         list.innerHTML = '';
         users.forEach(u => {
             const initials = u.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
             list.innerHTML += `
-                <div class="participant-mini mb-2 p-2 rounded bg-white-5 d-flex align-items-center gap-2">
+                <div class="participant-mini mb-2 p-2 rounded d-flex align-items-center gap-2 animate-fadeIn">
                     <div class="avatar-sm">${initials}</div>
-                    <span class="small">${u}</span>
+                    <span class="small text-white-50">${u}</span>
+                    <div class="ms-auto"><span class="status-dot-sm bg-success"></span></div>
                 </div>`;
         });
     });
@@ -242,6 +284,22 @@
     connection.start().then(() => {
         connection.invoke("JoinRoom", roomId, displayName);
     });
+
+    // --- Timer Logic ---
+    let seconds = 0;
+    function updateTimer() {
+        seconds++;
+        const hrs = Math.floor(seconds / 3600);
+        const mins = Math.floor((seconds % 3600) / 60);
+        const secs = seconds % 60;
+        const formatted = 
+            (hrs < 10 ? "0" + hrs : hrs) + ":" + 
+            (mins < 10 ? "0" + mins : mins) + ":" + 
+            (secs < 10 ? "0" + secs : secs);
+        const timerEl = document.getElementById('lessonTimer');
+        if (timerEl) timerEl.innerText = formatted;
+    }
+    let timerInterval;
 
     // --- UI Logic ---
     const btnStart = document.getElementById('btnStartLesson');
@@ -305,7 +363,15 @@
         document.getElementById('btnAttendance').onclick = () => {
             fetch('/LiveLesson/TakeAttendance?roomId=' + roomId, { method: 'POST' })
                 .then(r => r.json())
-                .then(d => alert(d.message));
+                .then(d => {
+                    Swal.fire({
+                        title: 'Yoklama Alındı',
+                        text: d.message,
+                        icon: 'success',
+                        background: 'rgba(15, 23, 42, 0.95)',
+                        color: '#fff'
+                    });
+                });
         };
     }
 
@@ -332,7 +398,6 @@
             if (jitsiApi) jitsiApi.executeCommand('hangup');
             
             if (isInstructor) {
-                // Turn off live status in DB for instructor
                 fetch('/Teacher/ToggleLive?start=false', { method: 'POST' })
                     .then(() => {
                         window.location.href = '/Teacher/Dashboard';
@@ -343,25 +408,75 @@
         }
     };
 
+    async function startLocalVideo() {
+        const video = document.getElementById('selfView');
+        const container = document.getElementById('floating-instructor');
+        
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+            video.srcObject = stream;
+            container.style.display = 'block';
+            console.log("Local camera started successfully");
+        } catch (err) {
+            console.error("Error accessing camera: ", err);
+            // Fallback: If camera blocked, show static placeholder or alert
+            Swal.fire({
+                title: 'Kamera Hatası',
+                text: 'Kameranıza erişilemedi. Lütfen izin verdiğinizden emin olun.',
+                icon: 'warning',
+                background: 'rgba(15, 23, 42, 0.95)',
+                color: '#fff'
+            });
+        }
+    }
+
     btnStart.addEventListener('click', () => {
         startScreen.style.display = 'none';
         jitsiContainer.style.display = 'block';
         jitsiControls.style.display = 'flex';
         
+        // Start Local Preview if instructor
+        if(isInstructor) {
+            startLocalVideo();
+        }
+
+        // Start Timer
+        timerInterval = setInterval(updateTimer, 1000);
+
         const options = {
             roomName: 'HalkEgitim_Room_' + roomId.replace(/[^a-zA-Z0-9]/g, ''),
             width: '100%', height: '100%',
             parentNode: jitsiContainer,
             userInfo: { displayName: displayName },
-            configOverwrite: { prejoinPageEnabled: false },
-            interfaceConfigOverwrite: { SHOW_JITSI_WATERMARK: false }
+            configOverwrite: { 
+                prejoinPageEnabled: false, 
+                disableDeepLinking: true,
+                startWithAudioMuted: false,
+                startWithVideoMuted: isInstructor // We hide instructor video in main Jitsi view to keep center empty
+            },
+            interfaceConfigOverwrite: { 
+                SHOW_JITSI_WATERMARK: false, 
+                SHOW_WATERMARK_FOR_GUESTS: false,
+                TOOLBAR_BUTTONS: [
+                   'microphone', 'camera', 'closedcaptions', 'desktop', 'fullscreen',
+                   'fittowindow', 'chat', 'recording', 'livestreaming', 'etherpad', 'sharedvideo',
+                   'settings', 'raisehand', 'videoquality', 'filmstrip', 'invite', 'feedback',
+                   'stats', 'shortcuts', 'tileview', 'videobackgroundblur', 'download', 'help', 'mute-everyone',
+                   'e2ee'
+                ]
+            }
         };
 
         jitsiApi = new JitsiMeetExternalAPI('meet.jit.si', options);
         
         document.getElementById('btnMute').onclick = () => jitsiApi.executeCommand('toggleAudio');
         document.getElementById('btnVideo').onclick = () => jitsiApi.executeCommand('toggleVideo');
-        if(isInstructor) document.getElementById('btnShare').onclick = () => jitsiApi.executeCommand('toggleShareScreen');
+        if(isInstructor) {
+            document.getElementById('btnShare').onclick = () => {
+                jitsiApi.executeCommand('toggleShareScreen');
+                // Screen share started - center will be filled by Jitsi automatically
+            };
+        }
     });
 </script>
 

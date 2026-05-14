@@ -1,4 +1,4 @@
-﻿@model List<HalkEgitimSistemi.Models.Message>
+@model List<HalkEgitimSistemi.Models.Message>
 @{
     ViewData["Title"] = "Mesajlaşma Takibi";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -30,6 +30,24 @@
         border: 1px solid rgba(255,255,255,0.08);
         backdrop-filter: blur(25px);
     }
+    
+    [data-theme="light"] .msg-table-wrapper {
+        background: rgba(255,255,255,0.9) !important;
+        border: 1px solid rgba(0,0,0,0.05);
+    }
+    [data-theme="light"] .msg-table, 
+    [data-theme="light"] .msg-table thead, 
+    [data-theme="light"] .msg-table tbody,
+    [data-theme="light"] .msg-table tr, 
+    [data-theme="light"] .msg-table td, 
+    [data-theme="light"] .msg-table th {
+        color: #1e293b !important;
+        border-color: rgba(0,0,0,0.05) !important;
+    }
+    [data-theme="light"] .msg-table thead th {
+        background: rgba(0,0,0,0.02) !important;
+        color: #64748b !important;
+    }
 </style>
 
 <div class="container-fluid py-4">
@@ -41,27 +59,40 @@
             <p class="text-muted-premium mb-0">Öğrenci <i class="bi bi-arrow-left-right mx-1 text-primary"></i> Öğretmen tüm yazışmalar</p>
         </div>
         <div class="d-flex gap-3">
-            <a asp-action="TeacherChatLog" class="btn btn-primary-glow px-4 py-2 rounded-pill fw-bold animate-pulse-slow text-white" style="background: linear-gradient(135deg, #581C1C, #C5A059) !important; border: none !important; box-shadow: 0 0 20px rgba(88, 28, 28, 0.4) !important;">
-                <i class="bi bi-people-fill me-2"></i> Öğretmen Chat Log
+            <a asp-action="TeacherChatLog" class="btn btn-primary-glow px-4 py-2 rounded-pill fw-bold animate-pulse-slow" style="background: linear-gradient(135deg, #581C1C, #C5A059) !important; border: none !important; box-shadow: 0 0 20px rgba(88, 28, 28, 0.4) !important; color: white !important;">
+                <i class="bi bi-people-fill me-2" style="color: white !important;"></i> Öğretmen Chat Log
             </a>
-            <a asp-action="CourseChatLog" class="btn btn-secondary-glow px-4 py-2 rounded-pill fw-bold animate-pulse-slow text-white" style="background: linear-gradient(135deg, #581C1C, #7000ff) !important; border: none !important; box-shadow: 0 0 20px rgba(88, 28, 28, 0.4) !important;">
-                <i class="bi bi-collection-play-fill me-2"></i> Kurs Chat Log
+            <a asp-action="CourseChatLog" class="btn btn-secondary-glow px-4 py-2 rounded-pill fw-bold animate-pulse-slow" style="background: linear-gradient(135deg, #581C1C, #7000ff) !important; border: none !important; box-shadow: 0 0 20px rgba(88, 28, 28, 0.4) !important; color: white !important;">
+                <i class="bi bi-collection-play-fill me-2" style="color: white !important;"></i> Kurs Chat Log
             </a>
         </div>
     </div>
 
     <!-- Arama -->
     <form method="get" action="/Admin/MessageLog" class="mb-4 animate-fadeIn" style="animation-delay: 0.2s;">
-        <div class="input-group glass-card p-1 rounded-pill" style="max-width:500px; border: 1px solid rgba(255,255,255,0.15);">
+        <div class="input-group glass-card p-1 rounded-pill" style="max-width:500px; border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.05);">
             <span class="input-group-text bg-transparent border-0 text-white-50 ps-3"><i class="bi bi-search"></i></span>
-            <input type="text" name="search" class="form-control bg-transparent border-0 text-white px-2" placeholder="Gönderen, içerik veya öğretmen ara..." value="@search" style="box-shadow: none;">
+            <input type="text" name="search" class="form-control bg-transparent border-0 text-white px-2 msg-search-input" 
+                   placeholder="Gönderen, içerik veya öğretmen ara..." value="@search" style="box-shadow: none; color: white !important;">
             @if (!string.IsNullOrEmpty(search))
             {
                 <a href="/Admin/MessageLog" class="btn btn-secondary-glass btn-sm rounded-pill my-1 me-1 d-flex align-items-center">Temizle</a>
             }
-            <button class="btn btn-primary-glow rounded-pill px-4 my-1 me-1" type="submit">Ara</button>
+            <button class="btn btn-primary-glow rounded-pill px-4 my-1 me-1 text-white" type="submit" style="background: var(--primary) !important;">Ara</button>
         </div>
     </form>
+
+<style>
+    .msg-search-input::placeholder {
+        color: rgba(255,255,255,0.5) !important;
+    }
+    [data-theme="light"] .msg-search-input {
+        color: #1e293b !important;
+    }
+    [data-theme="light"] .msg-search-input::placeholder {
+        color: #64748b !important;
+    }
+</style>
 
     <div class="msg-table-wrapper shadow-lg animate-fadeInUp">
         <div class="card-body p-0">

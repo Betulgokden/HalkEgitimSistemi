@@ -1,4 +1,4 @@
-﻿@model IEnumerable<HalkEgitimSistemi.Models.Course>
+@model IEnumerable<HalkEgitimSistemi.Models.Course>
 
 @{
     ViewData["Title"] = "Canlı Ders İzleme";
@@ -9,7 +9,7 @@
         <div class="page-header-content">
             <div>
                 <h1 class="page-header-title"><i class="bi bi-broadcast me-2"></i> Canlı Ders Denetimi</h1>
-                <p class="page-header-subtitle">Åu an yayında olan interaktif sınıfları takip edin.</p>
+                <p class="page-header-subtitle">Şu an yayında olan interaktif sınıfları takip edin.</p>
             </div>
             <div class="live-indicator">
                 <span class="pulse-dot"></span> <span class="fw-bold">@Model.Count()</span> Aktif Yayın
@@ -23,7 +23,7 @@
     {
         <div class="glass-card-static p-5 text-center">
             <div class="display-1 text-primary-light opacity-25 mb-4"><i class="bi bi-camera-video-off"></i></div>
-            <h3 class="fw-bold">Åu An Aktif Canlı Ders Bulunmuyor</h3>
+            <h3 class="fw-bold">Şu An Aktif Canlı Ders Bulunmamaktadır</h3>
             <p class="text-muted">Eğitmenler ders başlattığında burada listelenecektir.</p>
         </div>
     }
@@ -89,4 +89,3 @@
         100% { opacity: 1; }
     }
 </style>
-

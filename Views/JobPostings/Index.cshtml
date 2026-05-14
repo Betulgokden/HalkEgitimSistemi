@@ -7,19 +7,19 @@
     <div class="container-fluid px-4">
         <div class="page-header-content py-5" style="background: linear-gradient(135deg, rgba(88, 28, 28, 0.1), rgba(197, 160, 89, 0.1)); border-radius: 30px; border: 1px solid var(--theme-card-border);">
             <div class="text-center w-100">
-                <h1 class="display-4 fw-900 gold-text mb-2" style="font-family: 'Outfit'; letter-spacing: -1px;">
-                    <i class="bi bi-briefcase-fill me-3"></i>Kariyer Merkezi
+                <h1 class="display-4 fw-900 gold-text mb-2" style="font-family: 'Outfit'; letter-spacing: -1px;" data-i18n="nav_jobs">
+                    <i class="bi bi-briefcase-fill me-3"></i>İş İlanları
                 </h1>
-                <p class="lead text-white-50 fw-600 mb-0">Borçka ve çevresindeki en güncel iş fırsatlarını keşfedin.</p>
+                <p class="lead text-white-50 fw-600 mb-0" data-i18n="home_jobs_text">Borçka ve çevresindeki en güncel iş fırsatlarını keşfedin.</p>
                 
                 @if (User.IsInRole("Admin") || User.IsInRole("Employer"))
                 {
                     <div class="mt-4">
                         <a asp-action="Create" class="btn btn-premium px-4 py-2">
-                            <i class="bi bi-plus-circle me-2"></i>İLAN YAYINLA
+                            <i class="bi bi-plus-circle me-2"></i><span data-i18n="login_ql_register">İLAN YAYINLA</span>
                         </a>
                         <a asp-action="Manage" class="btn btn-outline-gold px-4 py-2 ms-2">
-                            <i class="bi bi-gear-fill me-2"></i>İLANLARIMI YÖNET
+                            <i class="bi bi-gear-fill me-2"></i><span data-i18n="nav_dashboard">İLANLARIMI YÖNET</span>
                         </a>
                     </div>
                 }
@@ -35,8 +35,8 @@
             <div class="col-12 text-center py-5">
                 <div class="glass-card p-5 animate-bounce-slow" style="border-radius: 30px;">
                     <i class="bi bi-search display-1 gold-text opacity-25 mb-4"></i>
-                    <h3 class="text-white-50 fw-700">Şu an aktif ilan bulunmuyor.</h3>
-                    <p class="text-white-25">Yeni ilanlar için takipte kalın.</p>
+                    <h3 class="text-white-50 fw-700" data-i18n="no_jobs_title">Şu an aktif ilan bulunmuyor.</h3>
+                    <p class="text-white-25" data-i18n="no_jobs_subtitle">Yeni ilanlar için takipte kalın.</p>
                 </div>
             </div>
         }
@@ -47,7 +47,7 @@
                 <div class="col-md-6 col-xl-4 animate-scaleIn">
                     <div class="glass-card-static job-card h-100 p-4 shadow-xl transition-all hover-translate-y" 
                          style="border-radius: 25px; border: 1.5px solid var(--theme-card-border); background: rgba(255,255,255,0.03);">
-                        <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div class="d-flex justify-content-between align-start mb-3">
                             <div class="company-badge bg-maroon-theme px-3 py-1 rounded-pill border border-gold-20">
                                 <span class="gold-text x-small fw-900">@job.CompanyName.ToUpper()</span>
                             </div>
@@ -64,7 +64,7 @@
                         
                         <div class="mt-auto pt-3 border-top border-white-10 d-flex justify-content-between align-items-center">
                             <span class="gold-text fw-800">@job.SalaryRange</span>
-                            <a asp-action="Details" asp-route-id="@job.Id" class="btn btn-sm btn-outline-gold rounded-pill px-4">İncele</a>
+                            <a asp-action="Details" asp-route-id="@job.Id" class="btn btn-sm btn-outline-gold rounded-pill px-4" data-i18n="job_examine">İncele</a>
                         </div>
                     </div>
                 </div>

@@ -37,8 +37,8 @@
                             <i class="bi bi-clock-fill"></i>
                         </div>
                         <div>
-                            <div style="color: var(--text-secondary); font-size: 0.8rem; text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em;">Süre</div>
-                            <div style="color: white; font-weight: 600;">@Model.DurationHours Saat</div>
+                            <div style="color: var(--text-secondary); font-size: 0.8rem; text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em;" data-i18n="duration_label">Süre</div>
+                            <div style="color: white; font-weight: 600;">@Model.DurationHours <span data-i18n="hours_suffix">Saat</span></div>
                         </div>
                     </div>
                     
@@ -47,7 +47,7 @@
                             <i class="bi bi-calendar-event-fill"></i>
                         </div>
                         <div>
-                            <div style="color: var(--text-secondary); font-size: 0.8rem; text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em;">Başlangıç</div>
+                            <div style="color: var(--text-secondary); font-size: 0.8rem; text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em;" data-i18n="start_date_label">Başlangıç</div>
                             <div style="color: white; font-weight: 600;">@Model.StartDate.ToString("dd MMMM yyyy")</div>
                         </div>
                     </div>
@@ -57,8 +57,8 @@
                             <i class="bi bi-person-x-fill"></i>
                         </div>
                         <div>
-                            <div style="color: var(--text-secondary); font-size: 0.8rem; text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em;">Devamsızlık Hak.</div>
-                            <div style="color: white; font-weight: 600;">@Model.MaxAbsenceLimit Hak</div>
+                            <div style="color: var(--text-secondary); font-size: 0.8rem; text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em;" data-i18n="absence_limit_label">Devamsızlık Hak.</div>
+                            <div style="color: white; font-weight: 600;">@Model.MaxAbsenceLimit <span data-i18n="rights_suffix">Hak</span></div>
                         </div>
                     </div>
                 </div>
@@ -71,9 +71,9 @@
     <div class="row g-5">
         <!-- Content -->
         <div class="col-lg-8">
-            <!-- Hakkında -->
+            <!-- HakkÄ±nda -->
             <div class="glass-card-static p-4 p-md-5 animate-fadeInUp delay-200" style="margin-bottom: 2rem;">
-                <h3 style="font-family: 'Outfit'; font-weight: 800; color: var(--text-primary); margin-bottom: 1.5rem;">
+                <h3 style="font-family: 'Outfit'; font-weight: 800; color: var(--text-primary); margin-bottom: 1.5rem;" data-i18n="about_course">
                     Kurs Hakkında
                 </h3>
                 <div style="color: var(--text-secondary); font-size: 1.1rem; line-height: 1.8; margin-bottom: 2rem;">
@@ -83,7 +83,7 @@
                 @if (!string.IsNullOrEmpty(Model.LearningOutcomes))
                 {
                     <h4 style="font-family: 'Outfit'; font-weight: 700; color: var(--text-primary); margin-top: 3rem; margin-bottom: 1.5rem;">
-                        <i class="bi bi-stars me-2" style="color: var(--warning);"></i>Neler Öğreneceksiniz?
+                        <i class="bi bi-stars me-2" style="color: var(--warning);"></i><span data-i18n="what_will_you_learn">Neler Öğreneceksiniz?</span>
                     </h4>
                     <div class="row g-3">
                         @foreach (var outcome in Model.LearningOutcomes.Split('\n', StringSplitOptions.RemoveEmptyEntries))
@@ -101,7 +101,7 @@
                 @if (!string.IsNullOrEmpty(Model.Curriculum))
                 {
                     <h4 style="font-family: 'Outfit'; font-weight: 700; color: var(--text-primary); margin-top: 3rem; margin-bottom: 1.5rem;">
-                        <i class="bi bi-calendar3 me-2" style="color: var(--primary-light);"></i>Haftalık Ders Programı
+                        <i class="bi bi-calendar3 me-2" style="color: var(--primary-light);"></i><span data-i18n="weekly_curriculum_label">Haftalık Ders Programı</span>
                     </h4>
                     
                     <div class="row g-3">
@@ -121,18 +121,18 @@
                                         
                                         <div class="week-number text-center" style="min-width: 70px;">
                                             <div class="h3 fw-900 mb-0" style="color: @(isCurrent ? "var(--primary-light)" : "var(--text-muted)");">@(i + 1)</div>
-                                            <div class="small text-uppercase fw-bold opacity-50">Hafta</div>
+                                            <div class="small text-uppercase fw-bold opacity-50" data-i18n="week_label">Hafta</div>
                                         </div>
 
                                         <div class="flex-grow-1">
                                             <div class="d-flex justify-content-between align-items-start mb-1">
                                                 <h5 class="fw-bold text-white mb-0">@modules[i].Trim()</h5>
                                                 @if (isPast) {
-                                                    <span class="badge-premium badge-success"><i class="bi bi-check2-all"></i> Tamamlandı</span>
+                                                    <span class="badge-premium badge-success"><i class="bi bi-check2-all"></i> <span data-i18n="completed_status">Tamamlandı</span></span>
                                                 } else if (isCurrent) {
-                                                    <span class="badge-premium badge-primary animate-pulse"><i class="bi bi-play-fill"></i> Åu An İşleniyor</span>
+                                                    <span class="badge-premium badge-primary animate-pulse"><i class="bi bi-play-fill"></i> <span data-i18n="currently_processing">Şu An İşleniyor</span></span>
                                                 } else {
-                                                    <span class="badge-premium badge-glass opacity-50"><i class="bi bi-clock"></i> Gelecek Hafta</span>
+                                                    <span class="badge-premium badge-glass opacity-50"><i class="bi bi-clock"></i> <span data-i18n="next_week">Gelecek Hafta</span></span>
                                                 }
                                             </div>
                                             <div class="small text-muted-premium">
@@ -149,13 +149,13 @@
                 <div class="row g-4 mt-4">
                     <div class="col-md-6">
                         <div class="p-4" style="background: rgba(255,159,67,0.05); border-radius: var(--radius-lg); border: 1px solid rgba(255,159,67,0.1);">
-                            <h5 style="color: #ff9f43; font-weight: 700; margin-bottom: 1rem;"><i class="bi bi-info-circle-fill me-2"></i>Gereksinimler</h5>
+                            <h5 style="color: #ff9f43; font-weight: 700; margin-bottom: 1rem;"><i class="bi bi-info-circle-fill me-2"></i><span data-i18n="requirements_label">Gereksinimler</span></h5>
                             <p style="color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 0;">@Model.Requirements</p>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="p-4" style="background: rgba(99,102,241,0.05); border-radius: var(--radius-lg); border: 1px solid rgba(99,102,241,0.1);">
-                            <h5 style="color: var(--primary-light); font-weight: 700; margin-bottom: 1rem;"><i class="bi bi-people-fill me-2"></i>Bu Kurs Kimler İçin?</h5>
+                            <h5 style="color: var(--primary-light); font-weight: 700; margin-bottom: 1rem;"><i class="bi bi-people-fill me-2"></i><span data-i18n="who_is_it_for">Bu Kurs Kimler İçin?</span></h5>
                             <p style="color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 0;">@Model.WhoIsItFor</p>
                         </div>
                     </div>
@@ -164,7 +164,7 @@
                 <hr class="divider-premium my-5" />
 
                 <h4 style="font-family: 'Outfit'; font-weight: 700; color: var(--text-primary); margin-top: 3rem; margin-bottom: 1.5rem;">
-                    <i class="bi bi-journal-text me-2" style="color: var(--info);"></i>Eğitim Materyalleri ve Konu Rehberi
+                    <i class="bi bi-journal-text me-2" style="color: var(--info);"></i><span data-i18n="materials_guide">Eğitim Materyalleri ve Konu Rehberi</span>
                 </h4>
                 
                 <div class="row g-3 mb-5">
@@ -196,7 +196,7 @@
                     {
                         <div class="col-12">
                             <div class="glass-card-static text-center p-4" style="border-style: dashed; background: transparent;">
-                                <p style="color: var(--text-muted); margin: 0; font-size: 0.9rem;">Bu kurs için henüz dijital materyal yüklenmemiştir.</p>
+                                <p style="color: var(--text-muted); margin: 0; font-size: 0.9rem;" data-i18n="no_materials_yet">Bu kurs için henüz dijital materyal yüklenmemiştir.</p>
                             </div>
                         </div>
                     }
@@ -205,7 +205,7 @@
                 <hr class="divider-premium my-5" />
 
                 <h4 style="font-family: 'Outfit'; font-weight: 700; color: var(--text-primary); margin-bottom: 1.5rem;">
-                    <i class="bi bi-person-video3 me-2" style="color: var(--primary-light);"></i>Eğitmen
+                    <i class="bi bi-person-video3 me-2" style="color: var(--primary-light);"></i><span data-i18n="instructor_label">Eğitmen</span>
                 </h4>
                 
                 @if (ViewBag.Instructor != null)
@@ -229,7 +229,7 @@
                 }
                 else
                 {
-                    <div class="p-3" style="background: rgba(255,255,255,0.02); border: 1px dashed var(--border-glass); border-radius: var(--radius-md); color: var(--text-muted);">
+                    <div class="p-3" style="background: rgba(255,255,255,0.02); border: 1px dashed var(--border-glass); border-radius: var(--radius-md); color: var(--text-muted);" data-i18n="instructor_process">
                         Eğitmen ataması süreci devam etmektedir.
                     </div>
                 }
@@ -240,7 +240,7 @@
         <div class="col-lg-4">
             <div class="glass-card-static p-4 sticky-top animate-fadeInUp delay-300" style="top: 100px;">
                 <div class="text-center mb-4">
-                    <div style="font-size: 0.9rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em; margin-bottom: 0.5rem;">Kontenjan Durumu</div>
+                    <div style="font-size: 0.9rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em; margin-bottom: 0.5rem;" data-i18n="quota_status">Kontenjan Durumu</div>
                     
                     <div style="position: relative; width: 120px; height: 120px; margin: 0 auto; display: flex; align-items: center; justify-content: center;">
                         <svg class="w-100 h-100" viewBox="0 0 36 36" style="position: absolute; top:0; left:0; transform: rotate(-90deg);">
@@ -263,7 +263,7 @@
                             <div style="font-family: 'Outfit'; font-weight: 900; font-size: 1.8rem; line-height: 1; color: @(isFull ? "var(--danger)" : "var(--text-primary)");">
                                 @remainingQuota
                             </div>
-                            <div style="font-size: 0.75rem; color: var(--text-muted);">Boş Yer</div>
+                            <div style="font-size: 0.75rem; color: var(--text-muted);" data-i18n="empty_seats">Boş Yer</div>
                         </div>
                     </div>
                     
@@ -274,28 +274,50 @@
 
                 <hr class="divider-premium mb-4" />
 
+                </div>
+                
+                <div class="mt-4 p-3 mb-3 animate-fadeInUp" style="background: linear-gradient(135deg, rgba(197, 160, 89, 0.05), rgba(88, 28, 28, 0.05)); border-radius: 20px; border: 1px solid var(--theme-card-border);">
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-star-fill gold-text"></i>
+                            <span class="text-white fw-800 small">HALK POINT</span>
+                        </div>
+                        <span class="badge bg-gold-glass text-gold x-small">1000 HP</span>
+                    </div>
+                    <p class="text-white-50 x-small mb-3">Puanınızı kullanarak bu kurs için ücretsiz kayıt kodu oluşturun.</p>
+                    <button id="btnUnlock" class="btn btn-sm btn-outline-gold w-100 rounded-pill py-2 fw-800" onclick="unlockCourse()">
+                        <i class="bi bi-lock-fill me-1"></i> BAŞARI KİLİDİNİ AÇ
+                    </button>
+                    <div id="unlockResult" class="mt-2" style="display:none;">
+                        <div class="p-2 bg-success bg-opacity-10 border border-success border-opacity-20 rounded-3 text-center">
+                            <span class="text-success x-small fw-900 d-block">PROMOSYON KODUNUZ:</span>
+                            <span id="promoCodeVal" class="gold-text fw-900 fs-5"></span>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="d-flex flex-column gap-3 mb-4">
                     <div class="d-flex justify-content-between align-items-center">
-                        <span style="color: var(--text-muted);"><i class="bi bi-calendar-check me-2"></i>Bitiş</span>
+                        <span style="color: var(--text-muted);"><i class="bi bi-calendar-check me-2"></i><span data-i18n="end_date_label">Bitiş</span></span>
                         <strong style="color: var(--text-primary);">@Model.EndDate.ToString("dd MMM yyyy")</strong>
                     </div>
                     @if (Model.ExamDate.HasValue)
                     {
                         <div class="d-flex justify-content-between align-items-center">
-                            <span style="color: var(--text-muted);"><i class="bi bi-journal-check me-2"></i>Sınav Tarihi</span>
+                            <span style="color: var(--text-muted);"><i class="bi bi-journal-check me-2"></i><span data-i18n="exam_date_label">Sınav Tarihi</span></span>
                             <strong style="color: var(--accent-light);">@Model.ExamDate.Value.ToString("dd MMM yyyy")</strong>
                         </div>
                     }
                     <div class="d-flex justify-content-between align-items-center">
-                        <span style="color: var(--text-muted);"><i class="bi bi-award me-2"></i>Sertifika</span>
-                        <strong style="color: #C5A059;">MEB Onaylı</strong>
+                        <span style="color: var(--text-muted);"><i class="bi bi-award me-2"></i><span data-i18n="certificate_label">Sertifika</span></span>
+                        <strong style="color: #C5A059;" data-i18n="meb_approved">MEB Onaylı</strong>
                     </div>
                     <div class="d-flex justify-content-between align-items-center">
-                        <span style="color: var(--text-muted);"><i class="bi bi-person-x me-2"></i>Devamsızlık Sınırı</span>
-                        <strong style="color: var(--danger);">@Model.MaxAbsenceLimit Hak</strong>
+                        <span style="color: var(--text-muted);"><i class="bi bi-person-x me-2"></i><span data-i18n="absence_limit_label">Devamsızlık Sınırı</span></span>
+                        <strong style="color: var(--danger);">@Model.MaxAbsenceLimit <span data-i18n="rights_suffix">Hak</span></strong>
                     </div>
                     <div class="d-flex justify-content-between align-items-center">
-                        <span style="color: var(--text-muted);"><i class="bi bi-cash-stack me-2"></i>Ücret</span>
+                        <span style="color: var(--text-muted);"><i class="bi bi-cash-stack me-2"></i><span data-i18n="price_label">Ücret</span></span>
                         @if (Model.Price > 0)
                         {
                             <strong style="color: var(--warning); font-size: 1.1rem;">@Model.Price.ToString("N2") ₺</strong>
@@ -307,55 +329,55 @@
                     </div>
                     <div class="d-flex justify-content-between align-items-center">
                         <span style="color: var(--text-muted);"><i class="bi bi-shield-lock me-2"></i>E-Devlet</span>
-                        <strong style="color: var(--info);">Entegre</strong>
+                        <strong style="color: var(--info);" data-i18n="edevlet_integrated">Entegre</strong>
                     </div>
                 </div>
 
                 @if (isFull)
                 {
-                    <a asp-controller="Applications" asp-action="Create" asp-route-courseId="@Model.Id" class="btn btn-premium btn-secondary-glass btn-lg w-100 mb-2">
-                        <i class="bi bi-hourglass-split me-1"></i> Yedek Listesine Katıl
+                    <a href="#applicationFormSection" class="btn btn-premium btn-secondary-glass btn-lg w-100 mb-2">
+                        <i class="bi bi-hourglass-split me-1"></i> <span data-i18n="join_waiting_list">Yedek Listesine Katıl</span>
                     </a>
                     <p class="small text-center text-warning mt-2">
-                        <i class="bi bi-info-circle"></i> Kontenjan dolmuştur. Başvurunuz yedek listesine alınacaktır.
+                        <i class="bi bi-info-circle"></i> <span data-i18n="quota_full_info">Kontenjan dolmuştur. Başvurunuz yedek listesine alınacaktır.</span>
                     </p>
                 }
                 else
                 {
-                    <a asp-controller="Applications" asp-action="Create" asp-route-courseId="@Model.Id" class="btn btn-premium btn-primary-glow btn-lg w-100" style="box-shadow: 0 5px 20px rgba(245,158,11,0.4);">
-                        <i class="bi bi-rocket-takeoff flex-shrink-0"></i> Hemen Başvur
+                    <a href="#applicationFormSection" class="btn btn-premium btn-primary-glow btn-lg w-100" style="box-shadow: 0 5px 20px rgba(245,158,11,0.4);">
+                        <i class="bi bi-rocket-takeoff flex-shrink-0"></i> <span data-i18n="apply_now">Hemen Başvur</span>
                     </a>
                 }
                 
                 <div class="text-center mt-3">
                     <a href="#reviewsSection" class="text-muted small text-decoration-none hover-primary">
-                        <i class="bi bi-star-fill text-warning me-1"></i> Tüm Değerlendirmeleri Gör
+                        <i class="bi bi-star-fill text-warning me-1"></i> <span data-i18n="see_all_reviews">Tüm Değerlendirmeleri Gör</span>
                     </a>
                 </div>
                 
                 <div class="mt-4 p-3" style="background: rgba(255,255,255,0.02); border-radius: 12px; border: 1px solid rgba(255,255,255,0.05);">
                     <div class="d-flex align-items-center gap-2 mb-2">
                         <i class="bi bi-lightning-charge-fill text-warning"></i>
-                        <span style="color: var(--text-primary); font-weight: 700; font-size: 0.9rem;">Hızlı Bilgi</span>
+                        <span style="color: var(--text-primary); font-weight: 700; font-size: 0.9rem;" data-i18n="fast_info">Hızlı Bilgi</span>
                     </div>
                     <ul style="list-style: none; padding: 0; margin: 0; font-size: 0.85rem; color: var(--text-muted);">
-                        <li class="mb-2"><i class="bi bi-check2 me-2"></i> %80 Devam Zorunluluğu</li>
-                        <li class="mb-2"><i class="bi bi-check2 me-2"></i> Uygulamalı Eğitimler</li>
-                        <li><i class="bi bi-check2 me-2"></i> Kariyer Desteği</li>
+                        <li class="mb-2"><i class="bi bi-check2 me-2"></i> <span data-i18n="attendance_requirement">%80 Devam Zorunluluğu</span></li>
+                        <li class="mb-2"><i class="bi bi-check2 me-2"></i> <span data-i18n="applied_training">UygulamalÄ± EÄŸitimler</span></li>
+                        <li><i class="bi bi-check2 me-2"></i> <span data-i18n="career_support">Kariyer DesteÄŸi</span></li>
                     </ul>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Başarı Hikayeleri Bölümü (İlişkisel Veritabanı Åovu) -->
+    <!-- BaÅŸarÄ± Hikayeleri BÃ¶lÃ¼mÃ¼ (Ä°liÅŸkisel VeritabanÄ± Ã…Âovu) -->
     @if (ViewBag.SuccessStories != null && ((List<HalkEgitimSistemi.Models.SuccessStory>)ViewBag.SuccessStories).Any())
     {
         <div class="row mt-5">
             <div class="col-lg-12">
                 <div class="glass-card-static p-4 p-md-5 animate-fadeInUp">
                     <h3 style="font-family: 'Outfit'; font-weight: 800; color: var(--text-primary); margin-bottom: 2rem;">
-                        <i class="bi bi-award-fill me-2" style="color: #f59e0b;"></i> Bu Kurstan Çıkan Başarı Hikayeleri
+                        <i class="bi bi-award-fill me-2" style="color: #f59e0b;"></i> <span data-i18n="success_stories_from_course">Bu Kurstan Çıkan Başarı Hikayeleri</span>
                     </h3>
                     <div class="row g-4">
                         @foreach (var story in (List<HalkEgitimSistemi.Models.SuccessStory>)ViewBag.SuccessStories)
@@ -366,7 +388,7 @@
                                     <div class="p-3">
                                         <h5 class="text-primary-theme fw-bold">@story.Title</h5>
                                         <p class="text-muted small mb-3">@story.Summary</p>
-                                        <a asp-controller="SuccessStories" asp-action="Details" asp-route-id="@story.Id" class="btn btn-premium btn-secondary-glass btn-sm w-100">Hikayeyi Oku</a>
+                                        <a asp-controller="SuccessStories" asp-action="Details" asp-route-id="@story.Id" class="btn btn-premium btn-secondary-glass btn-sm w-100" data-i18n="read_story">Hikayeyi Oku</a>
                                     </div>
                                 </div>
                             </div>
@@ -377,16 +399,16 @@
         </div>
     }
 
-    <!-- Değerlendirmeler Bölümü (HERKESE AÇIK) -->
+    <!-- DeÄŸerlendirmeler BÃ¶lÃ¼mÃ¼ (HERKESE AÃ‡IK) -->
     <div class="row mt-5" id="reviewsSection">
         <div class="col-lg-8">
             <div class="glass-card-static p-4 p-md-5 animate-fadeInUp">
                 <div class="d-flex justify-content-between align-items-center mb-5">
                     <div>
                         <h3 style="font-family: 'Outfit'; font-weight: 800; color: var(--text-primary); margin: 0;">
-                            <i class="bi bi-chat-heart me-2" style="color: #581C1C;"></i> Katılımcı Yorumları
+                            <i class="bi bi-chat-heart me-2" style="color: #581C1C;"></i> <span data-i18n="participant_reviews">Katılımcı Yorumları</span>
                         </h3>
-                        <p class="text-muted small mb-0 mt-1">Bu kurs hakkında neler söylendi?</p>
+                        <p class="text-muted small mb-0 mt-1" data-i18n="what_was_said">Bu kurs hakkında neler söylendi?</p>
                     </div>
                     <div class="text-end">
                         <div class="d-flex align-items-center justify-content-end gap-2">
@@ -402,20 +424,20 @@
                     </div>
                 </div>
 
-                <!-- Yorum Yapma Formu (Herkese Açık) -->
+                <!-- Yorum Yapma Formu (Herkese AÃ§Ä±k) -->
                 <div class="p-4 mb-5 shadow-sm" style="background: var(--bg-glass); border-radius: 20px; border: 1px solid var(--border-glass);">
-                    <h5 class="mb-4 fw-bold text-primary-theme"><i class="bi bi-pencil-square me-2 text-primary"></i> Deneyiminizi Paylaşın</h5>
+                    <h5 class="mb-4 fw-bold text-primary-theme"><i class="bi bi-pencil-square me-2 text-primary"></i> <span data-i18n="share_experience">Deneyiminizi Paylaşın</span></h5>
                     <form asp-controller="Comments" asp-action="AddComment" method="post">
                         <input type="hidden" name="CourseId" value="@Model.Id" />
                         
                         <div class="row g-3">
                             <div class="col-md-6">
-                                <label class="form-label small fw-bold text-muted">E-POSTA ADRESİNİZ</label>
+                                <label class="form-label small fw-bold text-muted" data-i18n="your_email">E-POSTA ADRESİNİZ</label>
                                 <input type="email" name="UserEmail" class="form-premium-control" placeholder="Örn: ahmet@mail.com" required 
                                        value="@(User.Identity?.IsAuthenticated == true ? User.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value : "")" />
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label small fw-bold text-muted-theme">PUANINIZ</label>
+                                <label class="form-label small fw-bold text-muted-theme" data-i18n="your_rating">PUANINIZ</label>
                                  <div class="rating-input-modern">
                                      <input type="hidden" name="Rating" id="ratingValue" value="0" />
                                      @for (int i = 1; i <= 5; i++)
@@ -425,12 +447,12 @@
                                  </div>
                             </div>
                             <div class="col-12">
-                                <label class="form-label small fw-bold text-muted">MESAJINIZ</label>
-                                <textarea name="Content" class="form-premium-control" rows="3" placeholder="Eğitim kalitesi, hoca ilgisi ve içerik hakkındaki düşünceleriniz..." required></textarea>
+                                <label class="form-label small fw-bold text-muted" data-i18n="your_message">MESAJINIZ</label>
+                                <textarea name="Content" class="form-premium-control" rows="3" data-i18n-placeholder="message_placeholder" placeholder="Eğitim kalitesi, hoca ilgisi ve içerik hakkındaki düşünceleriniz..." required></textarea>
                             </div>
                             <div class="col-12">
                                 <button type="submit" class="btn btn-premium btn-primary-glow px-5 py-3 w-100 w-md-auto">
-                                    Yorumu Gönder <i class="bi bi-send-fill ms-2"></i>
+                                    <span data-i18n="send_comment">Yorumu Gönder</span> <i class="bi bi-send-fill ms-2"></i>
                                 </button>
                             </div>
                         </div>
@@ -468,10 +490,115 @@
                     {
                         <div class="text-center py-5">
                             <div class="icon-box mx-auto mb-3"><i class="bi bi-chat-dots fs-1"></i></div>
-                            <h5 class="text-primary-theme">Henüz Yorum Yapılmamış</h5>
-                            <p class="text-muted">Bu kurs hakkında ilk yorumu siz yaparak diğerlerine rehberlik edin!</p>
+                            <h5 class="text-primary-theme" data-i18n="no_reviews_yet">Henüz Yorum Yapılmamış</h5>
+                            <p class="text-muted" data-i18n="be_the_first_reviewer">Bu kurs hakkÄ±nda ilk yorumu siz yaparak diÄŸerlerine rehberlik edin!</p>
                         </div>
                     }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Final Info & Halk Point Code Section -->
+    <div class="row mt-5" id="applicationFormSection">
+        <div class="col-12">
+            <div class="glass-card-static p-4 p-md-5 animate-fadeInUp" style="border-radius: 30px; border: 2px dashed var(--theme-card-border); background: rgba(197, 160, 89, 0.03) !important;">
+                <div class="text-center mb-5">
+                    <h4 class="fw-800 gold-text mb-3"><i class="bi bi-rocket-takeoff-fill me-2"></i> KURSA BAŞVURU EKRANI</h4>
+                    <p class="text-white-50 mx-auto" style="max-width: 700px;">
+                        Aşağıdaki formu doldurarak kursa kaydınızı gerçekleştirebilirsiniz. Eğer <strong>Halk Point</strong> kodunuz varsa, formun sonundaki alana girmeyi unutmayın!
+                    </p>
+                </div>
+
+                <div class="row g-5">
+                    <!-- Left: Form -->
+                    <div class="col-lg-7">
+                        @if (User.Identity.IsAuthenticated && User.IsInRole("Student"))
+                        {
+                            <form asp-controller="Applications" asp-action="Create" method="post" class="text-start">
+                                <input type="hidden" name="CourseId" value="@Model.Id" />
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label small fw-bold text-muted">ADINIZ</label>
+                                        <input type="text" name="FirstName" class="form-premium-control" required />
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label small fw-bold text-muted">SOYADINIZ</label>
+                                        <input type="text" name="LastName" class="form-premium-control" required />
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="form-label small fw-bold text-muted">T.C. KİMLİK NO</label>
+                                        <input type="text" name="TcNo" class="form-premium-control" maxlength="11" required />
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label small fw-bold text-muted">TELEFON</label>
+                                        <input type="tel" name="PhoneNumber" class="form-premium-control" required />
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label small fw-bold text-muted">E-POSTA</label>
+                                        <input type="email" name="Email" class="form-premium-control" required />
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="form-label small fw-bold text-muted">HALK POINT KODU (VARSA)</label>
+                                        <input type="text" name="UsedHalkPointCode" id="formPromoCode" class="form-premium-control border-gold" placeholder="HP-XXXX-XX" />
+                                        <small class="text-gold opacity-75 mt-1 d-block"><i class="bi bi-info-circle me-1"></i> Kodunuzu girdikten sonra başvuru otomatik olarak ücretsiz tanımlanacaktır.</small>
+                                    </div>
+                                    <div class="col-12 mt-4">
+                                        <button type="submit" class="btn btn-premium btn-primary-glow btn-lg w-100 py-3 rounded-pill">
+                                            <i class="bi bi-check2-circle me-2"></i> BAŞVURUYU TAMAMLA
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        }
+                        else if (!User.Identity.IsAuthenticated)
+                        {
+                            <div class="text-center py-5">
+                                <i class="bi bi-lock-fill fs-1 gold-text mb-3"></i>
+                                <h5 class="text-white">Başvuru İçin Giriş Yapmalısınız</h5>
+                                <p class="text-muted small">Kurs başvurusu yapmak için lütfen öğrenci hesabınızla giriş yapın.</p>
+                                <a asp-controller="Account" asp-action="Login" class="btn btn-outline-gold rounded-pill px-4 mt-3">GİRİŞ YAP</a>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="alert alert-info-glass">
+                                <i class="bi bi-info-circle-fill me-2"></i> Sadece Kursiyer hesabı ile başvuru yapılabilir.
+                            </div>
+                        }
+                    </div>
+
+                    <!-- Right: Info & Halk Point -->
+                    <div class="col-lg-5">
+                        <div class="p-4 rounded-4" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05);">
+                            <h5 class="fw-bold text-white mb-4"><i class="bi bi-lightning-charge-fill text-warning me-2"></i> Halk Point Bilgisi</h5>
+                            <p class="small text-muted mb-4">
+                                Kursu ücretsiz almak için yeterli puanınız varsa "BAŞARI KİLİDİNİ AÇ" butonu ile kodunuzu oluşturun ve formda kullanın.
+                            </p>
+
+                            <div id="finalUnlockResult" class="mt-4 mb-4" style="display:none;">
+                                <div class="p-4 bg-success bg-opacity-10 border border-success border-opacity-20 rounded-4 text-center">
+                                    <span class="text-success fw-900 d-block mb-2" style="font-size: 0.7rem;">KODUNUZ HAZIR:</span>
+                                    <div class="d-flex align-items-center justify-content-center gap-2">
+                                        <span id="finalPromoCodeVal" class="gold-text fw-900 fs-3"></span>
+                                        <button class="btn btn-sm btn-outline-gold" onclick="copyPromoCode()">
+                                            <i class="bi bi-clipboard"></i>
+                                        </button>
+                                    </div>
+                                    <p class="x-small text-white-50 mt-2 mb-0">Bu kodu yan taraftaki forma yapıştırın.</p>
+                                </div>
+                            </div>
+
+                            <div class="p-3 bg-glass-sm rounded-3 mt-4">
+                                <h6 class="text-white x-small fw-bold mb-2">DİKKAT EDİLMESİ GEREKENLER</h6>
+                                <ul class="x-small text-muted ps-3 mb-0">
+                                    <li class="mb-2">T.C. No bilgisinin doğru olduğundan emin olun.</li>
+                                    <li class="mb-2">Devamsızlık sınırı %20'dir.</li>
+                                    <li>Başvuru sonrası e-posta onayı gelecektir.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -540,6 +667,53 @@
             } else {
                 star.classList.remove('active');
             }
+        });
+    }
+
+    function unlockCourse() {
+        if (!confirm('500 Halk Point harcanarak başarı kilidi açılacaktır. Onaylıyor musunuz?')) return;
+
+        fetch('/Courses/UnlockWithPoints/@Model.Id', {
+            method: 'POST',
+            headers: { 'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val() }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                document.getElementById('btnUnlock').style.display = 'none';
+                document.getElementById('unlockResult').style.display = 'block';
+                document.getElementById('promoCodeVal').innerText = data.code;
+                
+                // Also update final section at the bottom
+                document.getElementById('finalUnlockResult').style.display = 'block';
+                document.getElementById('finalPromoCodeVal').innerText = data.code;
+                
+                // Smooth scroll to bottom
+                window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+
+                Swal.fire({
+                    title: 'Kilit Açıldı!',
+                    text: 'Halk Point kodunuz sayfanın en altında da görüntülenmektedir.',
+                    icon: 'success',
+                    background: '#1a1a2e',
+                    color: '#fff',
+                    confirmButtonText: 'Koda Git',
+                    confirmButtonColor: '#C5A059'
+                });
+            } else {
+                alert(data.message);
+            }
+        });
+    }
+
+    function copyPromoCode() {
+        const code = document.getElementById('finalPromoCodeVal').innerText;
+        navigator.clipboard.writeText(code).then(() => {
+            // Also auto-fill the form if it exists
+            const formInput = document.getElementById('formPromoCode');
+            if (formInput) formInput.value = code;
+            
+            alert('Kod panoya kopyalandı ve forma otomatik olarak eklendi: ' + code);
         });
     }
 

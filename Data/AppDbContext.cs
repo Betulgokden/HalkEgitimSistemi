@@ -58,6 +58,9 @@ namespace HalkEgitimSistemi.Data
         public DbSet<AcademicNote> AcademicNotes { get; set; }
         public DbSet<AcademicTest> AcademicTests { get; set; }
         public DbSet<AcademicQuestion> AcademicQuestions { get; set; }
+        public DbSet<PromoCode> PromoCodes { get; set; }
+        public DbSet<HalkPointActivity> HalkPointActivities { get; set; }
+        public DbSet<HalkPointCode> HalkPointCodes { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -96,6 +99,21 @@ namespace HalkEgitimSistemi.Data
                 .HasIndex(s => s.TcNo)
                 .IsUnique();
 
+            modelBuilder.Entity<Student>()
+                .HasIndex(s => s.Email);
+
+            modelBuilder.Entity<Course>()
+                .HasIndex(c => c.CourseName);
+
+            modelBuilder.Entity<Application>()
+                .HasIndex(a => a.Email);
+
+            modelBuilder.Entity<Application>()
+                .HasIndex(a => a.Status);
+
+            modelBuilder.Entity<Instructor>()
+                .HasIndex(i => i.FullName);
+
             // ===== SEED DATA: ADMIN USER =====
             modelBuilder.Entity<AdminUser>().HasData(
                 new AdminUser { Id = 1, Username = "Betül", Password = "0808", FullName = "Betül Gökden" }
@@ -115,24 +133,24 @@ namespace HalkEgitimSistemi.Data
 
             // ===== SEED DATA: KURSLAR =====
             modelBuilder.Entity<Course>().HasData(
-                new Course { Id = 1, CourseName = "Yapay Zeka Destekli Python Programlama", CategoryId = 1, Quota = 25, DurationHours = 80, StartDate = new DateTime(2026, 5, 1), EndDate = new DateTime(2026, 7, 31), IsActive = true, MaxAbsenceLimit = 4, Price = 500, ImageUrl = "https://images.unsplash.com/photo-1526379095098-d400fd0bf935?w=600" },
-                new Course { Id = 2, CourseName = "Modern Web Tasarım", CategoryId = 1, Quota = 30, DurationHours = 60, StartDate = new DateTime(2026, 5, 15), EndDate = new DateTime(2026, 7, 15), IsActive = true, MaxAbsenceLimit = 4, Price = 500, ImageUrl = "https://images.unsplash.com/photo-1547658719-da2b51169166?w=600" },
-                new Course { Id = 3, CourseName = "Bilgisayar İşletmenliği", CategoryId = 1, Quota = 35, DurationHours = 120, StartDate = new DateTime(2026, 4, 15), EndDate = new DateTime(2026, 8, 15), IsActive = true, MaxAbsenceLimit = 4, Price = 500, ImageUrl = "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=600" },
-                new Course { Id = 4, CourseName = "İngilizce A1-A2", CategoryId = 2, Quota = 20, DurationHours = 90, StartDate = new DateTime(2026, 5, 1), EndDate = new DateTime(2026, 8, 1), IsActive = true, MaxAbsenceLimit = 4, Price = 500, ImageUrl = "https://images.unsplash.com/photo-1543109740-4bdb38fda756?w=600" },
-                new Course { Id = 5, CourseName = "Almanca A1", CategoryId = 2, Quota = 15, DurationHours = 60, StartDate = new DateTime(2026, 6, 1), EndDate = new DateTime(2026, 8, 30), IsActive = true, MaxAbsenceLimit = 4, Price = 1000, ImageUrl = "https://images.unsplash.com/photo-1527866959252-deab85ef7d1b?w=600" },
-                new Course { Id = 6, CourseName = "Ahşap Boyama", CategoryId = 3, Quota = 20, DurationHours = 40, StartDate = new DateTime(2026, 5, 10), EndDate = new DateTime(2026, 7, 10), IsActive = true, MaxAbsenceLimit = 4, Price = 1000, ImageUrl = "https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=600" },
-                new Course { Id = 7, CourseName = "Geleneksel Seramik", CategoryId = 3, Quota = 15, DurationHours = 50, StartDate = new DateTime(2026, 5, 20), EndDate = new DateTime(2026, 8, 20), IsActive = true, MaxAbsenceLimit = 4, Price = 750, ImageUrl = "https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?w=600" },
-                new Course { Id = 8, CourseName = "Gitar Eğitimi", CategoryId = 4, Quota = 12, DurationHours = 45, StartDate = new DateTime(2026, 5, 5), EndDate = new DateTime(2026, 7, 30), IsActive = true, MaxAbsenceLimit = 4, Price = 750, ImageUrl = "https://images.unsplash.com/photo-1510915361894-db8b60106cb1?w=600" },
-                new Course { Id = 9, CourseName = "Bağlama Kursu", CategoryId = 4, Quota = 15, DurationHours = 50, StartDate = new DateTime(2026, 6, 1), EndDate = new DateTime(2026, 8, 30), IsActive = true, MaxAbsenceLimit = 4, Price = 520, ImageUrl = "https://images.unsplash.com/photo-1507838153414-b4b713384a76?w=600" },
-                new Course { Id = 10, CourseName = "Yoga ve Pilates", CategoryId = 5, Quota = 25, DurationHours = 36, StartDate = new DateTime(2026, 5, 1), EndDate = new DateTime(2026, 7, 31), IsActive = true, MaxAbsenceLimit = 4, Price = 680, ImageUrl = "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=600" },
-                new Course { Id = 11, CourseName = "Türk Mutfağı", CategoryId = 6, Quota = 18, DurationHours = 60, StartDate = new DateTime(2026, 5, 10), EndDate = new DateTime(2026, 7, 30), IsActive = true, MaxAbsenceLimit = 4, Price = 720, ImageUrl = "https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=600" },
-                new Course { Id = 12, CourseName = "Pastacılık", CategoryId = 6, Quota = 15, DurationHours = 50, StartDate = new DateTime(2026, 6, 1), EndDate = new DateTime(2026, 8, 15), IsActive = true, MaxAbsenceLimit = 4, Price = 840, ImageUrl = "https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=600" },
-                new Course { Id = 13, CourseName = "Cilt Bakımı", CategoryId = 7, Quota = 12, DurationHours = 72, StartDate = new DateTime(2026, 5, 15), EndDate = new DateTime(2026, 8, 15), IsActive = true, MaxAbsenceLimit = 6, Price = 950, ImageUrl = "https://images.unsplash.com/photo-1560750588-73207b1ef5b8?w=600" },
-                new Course { Id = 14, CourseName = "Dijital Muhasebe", CategoryId = 8, Quota = 30, DurationHours = 90, StartDate = new DateTime(2026, 5, 1), EndDate = new DateTime(2026, 8, 1), IsActive = true, MaxAbsenceLimit = 4, Price = 760, ImageUrl = "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=600" },
-                new Course { Id = 15, CourseName = "E-Ticaret Atölyesi", CategoryId = 8, Quota = 25, DurationHours = 40, StartDate = new DateTime(2026, 6, 15), EndDate = new DateTime(2026, 8, 15), IsActive = true, MaxAbsenceLimit = 4, Price = 590, ImageUrl = "https://images.unsplash.com/photo-1559136555-9303baea8ebd?w=600" },
-                new Course { Id = 16, CourseName = "Siber Güvenlik", CategoryId = 1, Quota = 20, DurationHours = 64, StartDate = new DateTime(2026, 9, 1), EndDate = new DateTime(2026, 11, 1), IsActive = true, MaxAbsenceLimit = 6, Price = 0, ImageUrl = "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=600" },
-                new Course { Id = 17, CourseName = "Profesyonel Arıcılık ve Bal Üretimi", CategoryId = 8, Quota = 30, DurationHours = 40, StartDate = new DateTime(2026, 5, 20), EndDate = new DateTime(2026, 6, 30), IsActive = true, MaxAbsenceLimit = 4, Price = 300, ImageUrl = "https://images.unsplash.com/photo-1587334206571-3390ccc205df?w=600" },
-                new Course { Id = 18, CourseName = "Modern Seralarda Organik Tarım", CategoryId = 8, Quota = 25, DurationHours = 60, StartDate = new DateTime(2026, 5, 25), EndDate = new DateTime(2026, 7, 25), IsActive = true, MaxAbsenceLimit = 4, Price = 450, ImageUrl = "https://images.unsplash.com/photo-1592419044706-39796d40f98c?w=600" }
+                new Course { Id = 1, CourseName = "Yapay Zeka Destekli Python Programlama", CategoryId = 1, Quota = 25, DurationHours = 80, StartDate = new DateTime(2026, 5, 1), EndDate = new DateTime(2026, 7, 31), IsActive = true, MaxAbsenceLimit = 4, Price = 500, ImageUrl = "https://images.unsplash.com/photo-1526379095098-d400fd0bf935?w=600&fm=webp&fm=webp" },
+                new Course { Id = 2, CourseName = "Modern Web Tasarım", CategoryId = 1, Quota = 30, DurationHours = 60, StartDate = new DateTime(2026, 5, 15), EndDate = new DateTime(2026, 7, 15), IsActive = true, MaxAbsenceLimit = 4, Price = 500, ImageUrl = "https://images.unsplash.com/photo-1547658719-da2b51169166?w=600&fm=webp&fm=webp" },
+                new Course { Id = 3, CourseName = "Bilgisayar İşletmenliği", CategoryId = 1, Quota = 35, DurationHours = 120, StartDate = new DateTime(2026, 4, 15), EndDate = new DateTime(2026, 8, 15), IsActive = true, MaxAbsenceLimit = 4, Price = 500, ImageUrl = "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=600&fm=webp&fm=webp" },
+                new Course { Id = 4, CourseName = "İngilizce A1-A2", CategoryId = 2, Quota = 20, DurationHours = 90, StartDate = new DateTime(2026, 5, 1), EndDate = new DateTime(2026, 8, 1), IsActive = true, MaxAbsenceLimit = 4, Price = 500, ImageUrl = "https://images.unsplash.com/photo-1543109740-4bdb38fda756?w=600&fm=webp" },
+                new Course { Id = 5, CourseName = "Almanca A1", CategoryId = 2, Quota = 15, DurationHours = 60, StartDate = new DateTime(2026, 6, 1), EndDate = new DateTime(2026, 8, 30), IsActive = true, MaxAbsenceLimit = 4, Price = 1000, ImageUrl = "https://images.unsplash.com/photo-1527866959252-deab85ef7d1b?w=600&fm=webp" },
+                new Course { Id = 6, CourseName = "Ahşap Boyama", CategoryId = 3, Quota = 20, DurationHours = 40, StartDate = new DateTime(2026, 5, 10), EndDate = new DateTime(2026, 7, 10), IsActive = true, MaxAbsenceLimit = 4, Price = 1000, ImageUrl = "https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=600&fm=webp" },
+                new Course { Id = 7, CourseName = "Geleneksel Seramik", CategoryId = 3, Quota = 15, DurationHours = 50, StartDate = new DateTime(2026, 5, 20), EndDate = new DateTime(2026, 8, 20), IsActive = true, MaxAbsenceLimit = 4, Price = 750, ImageUrl = "https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?w=600&fm=webp" },
+                new Course { Id = 8, CourseName = "Gitar Eğitimi", CategoryId = 4, Quota = 12, DurationHours = 45, StartDate = new DateTime(2026, 5, 5), EndDate = new DateTime(2026, 7, 30), IsActive = true, MaxAbsenceLimit = 4, Price = 750, ImageUrl = "https://images.unsplash.com/photo-1510915361894-db8b60106cb1?w=600&fm=webp" },
+                new Course { Id = 9, CourseName = "Bağlama Kursu", CategoryId = 4, Quota = 15, DurationHours = 50, StartDate = new DateTime(2026, 6, 1), EndDate = new DateTime(2026, 8, 30), IsActive = true, MaxAbsenceLimit = 4, Price = 520, ImageUrl = "https://images.unsplash.com/photo-1507838153414-b4b713384a76?w=600&fm=webp" },
+                new Course { Id = 10, CourseName = "Yoga ve Pilates", CategoryId = 5, Quota = 25, DurationHours = 36, StartDate = new DateTime(2026, 5, 1), EndDate = new DateTime(2026, 7, 31), IsActive = true, MaxAbsenceLimit = 4, Price = 680, ImageUrl = "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=600&fm=webp" },
+                new Course { Id = 11, CourseName = "Türk Mutfağı", CategoryId = 6, Quota = 18, DurationHours = 60, StartDate = new DateTime(2026, 5, 10), EndDate = new DateTime(2026, 7, 30), IsActive = true, MaxAbsenceLimit = 4, Price = 720, ImageUrl = "https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=600&fm=webp" },
+                new Course { Id = 12, CourseName = "Pastacılık", CategoryId = 6, Quota = 15, DurationHours = 50, StartDate = new DateTime(2026, 6, 1), EndDate = new DateTime(2026, 8, 15), IsActive = true, MaxAbsenceLimit = 4, Price = 840, ImageUrl = "https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=600&fm=webp" },
+                new Course { Id = 13, CourseName = "Cilt Bakımı", CategoryId = 7, Quota = 12, DurationHours = 72, StartDate = new DateTime(2026, 5, 15), EndDate = new DateTime(2026, 8, 15), IsActive = true, MaxAbsenceLimit = 6, Price = 950, ImageUrl = "https://images.unsplash.com/photo-1560750588-73207b1ef5b8?w=600&fm=webp" },
+                new Course { Id = 14, CourseName = "Dijital Muhasebe", CategoryId = 8, Quota = 30, DurationHours = 90, StartDate = new DateTime(2026, 5, 1), EndDate = new DateTime(2026, 8, 1), IsActive = true, MaxAbsenceLimit = 4, Price = 760, ImageUrl = "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=600&fm=webp" },
+                new Course { Id = 15, CourseName = "E-Ticaret Atölyesi", CategoryId = 8, Quota = 25, DurationHours = 40, StartDate = new DateTime(2026, 6, 15), EndDate = new DateTime(2026, 8, 15), IsActive = true, MaxAbsenceLimit = 4, Price = 590, ImageUrl = "https://images.unsplash.com/photo-1559136555-9303baea8ebd?w=600&fm=webp" },
+                new Course { Id = 16, CourseName = "Siber Güvenlik", CategoryId = 1, Quota = 20, DurationHours = 64, StartDate = new DateTime(2026, 9, 1), EndDate = new DateTime(2026, 11, 1), IsActive = true, MaxAbsenceLimit = 6, Price = 0, ImageUrl = "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=600&fm=webp" },
+                new Course { Id = 17, CourseName = "Profesyonel Arıcılık ve Bal Üretimi", CategoryId = 8, Quota = 30, DurationHours = 40, StartDate = new DateTime(2026, 5, 20), EndDate = new DateTime(2026, 6, 30), IsActive = true, MaxAbsenceLimit = 4, Price = 300, ImageUrl = "https://images.unsplash.com/photo-1587334206571-3390ccc205df?w=600&fm=webp" },
+                new Course { Id = 18, CourseName = "Modern Seralarda Organik Tarım", CategoryId = 8, Quota = 25, DurationHours = 60, StartDate = new DateTime(2026, 5, 25), EndDate = new DateTime(2026, 7, 25), IsActive = true, MaxAbsenceLimit = 4, Price = 450, ImageUrl = "https://images.unsplash.com/photo-1592419044706-39796d40f98c?w=600&fm=webp" }
             );
 
             modelBuilder.Entity<Instructor>().HasData(

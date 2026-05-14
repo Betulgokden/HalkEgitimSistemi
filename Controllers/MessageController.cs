@@ -19,6 +19,28 @@ namespace HalkEgitimSistemi.Controllers
             _context = context;
         }
 
+        public async Task<IActionResult> Index()
+        {
+            var username = User.Identity?.Name;
+            if (string.IsNullOrEmpty(username)) return Forbid();
+
+            // Admin is redirected to their own log
+            if (User.IsInRole("Admin")) return RedirectToAction("MessageLog", "Admin");
+
+            var instructorIdStr = User.FindFirst("InstructorId")?.Value;
+            int? instructorId = string.IsNullOrEmpty(instructorIdStr) ? null : int.Parse(instructorIdStr);
+
+            var messages = await _context.Messages
+                .Include(m => m.ReceiverInstructor)
+                .Where(m => m.SenderUsername == username 
+                         || m.ReceiverUsername == username 
+                         || (instructorId.HasValue && m.ReceiverInstructorId == instructorId.Value))
+                .OrderByDescending(m => m.Date)
+                .ToListAsync();
+
+            return View(messages);
+        }
+
         // ÖĞRENCİ TARAFINDAN MESAJ GÖNDERME
         [HttpPost]
         [Authorize(Roles = "Student")]
@@ -55,25 +77,26 @@ namespace HalkEgitimSistemi.Controllers
             return RedirectToAction("Details", "Instructors", new { id = instructorId });
         }
 
-        // EĞİTMEN TARAFINDAN CEVAP VERME
+        // EĞİTMEN VEYA KULLANICI TARAFINDAN CEVAP VERME
         [HttpPost]
-        [Authorize(Roles = "Instructor")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CevapGonder(int messageId, string content)
         {
             var originalMessage = await _context.Messages.FindAsync(messageId);
             if (originalMessage == null) return NotFound();
 
+            bool isInstructor = User.IsInRole("Instructor");
+
             var reply = new Message
             {
-                SenderUsername = User.Identity?.Name ?? "Eğitmen",
+                SenderUsername = User.Identity?.Name ?? (isInstructor ? "Eğitmen" : "Kullanıcı"),
                 ReceiverInstructorId = originalMessage.ReceiverInstructorId,
                 ReceiverUsername = originalMessage.SenderUsername,
-                Subject = "RE: " + originalMessage.Subject,
+                Subject = originalMessage.Subject.StartsWith("RE: ") ? originalMessage.Subject : "RE: " + originalMessage.Subject,
                 Content = content,
                 Date = DateTime.Now,
                 IsRead = false,
-                IsFromInstructor = true
+                IsFromInstructor = isInstructor
             };
 
             // Orijinal mesajı okundu olarak işaretle
@@ -83,7 +106,15 @@ namespace HalkEgitimSistemi.Controllers
             await _context.SaveChangesAsync();
 
             TempData["Success"] = "Cevabınız gönderildi.";
-            return RedirectToAction("Dashboard", "Teacher");
+
+            // Redirection logic
+            if (Request.Headers["Referer"].ToString().Contains("Message"))
+                return RedirectToAction("Index");
+
+            if (isInstructor)
+                return RedirectToAction("Dashboard", "Teacher");
+            
+            return RedirectToAction("Dashboard", "Student");
         }
 
         // MESAJI OKUNDU İŞARETLE

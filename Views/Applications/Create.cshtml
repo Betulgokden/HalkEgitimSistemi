@@ -5,176 +5,216 @@
 }
 
 <div class="container py-5">
-    <!-- Hero Section -->
-    <div class="glass-card-static animate-fadeInDown" style="padding: 3rem; margin-bottom: 2rem; background: linear-gradient(135deg, rgba(236,72,153,0.08) 0%, rgba(239,68,68,0.05) 100%); text-align: center;">
-        <span class="badge-premium badge-danger mb-3"><i class="bi bi-rocket-takeoff"></i> Kayıt Formu</span>
-        <h1 style="font-family: 'Outfit', sans-serif; font-size: 2.5rem; font-weight: 900; margin-bottom: 0.8rem;">
-            Eğitim <span class="section-title-gradient">Başvuru Formu</span>
-        </h1>
-        <p style="color: var(--text-muted); max-width: 600px; margin: 0 auto; font-size: 1.05rem;">
-            @if(ViewBag.CourseName != null) {
-                <span><strong>@ViewBag.CourseName</strong> kursu için başvuru yapıyorsunuz.</span>
-            } else {
-                <span>Aşağıdaki formu doldurup dilediğiniz eğitime başvurabilirsiniz.</span>
-            }
-        </p>
+    <!-- Ultra-Premium Form Header -->
+    <div class="row justify-content-center mb-5">
+        <div class="col-lg-8">
+            <div class="glass-card-static p-4 p-md-5 text-center position-relative overflow-hidden animate-fadeInDown" 
+                 style="border-radius: 30px; background: linear-gradient(135deg, rgba(88, 28, 28, 0.1) 0%, rgba(197, 160, 89, 0.1) 100%);">
+                <div class="header-decoration-top"></div>
+                
+                <span class="badge-premium badge-danger mb-3 shadow-glow-sm">
+                    <i class="bi bi-shield-lock-fill me-2"></i> GÜVENLİ BAŞVURU SİSTEMİ
+                </span>
+                
+                <h1 class="display-5 fw-900 mb-3" style="font-family: 'Outfit', sans-serif;">
+                    Kurs <span class="gold-text">Kayıt & Başvuru</span>
+                </h1>
+                
+                <p class="lead opacity-75 mx-auto" style="max-width: 600px; font-weight: 500;">
+                    @if(ViewBag.CourseName != null) {
+                        <span class="d-block mb-2">Başvurulan Kurs: <strong class="gold-text">@ViewBag.CourseName</strong></span>
+                    }
+                    Lütfen aşağıdaki formu kimlik bilgilerinizle birebir eşleşecek şekilde doldurunuz.
+                </p>
+
+                <!-- Step Indicator -->
+                <div class="d-flex justify-content-center align-items-center gap-4 mt-4 opacity-50">
+                    <div class="d-flex align-items-center gap-2"><div class="step-dot active"></div> <small class="fw-bold">BİLGİLER</small></div>
+                    <div class="step-line"></div>
+                    <div class="d-flex align-items-center gap-2"><div class="step-dot"></div> <small class="fw-bold">ÖDEME</small></div>
+                    <div class="step-line"></div>
+                    <div class="d-flex align-items-center gap-2"><div class="step-dot"></div> <small class="fw-bold">ONAY</small></div>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <!-- Form Card -->
+    <!-- Main Form Section -->
     <div class="row justify-content-center">
-        <div class="col-lg-8 col-md-10">
-            <div class="glass-card-static animate-fadeInUp delay-200 overflow-hidden">
-                <div style="padding: 2rem 2rem 1.5rem; border-bottom: 1px solid var(--border-glass); background: var(--gradient-card);">
-                    <div class="d-flex align-items-center gap-3">
-                        <div class="page-header-icon" style="width: 50px; height: 50px; font-size: 1.3rem; background: var(--gradient-warm);">
-                            <i class="bi bi-pen-fill"></i>
+        <div class="col-lg-10">
+            <form asp-action="Create" class="application-premium-form">
+                <div class="row g-4">
+                    <!-- Left Column: Personal Information -->
+                    <div class="col-md-7">
+                        <div class="glass-card-static p-4 p-lg-5 h-100 animate-fadeInLeft" style="border-radius: 25px;">
+                            <div class="section-header mb-4">
+                                <h4 class="fw-800 d-flex align-items-center gap-2">
+                                    <i class="bi bi-person-bounding-box gold-text"></i> Kişisel Bilgiler
+                                </h4>
+                                <div class="accent-line"></div>
+                            </div>
+
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="form-premium-group">
+                                        <label asp-for="FirstName" class="form-premium-label">Adınız</label>
+                                        <div class="input-icon-wrapper">
+                                            <i class="bi bi-person"></i>
+                                            <input asp-for="FirstName" class="form-premium-control" placeholder="Ad" required />
+                                        </div>
+                                        <span asp-validation-for="FirstName" class="text-danger small"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-premium-group">
+                                        <label asp-for="LastName" class="form-premium-label">Soyadınız</label>
+                                        <div class="input-icon-wrapper">
+                                            <i class="bi bi-person"></i>
+                                            <input asp-for="LastName" class="form-premium-control" placeholder="Soyad" required />
+                                        </div>
+                                        <span asp-validation-for="LastName" class="text-danger small"></span>
+                                    </div>
+                                </div>
+
+                                <div class="col-12">
+                                    <div class="form-premium-group">
+                                        <label asp-for="TcNo" class="form-premium-label">T.C. Kimlik Numarası</label>
+                                        <div class="input-icon-wrapper">
+                                            <i class="bi bi-card-text"></i>
+                                            <input asp-for="TcNo" class="form-premium-control" placeholder="11 Haneli TC Kimlik No" maxlength="11" required />
+                                        </div>
+                                        <span asp-validation-for="TcNo" class="text-danger small"></span>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-premium-group">
+                                        <label asp-for="BirthPlace" class="form-premium-label">Doğum Yeri</label>
+                                        <div class="input-icon-wrapper">
+                                            <i class="bi bi-geo-alt"></i>
+                                            <input asp-for="BirthPlace" class="form-premium-control" placeholder="Şehir" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-premium-group">
+                                        <label asp-for="DateOfBirth" class="form-premium-label">Doğum Tarihi</label>
+                                        <div class="input-icon-wrapper">
+                                            <i class="bi bi-calendar-event"></i>
+                                            <input asp-for="DateOfBirth" type="date" class="form-premium-control" required />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-12">
+                                    <div class="form-premium-group">
+                                        <label asp-for="EducationLevel" class="form-premium-label">Eğitim Durumu</label>
+                                        <div class="input-icon-wrapper">
+                                            <i class="bi bi-mortarboard"></i>
+                                            <select asp-for="EducationLevel" class="form-premium-control" required>
+                                                <option value="">Eğitim Seviyenizi Seçin</option>
+                                                <option value="İlkokul">İlkokul</option>
+                                                <option value="Ortaokul">Ortaokul</option>
+                                                <option value="Lise">Lise</option>
+                                                <option value="Ön Lisans">Ön Lisans</option>
+                                                <option value="Lisans">Lisans</option>
+                                                <option value="Yüksek Lisans">Yüksek Lisans</option>
+                                                <option value="Doktora">Doktora</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div>
-                            <h3 style="font-family: 'Outfit', sans-serif; font-weight: 800; margin: 0; color: var(--text-primary); font-size: 1.3rem;">Kişisel Bilgiler</h3>
-                            <p style="color: var(--text-muted); margin: 0; font-size: 0.85rem;">Lütfen tüm alanları eksiksiz ve T.C. kimliğinize uygun doldurunuz.</p>
+                    </div>
+
+                    <!-- Right Column: Contact & Course Selection -->
+                    <div class="col-md-5">
+                        <div class="row g-4 h-100">
+                            <!-- Contact Section -->
+                            <div class="col-12">
+                                <div class="glass-card-static p-4 animate-fadeInRight" style="border-radius: 25px; border-left: 4px solid var(--gold);">
+                                    <div class="section-header mb-3">
+                                        <h5 class="fw-800 d-flex align-items-center gap-2">
+                                            <i class="bi bi-headset gold-text"></i> İletişim Kanalları
+                                        </h5>
+                                    </div>
+                                    <div class="form-premium-group mb-3">
+                                        <label asp-for="PhoneNumber" class="form-premium-label">Telefon Numarası</label>
+                                        <div class="input-icon-wrapper">
+                                            <i class="bi bi-phone"></i>
+                                            <input asp-for="PhoneNumber" class="form-premium-control" placeholder="05XX XXX XX XX" required />
+                                        </div>
+                                    </div>
+                                    <div class="form-premium-group mb-0">
+                                        <label asp-for="Email" class="form-premium-label">E-Posta Adresi</label>
+                                        <div class="input-icon-wrapper">
+                                            <i class="bi bi-envelope-at"></i>
+                                            <input asp-for="Email" class="form-premium-control" placeholder="eposta@adresiniz.com" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Course Selection & Payment -->
+                            <div class="col-12 flex-grow-1">
+                                <div class="glass-card-static p-4 h-100 animate-fadeInRight delay-200" style="border-radius: 25px; background: rgba(0,0,0,0.15);">
+                                    <div class="section-header mb-4 text-center">
+                                        <h5 class="fw-800 gold-text">KURS & ÖDEME</h5>
+                                        <div class="divider-premium mx-auto" style="width: 50px;"></div>
+                                    </div>
+
+                                    <div class="form-premium-group mb-4">
+                                        <label class="form-premium-label">Seçilen Eğitim</label>
+                                        @if(ViewBag.CourseName != null) {
+                                            <input type="hidden" asp-for="CourseId" />
+                                            <div class="p-3 rounded-12 bg-glass-sm border-glass text-center fw-bold text-white shadow-glow-sm">
+                                                <i class="bi bi-bookmark-star-fill me-2 gold-text"></i> @ViewBag.CourseName
+                                            </div>
+                                        } else {
+                                            <select asp-for="CourseId" class="form-premium-control" asp-items="ViewBag.CourseId" required>
+                                                <option value="">Lütfen Kurs Seçin</option>
+                                            </select>
+                                        }
+                                    </div>
+
+                                    <!-- Halk Point Section -->
+                                    <div class="promo-box p-3 rounded-20 mb-4" style="background: rgba(197, 160, 89, 0.08); border: 1.5px dashed var(--gold);">
+                                        <label class="form-premium-label small mb-2"><i class="bi bi-stars gold-text"></i> Halk Point İndirim Kodu</label>
+                                        <div class="input-group input-group-sm">
+                                            <input asp-for="UsedHalkPointCode" id="pointCodeInput" class="form-control bg-transparent border-gold text-white" placeholder="HP-XXXX-XX" />
+                                            <button type="button" class="btn btn-gold-sm" onclick="verifyPointCode()">UYGULA</button>
+                                        </div>
+                                        <div id="pointCodeStatus" class="x-small mt-2"></div>
+                                    </div>
+
+                                    <!-- Payment Info (Visible if no code) -->
+                                    <div id="paymentDisplay" class="text-center mb-4">
+                                        <div class="price-tag mb-1">Kayıt Ücreti</div>
+                                        <div class="h2 fw-900 gold-text mb-0 price-display-premium">--- ₺</div>
+                                        <small class="text-white-50">Ödeme onay sonrası tahsil edilecektir.</small>
+                                    </div>
+
+                                    <div class="form-check mb-4 x-small">
+                                        <input class="form-check-input" type="checkbox" id="kvkkCheck" required>
+                                        <label class="form-check-label text-white-50" for="kvkkCheck">
+                                            <a href="#" class="gold-text text-decoration-none">KVKK Aydınlatma Metni</a>'ni okudum ve kabul ediyorum.
+                                        </label>
+                                    </div>
+
+                                    <button type="submit" class="btn-vibrant-glow w-100 py-3 rounded-15">
+                                        <i class="bi bi-check2-circle me-2"></i> BAŞVURUYU TAMAMLA
+                                    </button>
+                                    
+                                    <a href="javascript:history.back()" class="d-block text-center mt-3 text-white-50 text-decoration-none small hover-gold">
+                                        <i class="bi bi-arrow-left me-1"></i> Vazgeç ve Dön
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-
-                <div style="padding: 2rem;">
-                    <form asp-action="Create">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-premium-group">
-                                    <label asp-for="FirstName" class="form-premium-label"><i class="bi bi-person me-1"></i>Adınız</label>
-                                    <input asp-for="FirstName" class="form-premium-control" placeholder="Adınızı girin" required />
-                                    <span asp-validation-for="FirstName" class="field-validation-error"></span>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-premium-group">
-                                    <label asp-for="LastName" class="form-premium-label"><i class="bi bi-person me-1"></i>Soyadınız</label>
-                                    <input asp-for="LastName" class="form-premium-control" placeholder="Soyadınızı girin" required />
-                                    <span asp-validation-for="LastName" class="field-validation-error"></span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-premium-group">
-                                    <label asp-for="TcNo" class="form-premium-label"><i class="bi bi-person-vcard me-1"></i>T.C. Kimlik No</label>
-                                    <input asp-for="TcNo" class="form-premium-control" placeholder="11 Haneli TC Giriniz" maxlength="11" required />
-                                    <span asp-validation-for="TcNo" class="field-validation-error"></span>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-premium-group">
-                                    <label asp-for="BirthPlace" class="form-premium-label"><i class="bi bi-geo-alt me-1"></i>Doğum Yeri</label>
-                                    <input asp-for="BirthPlace" class="form-premium-control" placeholder="Örn: Ankara" />
-                                    <span asp-validation-for="BirthPlace" class="field-validation-error"></span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-premium-group">
-                                    <label asp-for="PhoneNumber" class="form-premium-label"><i class="bi bi-telephone me-1"></i>Telefon</label>
-                                    <input asp-for="PhoneNumber" class="form-premium-control" placeholder="05XX XXX XX XX" required />
-                                    <span asp-validation-for="PhoneNumber" class="field-validation-error"></span>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-premium-group">
-                                    <label asp-for="Email" class="form-premium-label"><i class="bi bi-envelope me-1"></i>E-posta (Zorunlu Değil)</label>
-                                    <input asp-for="Email" class="form-premium-control" placeholder="ornek@email.com" />
-                                    <span asp-validation-for="Email" class="field-validation-error"></span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-premium-group">
-                                    <label asp-for="DateOfBirth" class="form-premium-label"><i class="bi bi-calendar-date me-1"></i>Doğum Tarihi</label>
-                                    <input asp-for="DateOfBirth" type="date" class="form-premium-control" required />
-                                    <span asp-validation-for="DateOfBirth" class="field-validation-error"></span>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-premium-group">
-                                    <label asp-for="EducationLevel" class="form-premium-label"><i class="bi bi-mortarboard me-1"></i>Eğitim Durumu</label>
-                                    <select asp-for="EducationLevel" class="form-premium-control" required>
-                                        <option value="">-- Seçiniz --</option>
-                                        <option value="İlkokul">İlkokul</option>
-                                        <option value="Ortaokul">Ortaokul</option>
-                                        <option value="Lise">Lise</option>
-                                        <option value="Ön Lisans">Ön Lisans</option>
-                                        <option value="Lisans">Lisans</option>
-                                        <option value="Yüksek Lisans">Yüksek Lisans</option>
-                                        <option value="Doktora">Doktora</option>
-                                    </select>
-                                    <span asp-validation-for="EducationLevel" class="field-validation-error"></span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-premium-group">
-                            <label asp-for="CourseId" class="form-premium-label">
-                                <i class="bi bi-journal-bookmark me-1"></i>Kurs Seçimi
-                            </label>
-                            @if(ViewBag.CourseName != null) {
-                                <input type="hidden" asp-for="CourseId" />
-                                <input type="text" class="form-premium-control" value="@ViewBag.CourseName" readonly style="color: var(--text-primary);" />
-                            }
-                            else {
-                                <select asp-for="CourseId" class="form-premium-control" asp-items="ViewBag.CourseId" required>
-                                    <option value="">-- Lütfen Başvurmak İstediğiniz Kursu Seçin --</option>
-                                </select>
-                                <span asp-validation-for="CourseId" class="field-validation-error"></span>
-                            }
-                        </div>
-
-                        <!-- Bilgilendirme Notu -->
-                        <div class="mt-4 p-3 rounded-3" style="background: rgba(99,102,241,0.05); border: 1px solid rgba(99,102,241,0.1);">
-                            <p class="mb-0 small text-muted">
-                                <i class="bi bi-info-circle-fill me-2 text-primary"></i>
-                                Başvurunuz alındıktan sonra müdürlüğümüz tarafından incelenecek ve onaylandığında size bildirim gönderilecektir. 
-                                <strong>Ücret ödemesi başvurunuz onaylandıktan sonra gerçekleştirilecektir.</strong>
-                            </p>
-                        </div>
-
-                        <!-- HALK POINT DISCOUNT CODE -->
-                        <div class="form-premium-group mt-3">
-                            <label asp-for="DiscountCode" class="form-premium-label">
-                                <i class="bi bi-ticket-perforated me-1"></i>Halk Point İndirim Kodu
-                            </label>
-                            <input asp-for="DiscountCode" class="form-premium-control" placeholder="Varsa indirim kodunuzu giriniz" />
-                            <div class="mt-2 p-3 rounded-20" style="background: rgba(197, 160, 89, 0.1); border: 1px solid rgba(197, 160, 89, 0.2);">
-                                <p class="small mb-0" style="color: #C5A059;">
-                                    <i class="bi bi-info-square-fill me-2"></i>
-                                    <strong>NOT:</strong> Bu alan, Halk Point sisteminde biriktirdiğiniz puanlarla kazandığınız "Ücretsiz Kurs" kodları içindir. 
-                                    Geçerli bir kod girdiğinizde, başvurunuz onaylandığında ücret talep edilmeyecektir.
-                                </p>
-                            </div>
-                        </div>
-
-                        <hr class="divider-premium" />
-
-                        <div class="d-flex gap-3 mt-4">
-                            <button type="button" onclick="history.back()" class="btn btn-premium btn-secondary-glass w-100 justify-content-center">
-                                <i class="bi bi-arrow-left"></i> Vazgeç
-                            </button>
-                            <button type="submit" class="btn btn-premium w-100 justify-content-center" style="background: var(--gradient-warm); box-shadow: 0 4px 20px rgba(245,158,11,0.4); color: white; border: none;">
-                                <i class="bi bi-send-fill text-white"></i> Başvuruyu Tamamla
-                            </button>
-                        </div>
-                    </form>
-                </div>
-
-                <div style="padding: 1rem 2rem; border-top: 1px solid var(--border-glass); text-align: center;">
-                    <p style="color: var(--text-muted); font-size: 0.82rem; margin: 0;">
-                        <i class="bi bi-shield-check me-1" style="color: var(--success);"></i>
-                        Kişisel verileriniz KVKK kapsamında korunmaktadır.
-                    </p>
-                </div>
-            </div>
+            </form>
         </div>
     </div>
 </div>
@@ -182,20 +222,129 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     <script>
+        function verifyPointCode() {
+            var code = $('#pointCodeInput').val();
+            var courseId = $('#CourseId').val();
+            var statusEl = $('#pointCodeStatus');
+            var submitBtn = $('button[type="submit"]');
+
+            if (!code) {
+                Swal.fire({ title: 'Hata', text: 'Lütfen bir kod girin.', icon: 'warning', background: '#1e1e2d', color: '#fff' });
+                return;
+            }
+
+            statusEl.html('<i class="bi bi-hourglass-split animate-spin"></i> Doğrulanıyor...').css('color', '#C5A059');
+
+            $.post('/Applications/VerifyPromoCode', { code: code, courseId: courseId }, function(data) {
+                if (data.success) {
+                    statusEl.html('<i class="bi bi-check-circle-fill"></i> ' + data.message).css('color', '#10B981');
+                    $('#pointCodeInput').addClass('is-valid').prop('readonly', true);
+                    
+                    // Update price display
+                    $('.price-display-premium').html('<span class="text-decoration-line-through text-white-50 small me-2">' + $('.price-display-premium').text() + '</span> 0.00 ₺');
+                    
+                    submitBtn.html('<i class="bi bi-star-fill me-2"></i> ÜCRETSİZ KAYDI TAMAMLA')
+                             .css('background', 'linear-gradient(135deg, #10B981, #059669)')
+                             .css('box-shadow', '0 10px 30px rgba(16, 185, 129, 0.4)');
+                    
+                    Swal.fire({ title: 'Tebrikler!', text: 'Kodunuz onaylandı. Ücretsiz kayıt hakkı kazandınız!', icon: 'success', background: '#1a1a2e', color: '#fff' });
+                } else {
+                    statusEl.html('<i class="bi bi-x-circle-fill"></i> ' + data.message).css('color', '#EF4444');
+                    Swal.fire({ title: 'Geçersiz Kod', text: data.message, icon: 'error', background: '#1a1a2e', color: '#fff' });
+                }
+            });
+        }
+
         $(document).ready(function() {
-            $('#CourseId').on('change', function() {
-                var selectedId = $(this).val();
+            function updatePrice() {
+                var selectedId = $('#CourseId').val();
                 if (selectedId) {
                     $.get('/Applications/GetCoursePrice/' + selectedId, function(data) {
                         var price = parseFloat(data);
-                        if (isNaN(price) || price <= 0) price = 750; // JavaScript Seviyesinde Koruma
+                        if (isNaN(price) || price <= 0) price = 0;
                         var formattedPrice = price.toLocaleString('tr-TR', { minimumFractionDigits: 2 });
                         $('.price-display-premium').text(formattedPrice + ' ₺');
                     });
                 } else {
-                    $('.price-display-premium').text('0,00 ₺');
+                    $('.price-display-premium').text('--- ₺');
                 }
-            });
+            }
+
+            $('#CourseId').on('change', updatePrice);
+            updatePrice(); // Initial call
         });
     </script>
+    <style>
+        /* Premium Styles for Application Form */
+        .application-premium-form .form-premium-label {
+            font-size: 0.75rem;
+            color: var(--theme-text-muted);
+            margin-left: 5px;
+            font-weight: 800;
+        }
+
+        .input-icon-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-icon-wrapper i {
+            position: absolute;
+            left: 15px;
+            color: var(--gold);
+            font-size: 1.1rem;
+            opacity: 0.6;
+            transition: all 0.3s;
+        }
+
+        .input-icon-wrapper .form-premium-control {
+            padding-left: 45px !important;
+        }
+
+        .input-icon-wrapper:focus-within i {
+            opacity: 1;
+            transform: scale(1.1);
+        }
+
+        .step-dot { width: 12px; height: 12px; border-radius: 50%; background: rgba(255,255,255,0.2); }
+        .step-dot.active { background: var(--gold); box-shadow: 0 0 10px var(--gold); }
+        .step-line { width: 40px; height: 2px; background: rgba(255,255,255,0.1); }
+        
+        .accent-line { width: 40px; height: 4px; background: var(--gold); border-radius: 2px; margin-top: 5px; }
+        
+        .price-tag { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px; color: var(--gold); font-weight: 700; }
+        
+        .btn-gold-sm { background: var(--gold); color: #581C1C; font-weight: 800; font-size: 0.75rem; border: none; padding: 0 15px; }
+        .btn-gold-sm:hover { filter: brightness(1.1); color: #581C1C; }
+        
+        .rounded-12 { border-radius: 12px; }
+        .rounded-15 { border-radius: 15px; }
+        .rounded-20 { border-radius: 20px; }
+        
+        .bg-glass-sm { background: rgba(255,255,255,0.05); backdrop-filter: blur(5px); }
+        .border-glass { border: 1px solid rgba(255,255,255,0.1); }
+        
+        .hover-gold:hover { color: var(--gold) !important; }
+
+        /* Light Mode Fixes */
+        [data-theme="light"] .application-premium-form .form-premium-control {
+            background: rgba(88, 28, 28, 0.03) !important;
+            border-color: rgba(88, 28, 28, 0.1) !important;
+            color: #581C1C !important;
+        }
+        [data-theme="light"] .glass-card-static {
+            background: #fff !important;
+            box-shadow: 0 10px 30px rgba(88, 28, 28, 0.05) !important;
+        }
+        [data-theme="light"] .promo-box {
+            background: rgba(197, 160, 89, 0.05) !important;
+        }
+        [data-theme="light"] .input-icon-wrapper i {
+            color: #581C1C;
+        }
+        [data-theme="light"] .text-white-50 {
+            color: rgba(88, 28, 28, 0.6) !important;
+        }
+    </style>
 }

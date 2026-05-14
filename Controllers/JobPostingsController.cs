@@ -23,6 +23,18 @@ namespace HalkEgitimSistemi.Controllers
                 .Where(j => j.IsActive && (j.Deadline == null || j.Deadline >= DateTime.Now))
                 .OrderByDescending(j => j.CreatedAt)
                 .ToListAsync();
+
+            if (!jobs.Any())
+            {
+                jobs = new List<JobPosting>
+                {
+                    new JobPosting { Id = -1, Title = "Mobilya Tasarım Ustası", CompanyName = "Artvin Ahşap Dünyası", Location = "Artvin Merkez", SalaryRange = "35.000₺ - 45.000₺", RequiredCategory = "ZANAAT", Description = "Artvin merkezdeki atölyemizde çalışacak deneyimli mobilya ustaları aranıyor.", CreatedAt = DateTime.Now.AddDays(-2), JobType = "Tam Zamanlı" },
+                    new JobPosting { Id = -2, Title = "Full Stack Web Geliştirici", CompanyName = "Borçka Yazılım", Location = "Borçka", SalaryRange = "45.000₺ - 65.000₺", RequiredCategory = "YAZILIM", Description = "Borçka dijital kampüs projemizde yer alacak yazılımcılar arıyoruz.", CreatedAt = DateTime.Now.AddDays(-1), JobType = "Uzaktan / Hibrit" },
+                    new JobPosting { Id = -3, Title = "Balistik ve Arıcılık Teknikeri", CompanyName = "Arhavi Doğal Üretim", Location = "Arhavi", SalaryRange = "28.000₺ - 38.000₺", RequiredCategory = "TARIM", Description = "Modern arıcılık teknikleri konusunda uzman kursiyerlerimiz için iş fırsatı.", CreatedAt = DateTime.Now.AddDays(-3), JobType = "Tam Zamanlı" },
+                    new JobPosting { Id = -4, Title = "Turizm ve Doğa Rehberi", CompanyName = "Şavşat Turizm", Location = "Şavşat", SalaryRange = "30.000₺ - 42.000₺", RequiredCategory = "TURİZM", Description = "Şavşat Karagöl çevresinde yabancı turistlere rehberlik edecek çalışma arkadaşları.", CreatedAt = DateTime.Now.AddDays(-5), JobType = "Proje Bazlı" },
+                    new JobPosting { Id = -5, Title = "Ön Muhasebe Elemanı", CompanyName = "Hopa Lojistik", Location = "Hopa", SalaryRange = "22.000₺ - 28.000₺", RequiredCategory = "FİNANS", Description = "Hopa liman bölgesindeki ofisimizde görevlendirilmek üzere muhasebe bilgisi olan eleman aranıyor.", CreatedAt = DateTime.Now.AddDays(-4), JobType = "Tam Zamanlı" }
+                };
+            }
             return View(jobs);
         }
 

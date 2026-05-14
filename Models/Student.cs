@@ -54,6 +54,8 @@ namespace HalkEgitimSistemi.Models
         public int TotalMatches { get; set; } = 0; // Toplam katıldığı yarışma
         public string? Badges { get; set; } // "MEB, Onur, Lider" vb.
         public string? PortfolioUrl { get; set; }
+        public string? LinkedInUrl { get; set; }
+        public string? GithubUrl { get; set; }
         public bool IsSpotlight { get; set; } = false; // Haftanın yeteneği mi?
         public bool IsAvailableForWork { get; set; } = true; // Hemen işe başlayabilir mi?
         public bool IsVerified { get; set; } = false; // Güvenlik doğrulaması yapıldı mı?

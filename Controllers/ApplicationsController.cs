@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
+using Microsoft.AspNetCore.SignalR;
 
 namespace HalkEgitimSistemi.Controllers
 {
@@ -11,11 +13,13 @@ namespace HalkEgitimSistemi.Controllers
     {
         private readonly AppDbContext _context;
         private readonly Services.IEmailService _emailService;
+        private readonly Microsoft.AspNetCore.SignalR.IHubContext<Hubs.AdminHub> _adminHubContext;
 
-        public ApplicationsController(AppDbContext context, Services.IEmailService emailService)
+        public ApplicationsController(AppDbContext context, Services.IEmailService emailService, Microsoft.AspNetCore.SignalR.IHubContext<Hubs.AdminHub> adminHubContext)
         {
             _context = context;
             _emailService = emailService;
+            _adminHubContext = adminHubContext;
         }
 
         // 🔴 SADECE MÜDÜR: Gelen başvuruları listeler
@@ -109,12 +113,28 @@ namespace HalkEgitimSistemi.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> GetCoursePrice(int id)
         {
-            var course = await _context.Courses.FindAsync(id);
-            if (course == null) return NotFound();
+            var course = await _context.Courses.AsNoTracking().FirstOrDefaultAsync(c => c.Id == id);
+            if (course == null) return Json(0);
             
-            // Fail-safe: Eğer fiyatta bir hata varsa veya 0 ise varsayılan 750 TL dön
-            var price = course.Price > 0 ? course.Price : 750;
-            return Ok(price);
+            return Json(course.Price);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> VerifyPromoCode(string code, int courseId)
+        {
+            if (string.IsNullOrEmpty(code)) return Json(new { success = false, message = "Kod boş olamaz." });
+
+            var studentIdStr = User.FindFirst("StudentId")?.Value;
+            if (!int.TryParse(studentIdStr, out var sid))
+                return Json(new { success = false, message = "Lütfen öğrenci girişi yapın." });
+
+            var promo = await _context.PromoCodes
+                .FirstOrDefaultAsync(p => p.Code == code && p.CourseId == courseId && !p.IsUsed && p.StudentId == sid);
+
+            if (promo == null) return Json(new { success = false, message = "Geçersiz veya kullanılmış kod." });
+
+            return Json(new { success = true, message = "Halk Point kodunuz geçerli! Ücret sıfırlandı." });
         }
 
         // 🟢 ÖĞRENCİYE ÖZEL: Kayıt Formu Ekranı
@@ -211,20 +231,36 @@ namespace HalkEgitimSistemi.Controllers
                             application.Email = student.Email;
                             application.PhoneNumber = student.PhoneNumber ?? application.PhoneNumber;
 
-                            // HALK POINT KOD KONTROLÜ
-                            if (!string.IsNullOrEmpty(application.DiscountCode) && application.DiscountCode.Trim().ToUpper() == "HALK2026-FREE")
+                            // HALK POINT KOD KONTROLÜ (GELİŞMİŞ)
+                            if (!string.IsNullOrEmpty(application.UsedHalkPointCode))
                             {
-                                if (student.Points >= 500)
+                                var promo = await _context.PromoCodes
+                                    .FirstOrDefaultAsync(p => p.Code == application.UsedHalkPointCode && p.CourseId == application.CourseId && !p.IsUsed && p.StudentId == studentId);
+                                
+                                if (promo != null)
                                 {
                                     application.IsPaid = true;
+                                    application.PaymentType = "Puan";
                                     application.PaymentMethod = "Halk Point (Ücretsiz Kurs)";
-                                    application.TransactionId = "HP-" + Guid.NewGuid().ToString("N").Substring(0, 8).ToUpper();
+                                    application.TransactionId = "HP-" + application.UsedHalkPointCode;
+                                    
+                                    promo.IsUsed = true;
+                                    promo.UsedAt = DateTime.Now;
+
+                                    // HP_Kodlar Tablosunu da Güncelle
+                                    var hpCode = await _context.HalkPointCodes.FirstOrDefaultAsync(h => h.GeneratedCode == application.UsedHalkPointCode);
+                                    if (hpCode != null) hpCode.IsUsed = true;
+                                    
+                                    // SignalR: Admin Paneline Bildirim Gönder
+                                    string notifyMsg = $"{student.FirstName} {student.LastName}, Halk Point kullanarak '{course?.CourseName}' kursuna başarıyla kayıt oldu!";
+                                    await _adminHubContext.Clients.Group("Admins").SendAsync("ReceiveNotification", notifyMsg);
+                                    
                                     TempData["Success"] = "Tebrikler! Halk Point kodunuzla kursunuz ücretsiz hale getirildi.";
                                 }
                                 else
                                 {
-                                    TempData["Warning"] = "Halk Point kodunuz geçerli ancak yeterli puanınız (500) bulunmamaktadır.";
-                                    application.DiscountCode = null; // Geçersiz kıl
+                                    TempData["Warning"] = "Halk Point kodunuz geçersiz, süresi dolmuş veya zaten kullanılmış.";
+                                    application.UsedHalkPointCode = null;
                                 }
                             }
                         }
@@ -402,4 +438,4 @@ namespace HalkEgitimSistemi.Controllers
             return RedirectToAction("MyCourses", "Student");
         }
     }
-}
+}

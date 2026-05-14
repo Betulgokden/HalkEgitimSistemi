@@ -1,4 +1,4 @@
-﻿@model IEnumerable<HalkEgitimSistemi.Models.Application>
+@model IEnumerable<HalkEgitimSistemi.Models.Application>
 
 @{
     ViewData["Title"] = "Başvuru Yönetimi";
@@ -110,6 +110,14 @@
                                 else
                                 {
                                     <span class="badge-premium badge-danger"><i class="bi bi-x-circle-fill"></i> Reddedildi</span>
+                                }
+                                @if (item.PaymentType == "Puan")
+                                {
+                                    <div class="mt-1">
+                                        <span class="badge bg-gold-glass text-gold x-small" style="font-size: 0.65rem;">
+                                            <i class="bi bi-star-fill me-1"></i> Puan ile Kayıt
+                                        </span>
+                                    </div>
                                 }
                             </td>
                             <td class="text-end" style="padding-right: 1.5rem;">

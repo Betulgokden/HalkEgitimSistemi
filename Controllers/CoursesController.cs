@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using HalkEgitimSistemi.Data;
 using HalkEgitimSistemi.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Caching.Memory;
+using System.Security.Claims;
 
 namespace HalkEgitimSistemi.Controllers
 {
@@ -15,11 +17,13 @@ namespace HalkEgitimSistemi.Controllers
     {
         private readonly AppDbContext _context;
         private readonly Services.IAuditService _auditService;
+        private readonly IMemoryCache _cache;
 
-        public CoursesController(AppDbContext context, Services.IAuditService auditService)
+        public CoursesController(AppDbContext context, Services.IAuditService auditService, IMemoryCache cache)
         {
             _context = context;
             _auditService = auditService;
+            _cache = cache;
         }
 
         // GET: Courses (Admin - Tablo Görünümü)
@@ -48,15 +52,31 @@ namespace HalkEgitimSistemi.Controllers
             if (!string.IsNullOrEmpty(search))
                 query = query.Where(c => c.CourseName.Contains(search) || c.Description.Contains(search));
 
-            ViewBag.Categories = await _context.Categories
-                .AsNoTracking()
-                .Include(c => c.Courses)
-                .ToListAsync();
+            string cacheKey = $"Browse_Cat{categoryId}_Search{search}";
+            if (!_cache.TryGetValue(cacheKey, out object? dbCoursesObj))
+            {
+                var dbCoursesList = await query.OrderBy(c => c.CourseName).ToListAsync();
+                _cache.Set(cacheKey, dbCoursesList, TimeSpan.FromMinutes(10));
+                dbCoursesObj = dbCoursesList;
+            }
+            var dbCourses = (List<Course>)dbCoursesObj!;
+
+            string catCacheKey = "AllCategories";
+            if (!_cache.TryGetValue(catCacheKey, out object? categoriesObj))
+            {
+                var categoriesList = await _context.Categories
+                    .AsNoTracking()
+                    .Include(c => c.Courses)
+                    .ToListAsync();
+                _cache.Set(catCacheKey, categoriesList, TimeSpan.FromMinutes(30));
+                categoriesObj = categoriesList;
+            }
+            var categories = (List<Category>)categoriesObj!;
+
+            ViewBag.Categories = categories;
             ViewBag.CurrentCategory = categoryId;
             ViewBag.CurrentSearch = search;
             ViewBag.TotalCourses = await _context.Courses.AsNoTracking().CountAsync(c => c.IsActive && !c.IsDeleted);
-
-            var dbCourses = await query.OrderBy(c => c.CourseName).ToListAsync();
 
             // Mock Courses to "multiply" the catalog
             var mockCourses = new List<Course>
@@ -286,6 +306,51 @@ namespace HalkEgitimSistemi.Controllers
                 return RedirectToAction(nameof(ManageResources), new { id = courseId });
             }
             return NotFound();
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> UnlockWithPoints(int id)
+        {
+            var userEmail = User.FindFirst(ClaimTypes.Email)?.Value;
+            var student = await _context.Students.FirstOrDefaultAsync(s => s.Email == userEmail);
+            var course = await _context.Courses.FindAsync(id);
+
+            if (student == null || course == null) return Json(new { success = false, message = "Kayıt bulunamadı." });
+
+            int pointCost = 500; // Kullanıcının istediği maliyet
+
+            if (student.Points < pointCost)
+                return Json(new { success = false, message = $"Yetersiz puan. Gerekli: {pointCost}, Mevcut: {student.Points}" });
+
+            // Benzersiz Kod Üretimi: HP-A24B-99
+            string randomPart = Guid.NewGuid().ToString().Substring(0, 4).ToUpper();
+            string code = $"HP-{randomPart}-{new Random().Next(10, 99)}";
+
+            // HP_Kodlar Tablosuna Kayıt
+            var hpCode = new HalkPointCode
+            {
+                UserId = student.Id,
+                CourseId = id,
+                GeneratedCode = code,
+                IsUsed = false
+            };
+
+            // PromoCode tablosuna da uyumluluk için ekleyelim
+            var promoCode = new PromoCode
+            {
+                Code = code,
+                CourseId = id,
+                StudentId = student.Id,
+                PointCost = pointCost
+            };
+
+            student.Points -= pointCost;
+            _context.HalkPointCodes.Add(hpCode);
+            _context.PromoCodes.Add(promoCode);
+            await _context.SaveChangesAsync();
+
+            return Json(new { success = true, code = code, message = "Başarı Kilidi Açıldı! Kodunuzu ödeme ekranında kullanabilirsiniz." });
         }
 
         private bool CourseExists(int id)

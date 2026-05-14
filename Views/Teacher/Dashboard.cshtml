@@ -10,13 +10,20 @@
 
     @if (TempData["Success"] != null)
     {
-        <div class="alert animate-fadeIn mb-4" style="background: rgba(16,185,129,0.1); color: var(--success); border: 1px solid rgba(16,185,129,0.2); border-radius: var(--radius-md); padding: 1rem 1.5rem;">
+        <div class="alert animate-fadeIn mb-4" style="background: rgba(16,185,129,0.1); color: #10b981; border: 1px solid rgba(16,185,129,0.2); border-radius: var(--radius-md); padding: 1rem 1.5rem;">
             <i class="bi bi-check-circle-fill me-2"></i> @TempData["Success"]
         </div>
     }
 
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert animate-fadeIn mb-4" style="background: rgba(239,68,68,0.1); color: #ef4444; border: 1px solid rgba(239,68,68,0.2); border-radius: var(--radius-md); padding: 1rem 1.5rem;">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i> @TempData["Error"]
+        </div>
+    }
+
     <!-- Header -->
-    <div class="glass-card-static p-4 mb-4 animate-fadeInUp">
+    <div class="glass-card-static p-4 mb-4 animate-fadeInUp shadow-glow-sm">
         <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
             <div>
                 <h2 class="section-title mb-1" style="font-family: 'Outfit';">
@@ -24,29 +31,29 @@
                 </h2>
                 <p class="mb-0" style="color: var(--text-muted);">
                     <i class="bi bi-book me-1"></i>Sorumlu kursunuz:
-                    <span class="badge-premium badge-primary" style="font-size: 0.95rem;">@ViewBag.CourseName</span>
+                    <span class="badge-premium badge-primary" style="font-size: 0.95rem; background: rgba(197, 160, 89, 0.2); color: #C5A059 !important; border: 1px solid rgba(197, 160, 89, 0.3);">@ViewBag.CourseName</span>
                 </p>
             </div>
             <div class="d-flex gap-2 flex-wrap">
                 <a asp-controller="TeacherChat" asp-action="Index"
-                   class="btn btn-premium btn-primary-glow">
+                   class="btn btn-premium btn-primary-glow" style="background: linear-gradient(135deg, #6366f1 0%, #4338ca 100%) !important; border: 1px solid rgba(255,255,255,0.2) !important; box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4) !important;">
                     <i class="bi bi-people-fill me-1"></i> Öğretmen Odası
                 </a>
                 @if (course != null)
                 {
                     <a asp-controller="CourseChat" asp-action="Index" asp-route-courseId="@course.Id"
-                       class="btn btn-premium btn-warning-glow">
+                       class="btn btn-premium btn-warning-glow" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important; border: 1px solid rgba(255,255,255,0.2) !important; box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4) !important;">
                         <i class="bi bi-chat-dots-fill me-1"></i> Sınıf Sohbeti
                     </a>
                 }
                 <a asp-action="Attendance"
-                   class="btn btn-premium btn-success-glow">
+                   class="btn btn-premium btn-success-glow" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important; border: 1px solid rgba(255,255,255,0.2) !important; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4) !important;">
                     <i class="bi bi-calendar-check-fill me-1"></i> Yoklama Al
                 </a>
-                <a asp-action="EditCourse" class="btn btn-premium btn-primary-glow">
+                <a asp-action="EditCourse" class="btn btn-premium btn-info-glow" style="background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%) !important; border: 1px solid rgba(255,255,255,0.2) !important; box-shadow: 0 4px 15px rgba(14, 165, 233, 0.4) !important;">
                     <i class="bi bi-gear-fill me-1"></i> Kurs Düzenle
                 </a>
-                <a asp-action="MyProfile" class="btn btn-premium btn-warning-glow">
+                <a asp-action="MyProfile" class="btn btn-premium btn-warning-glow" style="background: linear-gradient(135deg, #ec4899 0%, #db2777 100%) !important; border: 1px solid rgba(255,255,255,0.2) !important; box-shadow: 0 4px 15px rgba(236, 72, 153, 0.4) !important;">
                     <i class="bi bi-person-circle me-1"></i> Profilim
                 </a>
             </div>
@@ -381,7 +388,7 @@
                     <tbody style="background: transparent !important;">
                         @foreach (var item in Model)
                         {
-                            <tr class="align-middle border-bottom border-white-5 transition-all hover-bg-glass" style="background: transparent !important;">
+                            <tr class="align-middle border-bottom border-white-5 transition-all hover-bg-glass" style="background: rgba(255,255,255,0.03) !important; color: white !important;">
                                 <td class="ps-4 py-3">
                                     <div class="d-flex align-items-center gap-3">
                                         <div class="avatar-sm rounded-circle d-flex align-items-center justify-content-center" style="width:40px; height:40px; background: rgba(197, 160, 89, 0.1); border: 1px solid rgba(197, 160, 89, 0.2);">
@@ -497,7 +504,7 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
 
-                    <form method="post" action="/Teacher/UpdateStudentStatus">
+                    <form asp-action="UpdateStudentStatus" method="post">
                         @Html.AntiForgeryToken()
                         <input type="hidden" name="id" value="@item.Id" />
 
@@ -591,7 +598,7 @@
                                     <i class="bi bi-trash me-1"></i>Öğrenciyi Sil
                                 </button>
                             </div>
-                            <button type="button" class="btn btn-premium btn-secondary-glass" data-bs-modal-dismiss="modal" data-bs-dismiss="modal">
+                            <button type="button" class="btn btn-premium btn-secondary-glass" data-bs-dismiss="modal">
                                 <i class="bi bi-x-lg me-1"></i>Vazgeç
                             </button>
                             <button type="submit" class="btn btn-premium btn-primary-glow">
@@ -609,6 +616,13 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
 document.querySelectorAll('.status-choice-btn input[type="radio"]').forEach(function(radio) {
+    if (radio.checked) {
+        var parent = radio.closest('.status-choice-btn');
+        var val = radio.value;
+        if (val === 'Approved') parent.classList.add('active-approve');
+        else if (val === 'Pending') parent.classList.add('active-pending');
+        else if (val === 'Rejected') parent.classList.add('active-reject');
+    }
     radio.addEventListener('change', function() {
         var group = this.closest('.d-flex');
         group.querySelectorAll('.status-choice-btn').forEach(function(btn) {
@@ -686,14 +700,18 @@ function toggleLive(start) {
                 if (data.success) {
                     Swal.fire({
                         title: 'Başarılı!',
-                        text: `Canlı yayın başarıyla ${start ? 'başlatıldı' : 'durduruldu'}.`,
+                        text: `Canlı yayın başarıyla ${start ? 'başlatıldı. Sınıfa yönlendiriliyorsunuz...' : 'durduruldu.'}`,
                         icon: 'success',
-                        timer: 1500,
+                        timer: 2000,
                         showConfirmButton: false,
                         background: 'rgba(15, 23, 42, 0.95)',
                         color: '#fff'
                     }).then(() => {
-                        location.reload();
+                        if (start && data.roomId) {
+                            window.location.href = '/LiveLesson/Room?roomId=' + data.roomId;
+                        } else {
+                            location.reload();
+                        }
                     });
                 }
             });
@@ -716,6 +734,34 @@ function toggleLive(start) {
         0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
         70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
         100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+    }
+
+    /* Dark Mode Table Fixes */
+    [data-theme="dark"] .table-premium tbody tr {
+        background: rgba(30, 41, 59, 0.4) !important;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+    }
+    [data-theme="dark"] .table-premium tbody tr:hover {
+        background: rgba(197, 160, 89, 0.08) !important;
+    }
+    [data-theme="dark"] .table-premium td, 
+    [data-theme="dark"] .table-premium td div, 
+    [data-theme="dark"] .table-premium td span:not(.badge-modern) {
+        color: rgba(255, 255, 255, 0.9) !important;
+    }
+    [data-theme="dark"] .text-white-50 {
+        color: rgba(255, 255, 255, 0.5) !important;
+    }
+    [data-theme="dark"] .hover-bg-glass:hover {
+        background: rgba(197, 160, 89, 0.1) !important;
+    }
+    
+    /* Global table row fix for dark mode */
+    [data-theme="dark"] .glass-card-static table tr {
+        background-color: transparent !important;
+    }
+    [data-theme="dark"] .glass-card-static .table-responsive {
+        background: transparent !important;
     }
 </style>
 }

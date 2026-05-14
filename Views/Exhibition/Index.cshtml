@@ -15,8 +15,8 @@
             Eserleri 3D odalarda inceleyin, videolarını izleyin ve el emeğine destek olun.
         </p>
         <div class="d-flex justify-content-center gap-3 mt-4 flex-wrap">
-            <a asp-action="Virtual" class="btn btn-premium btn-primary-glow btn-lg px-5 py-3">
-                <i class="bi bi-box-fill me-2"></i> 3D SANAL SERGİYE GİR
+            <a asp-action="Virtual" class="btn btn-premium btn-primary-glow btn-lg px-5 py-3" style="border: 2px solid #C5A059 !important; box-shadow: 0 0 20px rgba(197, 160, 89, 0.4) !important;">
+                <i class="bi bi-box-fill me-2" style="color: #C5A059;"></i> <span style="background: linear-gradient(135deg, #FFD700, #C5A059); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 900;">3D SANAL SERGİYE GİR</span>
             </a>
             @if (User.IsInRole("Admin") || User.IsInRole("Instructor"))
             {

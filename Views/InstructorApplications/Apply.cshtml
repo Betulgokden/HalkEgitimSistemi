@@ -12,15 +12,15 @@
                 <!-- Progress Stepper -->
                 <div class="stepper-wrapper mb-5">
                     <div class="stepper-item active" id="step1-header">
-                        <div class="step-counter">1</div>
-                        <div class="step-name">Kimlik & İletişim</div>
+                        <div class="step-counter" style="border-radius: 12px !important; width: 60px; height: 60px; background: linear-gradient(135deg, #FFD700, #C5A059); color: #581C1C; font-size: 1.4rem; box-shadow: 0 0 15px rgba(197, 160, 89, 0.5);">1</div>
+                        <div class="step-name" style="color: #C5A059; font-weight: 900;">Kimlik & İletişim</div>
                     </div>
                     <div class="stepper-item" id="step2-header">
-                        <div class="step-counter">2</div>
+                        <div class="step-counter" style="border-radius: 12px !important; width: 60px; height: 60px; background: rgba(197, 160, 89, 0.1); border: 2px solid #C5A059; color: #C5A059;">2</div>
                         <div class="step-name">Uzmanlık & Müsaitlik</div>
                     </div>
                     <div class="stepper-item" id="step3-header">
-                        <div class="step-counter">3</div>
+                        <div class="step-counter" style="border-radius: 12px !important; width: 60px; height: 60px; background: rgba(197, 160, 89, 0.1); border: 2px solid #C5A059; color: #C5A059;">3</div>
                         <div class="step-name">Belge Yükleme</div>
                     </div>
                 </div>
@@ -417,21 +417,47 @@
     }
     
     .bg-glass-input {
-        background: rgba(15, 23, 42, 0.8) !important;
-        border: 1px solid rgba(255, 255, 255, 0.15) !important;
-        color: white !important;
+        background: rgba(197, 160, 89, 0.03) !important;
+        border: 2px solid #C5A059 !important;
+        color: #581C1C !important;
         padding: 15px 20px !important;
         border-radius: 15px !important;
+        font-weight: 600 !important;
+        transition: all 0.3s ease !important;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.05) !important;
+    }
+    [data-theme="dark"] .bg-glass-input {
+        background: rgba(15, 23, 42, 0.8) !important;
+        color: white !important;
+        border-color: rgba(197, 160, 89, 0.5) !important;
     }
     .bg-glass-input::placeholder {
-        color: rgba(255, 255, 255, 0.5) !important;
-        font-weight: 400;
+        color: rgba(88, 28, 28, 0.6) !important;
+        font-weight: 500;
+    }
+    [data-theme="dark"] .bg-glass-input::placeholder {
+        color: rgba(255, 255, 255, 0.4) !important;
     }
     .bg-glass-input:focus {
-        background: rgba(15, 23, 42, 1) !important;
-        border-color: #C5A059 !important;
+        background: white !important;
+        border-color: #581C1C !important;
+        color: #581C1C !important;
+        box-shadow: 0 0 25px rgba(197, 160, 89, 0.4) !important;
+        transform: translateY(-2px);
+    }
+    [data-theme="dark"] .bg-glass-input:focus {
+        background: #0f172a !important;
+        border-color: #FFD700 !important;
         color: white !important;
-        box-shadow: 0 0 20px rgba(197, 160, 89, 0.3) !important;
+    }
+
+    .form-label.text-primary-theme {
+        color: #581C1C !important;
+        font-size: 0.9rem !important;
+        letter-spacing: 0.5px;
+    }
+    [data-theme="dark"] .form-label.text-primary-theme {
+        color: #C5A059 !important;
     }
 
     /* Step Button Overrides */

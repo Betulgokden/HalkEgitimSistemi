@@ -144,7 +144,7 @@ namespace HalkEgitimSistemi.Controllers
                     var ownerStudent = await _context.Students.AsNoTracking().FirstOrDefaultAsync(s => s.Id == 99);
                     if (ownerStudent != null)
                     {
-                        return await DoSignIn(ownerStudent.FirstName + " " + ownerStudent.LastName, "Student", null, null, ownerStudent.Email, ownerStudent.Id, null);
+                        return await DoSignIn(ownerStudent.FirstName + " " + ownerStudent.LastName, "Student", null, null, ownerStudent.Email, ownerStudent.Id, null, ownerStudent.Points);
                     }
                 }
                 
@@ -163,7 +163,7 @@ namespace HalkEgitimSistemi.Controllers
 
                 if (student != null)
                 {
-                    return await DoSignIn(student.FirstName + " " + student.LastName, "Student", null, null, student.Email, student.Id, null);
+                    return await DoSignIn(student.FirstName + " " + student.LastName, "Student", null, null, student.Email, student.Id, null, student.Points);
                 }
             }
             // 4. EMPLOYER LOGIN
@@ -188,7 +188,7 @@ namespace HalkEgitimSistemi.Controllers
             return await Login();
         }
 
-        private async Task<IActionResult> DoSignIn(string name, string role, int? instructorId, int? courseId, string? email, int? studentId, int? employerId)
+        private async Task<IActionResult> DoSignIn(string name, string role, int? instructorId, int? courseId, string? email, int? studentId, int? employerId, int points = 0)
         {
             var claims = new List<Claim> 
             { 
@@ -196,6 +196,8 @@ namespace HalkEgitimSistemi.Controllers
                 new Claim("FullName", name),
                 new Claim(ClaimTypes.Role, role)
             };
+            
+            if (role == "Student") claims.Add(new Claim("Points", points.ToString()));
 
             if (instructorId.HasValue) claims.Add(new Claim("InstructorId", instructorId.Value.ToString()));
             if (courseId.HasValue) claims.Add(new Claim("CourseId", courseId.Value.ToString()));

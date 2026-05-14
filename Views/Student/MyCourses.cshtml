@@ -1,4 +1,4 @@
-﻿@model List<HalkEgitimSistemi.Models.Application>
+@model List<HalkEgitimSistemi.Models.Application>
 @using HalkEgitimSistemi.Models
 @{
     Layout = "_Layout";
@@ -78,7 +78,14 @@
                                     </div>
                                 }
                             }
-                                @if (app.Status == ApplicationStatus.Approved && !app.IsPaid)
+                                @if (app.Status == ApplicationStatus.Approved && app.IsPaid && app.Course?.IsLive == true)
+                                {
+                                    <a asp-controller="LiveLesson" asp-action="Room" asp-route-roomId="@app.Course.LiveRoomId"
+                                       class="btn btn-premium btn-danger-glow w-100 mt-2 py-2 pulse-animation" style="font-size:0.82rem;">
+                                         <i class="bi bi-broadcast me-1"></i>Canlı Derse Katıl (YAYINDA)
+                                    </a>
+                                }
+                                else if (app.Status == ApplicationStatus.Approved && !app.IsPaid)
                                 {
                                     <a asp-controller="Applications" asp-action="Payment" asp-route-id="@app.Id"
                                        class="btn btn-premium btn-warning-glow w-100 mt-2 py-2" style="font-size:0.82rem; background: var(--gradient-warm); color: white;">
@@ -90,13 +97,6 @@
                                     <a asp-controller="Student" asp-action="Certificate" asp-route-id="@app.Id"
                                        class="btn btn-premium btn-success-glow w-100 mt-2 py-2" style="font-size:0.82rem;">
                                          <i class="bi bi-patch-check-fill me-1"></i>Sertifika Görüntüle
-                                    </a>
-                                }
-                                else if (app.Status == ApplicationStatus.Approved && app.IsPaid)
-                                {
-                                    <a asp-controller="LiveLesson" asp-action="Room" asp-route-roomId="Course_@app.CourseId"
-                                       class="btn btn-premium btn-danger-glow w-100 mt-2 py-2 pulse-animation" style="font-size:0.82rem;">
-                                         <i class="bi bi-broadcast me-1"></i>Canlı Derse Katıl
                                     </a>
                                 }
                                 else

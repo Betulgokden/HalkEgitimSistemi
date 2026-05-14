@@ -1,4 +1,4 @@
-﻿@model List<HalkEgitimSistemi.Models.AcademicNote>
+@model List<HalkEgitimSistemi.Models.AcademicNote>
 @{
     ViewData["Title"] = "Konu Anlatımı";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -27,8 +27,8 @@
             </form>
             @if (User.IsInRole("Admin") || User.IsInRole("Instructor"))
             {
-                <button class="btn btn-primary-glow rounded-pill px-4" data-bs-toggle="modal" data-bs-target="#addNoteModal">
-                    <i class="bi bi-plus-lg me-2"></i> İçerik Ekle
+                <button class="btn btn-primary-glow rounded-pill px-4 text-white" data-bs-toggle="modal" data-bs-target="#addNoteModal" style="color: white !important;">
+                    <i class="bi bi-plus-lg me-2" style="color: white !important;"></i> İçerik Ekle
                 </button>
             }
         </div>

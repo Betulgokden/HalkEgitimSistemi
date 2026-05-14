@@ -1,0 +1,286 @@
+@{
+    ViewData["Title"] = "Halk Point Rehberi";
+}
+
+<div class="hp-guide-wrapper">
+    <!-- Hero Header -->
+    <div class="hp-hero animate-fadeIn">
+        <div class="container py-5">
+            <div class="hp-hero-card glass-card-static p-5 text-center">
+                <div class="floating-icons">
+                    <i class="bi bi-star-fill hp-float-1"></i>
+                    <i class="bi bi-gem hp-float-2"></i>
+                    <i class="bi bi-trophy-fill hp-float-3"></i>
+                </div>
+                <h1 class="display-3 fw-900 mb-3 hp-main-title" style="font-family: 'Outfit';" data-i18n="nav_hp_guide">
+                    HALK POINT EKOSİSTEMİ
+                </h1>
+                <p class="lead text-white-50 fw-600 mb-4 mx-auto" style="max-width: 700px;" data-i18n="hp_guide_subtitle">
+                    Borçka Halk Eğitim Merkezi'nin dijital para birimiyle tanışın! Sadece öğrenerek değil, sisteme katkı sağlayarak da kazanın.
+                </p>
+                
+                <div class="d-flex justify-content-center gap-3 flex-wrap">
+                    <button id="btnListen" class="btn btn-premium btn-primary-glow px-5 py-3 rounded-pill">
+                        <i class="bi bi-volume-up-fill me-2 fs-4"></i> REHBERİ SESLİ DİNLE
+                    </button>
+                    @if (User.IsInRole("Student"))
+                    {
+                        <div class="balance-badge-premium p-3 rounded-pill border-gold shadow-glow-sm">
+                            <i class="bi bi-wallet2 me-2"></i>Mevcut Bakiyeniz: <span class="fw-900">@ViewBag.UserPoints</span> HP
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container pb-5">
+        <!-- Earning Roadmap -->
+        <div class="section-title text-center mb-5 animate-fadeInUp">
+            <h2 class="fw-900 gold-text">HP NASIL KAZANILIR?</h2>
+            <div class="title-line mx-auto"></div>
+            <p class="text-white-50 mt-2">Başarıya giden yolda her adımınız ödüllendirilir.</p>
+        </div>
+
+        <div class="row g-4 mb-5 stagger-children">
+            <!-- Card 1: Daily Login -->
+            <div class="col-md-6 col-lg-3">
+                <div class="hp-earn-card glass-card-static h-100 p-4 text-center border-glass hover-scale">
+                    <div class="hp-icon-box bg-info-glow mb-4 mx-auto">
+                        <i class="bi bi-calendar2-check"></i>
+                    </div>
+                    <h4 class="fw-800 text-white mb-3">Sadakat Bonusu</h4>
+                    <p class="text-white-50 small mb-4">Sisteme her gün giriş yapmak, öğrenme disiplininizi gösterir. Her gün +10 HP otomatik olarak cüzdanınıza eklenir.</p>
+                    <div class="hp-value">+10 HP / GÜN</div>
+                </div>
+            </div>
+
+            <!-- Card 2: Course Success -->
+            <div class="col-md-6 col-lg-3">
+                <div class="hp-earn-card glass-card-static h-100 p-4 text-center border-glass hover-scale">
+                    <div class="hp-icon-box bg-success-glow mb-4 mx-auto">
+                        <i class="bi bi-mortarboard-fill"></i>
+                    </div>
+                    <h4 class="fw-800 text-white mb-3">Akademik Başarı</h4>
+                    <p class="text-white-50 small mb-4">Bir kursu başarıyla tamamlamak en büyük ödülümüzdür. Sertifika almaya hak kazandığınız an HP ödülünüz yüklenir.</p>
+                    <div class="hp-value">+100 HP / SERTİFİKA</div>
+                </div>
+            </div>
+
+            <!-- Card 3: Community Content -->
+            <div class="col-md-6 col-lg-3">
+                <div class="hp-earn-card glass-card-static h-100 p-4 text-center border-glass hover-scale">
+                    <div class="hp-icon-box bg-warning-glow mb-4 mx-auto">
+                        <i class="bi bi-journal-plus"></i>
+                    </div>
+                    <h4 class="fw-800 text-white mb-3">Bilgi Paylaşımı</h4>
+                    <p class="text-white-50 small mb-4">Aldığınız notları diğer öğrencilerle paylaşın. Notunuz her 'Beğeni' veya 'Yıldız' aldığında puan kazanırsınız.</p>
+                    <div class="hp-value">+5 HP / ETKİLEŞİM</div>
+                </div>
+            </div>
+
+            <!-- Card 4: AI Collaboration -->
+            <div class="col-md-6 col-lg-3">
+                <div class="hp-earn-card glass-card-static h-100 p-4 text-center border-glass hover-scale">
+                    <div class="hp-icon-box bg-danger-glow mb-4 mx-auto">
+                        <i class="bi bi-robot"></i>
+                    </div>
+                    <h4 class="fw-800 text-white mb-3">Bot Etkileşimi</h4>
+                    <p class="text-white-50 small mb-4">HalkBot ile etkileşime geçmek ve ondan bilgi almak sistem kullanımınızı artırır. Günlük etkileşim limiti dahilinde kazanın.</p>
+                    <div class="hp-value">+20 HP / GÜNLÜK</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Redemption Section -->
+        <div class="row mt-5 g-4 align-items-stretch">
+            <div class="col-lg-8">
+                <div class="glass-card-static p-5 h-100 border-glass">
+                    <h3 class="fw-900 gold-text mb-4 border-bottom border-white-10 pb-3">BAŞARI KADEMELERİ VE AYRICALIKLAR</h3>
+                    <div class="table-responsive">
+                        <table class="table table-premium custom-hp-table">
+                            <thead>
+                                <tr>
+                                    <th>SEVİYE</th>
+                                    <th>GEREKLİ HP</th>
+                                    <th>AVANTAJLAR</th>
+                                    <th class="text-center">DURUM</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="@(ViewBag.UserPoints >= 1000 ? "active-level" : "")">
+                                    <td><span class="badge bg-bronze-glass p-2 px-3">BRONZ</span></td>
+                                    <td class="fw-bold">1.000 HP</td>
+                                    <td class="small text-white-50">Ücretsiz 1 Temel Eğitim Kursu</td>
+                                    <td class="text-center">
+                                        @if(ViewBag.UserPoints >= 1000) { <i class="bi bi-check-circle-fill text-success"></i> } else { <i class="bi bi-lock-fill text-white-20"></i> }
+                                    </td>
+                                </tr>
+                                <tr class="@(ViewBag.UserPoints >= 5000 ? "active-level" : "")">
+                                    <td><span class="badge bg-silver-glass p-2 px-3">GÜMÜŞ</span></td>
+                                    <td class="fw-bold">5.000 HP</td>
+                                    <td class="small text-white-50">Dilediğin 1 Kurs %100 Ücretsiz</td>
+                                    <td class="text-center">
+                                        @if(ViewBag.UserPoints >= 5000) { <i class="bi bi-check-circle-fill text-success"></i> } else { <i class="bi bi-lock-fill text-white-20"></i> }
+                                    </td>
+                                </tr>
+                                <tr class="@(ViewBag.UserPoints >= 10000 ? "active-level" : "")">
+                                    <td><span class="badge bg-gold-glass p-2 px-3">ALTIN (VIP)</span></td>
+                                    <td class="fw-bold">10.000 HP</td>
+                                    <td class="small text-white-50">İşveren Panelinde Öne Çıkan Aday</td>
+                                    <td class="text-center">
+                                        @if(ViewBag.UserPoints >= 10000) { <i class="bi bi-check-circle-fill text-success"></i> } else { <i class="bi bi-lock-fill text-white-20"></i> }
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="glass-card-static p-5 h-100 border-gold-vibrant text-center d-flex flex-column justify-content-center">
+                    <div class="hp-bonus-glow mb-4">
+                        <i class="bi bi-lightning-charge-fill display-4 text-gold"></i>
+                    </div>
+                    <h3 class="text-white fw-900 mb-2">GÜNLÜK BONUS</h3>
+                    <p class="text-white-50 small mb-4">Bugünkü şansını dene ve hesabına rastgele HP ekle!</p>
+                    <button onclick="claimBonus()" class="btn btn-premium btn-warning-glow w-100 py-3 rounded-pill fw-bold">
+                        BONUSU ŞİMDİ AL
+                    </button>
+                    <p class="text-white-20 x-small mt-3">24 saatte bir kullanılabilir.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .hp-guide-wrapper { background: var(--bg-dark); min-height: 100vh; font-family: 'Outfit', sans-serif; }
+    .hp-hero { background: radial-gradient(circle at top right, rgba(197, 160, 89, 0.1), transparent 50%); }
+    .hp-hero-card { background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.05); border-radius: 40px; position: relative; overflow: hidden; }
+    
+    .hp-main-title {
+        background: linear-gradient(135deg, #FFD700 0%, #C5A059 50%, #B8860B 100%) !important;
+        -webkit-background-clip: text !important;
+        -webkit-text-fill-color: transparent !important;
+        background-clip: text !important;
+        filter: drop-shadow(0 0 15px rgba(197, 160, 89, 0.6)) !important;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+    }
+
+    .gold-text { color: #C5A059 !important; }
+    .title-line { width: 80px; height: 4px; background: var(--gradient-premium); border-radius: 2px; }
+    
+    .hp-icon-box { width: 70px; height: 70px; display: flex; align-items: center; justify-content: center; border-radius: 20px; font-size: 2rem; }
+    .bg-info-glow { background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3); box-shadow: 0 0 20px rgba(56, 189, 248, 0.2); }
+    .bg-success-glow { background: rgba(34, 197, 94, 0.15); color: #22c55e; border: 1px solid rgba(34, 197, 94, 0.3); box-shadow: 0 0 20px rgba(34, 197, 94, 0.2); }
+    .bg-warning-glow { background: rgba(197, 160, 89, 0.15); color: #C5A059; border: 1px solid rgba(197, 160, 89, 0.3); box-shadow: 0 0 20px rgba(197, 160, 89, 0.2); }
+    .bg-danger-glow { background: rgba(239, 68, 68, 0.15); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3); box-shadow: 0 0 20px rgba(239, 68, 68, 0.2); }
+    
+    .hp-value { font-weight: 900; color: #C5A059; background: rgba(197, 160, 89, 0.1); padding: 8px 15px; border-radius: 12px; display: inline-block; letter-spacing: 1px; }
+    
+    /* Earning Card Hover & Colors */
+    .hp-earn-card { transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); cursor: default; background: rgba(255,255,255,0.03); }
+    .hp-earn-card:hover { border-color: #C5A059 !important; background: rgba(197, 160, 89, 0.08) !important; transform: translateY(-10px); box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
+    
+    /* 🏆 REFINED TABLE STYLES (Fixed visibility in Dark Mode) */
+    .custom-hp-table { border-collapse: separate; border-spacing: 0 12px; background: transparent !important; }
+    .custom-hp-table thead th { border: none; color: #C5A059; text-transform: uppercase; letter-spacing: 2px; font-size: 0.85rem; font-weight: 800; padding: 15px 20px !important; }
+    
+    .custom-hp-table tbody tr { 
+        background: rgba(255, 255, 255, 0.03) !important; 
+        transition: all 0.3s ease; 
+        border: 1px solid rgba(255, 255, 255, 0.05) !important;
+    }
+    
+    .custom-hp-table tbody tr td { 
+        padding: 25px 20px !important; 
+        border: none !important; 
+        color: rgba(255, 255, 255, 0.8) !important; 
+        vertical-align: middle;
+        background: transparent !important; /* Ensure cell doesn't override row */
+    }
+    
+    /* Ensure Bootstrap table vars don't force white */
+    .custom-hp-table > :not(caption) > * > * {
+        --bs-table-bg: transparent !important;
+        background-color: transparent !important;
+        color: inherit !important;
+    }
+
+    .active-level { 
+        background: rgba(197, 160, 89, 0.15) !important; 
+        border: 1px solid rgba(197, 160, 89, 0.4) !important; 
+        box-shadow: 0 0 20px rgba(197, 160, 89, 0.1); 
+    }
+
+    .border-gold-vibrant { border: 2px solid #C5A059 !important; box-shadow: 0 0 30px rgba(197, 160, 89, 0.2) !important; }
+    
+    .bg-bronze-glass { background: rgba(205, 127, 50, 0.2); color: #cd7f32; border: 1px solid rgba(205, 127, 50, 0.4); }
+    .bg-silver-glass { background: rgba(192, 192, 192, 0.2); color: #c0c0c0; border: 1px solid rgba(192, 192, 192, 0.4); }
+    .bg-gold-glass { background: rgba(197, 160, 89, 0.2); color: #C5A059; border: 1px solid rgba(197, 160, 89, 0.4); }
+
+    /* Theme Overrides for Light Mode */
+    [data-theme="light"] .hp-guide-wrapper { background: #fdfdfd; }
+    [data-theme="light"] .hp-hero-card { background: white; border-color: rgba(0,0,0,0.05); box-shadow: 0 10px 40px rgba(0,0,0,0.05); }
+    [data-theme="light"] .hp-main-title { background: linear-gradient(to right, #581C1C 0%, #C5A059 50%, #581C1C 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    [data-theme="light"] .hp-hero-card p { color: #475569 !important; }
+    [data-theme="light"] .hp-earn-card { background: white; border-color: #f1f5f9; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
+    [data-theme="light"] .hp-earn-card h4 { color: #1e293b !important; }
+    [data-theme="light"] .hp-earn-card p { color: #64748b !important; }
+    [data-theme="light"] .custom-hp-table tbody tr { background: white !important; border: 1px solid #e2e8f0 !important; box-shadow: 0 4px 10px rgba(0,0,0,0.02); }
+    [data-theme="light"] .custom-hp-table td { color: #1e293b !important; }
+    [data-theme="light"] .active-level { background: rgba(197, 160, 89, 0.15) !important; border-color: rgba(197, 160, 89, 0.5) !important; }
+    
+    /* VIBRANT LISTEN BUTTON */
+    #btnListen {
+        background: linear-gradient(135deg, #6366f1 0%, #a855f7 50%, #ec4899 100%);
+        background-size: 200% auto;
+        border: none;
+        color: white;
+        font-weight: 800;
+        letter-spacing: 1px;
+        transition: 0.5s;
+        box-shadow: 0 10px 25px rgba(99, 102, 241, 0.4);
+    }
+    #btnListen:hover {
+        background-position: right center;
+        transform: scale(1.05) translateY(-3px);
+        box-shadow: 0 15px 35px rgba(168, 85, 247, 0.5);
+    }
+    
+    /* Animations */
+    .hp-float-1 { position: absolute; top: 10%; left: 5%; font-size: 3rem; color: #C5A059; opacity: 0.2; animation: float 6s infinite ease-in-out; }
+    .hp-float-2 { position: absolute; bottom: 15%; right: 10%; font-size: 4rem; color: #38bdf8; opacity: 0.15; animation: float 8s infinite ease-in-out reverse; }
+    .hp-float-3 { position: absolute; top: 20%; right: 5%; font-size: 2.5rem; color: #ef4444; opacity: 0.1; animation: float 5s infinite ease-in-out 1s; }
+
+    @@keyframes float {
+        0%, 100% { transform: translateY(0) rotate(0deg); }
+        50% { transform: translateY(-20px) rotate(10deg); }
+    }
+</style>
+
+<script>
+    document.getElementById('btnListen').addEventListener('click', function() {
+        const text = "Halk Point Rehberine hoşgeldiniz. Sisteme her gün giriş yaparak 10 puan, kursları tamamlayarak 100 puan kazanabilirsiniz. Ayrıca not paylaşımı yaparak ek puanlar toplayabilirsiniz. 10 bin puana ulaştığınızda işveren panelinde öne çıkan aday olursunuz.";
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'tr-TR';
+        utterance.rate = 1.0;
+        window.speechSynthesis.speak(utterance);
+    });
+
+    function claimBonus() {
+        fetch('/HalkPoint/ClaimDailyBonus', { method: 'POST' })
+        .then(response => response.json())
+        .then(data => {
+            Swal.fire({
+                icon: data.success ? 'success' : 'info',
+                title: data.success ? 'Tebrikler!' : 'Bilgi',
+                text: data.message,
+                background: document.documentElement.getAttribute('data-theme') === 'dark' ? '#1e293b' : '#fff',
+                color: document.documentElement.getAttribute('data-theme') === 'dark' ? '#fff' : '#1e293b'
+            }).then(() => { if(data.success) location.reload(); });
+        });
+    }
+</script>

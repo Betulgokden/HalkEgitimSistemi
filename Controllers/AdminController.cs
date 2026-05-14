@@ -58,13 +58,13 @@ namespace HalkEgitimSistemi.Controllers
                 stats["PendingInstructorAppCount"] = pendingInstructorCount;
                 stats["ActiveLiveCount"] = activeLiveCount;
 
-                // Detail queries (still parallelizable but slightly more complex)
-                stats["CourseStats"] = await _context.Courses.AsNoTracking().Where(c => !c.IsDeleted).Select(c => new { CourseName = c.CourseName, Quota = c.Quota, ApprovedCount = c.Applications!.Count(a => a.Status == ApplicationStatus.Approved && !a.IsDeleted) }).OrderByDescending(x => x.ApprovedCount).Take(6).ToListAsync();
+                // Detail queries (Optimized to avoid N+1 issues)
+                stats["CourseStats"] = await _context.Courses.AsNoTracking().Where(c => !c.IsDeleted).OrderByDescending(c => c.Applications!.Count).Take(6).Select(c => new { CourseName = c.CourseName, Quota = c.Quota, ApprovedCount = c.Applications!.Count(a => a.Status == ApplicationStatus.Approved && !a.IsDeleted) }).ToListAsync();
                 stats["CategoryStats"] = await _context.Categories.AsNoTracking().Where(c => !c.IsDeleted).Select(c => new { CategoryName = c.CategoryName, CourseCount = c.Courses!.Count(x => !x.IsDeleted) }).ToListAsync();
                 stats["RecentApplications"] = await _context.Applications.AsNoTracking().Include(a => a.Course).Where(a => !a.IsDeleted).OrderByDescending(a => a.ApplyDate).Take(5).ToListAsync();
                 stats["TrendData"] = await _context.Applications.AsNoTracking().Where(a => !a.IsDeleted && a.ApplyDate >= DateTime.Now.AddDays(-7)).GroupBy(a => a.ApplyDate.Date).Select(g => new { Date = g.Key, Count = g.Count() }).OrderBy(x => x.Date).ToListAsync();
 
-                _cache.Set(cacheKey, stats, TimeSpan.FromMinutes(2)); // Reduced cache time for fresher data
+                _cache.Set(cacheKey, stats, TimeSpan.FromMinutes(10)); // Increased cache time for better performance
             }
 
             ViewBag.PendingCount = stats?["PendingCount"];
@@ -848,7 +848,7 @@ namespace HalkEgitimSistemi.Controllers
                         .Select(s => new { 
                             name = s.FirstName + " " + s.LastName, 
                             sub = s.Email, 
-                            meta = s.EloRating + " ELO",
+                            meta = s.Points + " HP / " + s.EloRating + " ELO",
                             color = "primary"
                         })
                         .ToListAsync();

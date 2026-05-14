@@ -1,0 +1,226 @@
+@model IEnumerable<HalkEgitimSistemi.Models.Message>
+@{
+    ViewData["Title"] = "Mesaj Kutusu";
+    var currentUsername = User.Identity?.Name;
+    var isInstructor = User.IsInRole("Instructor");
+}
+
+<div class="container py-5">
+    <!-- Header Area -->
+    <div class="page-header animate-fadeInDown mb-5">
+        <div class="page-header-content p-4 rounded-4" style="background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-color); backdrop-filter: blur(10px);">
+            <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+                <div class="d-flex align-items-center">
+                    <div class="page-header-icon me-3" style="width: 60px; height: 60px; background: linear-gradient(135deg, #C5A059 0%, #581C1C 100%); border-radius: 15px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem; box-shadow: 0 10px 20px rgba(197, 160, 89, 0.3);">
+                        <i class="bi bi-envelope-paper-heart-fill"></i>
+                    </div>
+                    <div>
+                        <h1 class="page-header-title mb-0 h3 fw-bold" style="font-family: 'Outfit'; color: var(--text-primary);">Mesaj Kutusu</h1>
+                        <p class="page-header-subtitle mb-0 small text-muted">İletişim ve geri bildirimlerinizi buradan yönetebilirsiniz.</p>
+                    </div>
+                </div>
+                <div class="header-stats d-flex gap-4">
+                    <div class="text-center">
+                        <div class="h4 mb-0 fw-bold gold-text">@Model.Count()</div>
+                        <div class="small text-muted text-uppercase" style="letter-spacing: 1px; font-size: 0.65rem;">Toplam</div>
+                    </div>
+                    <div class="text-center border-start ps-4" style="border-color: rgba(255,255,255,0.1) !important;">
+                        <div class="h4 mb-0 fw-bold text-danger">@Model.Count(m => !m.IsRead && (m.ReceiverUsername == currentUsername || (isInstructor && !m.IsFromInstructor)))</div>
+                        <div class="small text-muted text-uppercase" style="letter-spacing: 1px; font-size: 0.65rem;">Okunmamış</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Message List -->
+        <div class="col-lg-12">
+            @if (!Model.Any())
+            {
+                <div class="glass-card-static p-5 text-center animate-fadeInUp shadow-lg rounded-4">
+                    <div class="empty-state-icon mb-4" style="width: 100px; height: 100px; margin: 0 auto; background: rgba(197, 160, 89, 0.05); border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px dashed var(--accent-gold);">
+                        <i class="bi bi-chat-right-dots" style="font-size: 3rem; color: var(--accent-gold); opacity: 0.5;"></i>
+                    </div>
+                    <h3 style="font-family: 'Outfit'; font-weight: 800; color: var(--text-primary);">Henüz Mesajınız Bulunmuyor</h3>
+                    <p class="text-muted mx-auto" style="max-width: 400px;">Gelen veya gönderilen herhangi bir mesaj kaydı sistemde mevcut değil.</p>
+                    @if (User.IsInRole("Student"))
+                    {
+                        <a asp-controller="Instructors" asp-action="Index" class="btn btn-premium btn-primary-glow mt-3 px-4 py-2">
+                            <i class="bi bi-search me-2"></i>Eğitmenlere Soru Sor
+                        </a>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="message-container stagger-children">
+                    @foreach (var msg in Model)
+                    {
+                        var isIncoming = msg.ReceiverUsername == currentUsername || (isInstructor && !msg.IsFromInstructor);
+                        
+                        <div class="message-card-wrapper mb-4 animate-fadeInUp">
+                            <div class="glass-card-static p-0 overflow-hidden shadow-hover transition-all rounded-4" 
+                                 style="border: 1px solid @(!msg.IsRead && isIncoming ? "var(--accent-gold)" : "rgba(255,255,255,0.08)"); 
+                                        background: @(!msg.IsRead && isIncoming ? "rgba(197, 160, 89, 0.03)" : "rgba(15, 23, 42, 0.4)");">
+                                
+                                <div class="message-header p-3 d-flex justify-content-between align-items-center border-bottom" style="border-color: rgba(255,255,255,0.05) !important;">
+                                    <div class="d-flex align-items-center">
+                                        <div class="avatar-box me-3">
+                                            @if (msg.IsFromInstructor)
+                                            {
+                                                <div class="avatar-circle" style="width: 45px; height: 45px; background: rgba(197, 160, 89, 0.1); border: 1px solid var(--accent-gold); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--accent-gold);">
+                                                    <i class="bi bi-person-workspace" style="font-size: 1.2rem;"></i>
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                <div class="avatar-circle" style="width: 45px; height: 45px; background: rgba(88, 28, 28, 0.1); border: 1px solid #581C1C; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #581C1C;">
+                                                    <i class="bi bi-person-fill" style="font-size: 1.2rem;"></i>
+                                                </div>
+                                            }
+                                        </div>
+                                        <div>
+                                            <div class="d-flex align-items-center gap-2">
+                                                <h6 class="mb-0 fw-bold" style="font-family: 'Outfit'; color: var(--text-primary);">
+                                                    @if (msg.SenderUsername == currentUsername)
+                                                    {
+                                                        <span>Size: </span> <span class="text-muted font-normal">@msg.ReceiverUsername @(msg.ReceiverInstructor?.FullName)</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span>@msg.SenderUsername</span>
+                                                    }
+                                                </h6>
+                                                @if (!msg.IsRead && isIncoming)
+                                                {
+                                                    <span class="badge bg-danger rounded-pill" style="font-size: 0.6rem; padding: 2px 8px; letter-spacing: 0.5px;">YENİ</span>
+                                                }
+                                            </div>
+                                            <small class="text-muted" style="font-size: 0.7rem;">
+                                                <i class="bi bi-clock me-1"></i> @msg.Date.ToString("dd MMMM yyyy, HH:mm")
+                                            </small>
+                                        </div>
+                                    </div>
+                                    <div class="message-meta d-flex align-items-center gap-3">
+                                        <div class="d-none d-md-block">
+                                            <span class="badge-premium @(msg.SenderUsername == currentUsername ? "badge-secondary" : "badge-primary")" style="font-size: 0.7rem;">
+                                                @msg.Subject
+                                            </span>
+                                        </div>
+                                        @if (isIncoming)
+                                        {
+                                            <button class="btn btn-sm btn-premium btn-primary-glow px-3" 
+                                                    onclick="openMessageModal(@msg.Id, '@msg.SenderUsername', '@msg.Subject', `@msg.Content`)">
+                                                <i class="bi bi-reply-fill"></i> <span class="d-none d-sm-inline ms-1">Cevapla</span>
+                                            </button>
+                                        }
+                                    </div>
+                                </div>
+                                <div class="message-body p-4">
+                                    <div class="content-text" style="color: var(--text-secondary); line-height: 1.8; font-size: 1rem; white-space: pre-line;">
+                                        @msg.Content
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Reply Modal -->
+<div class="modal fade" id="messageReplyModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="background: #0f172a; border: 1px solid rgba(197, 160, 89, 0.2); border-radius: 20px; box-shadow: 0 25px 70px rgba(0,0,0,0.8);">
+            <div class="modal-header border-bottom border-white-10 p-3">
+                <div class="d-flex align-items-center">
+                    <div class="icon-box-sm bg-primary-glow me-3" style="width: 35px; height: 35px; border-radius: 8px; display: flex; align-items: center; justify-content: center; background: rgba(197, 160, 89, 0.1); color: var(--accent-gold);">
+                        <i class="bi bi-reply-all-fill"></i>
+                    </div>
+                    <h5 class="modal-title fw-bold" id="msgModalTitle" style="font-family: 'Outfit'; color: white;">Cevapla</h5>
+                </div>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form asp-controller="Message" asp-action="CevapGonder" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="messageId" id="modalMsgId" />
+                <div class="modal-body p-4">
+                    <div class="incoming-reference mb-4 p-3 rounded-3" style="background: rgba(255,255,255,0.03); border-left: 3px solid var(--accent-gold);">
+                        <small class="text-muted d-block mb-1 text-uppercase fw-bold" style="font-size: 0.65rem; letter-spacing: 1px;">Gelen Mesaj</small>
+                        <p id="modalMsgBody" class="mb-0 small text-white-50" style="white-space: pre-wrap; font-style: italic;"></p>
+                    </div>
+                    <div class="mb-0">
+                        <label class="form-label fw-bold small text-white-70 mb-2">Cevap İçeriği</label>
+                        <textarea name="content" rows="5" class="form-control" 
+                                  style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: white; border-radius: 12px; resize: none; padding: 15px;" 
+                                  placeholder="Mesajınızı buraya yazın..." required></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer border-top border-white-10 p-3">
+                    <button type="button" class="btn btn-link text-muted text-decoration-none" data-bs-dismiss="modal">İptal</button>
+                    <button type="submit" class="btn btn-premium btn-primary-glow px-4 py-2">
+                        <i class="bi bi-send-fill me-2"></i>Cevabı Gönder
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function openMessageModal(id, sender, subject, content) {
+            document.getElementById('modalMsgId').value = id;
+            document.getElementById('msgModalTitle').innerText = "Cevapla: " + sender;
+            document.getElementById('modalMsgBody').innerText = content;
+            
+            var myModal = new bootstrap.Modal(document.getElementById('messageReplyModal'));
+            myModal.show();
+            
+            // Mark as read in background
+            fetch('/Message/MarkAsRead/' + id, { 
+                method: 'POST',
+                headers: {
+                    'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+                }
+            });
+        }
+    </script>
+}
+
+<style>
+    .shadow-hover { transition: all 0.3s ease; }
+    .shadow-hover:hover { 
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px rgba(0,0,0,0.4) !important;
+        border-color: rgba(197, 160, 89, 0.3) !important;
+    }
+    .badge-premium {
+        padding: 5px 12px;
+        border-radius: 50px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    .badge-primary { background: rgba(197, 160, 89, 0.2); color: var(--accent-gold); border: 1px solid rgba(197, 160, 89, 0.3); }
+    .badge-secondary { background: rgba(255, 255, 255, 0.05); color: rgba(255, 255, 255, 0.7); border: 1px solid rgba(255, 255, 255, 0.1); }
+    
+    [data-theme='light'] .glass-card-static {
+        background: white !important;
+        border-color: rgba(88, 28, 28, 0.1) !important;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.05) !important;
+    }
+    [data-theme='light'] .text-white-50 { color: #8E5A5A !important; }
+    [data-theme='light'] .text-white-70 { color: #581C1C !important; }
+    [data-theme='light'] .modal-content {
+        background: white !important;
+        border-color: #eee !important;
+        box-shadow: 0 30px 60px rgba(0,0,0,0.1) !important;
+    }
+    [data-theme='light'] .modal-title { color: #581C1C !important; }
+    [data-theme='light'] .incoming-reference { background: #f8f9fa !important; }
+    [data-theme='light'] .form-control { background: white !important; color: #581C1C !important; border-color: #ddd !important; }
+</style>

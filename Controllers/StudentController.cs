@@ -58,6 +58,9 @@ namespace HalkEgitimSistemi.Controllers
             student.BirthPlace = model.BirthPlace;
             student.Summary = model.Summary;
             student.Skills = model.Skills;
+            student.LinkedInUrl = model.LinkedInUrl;
+            student.GithubUrl = model.GithubUrl;
+            student.PortfolioUrl = model.PortfolioUrl;
 
             if (profilePic != null)
             {
@@ -305,6 +308,9 @@ namespace HalkEgitimSistemi.Controllers
                     Summary = s.Summary,
                     Skills = s.Skills,
                     ProfilePicture = s.ProfilePicture,
+                    LinkedInUrl = s.LinkedInUrl,
+                    GithubUrl = s.GithubUrl,
+                    PortfolioUrl = s.PortfolioUrl,
                     Applications = s.Applications
                 })
                 .FirstOrDefaultAsync(s => s.Id == id && !s.IsDeleted);

@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Hosting;
 using System.IO;
 using Microsoft.AspNetCore.Http;
 using System;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace HalkEgitimSistemi.Controllers
 {
@@ -19,23 +20,32 @@ namespace HalkEgitimSistemi.Controllers
     {
         private readonly AppDbContext _context;
         private readonly IWebHostEnvironment _env;
+        private readonly Microsoft.Extensions.Caching.Memory.IMemoryCache _cache;
 
-        public InstructorsController(AppDbContext context, IWebHostEnvironment env)
+        public InstructorsController(AppDbContext context, IWebHostEnvironment env, Microsoft.Extensions.Caching.Memory.IMemoryCache cache)
         {
             _context = context;
             _env = env;
+            _cache = cache;
         }
 
         // 🟢 ZİYARETÇİLERE AÇIK: Eğitmen Listesi
         [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
-            var instructors = await _context.Instructors
-                .AsNoTracking()
-                .Include(i => i.Course)
-                .Include(i => i.Schedules)
-                .Where(i => !i.IsDeleted)
-                .ToListAsync();
+            string cacheKey = "AllInstructorsList";
+            if (!_cache.TryGetValue(cacheKey, out object? instructorsObj))
+            {
+                var instructorsList = await _context.Instructors
+                    .AsNoTracking()
+                    .Include(i => i.Course)
+                    .Include(i => i.Schedules)
+                    .Where(i => !i.IsDeleted)
+                    .ToListAsync();
+                _cache.Set(cacheKey, instructorsList, TimeSpan.FromMinutes(15));
+                instructorsObj = instructorsList;
+            }
+            var instructors = (List<Instructor>)instructorsObj!;
 
             var now = DateTime.Now.TimeOfDay;
             var today = DateTime.Now.DayOfWeek.ToString();

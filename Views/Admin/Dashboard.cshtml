@@ -49,6 +49,36 @@
             </a>
         </div>
         <div class="col-md-3">
+            <a asp-controller="JobPostings" asp-action="Manage" class="text-decoration-none">
+                <div class="action-card-modern info-theme">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="action-icon">
+                            <i class="bi bi-briefcase"></i>
+                        </div>
+                        <div>
+                            <h5 class="mb-1 fw-900 text-premium">İlan Yönetimi</h5>
+                            <p class="mb-0 text-white-50 small">Tüm iş ilanlarını denetleyin.</p>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-3">
+            <a asp-controller="Employer" asp-action="ManageEmployers" class="text-decoration-none">
+                <div class="action-card-modern vibrant-purple-theme">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="action-icon">
+                            <i class="bi bi-shield-check"></i>
+                        </div>
+                        <div>
+                            <h5 class="mb-1 fw-900 text-premium">İşveren Onayları</h5>
+                            <p class="mb-0 text-white-50 small">Yeni kayıtları doğrulayın.</p>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-3">
             <a asp-controller="Employer" asp-action="Dashboard" class="text-decoration-none">
                 <div class="action-card-modern success-theme">
                     <div class="d-flex align-items-center gap-3">
@@ -56,8 +86,8 @@
                             <i class="bi bi-buildings-fill"></i>
                         </div>
                         <div>
-                            <h5 class="mb-1 fw-900 text-premium">İşveren Paneli</h5>
-                            <p class="mb-0 text-white-50 small">İstihdam ve iş ilanları takibi.</p>
+                            <h5 class="mb-1 fw-900 text-premium">Yetenek Havuzu</h5>
+                            <p class="mb-0 text-white-50 small">İşveren gözüyle adaylar.</p>
                         </div>
                     </div>
                 </div>
@@ -65,14 +95,14 @@
         </div>
         <div class="col-md-3">
             <a asp-controller="Admin" asp-action="GlobalSettings" class="text-decoration-none">
-                <div class="action-card-modern info-theme">
+                <div class="action-card-modern primary-theme">
                     <div class="d-flex align-items-center gap-3">
                         <div class="action-icon">
                             <i class="bi bi-gear-wide-connected"></i>
                         </div>
                         <div>
                             <h5 class="mb-1 fw-900 text-premium">Sistem Ayarları</h5>
-                            <p class="mb-0 text-white-50 small">Logolar ve kurumsal kimlik.</p>
+                            <p class="mb-0 text-white-50 small">Genel yapılandırma.</p>
                         </div>
                     </div>
                 </div>
@@ -547,6 +577,35 @@
                     console.error(err);
                 });
         }
+        // SignalR: Admin Bildirimleri
+        const adminConnection = new signalR.HubConnectionBuilder()
+            .withUrl("/adminHub")
+            .build();
+
+        adminConnection.on("ReceiveNotification", function (message) {
+            Swal.fire({
+                title: 'Yeni Başvuru!',
+                text: message,
+                icon: 'info',
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 5000,
+                timerProgressBar: true,
+                background: 'rgba(30, 41, 59, 0.95)',
+                color: '#fff'
+            });
+            
+            // Eğer sayfa açıksa verileri tazele (isteğe bağlı)
+            // location.reload(); 
+        });
+
+        adminConnection.start().then(function () {
+            adminConnection.invoke("JoinAdminGroup");
+            console.log("AdminHub bağlantısı kuruldu.");
+        }).catch(function (err) {
+            return console.error(err.toString());
+        });
     </script>
 }
 

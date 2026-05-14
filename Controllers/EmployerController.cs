@@ -136,6 +136,13 @@ namespace HalkEgitimSistemi.Controllers
             ViewBag.NeighborhoodStats = neighborhoodStatsTask.Result;
             ViewBag.ReadyToWork = readyToWork;
 
+            // Halk Point Altın Üyeler (10.000+ HP)
+            ViewBag.FeaturedStudents = await _context.Students
+                .AsNoTracking()
+                .Where(s => s.Points >= 10000 && !s.IsDeleted)
+                .OrderByDescending(s => s.Points)
+                .ToListAsync();
+
             return View(students);
         }
 

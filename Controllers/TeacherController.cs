@@ -212,7 +212,11 @@ namespace HalkEgitimSistemi.Controllers
             string? educationLevel)
         {
             var application = await _context.Applications.FirstOrDefaultAsync(a => a.Id == id && !a.IsDeleted);
-            if (application == null) return NotFound();
+            if (application == null)
+            {
+                TempData["Error"] = "Başvuru bulunamadı.";
+                return RedirectToAction(nameof(Dashboard));
+            }
 
             if (application.CourseId != GetCourseId()) return Forbid();
 
@@ -230,8 +234,17 @@ namespace HalkEgitimSistemi.Controllers
             if (dateOfBirth.HasValue)                    application.DateOfBirth = dateOfBirth.Value;
             if (!string.IsNullOrWhiteSpace(educationLevel)) application.EducationLevel = educationLevel;
 
-            await _context.SaveChangesAsync();
-            TempData["Success"] = $"{application.FirstName} {application.LastName} bilgileri güncellendi.";
+            try
+            {
+                _context.Update(application);
+                await _context.SaveChangesAsync();
+                TempData["Success"] = $"{application.FirstName} {application.LastName} bilgileri başarıyla güncellendi.";
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = "Güncelleme sırasında bir hata oluştu: " + ex.Message;
+            }
+
             return RedirectToAction(nameof(Dashboard));
         }
 
