@@ -79,7 +79,7 @@
             background: var(--bg-glass-strong) !important;
             border: 1px solid var(--border-color) !important;
             box-shadow: 0 10px 40px rgba(88, 28, 28, 0.08) !important;
-            backdrop-filter: blur(10px) !important;
+            backdrop-filter: blur(4px) !important;
         }
 
         [data-theme="light"] h1, [data-theme="light"] h2, [data-theme="light"] h3, 
@@ -314,7 +314,7 @@
         /* Dropdown vibrancy and Hover-Open */
         .navbar .dropdown-menu {
             background: rgba(10, 10, 10, 0.98) !important;
-            backdrop-filter: blur(10px) !important;
+            backdrop-filter: blur(4px) !important;
             border: 1px solid rgba(197,160,89,0.2) !important;
             border-top: 3px solid #C5A059 !important;
             border-radius: 18px !important;
@@ -647,7 +647,7 @@
         }
         .robot-body::after {
             content: ''; position: absolute; width: 110%; height: 110%; border-radius: 50%;
-            background: inherit; filter: blur(15px); opacity: 0.3; z-index: -1;
+            background: inherit; filter: blur(4px); opacity: 0.3; z-index: -1;
             animation: pulse-aura 3s infinite;
         }
         @@keyframes pulse-aura {
@@ -661,7 +661,7 @@
             right: 0 !important;
             width: 400px !important; /* Enlarged from 320px */
             background: rgba(15, 17, 26, 0.98) !important;
-            backdrop-filter: blur(35px) !important;
+            backdrop-filter: blur(4px) !important;
             border: 1px solid rgba(255,255,255,0.2) !important;
             border-radius: 25px !important;
             padding: 20px !important;
@@ -809,7 +809,7 @@
         
         .login-item-student:hover i, .login-item-instructor:hover i, .login-item-admin:hover i { transform: scale(1.2); }
 
-        .bg-glass-sm { background: rgba(255,255,255,0.05); backdrop-filter: blur(10px); }
+        .bg-glass-sm { background: rgba(255,255,255,0.05); backdrop-filter: blur(4px); }
         .btn-icon-sm { background: transparent; border: none; color: white; opacity: 0.8; transition: 0.3s; padding: 2px 5px; }
         .btn-icon-sm:hover { opacity: 1; transform: scale(1.2); color: #C5A059 !important; }
 
@@ -857,7 +857,7 @@
 
     <!-- Premium Header & Navbar -->
     <!-- Ultra-Premium Compact Header -->
-    <header class="main-header fixed-top" style="z-index: 2000 !important; background: var(--theme-card-bg); backdrop-filter: blur(15px); border-bottom: 1px solid var(--theme-card-border) !important; transition: all 0.3s ease;">
+    <header class="main-header fixed-top" style="z-index: 2000 !important; background: var(--theme-card-bg); backdrop-filter: blur(4px); border-bottom: 1px solid var(--theme-card-border) !important; transition: all 0.3s ease;">
         <div class="container-fluid">
             <div class="row align-items-center py-2">
                 <!-- Left: Theme Toggle Centered -->
@@ -943,7 +943,7 @@
                                     </button>
                                 }
                                 
-                                <ul class="dropdown-menu dropdown-menu-end animate-fadeIn border-glass bg-glass-strong shadow-2xl p-2" style="min-width: 280px; border-radius: 20px; backdrop-filter: blur(10px); max-height: 80vh; overflow-y: auto;">
+                                <ul class="dropdown-menu dropdown-menu-end animate-fadeIn border-glass bg-glass-strong shadow-2xl p-2" style="min-width: 280px; border-radius: 20px; backdrop-filter: blur(4px); max-height: 80vh; overflow-y: auto;">
                                     <li><h6 class="dropdown-header text-white-50 small fw-bold px-3 pt-2 mb-2" style="letter-spacing: 1px;">HESAP YÖNETİMİ</h6></li>
                                     <li>
                                         <a class="dropdown-item rounded-12 p-2 d-flex align-items-center gap-3" asp-controller="@(User.IsInRole("Admin") ? "Admin" : (User.IsInRole("Instructor") ? "Teacher" : "Student"))" asp-action="Dashboard">
@@ -1558,7 +1558,7 @@
         .glass-card, .glass-card-static {
             background: var(--theme-card-bg) !important;
             border: 1px solid var(--theme-card-border) !important;
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(4px);
             transition: all 0.4s;
         }
 
@@ -1678,7 +1678,7 @@
                 height: 50px;
                 border-radius: 15px;
                 background: rgba(15, 23, 42, 0.8);
-                backdrop-filter: blur(10px);
+                backdrop-filter: blur(4px);
                 border: 1px solid rgba(255,255,255,0.1);
                 color: white;
                 display: flex;

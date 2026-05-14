@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
@@ -11,6 +11,7 @@ namespace HalkEgitimSistemi.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            /*
             migrationBuilder.DropForeignKey(
                 name: "FK_JobPostings_Employers_EmployerId",
                 table: "JobPostings");
@@ -18,6 +19,7 @@ namespace HalkEgitimSistemi.Migrations
             migrationBuilder.DropIndex(
                 name: "IX_JobPostings_EmployerId",
                 table: "JobPostings");
+            */
 
             migrationBuilder.AlterColumn<string>(
                 name: "Title",
@@ -28,6 +30,7 @@ namespace HalkEgitimSistemi.Migrations
                 oldType: "nvarchar(100)",
                 oldMaxLength: 100);
 
+            /*
             migrationBuilder.AddColumn<string>(
                 name: "CompanyName",
                 table: "JobPostings",
@@ -52,12 +55,15 @@ namespace HalkEgitimSistemi.Migrations
                 table: "JobPostings",
                 type: "nvarchar(max)",
                 nullable: true);
+            */
 
+            /*
             migrationBuilder.AddColumn<string>(
                 name: "DiscountCode",
                 table: "Applications",
                 type: "nvarchar(max)",
                 nullable: true);
+            */
 
             migrationBuilder.UpdateData(
                 table: "ExhibitionItems",

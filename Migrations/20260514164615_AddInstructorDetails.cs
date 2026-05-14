@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
@@ -13,6 +13,7 @@ namespace HalkEgitimSistemi.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            /*
             migrationBuilder.AddColumn<string>(
                 name: "GithubUrl",
                 table: "Students",
@@ -24,6 +25,7 @@ namespace HalkEgitimSistemi.Migrations
                 table: "Students",
                 type: "nvarchar(max)",
                 nullable: true);
+            */
 
             migrationBuilder.AlterColumn<string>(
                 name: "FullName",
@@ -34,6 +36,7 @@ namespace HalkEgitimSistemi.Migrations
                 oldType: "nvarchar(max)",
                 oldNullable: true);
 
+            /*
             migrationBuilder.AddColumn<string>(
                 name: "Bio",
                 table: "Instructors",
@@ -69,6 +72,7 @@ namespace HalkEgitimSistemi.Migrations
                 table: "Instructors",
                 type: "nvarchar(max)",
                 nullable: true);
+            */
 
             migrationBuilder.AlterColumn<string>(
                 name: "CourseName",
@@ -87,6 +91,7 @@ namespace HalkEgitimSistemi.Migrations
                 oldType: "nvarchar(max)",
                 oldNullable: true);
 
+            /*
             migrationBuilder.AddColumn<string>(
                 name: "PaymentType",
                 table: "Applications",
@@ -98,6 +103,7 @@ namespace HalkEgitimSistemi.Migrations
                 table: "Applications",
                 type: "nvarchar(max)",
                 nullable: true);
+            */
 
             migrationBuilder.CreateTable(
                 name: "HalkPointActivities",
@@ -132,6 +138,7 @@ namespace HalkEgitimSistemi.Migrations
                     table.PrimaryKey("PK_HalkPointCodes", x => x.Id);
                 });
 
+            /*
             migrationBuilder.CreateTable(
                 name: "PromoCodes",
                 columns: table => new
@@ -162,6 +169,7 @@ namespace HalkEgitimSistemi.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+            */
 
             migrationBuilder.UpdateData(
                 table: "Courses",
@@ -693,6 +701,7 @@ namespace HalkEgitimSistemi.Migrations
                 table: "Applications",
                 column: "Status");
 
+            /*
             migrationBuilder.CreateIndex(
                 name: "IX_PromoCodes_CourseId",
                 table: "PromoCodes",
@@ -702,6 +711,7 @@ namespace HalkEgitimSistemi.Migrations
                 name: "IX_PromoCodes_StudentId",
                 table: "PromoCodes",
                 column: "StudentId");
+            */
         }
 
         /// <inheritdoc />

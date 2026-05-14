@@ -38,52 +38,141 @@
         <div class="row g-5 stagger-children">
             @foreach (var item in Model) {
                 <div class="col-md-6 col-lg-4">
-                        <div class="instructor-card tilt-card h-100 p-5">
+                        <div class="instructor-card h-100 p-5 position-relative overflow-hidden">
                             <!-- Avatar / Icon -->
-                            <div class="instructor-avatar-modern mb-4" style="width: 80px; height: 80px; margin: 0 auto; background: linear-gradient(135deg, #C5A059, #581C1C); border-radius: 20px; display: flex; align-items: center; justify-content: center; color: white; font-size: 2rem; box-shadow: 0 10px 20px rgba(197, 160, 89, 0.3);">
+                            <div class="instructor-avatar-modern mb-4">
                                 <i class="bi bi-person-workspace"></i>
                             </div>
     
-                            <h3 style="font-family: 'Outfit', sans-serif; font-weight: 900; margin-bottom: 0.5rem; font-size: 1.8rem; text-align: center;">@item.FullName</h3>
-                        <p style="background: linear-gradient(135deg, #C5A059, #581C1C); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-transform: uppercase; letter-spacing: 1.5px; font-size: 0.85rem; font-weight: 800; text-align: center; margin-bottom: 2rem;">@item.Title</p>
+                            <h3 class="instructor-name">@item.FullName</h3>
+                            <p class="instructor-title">@item.Title</p>
 
-                        <div class="d-flex flex-wrap gap-2 justify-content-center mb-5">
-                            <span class="badge-premium py-2 px-3" style="background: rgba(255,255,255,0.05); color: #fff; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; font-weight: 700;">
-                                <i class="bi bi-book me-2"></i> @(item.Course?.CourseName ?? "Genel Branş")
-                            </span>
-                            
-                            @{
-                                var isBusy = (ViewBag.Availability as Dictionary<int, bool>)?[item.Id] ?? false;
-                            }
-                            @if (isBusy)
-                            {
-                                <span class="badge-premium py-2 px-3" style="background: rgba(239, 68, 68, 0.2); color: #ff4d4d; border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 12px; font-weight: 700;">
-                                    <i class="bi bi-clock-history me-2"></i> Derste
+                            <div class="d-flex flex-wrap gap-2 justify-content-center mb-4 mt-2">
+                                <span class="badge-premium py-2 px-3 instructor-badge-default">
+                                    <i class="bi bi-book me-2"></i> @(item.Course?.CourseName ?? "Genel Branş")
                                 </span>
-                            }
-                            else
-                            {
-                                <span class="badge-premium py-2 px-3" style="background: rgba(197, 160, 89, 0.2); color: #C5A059; border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 12px; font-weight: 700;">
-                                    <i class="bi bi-check-circle me-2"></i> Müsait
-                                </span>
-                            }
-                        </div>
+                                
+                                @{
+                                    var isBusy = (ViewBag.Availability as Dictionary<int, bool>)?[item.Id] ?? false;
+                                }
+                                @if (isBusy)
+                                {
+                                    <span class="badge-premium py-2 px-3 instructor-badge-busy">
+                                        <i class="bi bi-clock-history me-2"></i> Derste
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="badge-premium py-2 px-3 instructor-badge-available">
+                                        <i class="bi bi-check-circle me-2"></i> Müsait
+                                    </span>
+                                }
+                            </div>
 
-                        <div class="d-flex gap-3 mt-auto pt-4 border-top border-glass" style="border-top-color: rgba(255,255,255,0.1) !important;">
-                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-premium btn-primary-glow flex-grow-1 py-3" style="background: linear-gradient(135deg, #C5A059, #581C1C) !important; color: #ffffff !important; border: none !important; font-weight: 800 !important; font-size: 1rem !important; border-radius: 15px !important; box-shadow: 0 10px 20px rgba(197, 160, 89, 0.4) !important; display: flex; align-items: center; justify-content: center; gap: 10px; text-decoration: none !important;">
-                                <i class="bi bi-info-circle-fill"></i> DETAYLARI GÖR
-                            </a>
-                            @if (User.IsInRole("Admin"))
-                            {
-                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn-icon btn-icon-primary" style="width: 55px; height: 55px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 15px; display: flex; align-items: center; justify-content: center; color: white; transition: all 0.3s ease;">
-                                    <i class="bi bi-pencil-square"></i>
+                            <div class="d-flex gap-3 mt-auto pt-4 instructor-actions-border">
+                                <a asp-action="Details" asp-route-id="@item.Id" class="btn flex-grow-1 py-3 instructor-btn-details">
+                                    <i class="bi bi-info-circle-fill"></i> DETAYLARI GÖR
                                 </a>
-                            }
+                                @if (User.IsInRole("Admin"))
+                                {
+                                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn-icon instructor-btn-edit">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </a>
+                                }
+                            </div>
                         </div>
                     </div>
-                </div>
-            }
-        </div>
+                }
+            </div>
+        }
+    </div>
+
+<style>
+    /* ORTAK KART STİLLERİ */
+    .instructor-card {
+        border-radius: 20px;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
-</div>
+    .instructor-card:hover {
+        transform: translateY(-10px);
+    }
+    .instructor-name {
+        font-family: 'Outfit', sans-serif;
+        font-weight: 900;
+        margin-bottom: 0.5rem;
+        font-size: 1.8rem;
+        text-align: center;
+    }
+    .instructor-title {
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        font-size: 0.85rem;
+        font-weight: 800;
+        text-align: center;
+        margin-bottom: 1.5rem;
+    }
+    .instructor-avatar-modern {
+        width: 80px; height: 80px; margin: 0 auto;
+        border-radius: 20px; display: flex; align-items: center;
+        justify-content: center; font-size: 2rem;
+    }
+
+    /* GÜNDÜZ MODU (BEJ KUTU) */
+    [data-theme="light"] .instructor-card {
+        background-color: #fdfaf1 !important; /* Bej */
+        border: 2px solid #e2d3b3 !important;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+    }
+    [data-theme="light"] .instructor-name { color: #581C1C !important; }
+    [data-theme="light"] .instructor-title { color: #8a2e2e !important; }
+    [data-theme="light"] .instructor-avatar-modern {
+        background: linear-gradient(135deg, #C5A059, #581C1C);
+        color: white; box-shadow: 0 10px 20px rgba(197, 160, 89, 0.3);
+    }
+    [data-theme="light"] .instructor-badge-default {
+        background: rgba(88,28,28,0.05); color: #581C1C; border: 1px solid rgba(88,28,28,0.2); border-radius: 12px; font-weight: 700;
+    }
+    [data-theme="light"] .instructor-badge-busy {
+        background: rgba(239, 68, 68, 0.1); color: #dc3545; border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 12px; font-weight: 700;
+    }
+    [data-theme="light"] .instructor-badge-available {
+        background: rgba(16, 185, 129, 0.1); color: #198754; border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 12px; font-weight: 700;
+    }
+    [data-theme="light"] .instructor-actions-border { border-top: 1px solid rgba(88,28,28,0.1); }
+    [data-theme="light"] .instructor-btn-details {
+        background: #581C1C !important; color: #fff !important; font-weight: 800; border-radius: 15px; box-shadow: 0 10px 20px rgba(88, 28, 28, 0.2); display: flex; align-items: center; justify-content: center; gap: 10px;
+    }
+    [data-theme="light"] .instructor-btn-edit {
+        width: 55px; height: 55px; background: rgba(88,28,28,0.05); border: 1px solid rgba(88,28,28,0.2); border-radius: 15px; display: flex; align-items: center; justify-content: center; color: #581C1C;
+    }
+
+    /* GECE MODU (BORDO KUTU) */
+    [data-theme="dark"] .instructor-card {
+        background-color: #3b0f0f !important; /* Koyu Bordo */
+        border: 2px solid #C5A059 !important;
+        box-shadow: 0 10px 30px rgba(197, 160, 89, 0.15);
+    }
+    [data-theme="dark"] .instructor-name { color: #fdfaf1 !important; } /* Görünür bej yazı */
+    [data-theme="dark"] .instructor-title { color: #C5A059 !important; } /* Gold yazı */
+    [data-theme="dark"] .instructor-avatar-modern {
+        background: rgba(197, 160, 89, 0.2);
+        color: #C5A059; border: 1px solid #C5A059;
+    }
+    [data-theme="dark"] .instructor-badge-default {
+        background: rgba(255,255,255,0.05); color: #fdfaf1; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; font-weight: 700;
+    }
+    [data-theme="dark"] .instructor-badge-busy {
+        background: rgba(239, 68, 68, 0.2); color: #ff8787; border: 1px solid rgba(239, 68, 68, 0.4); border-radius: 12px; font-weight: 700;
+    }
+    [data-theme="dark"] .instructor-badge-available {
+        background: rgba(197, 160, 89, 0.2); color: #C5A059; border: 1px solid rgba(197, 160, 89, 0.4); border-radius: 12px; font-weight: 700;
+    }
+    [data-theme="dark"] .instructor-actions-border { border-top: 1px dashed rgba(197, 160, 89, 0.3); }
+    [data-theme="dark"] .instructor-btn-details {
+        background: #C5A059 !important; color: #3b0f0f !important; font-weight: 900; border-radius: 15px; box-shadow: 0 10px 20px rgba(197, 160, 89, 0.2); display: flex; align-items: center; justify-content: center; gap: 10px;
+    }
+    [data-theme="dark"] .instructor-btn-edit {
+        width: 55px; height: 55px; background: rgba(197, 160, 89, 0.1); border: 1px solid rgba(197, 160, 89, 0.3); border-radius: 15px; display: flex; align-items: center; justify-content: center; color: #C5A059;
+    }
+</style>
 

@@ -223,15 +223,23 @@
 
     /* Theme Overrides for Light Mode */
     [data-theme="light"] .hp-guide-wrapper { background: #fdfdfd; }
-    [data-theme="light"] .hp-hero-card { background: white; border-color: rgba(0,0,0,0.05); box-shadow: 0 10px 40px rgba(0,0,0,0.05); }
+    [data-theme="light"] .hp-hero-card { background: white; border-color: rgba(197, 160, 89, 0.2); box-shadow: 0 10px 40px rgba(197, 160, 89, 0.1); }
     [data-theme="light"] .hp-main-title { background: linear-gradient(to right, #581C1C 0%, #C5A059 50%, #581C1C 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    [data-theme="light"] .hp-hero-card p { color: #475569 !important; }
-    [data-theme="light"] .hp-earn-card { background: white; border-color: #f1f5f9; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
-    [data-theme="light"] .hp-earn-card h4 { color: #1e293b !important; }
-    [data-theme="light"] .hp-earn-card p { color: #64748b !important; }
-    [data-theme="light"] .custom-hp-table tbody tr { background: white !important; border: 1px solid #e2e8f0 !important; box-shadow: 0 4px 10px rgba(0,0,0,0.02); }
-    [data-theme="light"] .custom-hp-table td { color: #1e293b !important; }
-    [data-theme="light"] .active-level { background: rgba(197, 160, 89, 0.15) !important; border-color: rgba(197, 160, 89, 0.5) !important; }
+    [data-theme="light"] .hp-hero-card p { color: #581C1C !important; }
+    
+    /* Gold themed cards for light mode */
+    [data-theme="light"] .hp-earn-card { background: #fdfaf1; border-color: #f1e3c8; box-shadow: 0 4px 15px rgba(197,160,89,0.1); }
+    [data-theme="light"] .hp-earn-card h4 { color: #581C1C !important; }
+    [data-theme="light"] .hp-earn-card p { color: #8a6a4b !important; }
+    [data-theme="light"] .hp-earn-card:hover { border-color: #C5A059 !important; background: #ffffff !important; box-shadow: 0 10px 30px rgba(197,160,89,0.2); }
+    [data-theme="light"] .hp-value { background: rgba(197, 160, 89, 0.15); color: #581C1C; border: 1px solid rgba(197, 160, 89, 0.3); }
+
+    /* Gold themed tables for light mode */
+    [data-theme="light"] .custom-hp-table thead th { background: linear-gradient(135deg, #d4af37 0%, #aa8c2c 100%) !important; color: #ffffff !important; border: none !important; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3) !important; }
+    [data-theme="light"] .custom-hp-table tbody tr { background: #fdfaf1 !important; border: 1px solid rgba(212, 175, 55, 0.2) !important; box-shadow: 0 2px 8px rgba(212, 175, 55, 0.1) !important; }
+    [data-theme="light"] .custom-hp-table td { color: #581C1C !important; font-weight: 600; }
+    [data-theme="light"] .custom-hp-table td .text-white-50 { color: rgba(88, 28, 28, 0.7) !important; }
+    [data-theme="light"] .active-level { background: #fbf1d6 !important; border-color: #d4af37 !important; box-shadow: 0 5px 15px rgba(212, 175, 55, 0.2) !important; transform: scale(1.01); }
     
     /* VIBRANT LISTEN BUTTON */
     #btnListen {

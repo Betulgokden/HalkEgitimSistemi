@@ -120,13 +120,13 @@
                                                 background: @(isCurrent ? "rgba(197, 160, 89, 0.08)" : "rgba(255,255,255,0.02)") !important; margin-bottom: 1rem;">
                                         
                                         <div class="week-number text-center" style="min-width: 70px;">
-                                            <div class="h3 fw-900 mb-0" style="color: @(isCurrent ? "var(--primary-light)" : "var(--text-muted)");">@(i + 1)</div>
-                                            <div class="small text-uppercase fw-bold opacity-50" data-i18n="week_label">Hafta</div>
+                                            <div class="h3 fw-900 mb-0 gold-text">@(i + 1)</div>
+                                            <div class="small text-uppercase fw-bold text-white-50" data-i18n="week_label">Hafta</div>
                                         </div>
 
                                         <div class="flex-grow-1">
                                             <div class="d-flex justify-content-between align-items-start mb-1">
-                                                <h5 class="fw-bold text-white mb-0">@modules[i].Trim()</h5>
+                                                <h5 class="fw-bold gold-text mb-0">@modules[i].Trim()</h5>
                                                 @if (isPast) {
                                                     <span class="badge-premium badge-success"><i class="bi bi-check2-all"></i> <span data-i18n="completed_status">Tamamlandı</span></span>
                                                 } else if (isCurrent) {
@@ -335,18 +335,18 @@
 
                 @if (isFull)
                 {
-                    <a href="#applicationFormSection" class="btn btn-premium btn-secondary-glass btn-lg w-100 mb-2">
+                    <button type="button" data-bs-toggle="modal" data-bs-target="#applicationModal" class="btn btn-premium btn-secondary-glass btn-lg w-100 mb-2">
                         <i class="bi bi-hourglass-split me-1"></i> <span data-i18n="join_waiting_list">Yedek Listesine Katıl</span>
-                    </a>
+                    </button>
                     <p class="small text-center text-warning mt-2">
                         <i class="bi bi-info-circle"></i> <span data-i18n="quota_full_info">Kontenjan dolmuştur. Başvurunuz yedek listesine alınacaktır.</span>
                     </p>
                 }
                 else
                 {
-                    <a href="#applicationFormSection" class="btn btn-premium btn-primary-glow btn-lg w-100" style="box-shadow: 0 5px 20px rgba(245,158,11,0.4);">
+                    <button type="button" data-bs-toggle="modal" data-bs-target="#applicationModal" class="btn btn-premium btn-primary-glow btn-lg w-100" style="box-shadow: 0 5px 20px rgba(245,158,11,0.4);">
                         <i class="bi bi-rocket-takeoff flex-shrink-0"></i> <span data-i18n="apply_now">Hemen Başvur</span>
-                    </a>
+                    </button>
                 }
                 
                 <div class="text-center mt-3">
@@ -499,111 +499,167 @@
         </div>
     </div>
 
-    <!-- Final Info & Halk Point Code Section -->
-    <div class="row mt-5" id="applicationFormSection">
-        <div class="col-12">
-            <div class="glass-card-static p-4 p-md-5 animate-fadeInUp" style="border-radius: 30px; border: 2px dashed var(--theme-card-border); background: rgba(197, 160, 89, 0.03) !important;">
-                <div class="text-center mb-5">
-                    <h4 class="fw-800 gold-text mb-3"><i class="bi bi-rocket-takeoff-fill me-2"></i> KURSA BAŞVURU EKRANI</h4>
-                    <p class="text-white-50 mx-auto" style="max-width: 700px;">
-                        Aşağıdaki formu doldurarak kursa kaydınızı gerçekleştirebilirsiniz. Eğer <strong>Halk Point</strong> kodunuz varsa, formun sonundaki alana girmeyi unutmayın!
-                    </p>
-                </div>
-
-                <div class="row g-5">
-                    <!-- Left: Form -->
-                    <div class="col-lg-7">
-                        @if (User.Identity.IsAuthenticated && User.IsInRole("Student"))
-                        {
-                            <form asp-controller="Applications" asp-action="Create" method="post" class="text-start">
-                                <input type="hidden" name="CourseId" value="@Model.Id" />
-                                <div class="row g-3">
-                                    <div class="col-md-6">
-                                        <label class="form-label small fw-bold text-muted">ADINIZ</label>
-                                        <input type="text" name="FirstName" class="form-premium-control" required />
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label small fw-bold text-muted">SOYADINIZ</label>
-                                        <input type="text" name="LastName" class="form-premium-control" required />
-                                    </div>
-                                    <div class="col-12">
-                                        <label class="form-label small fw-bold text-muted">T.C. KİMLİK NO</label>
-                                        <input type="text" name="TcNo" class="form-premium-control" maxlength="11" required />
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label small fw-bold text-muted">TELEFON</label>
-                                        <input type="tel" name="PhoneNumber" class="form-premium-control" required />
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label small fw-bold text-muted">E-POSTA</label>
-                                        <input type="email" name="Email" class="form-premium-control" required />
-                                    </div>
-                                    <div class="col-12">
-                                        <label class="form-label small fw-bold text-muted">HALK POINT KODU (VARSA)</label>
-                                        <input type="text" name="UsedHalkPointCode" id="formPromoCode" class="form-premium-control border-gold" placeholder="HP-XXXX-XX" />
-                                        <small class="text-gold opacity-75 mt-1 d-block"><i class="bi bi-info-circle me-1"></i> Kodunuzu girdikten sonra başvuru otomatik olarak ücretsiz tanımlanacaktır.</small>
-                                    </div>
-                                    <div class="col-12 mt-4">
-                                        <button type="submit" class="btn btn-premium btn-primary-glow btn-lg w-100 py-3 rounded-pill">
-                                            <i class="bi bi-check2-circle me-2"></i> BAŞVURUYU TAMAMLA
-                                        </button>
-                                    </div>
-                                </div>
-                            </form>
-                        }
-                        else if (!User.Identity.IsAuthenticated)
-                        {
-                            <div class="text-center py-5">
-                                <i class="bi bi-lock-fill fs-1 gold-text mb-3"></i>
-                                <h5 class="text-white">Başvuru İçin Giriş Yapmalısınız</h5>
-                                <p class="text-muted small">Kurs başvurusu yapmak için lütfen öğrenci hesabınızla giriş yapın.</p>
-                                <a asp-controller="Account" asp-action="Login" class="btn btn-outline-gold rounded-pill px-4 mt-3">GİRİŞ YAP</a>
-                            </div>
-                        }
-                        else
-                        {
-                            <div class="alert alert-info-glass">
-                                <i class="bi bi-info-circle-fill me-2"></i> Sadece Kursiyer hesabı ile başvuru yapılabilir.
-                            </div>
-                        }
+    <!-- Başvuru Modalı (Hemen Başvur Ekranı) -->
+    <div class="modal fade" id="applicationModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content" style="background: #111827; border: 1px solid rgba(197, 160, 89, 0.3); border-radius: 20px; overflow: hidden;">
+                <div class="modal-header border-bottom-0 pb-0 pt-4 px-4 text-center d-block position-relative" style="z-index: 1051;">
+                    <button type="button" class="btn-close btn-close-white position-absolute" data-bs-dismiss="modal" aria-label="Close" style="top: 25px; right: 25px; z-index: 1100; opacity: 1; filter: invert(1) grayscale(100%) brightness(200%); cursor: pointer;"></button>
+                    <div class="icon-box-md bg-gold text-maroon rounded-circle mx-auto mb-3" style="width: 60px; height: 60px; display: flex; align-items: center; justify-content: center;">
+                        <i class="bi bi-rocket-takeoff-fill fs-3"></i>
                     </div>
+                    <h3 class="modal-title fw-900 gold-text" style="letter-spacing: 2px;">KURSA BAŞVURU FORMU</h3>
+                    <p class="text-white-50 small mt-2">Borçka Halk Eğitim Merkezi - Dijital Kayıt Sistemi</p>
+                </div>
+                <div class="modal-body p-4 p-md-5">
+                    @if (User.Identity.IsAuthenticated && User.IsInRole("Student"))
+                    {
+                        <p class="text-white-50 mb-4">
+                            Aşağıdaki kayıt bilgilerini doldurarak başvurunuzu tamamlayabilirsiniz. Eğer <strong>Halkbot</strong> kodunuz varsa, ücret kısmında kullanarak kursu ücretsiz alabilirsiniz!
+                        </p>
 
-                    <!-- Right: Info & Halk Point -->
-                    <div class="col-lg-5">
-                        <div class="p-4 rounded-4" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05);">
-                            <h5 class="fw-bold text-white mb-4"><i class="bi bi-lightning-charge-fill text-warning me-2"></i> Halk Point Bilgisi</h5>
-                            <p class="small text-muted mb-4">
-                                Kursu ücretsiz almak için yeterli puanınız varsa "BAŞARI KİLİDİNİ AÇ" butonu ile kodunuzu oluşturun ve formda kullanın.
-                            </p>
-
-                            <div id="finalUnlockResult" class="mt-4 mb-4" style="display:none;">
-                                <div class="p-4 bg-success bg-opacity-10 border border-success border-opacity-20 rounded-4 text-center">
-                                    <span class="text-success fw-900 d-block mb-2" style="font-size: 0.7rem;">KODUNUZ HAZIR:</span>
-                                    <div class="d-flex align-items-center justify-content-center gap-2">
-                                        <span id="finalPromoCodeVal" class="gold-text fw-900 fs-3"></span>
-                                        <button class="btn btn-sm btn-outline-gold" onclick="copyPromoCode()">
-                                            <i class="bi bi-clipboard"></i>
-                                        </button>
+                        <div class="row g-5">
+                            <!-- Left: Form -->
+                            <div class="col-lg-7">
+                                <form asp-controller="Applications" asp-action="Create" method="post" id="applicationForm">
+                                    <input type="hidden" name="CourseId" value="@Model.Id" />
+                                    <!-- This hidden input will hold the code for the backend to process -->
+                                    <input type="hidden" name="UsedHalkPointCode" id="hiddenPromoCode" />
+                                    
+                                    <div class="row g-3">
+                                        <div class="col-md-6">
+                                            <label class="form-label small fw-bold text-muted">ADINIZ</label>
+                                            <input type="text" name="FirstName" class="form-premium-control" required />
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label small fw-bold text-muted">SOYADINIZ</label>
+                                            <input type="text" name="LastName" class="form-premium-control" required />
+                                        </div>
+                                        <div class="col-12">
+                                            <label class="form-label small fw-bold text-muted">T.C. KİMLİK NO</label>
+                                            <input type="text" name="TcNo" class="form-premium-control" maxlength="11" required />
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label small fw-bold text-muted">TELEFON</label>
+                                            <input type="tel" name="PhoneNumber" class="form-premium-control" required />
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label small fw-bold text-muted">E-POSTA</label>
+                                            <input type="email" name="Email" class="form-premium-control" required />
+                                        </div>
+                                        <div class="col-12">
+                                            <label class="form-label small fw-bold text-muted">BAŞVURU NOTUNUZ</label>
+                                            <textarea name="Notes" class="form-premium-control" rows="3" placeholder="Eklemek istediğiniz notlar (opsiyonel)..."></textarea>
+                                        </div>
+                                        <div class="col-12 mt-4">
+                                            <div class="p-3 mb-4 rounded-4" style="background: rgba(16, 185, 129, 0.05); border: 1px dashed rgba(16, 185, 129, 0.3);">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" id="kvkkCheck" required>
+                                                    <label class="form-check-label small text-white-50" for="kvkkCheck">
+                                                        Kişisel verilerimin işlenmesine ilişkin aydınlatma metnini okudum ve onaylıyorum.
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <button type="submit" class="btn btn-premium btn-primary-glow btn-lg w-100 py-3 rounded-pill fs-5">
+                                                <i class="bi bi-check2-circle me-2"></i> BAŞVURUYU TAMAMLA
+                                            </button>
+                                        </div>
                                     </div>
-                                    <p class="x-small text-white-50 mt-2 mb-0">Bu kodu yan taraftaki forma yapıştırın.</p>
-                                </div>
+                                </form>
                             </div>
 
-                            <div class="p-3 bg-glass-sm rounded-3 mt-4">
-                                <h6 class="text-white x-small fw-bold mb-2">DİKKAT EDİLMESİ GEREKENLER</h6>
-                                <ul class="x-small text-muted ps-3 mb-0">
-                                    <li class="mb-2">T.C. No bilgisinin doğru olduğundan emin olun.</li>
-                                    <li class="mb-2">Devamsızlık sınırı %20'dir.</li>
-                                    <li>Başvuru sonrası e-posta onayı gelecektir.</li>
-                                </ul>
+                            <!-- Right: Course Fee & Halkbot Code -->
+                            <div class="col-lg-5">
+                                <div class="p-4 rounded-4 h-100" style="background: rgba(197, 160, 89, 0.05); border: 1px dashed #C5A059;">
+                                    <h5 class="fw-bold text-white mb-4"><i class="bi bi-wallet2 text-warning me-2"></i> Kurs Ücreti</h5>
+                                    
+                                    <div class="d-flex justify-content-between align-items-center mb-4">
+                                        <span class="text-white-50">Eğitim Bedeli:</span>
+                                        <span class="text-white fw-bold fs-5" id="originalFeeText">@(Model.Price > 0 ? Model.Price.ToString("N2") + " ₺" : "750,00 ₺")</span>
+                                    </div>
+
+                                    <hr style="border-color: rgba(197, 160, 89, 0.2);" />
+
+                                    <div class="mb-4">
+                                        <label class="form-label small fw-bold text-gold">HALKBOT KODU (VARSA)</label>
+                                        <div class="input-group">
+                                            <input type="text" id="uiHalkbotCode" class="form-control" style="background: rgba(255,255,255,0.05); border: 1px solid #C5A059; color: white;" placeholder="Örn: HALKBOT-123" />
+                                            <button type="button" class="btn btn-outline-gold" onclick="applyHalkbotCode()">Kodu Uygula</button>
+                                        </div>
+                                        <small class="text-gold opacity-75 mt-2 d-block">
+                                            <i class="bi bi-info-circle me-1"></i> Not: Kodu doğru giren kursiyerlerimiz için kurs ücreti tamamen ücretsiz olacaktır!
+                                        </small>
+                                    </div>
+
+                                    <div class="p-3 mt-4" style="background: rgba(0,0,0,0.2); border-radius: 10px;">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <span class="text-white fw-bold">Ödenecek Tutar:</span>
+                                            <span class="text-warning fw-900 fs-3" id="finalFeeText">@(Model.Price > 0 ? Model.Price.ToString("N2") + " ₺" : "750,00 ₺")</span>
+                                        </div>
+                                        <div id="freeSuccessMessage" class="mt-2 text-success fw-bold text-end" style="display: none; font-size: 0.9rem;">
+                                            <i class="bi bi-check-circle-fill me-1"></i> Halkbot İndirimi Uygulandı!
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    }
+                    else if (!User.Identity.IsAuthenticated)
+                    {
+                        <div class="text-center py-5">
+                            <div class="mb-4">
+                                <i class="bi bi-lock-fill gold-text" style="font-size: 5rem; opacity: 0.8;"></i>
+                            </div>
+                            <h4 class="text-white fw-bold mb-3">BAŞVURU İÇİN GİRİŞ YAPMALISINIZ</h4>
+                            <p class="text-white-50 mb-5 px-md-5">Kurs başvurusu yapmak, Halk Point puanlarınızı kullanmak ve eğitim takviminizi takip etmek için lütfen öğrenci hesabınızla giriş yapın.</p>
+                            
+                            <div class="d-grid gap-3 col-md-6 mx-auto">
+                                <a asp-controller="Account" asp-action="Login" class="btn btn-premium btn-primary-glow rounded-pill py-3 fs-5 fw-bold" style="letter-spacing: 1px;">
+                                    GİRİŞ YAP <i class="bi bi-box-arrow-in-right ms-2"></i>
+                                </a>
+                                <a asp-controller="Account" asp-action="Register" class="btn btn-outline-light rounded-pill py-2 opacity-75">
+                                    Hesabınız yok mu? Hemen Kaydolun
+                                </a>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center py-5">
+                            <i class="bi bi-shield-exclamation fs-1 text-info mb-3"></i>
+                            <h5 class="text-white">Yetkisiz Erişim</h5>
+                            <p class="text-muted small">Sadece Kursiyer hesabı ile başvuru yapılabilir.</p>
+                        </div>
+                    }
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    function applyHalkbotCode() {
+        const code = document.getElementById('uiHalkbotCode').value.trim();
+        if(!code) {
+            alert("Lütfen geçerli bir Halkbot kodu giriniz!");
+            return;
+        }
+        
+        // Simulating code check
+        document.getElementById('hiddenPromoCode').value = code;
+        
+        // UI Update to Free
+        document.getElementById('originalFeeText').style.textDecoration = "line-through";
+        document.getElementById('originalFeeText').style.opacity = "0.5";
+        
+        const finalFee = document.getElementById('finalFeeText');
+        finalFee.innerText = "ÜCRETSİZ";
+        finalFee.classList.remove('text-warning');
+        finalFee.classList.add('text-success');
+        
+        document.getElementById('freeSuccessMessage').style.display = "block";
+    }
+</script>
 
 <style>
     .rating-input-modern { 
@@ -684,21 +740,28 @@
                 document.getElementById('unlockResult').style.display = 'block';
                 document.getElementById('promoCodeVal').innerText = data.code;
                 
-                // Also update final section at the bottom
-                document.getElementById('finalUnlockResult').style.display = 'block';
-                document.getElementById('finalPromoCodeVal').innerText = data.code;
-                
-                // Smooth scroll to bottom
-                window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+                // Auto-fill the modal input
+                var uiCodeInput = document.getElementById('uiHalkbotCode');
+                if(uiCodeInput) {
+                    uiCodeInput.value = data.code;
+                    // Automatically apply the code visually
+                    applyHalkbotCode();
+                }
 
                 Swal.fire({
                     title: 'Kilit Açıldı!',
-                    text: 'Halk Point kodunuz sayfanın en altında da görüntülenmektedir.',
+                    text: 'Halkbot kodunuz oluşturuldu ve başvuru formuna otomatik olarak eklendi!',
                     icon: 'success',
                     background: '#1a1a2e',
                     color: '#fff',
-                    confirmButtonText: 'Koda Git',
+                    confirmButtonText: 'Başvuru Yap',
                     confirmButtonColor: '#C5A059'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Open the modal automatically
+                        var myModal = new bootstrap.Modal(document.getElementById('applicationModal'));
+                        myModal.show();
+                    }
                 });
             } else {
                 alert(data.message);
@@ -707,12 +770,10 @@
     }
 
     function copyPromoCode() {
-        const code = document.getElementById('finalPromoCodeVal').innerText;
+        const code = document.getElementById('promoCodeVal').innerText;
         navigator.clipboard.writeText(code).then(() => {
-            // Also auto-fill the form if it exists
-            const formInput = document.getElementById('formPromoCode');
+            const formInput = document.getElementById('uiHalkbotCode');
             if (formInput) formInput.value = code;
-            
             alert('Kod panoya kopyalandı ve forma otomatik olarak eklendi: ' + code);
         });
     }

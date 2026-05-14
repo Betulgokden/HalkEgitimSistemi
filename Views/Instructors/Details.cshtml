@@ -63,8 +63,8 @@
                 </div>
 
                 <div class="d-grid gap-2">
-                    <button class="btn btn-premium btn-primary-glow py-3" onclick="document.getElementById('messageFormSection').scrollIntoView({behavior: 'smooth'})">
-                        <i class="bi bi-chat-left-text-fill me-2"></i> Soru Sor
+                    <button class="btn btn-premium btn-primary-glow py-3" onclick="document.getElementById('messageFormSection').scrollIntoView({behavior: 'smooth'})" style="color: #C5A059 !important;">
+                        <i class="bi bi-chat-left-text me-2"></i> Soru Sor
                     </button>
                     @if (!string.IsNullOrEmpty(Model.CvFilePath))
                     {
@@ -133,7 +133,7 @@
                 </div>
                 
                 <div class="table-responsive">
-                    <table class="table table-premium-dark mb-0">
+                    <table class="table table-modern-premium mb-0">
                         <thead>
                             <tr>
                                 <th>Gün</th>
@@ -179,8 +179,13 @@
             </div>
 
             <!-- Mesaj Gönder Section -->
-            <div id="messageFormSection" class="glass-card-static p-4 animate-fadeInRight" style="animation-delay: 0.2s;">
-                <h4 class="text-white fw-bold mb-4"><i class="bi bi-chat-right-quote-fill me-2 text-info"></i> Eğitmene Soru Sor</h4>
+            <div id="messageFormSection" class="glass-card-static p-4 animate-fadeInRight" style="animation-delay: 0.2s; border: 1px solid rgba(197, 160, 89, 0.3);">
+                <div class="d-flex align-items-center mb-4">
+                    <div class="icon-box-sm bg-gold text-maroon rounded-circle me-3" style="width: 45px; height: 45px; display: flex; align-items: center; justify-content: center;">
+                        <i class="bi bi-chat-right-quote-fill"></i>
+                    </div>
+                    <h4 class="gold-text fw-900 m-0" style="letter-spacing: 1px;">EĞİTMENE SORU SOR</h4>
+                </div>
                 
                 @if (User.Identity != null && User.Identity.IsAuthenticated)
                 {
@@ -218,32 +223,51 @@
 </div>
 
 <style>
-    /* Gece Modu Tablo Fix */
-    [data-theme="dark"] .table-premium-dark {
-        color: #ffffff !important;
+    /* Gece Modu Tablo Fix - Renksiz / Nötr Glass */
+    [data-theme="dark"] .table-modern-premium {
+        background: transparent !important;
+        border-collapse: separate;
+        border-spacing: 0 10px;
     }
-    [data-theme="dark"] .table-premium-dark thead th {
-        background: rgba(88, 28, 28, 0.4) !important;
+    [data-theme="dark"] .table-modern-premium thead th {
+        background: rgba(255, 255, 255, 0.05) !important;
         color: #C5A059 !important;
-        border-bottom: 2px solid #C5A059 !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        border-radius: 10px;
+        padding: 15px;
     }
-    [data-theme="dark"] .table-premium-dark tbody td {
-        border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+    [data-theme="dark"] .table-modern-premium tbody tr {
+        background: rgba(255, 255, 255, 0.03) !important;
+        border: 1px solid rgba(255, 255, 255, 0.05) !important;
+        transition: all 0.3s ease;
+    }
+    [data-theme="dark"] .table-modern-premium tbody tr:hover {
+        background: rgba(255, 255, 255, 0.08) !important;
+        transform: scale(1.01);
+    }
+    [data-theme="dark"] .table-modern-premium tbody td {
         color: #ffffff !important;
+        padding: 15px;
+        border: none !important;
     }
-
+    [data-theme="dark"] .table-modern-premium .text-white,
+    [data-theme="dark"] .table-modern-premium .text-white-50,
+    [data-theme="dark"] .table-modern-premium .text-white-25 {
+        color: rgba(255, 255, 255, 0.9) !important;
+    }
+    [data-theme="dark"] .table-modern-premium .opacity-50 {
+        color: rgba(255, 255, 255, 0.4) !important;
+    }
+    
     /* Gündüz Modu Tablo Fix */
-    [data-theme="light"] .table-premium-dark {
-        color: #581C1C !important;
+    [data-theme="light"] .table-modern-premium thead th {
+        background: #581C1C !important;
+        color: #fff !important;
+        border-radius: 10px;
     }
-    [data-theme="light"] .table-premium-dark thead th {
-        background: #f5f0e1 !important;
-        color: #581C1C !important;
-        border-bottom: 2px solid #581C1C !important;
-    }
-    [data-theme="light"] .table-premium-dark tbody td {
-        border-bottom: 1px solid rgba(88, 28, 28, 0.1) !important;
-        color: #581C1C !important;
+    [data-theme="light"] .table-modern-premium tbody tr {
+        background: #fff !important;
+        border: 1px solid #eee !important;
     }
 
     .bg-gold-glass {
@@ -273,6 +297,25 @@
     [data-theme="light"] .text-white, 
     [data-theme="light"] .text-white-70 {
         color: #581C1C !important;
+    }
+    [data-theme="dark"] .table-modern-premium {
+        background: rgba(255, 255, 255, 0.03) !important;
+        border: 1px solid rgba(197, 160, 89, 0.1) !important;
+    }
+    [data-theme="dark"] .table-modern-premium thead th {
+        background: rgba(197, 160, 89, 0.1) !important;
+        color: #C5A059 !important;
+        border-bottom: 1px solid #C5A059 !important;
+        text-transform: uppercase;
+        font-weight: 800;
+        letter-spacing: 1px;
+    }
+    [data-theme="dark"] .table-modern-premium tbody td {
+        color: rgba(255, 255, 255, 0.9) !important;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+    }
+    [data-theme="dark"] .table-modern-premium tbody tr:hover {
+        background: rgba(197, 160, 89, 0.05) !important;
     }
 </style>
 

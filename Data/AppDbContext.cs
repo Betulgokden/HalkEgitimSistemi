@@ -160,35 +160,119 @@ namespace HalkEgitimSistemi.Data
             );
 
             modelBuilder.Entity<Instructor>().HasData(
-                new Instructor { Id = 1, FullName = "Ahmet Yılmaz", Title = "Bilişim Teknolojileri Öğretmeni", CourseId = 1, Username = "ahmet", Password = "123", IsApproved = false, Address = "Borçka, Artvin", BirthYear = 1985 },
                 new Instructor 
                 { 
-                    Id = 2, 
-                    FullName = "Elif Kaya", 
-                    Title = "Web Tasarım Uzmanı", 
-                    CourseId = 2,
-                    Bio = "10 yılı aşkın süredir sektörde aktif olarak UI/UX tasarım ve ön yüz geliştirme projelerinde yer almaktadır. Figma, Adobe Creative Cloud ve modern web teknolojileri (HTML5, CSS3, JavaScript) konusunda uzmanlaşmıştır. Öğrencilerine sadece teknik bilgi değil, aynı zamanda tasarım odaklı düşünme yetisini de kazandırmayı amaçlar.",
-                    Education = "İstanbul Teknik Üniversitesi - Endüstriyel Tasarım (Lisans)\nMarmara Üniversitesi - Grafik Tasarım (Yüksek Lisans)",
-                    Skills = "UI/UX Design, Figma, HTML/CSS, Responsive Design, Adobe XD, Prototyping",
-                    LinkedInUrl = "https://linkedin.com/in/elifkaya",
-                    PortfolioUrl = "https://elifkaya.design",
-                    DribbbleUrl = "https://behance.net/elifkaya",
-                    ImageUrl = "/img/instructors/elif_kaya.png"
+                    Id = 1, FullName = "Ahmet Yılmaz", Title = "Bilişim Teknolojileri Öğretmeni", CourseId = 1, Username = "ahmet", Password = "123", IsApproved = false, Address = "Borçka, Artvin", BirthYear = 1985,
+                    Bio = "Yazılım dünyasına 15 yıl önce adım atan Ahmet Yılmaz, yapay zeka ve Python programlama konusunda ulusal çapta birçok ödüle sahiptir. Gençleri geleceğin teknolojileriyle buluşturmayı misyon edinmiştir.",
+                    Education = "ODTÜ - Bilgisayar Mühendisliği (Lisans)\nBoğaziçi Üniversitesi - Yapay Zeka (Yüksek Lisans)",
+                    Skills = "Python, Makine Öğrenmesi, Veri Bilimi, C#, Eğitim Teknolojileri"
                 },
-                new Instructor { Id = 3, FullName = "Mehmet Demir", Title = "Bilgisayar Eğitmeni", CourseId = 3 },
-                new Instructor { Id = 4, FullName = "Sarah Johnson", Title = "İngilizce Öğretmeni", CourseId = 4 },
-                new Instructor { Id = 5, FullName = "Hans Weber", Title = "Almanca Öğretmeni", CourseId = 5 },
-                new Instructor { Id = 6, FullName = "Zeynep Arslan", Title = "El Sanatları Ustası", CourseId = 6 },
-                new Instructor { Id = 7, FullName = "Fatma Çelik", Title = "Seramik Sanatçısı", CourseId = 7 },
-                new Instructor { Id = 8, FullName = "Can Özkan", Title = "Müzik Öğretmeni", CourseId = 8 },
-                new Instructor { Id = 9, FullName = "Hasan Korkmaz", Title = "Halk Müziği Sanatçısı", CourseId = 9 },
-                new Instructor { Id = 10, FullName = "Ayşe Yıldırım", Title = "Yoga Eğitmeni", CourseId = 10 },
-                new Instructor { Id = 11, FullName = "Şef Mustafa Bey", Title = "Aşçıbaşı", CourseId = 11 },
-                new Instructor { Id = 12, FullName = "Pınar Aydın", Title = "Pastacılık Ustası", CourseId = 12 },
-                new Instructor { Id = 13, FullName = "Derya Şahin", Title = "Güzellik Uzmanı", CourseId = 13 },
-                new Instructor { Id = 14, FullName = "Burak Öztürk", Title = "Mali Müşavir", CourseId = 14 },
-                new Instructor { Id = 15, FullName = "Prof. Dr. Selin Aktaş", Title = "Girişimcilik Danışmanı", CourseId = 15 },
-                new Instructor { Id = 16, FullName = "Caner Kandemir", Title = "Kıdemli Güvenlik Analisti", CourseId = 16, Username = "caner", Password = "123" }
+                new Instructor 
+                { 
+                    Id = 2, FullName = "Elif Kaya", Title = "Web Tasarım Uzmanı", CourseId = 2,
+                    Bio = "10 yılı aşkın süredir sektörde aktif olarak UI/UX tasarım ve ön yüz geliştirme projelerinde yer almaktadır. Figma, Adobe Creative Cloud ve modern web teknolojileri konusunda uzmanlaşmıştır.",
+                    Education = "İstanbul Teknik Üniversitesi - Endüstriyel Tasarım (Lisans)\nMarmara Üniversitesi - Grafik Tasarım (Yüksek Lisans)",
+                    Skills = "UI/UX Design, Figma, HTML/CSS, Responsive Design, Adobe XD",
+                    LinkedInUrl = "https://linkedin.com/in/elifkaya", PortfolioUrl = "https://elifkaya.design", ImageUrl = "/img/instructors/elif_kaya.png"
+                },
+                new Instructor 
+                { 
+                    Id = 3, FullName = "Mehmet Demir", Title = "Bilgisayar Eğitmeni", CourseId = 3,
+                    Bio = "Kamu kurumları ve özel sektörde 20 yıllık sistem yöneticiliği tecrübesine sahip olan Mehmet Demir, ofis yazılımları ve temel bilgisayar ağları konusunda yüzlerce kursiyer mezun etmiştir.",
+                    Education = "Karadeniz Teknik Üniversitesi - Bilgisayar Teknolojileri",
+                    Skills = "Windows Server, Microsoft Office, Ağ Güvenliği, Donanım"
+                },
+                new Instructor 
+                { 
+                    Id = 4, FullName = "Sarah Johnson", Title = "İngilizce Öğretmeni", CourseId = 4,
+                    Bio = "Ana dili İngilizce olan Sarah, CELTA ve TEFL sertifikalarına sahiptir. 8 yıldır Türkiye'de her yaş grubuna yenilikçi metotlarla İngilizce konuşma ve yazma eğitimleri vermektedir.",
+                    Education = "University of London - English Literature\nCambridge CELTA Certification",
+                    Skills = "İngilizce (Anadil), Konuşma Pratiği, IELTS/TOEFL Hazırlık, Pedagoji"
+                },
+                new Instructor 
+                { 
+                    Id = 5, FullName = "Hans Weber", Title = "Almanca Öğretmeni", CourseId = 5,
+                    Bio = "Goethe Enstitüsü geçmişine sahip olan Hans, Almanca dilinin mantığını ve Alman kültürünü kursiyerlere interaktif bir şekilde aktararak dil öğrenimini keyifli hale getiriyor.",
+                    Education = "Ludwig-Maximilians-Universität München - Germanistik",
+                    Skills = "Almanca A1-C1, Telc Sınav Hazırlığı, Kültürel Entegrasyon"
+                },
+                new Instructor 
+                { 
+                    Id = 6, FullName = "Zeynep Arslan", Title = "El Sanatları Ustası", CourseId = 6,
+                    Bio = "Kültür Bakanlığı onaylı El Sanatları ustası olan Zeynep Hanım, ahşap boyama ve geleneksel Türk motifleri üzerine eserler üretmekte ve sergiler açmaktadır.",
+                    Education = "Mimar Sinan Güzel Sanatlar Üniversitesi - Geleneksel Türk Sanatları",
+                    Skills = "Ahşap Boyama, Ebru Sanatı, Hat Sanatı, Motif Tasarımı"
+                },
+                new Instructor 
+                { 
+                    Id = 7, FullName = "Fatma Çelik", Title = "Seramik Sanatçısı", CourseId = 7,
+                    Bio = "Toprağa şekil vermeyi hayat felsefesi olarak gören Fatma Çelik, modern ve geleneksel seramik sanatını harmanlayarak atölyesinde eşsiz eserler ortaya çıkarıyor.",
+                    Education = "Hacettepe Üniversitesi - Seramik ve Cam Bölümü",
+                    Skills = "Seramik Şekillendirme, Sırlama Teknikleri, Çini İşlemeciliği"
+                },
+                new Instructor 
+                { 
+                    Id = 8, FullName = "Can Özkan", Title = "Müzik Öğretmeni", CourseId = 8,
+                    Bio = "Klasik gitar ve piyano alanında konservatuar eğitimi almış olan Can Özkan, çok sesli korolarda şeflik yapmış ve sayısız müzisyen yetiştirmiştir.",
+                    Education = "Ankara Devlet Konservatuarı - Müzik Teorisi ve Kompozisyon",
+                    Skills = "Klasik Gitar, Piyano, Solfej, Armoni"
+                },
+                new Instructor 
+                { 
+                    Id = 9, FullName = "Hasan Korkmaz", Title = "Halk Müziği Sanatçısı", CourseId = 9,
+                    Bio = "Anadolu'nun ezgilerini nesilden nesile aktarmayı görev edinen Hasan Korkmaz, bağlama virtüözü olup yurt içi ve yurt dışı birçok festivalde sahne almıştır.",
+                    Education = "Ege Üniversitesi - Türk Musikisi Devlet Konservatuarı",
+                    Skills = "Bağlama, Türk Halk Müziği Repertuarı, Şan Eğitimi"
+                },
+                new Instructor 
+                { 
+                    Id = 10, FullName = "Ayşe Yıldırım", Title = "Yoga Eğitmeni", CourseId = 10,
+                    Bio = "Hindistan'da aldığı 500 saatlik Yoga Alliance eğitiminin ardından, beden ve zihin sağlığını geliştirmeye yönelik nefes terapileri ve Hatha Yoga dersleri vermektedir.",
+                    Education = "Rishikesh Yoga Academy (RYT 500)\nSpor Bilimleri Fakültesi",
+                    Skills = "Hatha Yoga, Nefes Terapisi, Meditasyon, Anatomi"
+                },
+                new Instructor 
+                { 
+                    Id = 11, FullName = "Şef Mustafa Bey", Title = "Aşçıbaşı", CourseId = 11,
+                    Bio = "Uluslararası mutfaklarda 25 yıllık şeflik deneyimi olan Mustafa Bey, Michelin yıldızlı restoranlardaki tecrübesini yerel Türk mutfağıyla birleştirerek eşsiz tarifler öğretiyor.",
+                    Education = "Le Cordon Bleu Paris - Culinary Arts\nMengen Aşçılık Meslek Lisesi",
+                    Skills = "Dünya Mutfağı, Türk Mutfağı, Menü Planlama, Mutfak Yönetimi"
+                },
+                new Instructor 
+                { 
+                    Id = 12, FullName = "Pınar Aydın", Title = "Pastacılık Ustası", CourseId = 12,
+                    Bio = "Butik pastacılık ve çikolata tasarımında kendi markasını kurmuş olan Pınar Aydın, görsel şölene dönüşen tatlıların tüm sırlarını öğrencileriyle paylaşıyor.",
+                    Education = "Gastronomi ve Mutfak Sanatları Lisans Eğitimi",
+                    Skills = "Butik Pasta Tasarımı, Çikolata Yapımı, Fransız Tatlıları"
+                },
+                new Instructor 
+                { 
+                    Id = 13, FullName = "Derya Şahin", Title = "Güzellik Uzmanı", CourseId = 13,
+                    Bio = "Medikal estetik ve cilt bakımı uzmanı Derya Şahin, en yeni güzellik teknolojileri ve dermatolojik testlerden geçmiş doğal yöntemlerle sektörde profesyoneller yetiştiriyor.",
+                    Education = "Güzellik ve Saç Bakım Hizmetleri Uzmanlık Eğitimi",
+                    Skills = "Cilt Bakımı, Lazer Epilasyon, Profesyonel Makyaj, Anatomi"
+                },
+                new Instructor 
+                { 
+                    Id = 14, FullName = "Burak Öztürk", Title = "Mali Müşavir", CourseId = 14,
+                    Bio = "Kurumsal şirketlerde finans direktörlüğü yapmış olan Burak Öztürk, e-ticaret muhasebesi, vergi mevzuatı ve finansal okuryazarlık alanlarında danışmanlık yapmaktadır.",
+                    Education = "Gazi Üniversitesi - İşletme\nSMMM Ruhsatı",
+                    Skills = "Genel Muhasebe, Finansal Analiz, E-Ticaret Vergilendirme, Excel"
+                },
+                new Instructor 
+                { 
+                    Id = 15, FullName = "Prof. Dr. Selin Aktaş", Title = "Girişimcilik Danışmanı", CourseId = 15,
+                    Bio = "Sayısız start-up'a mentörlük yapan Prof. Dr. Selin Aktaş, melek yatırımcı ağlarıyla olan bağlantıları ve inovasyon stratejileri sayesinde girişimcilere yol gösteriyor.",
+                    Education = "Stanford University - Business Administration (Ph.D.)",
+                    Skills = "İş Geliştirme, Melek Yatırım, KOSGEB Danışmanlığı, Start-up Yönetimi"
+                },
+                new Instructor 
+                { 
+                    Id = 16, FullName = "Caner Kandemir", Title = "Kıdemli Güvenlik Analisti", CourseId = 16, Username = "caner", Password = "123",
+                    Bio = "Siber güvenlik alanında CEH ve CISSP sertifikalarına sahip Caner Kandemir, kurumların ağ güvenlik mimarilerini test eden etik bir hacker ve güvenlik araştırmacısıdır.",
+                    Education = "Bilkent Üniversitesi - Bilgisayar Mühendisliği\nCertified Ethical Hacker (CEH)",
+                    Skills = "Ağ Güvenliği, Penetrasyon Testleri, Kriptografi, Sızma Testi"
+                }
             );
 
             modelBuilder.Entity<News>().HasData(

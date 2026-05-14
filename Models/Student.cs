@@ -14,9 +14,7 @@ namespace HalkEgitimSistemi.Models
         public string Password { get; set; } = string.Empty;
         public string? PhoneNumber { get; set; }
         
-        [System.ComponentModel.DataAnnotations.Schema.NotMapped]
         public int? NeighborhoodId { get; set; }
-        [System.ComponentModel.DataAnnotations.Schema.NotMapped]
         public Neighborhood? Neighborhood { get; set; }
         
         public bool IsApproved { get; set; } = false; // Yeni: Genel onay durumu

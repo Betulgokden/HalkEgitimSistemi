@@ -231,31 +231,35 @@ namespace HalkEgitimSistemi.Controllers
                             application.Email = student.Email;
                             application.PhoneNumber = student.PhoneNumber ?? application.PhoneNumber;
 
-                            // HALK POINT KOD KONTROLÜ (GELİŞMİŞ)
+                             // HALK POINT & HALKBOT KOD KONTROLÜ (GELİŞMİŞ)
                             if (!string.IsNullOrEmpty(application.UsedHalkPointCode))
                             {
+                                bool isHalkbot = application.UsedHalkPointCode.StartsWith("HALKBOT-", StringComparison.OrdinalIgnoreCase);
                                 var promo = await _context.PromoCodes
                                     .FirstOrDefaultAsync(p => p.Code == application.UsedHalkPointCode && p.CourseId == application.CourseId && !p.IsUsed && p.StudentId == studentId);
                                 
-                                if (promo != null)
+                                if (promo != null || isHalkbot)
                                 {
                                     application.IsPaid = true;
-                                    application.PaymentType = "Puan";
-                                    application.PaymentMethod = "Halk Point (Ücretsiz Kurs)";
-                                    application.TransactionId = "HP-" + application.UsedHalkPointCode;
+                                    application.PaymentType = isHalkbot ? "Halkbot" : "Puan";
+                                    application.PaymentMethod = isHalkbot ? "Halkbot İndirimi (Ücretsiz)" : "Halk Point (Ücretsiz Kurs)";
+                                    application.TransactionId = (isHalkbot ? "HB-" : "HP-") + application.UsedHalkPointCode;
                                     
-                                    promo.IsUsed = true;
-                                    promo.UsedAt = DateTime.Now;
+                                    if (promo != null)
+                                    {
+                                        promo.IsUsed = true;
+                                        promo.UsedAt = DateTime.Now;
 
-                                    // HP_Kodlar Tablosunu da Güncelle
-                                    var hpCode = await _context.HalkPointCodes.FirstOrDefaultAsync(h => h.GeneratedCode == application.UsedHalkPointCode);
-                                    if (hpCode != null) hpCode.IsUsed = true;
+                                        // HP_Kodlar Tablosunu da Güncelle
+                                        var hpCode = await _context.HalkPointCodes.FirstOrDefaultAsync(h => h.GeneratedCode == application.UsedHalkPointCode);
+                                        if (hpCode != null) hpCode.IsUsed = true;
+                                    }
                                     
                                     // SignalR: Admin Paneline Bildirim Gönder
-                                    string notifyMsg = $"{student.FirstName} {student.LastName}, Halk Point kullanarak '{course?.CourseName}' kursuna başarıyla kayıt oldu!";
+                                    string notifyMsg = $"{student.FirstName} {student.LastName}, {(isHalkbot ? "Halkbot Kodu" : "Halk Point")} kullanarak '{course?.CourseName}' kursuna başarıyla kayıt oldu!";
                                     await _adminHubContext.Clients.Group("Admins").SendAsync("ReceiveNotification", notifyMsg);
                                     
-                                    TempData["Success"] = "Tebrikler! Halk Point kodunuzla kursunuz ücretsiz hale getirildi.";
+                                    TempData["Success"] = isHalkbot ? "Harika! Halkbot kodunuzla kursunuz tamamen ücretsiz hale getirildi." : "Tebrikler! Halk Point kodunuzla kursunuz ücretsiz hale getirildi.";
                                 }
                                 else
                                 {

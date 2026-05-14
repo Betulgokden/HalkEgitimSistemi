@@ -88,8 +88,8 @@ namespace HalkEgitimSistemi.Controllers
 
             var neighborhoodStatsTask = _context.Students.AsNoTracking()
                 .Where(s => !s.IsDeleted && s.NeighborhoodId != null)
-                .GroupBy(s => s.Neighborhood!.Name)
-                .Select(g => new { Neighborhood = g.Key, Count = g.Count() })
+                .GroupBy(s => s.NeighborhoodId)
+                .Select(g => new { NeighborhoodId = g.Key, Count = g.Count() })
                 .ToListAsync();
 
             // Main Talent Query
@@ -118,7 +118,7 @@ namespace HalkEgitimSistemi.Controllers
                 .Select(a => new {
                     Id = a.Id,
                     Name = a.FirstName + " " + a.LastName,
-                    Category = a.Course != null ? a.Course.Category!.CategoryName : "Genel",
+                    Category = a.Course != null && a.Course.Category != null ? a.Course.Category.CategoryName : "Genel",
                     CourseName = a.Course != null ? a.Course.CourseName : "Kurs",
                     CertCode = a.CertificateCode,
                     Grade = a.ExamGrade,

@@ -62,6 +62,9 @@ namespace HalkEgitimSistemi.Models
         [Display(Name = "Yönetici Notu")]
         public string? AdminNote { get; set; }
 
+        [Display(Name = "Aday Notu")]
+        public string? Notes { get; set; }
+
         [Display(Name = "Sertifika Kodu")]
         public string? CertificateCode { get; set; }
 

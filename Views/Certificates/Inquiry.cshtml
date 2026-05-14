@@ -22,7 +22,7 @@
 
                 <div class="e-devlet-badge animate-pulse-glow mb-5 mx-auto" style="width: fit-content;">
                     <div class="p-2 px-4 rounded-pill d-flex align-items-center gap-3 badge-edevlet-premium">
-                        <img src="https://cdntr.e-devlet.gov.tr/assets/img/logos/e-devlet-kapisi-logo.png" height="24" alt="E-Devlet">
+                        <i class="bi bi-shield-fill-check fs-4" style="color: #C5A059;"></i>
                         <span class="edevlet-text-premium">E-DEVLET ENTEGRE SİSTEM</span>
                     </div>
                 </div>
@@ -200,10 +200,23 @@
         box-shadow: 0 10px 25px rgba(0,0,0,0.2);
     }
     .edevlet-text-premium { 
-        color: #C5A059; 
+        color: #C5A059 !important; 
         font-weight: 900; 
         font-size: 0.85rem; 
         letter-spacing: 1.5px; 
+    }
+
+    /* Light Theme Enhancements for E-Devlet Badge */
+    [data-theme="light"] .badge-edevlet-premium {
+        background: #ffffff;
+        border-color: #C5A059;
+        box-shadow: 0 8px 25px rgba(197, 160, 89, 0.2);
+    }
+    [data-theme="light"] .edevlet-text-premium {
+        color: #581C1C !important;
+    }
+    [data-theme="light"] .badge-edevlet-premium i {
+        color: #581C1C !important;
     }
 
     .search-box-premium-xl { 
