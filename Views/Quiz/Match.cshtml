@@ -1,4 +1,4 @@
-﻿@model List<HalkEgitimSistemi.Models.QuizQuestion>
+@model List<HalkEgitimSistemi.Models.QuizQuestion>
 @{
     ViewData["Title"] = "Düello Başlıyor!";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -197,13 +197,13 @@
         }
 
         const q = questions[currentIndex];
-        document.getElementById('questionTitle').innerText = q.questionText;
-        document.getElementById('optA').innerText = q.optionA;
-        document.getElementById('optB').innerText = q.optionB;
-        document.getElementById('optC').innerText = q.optionC;
-        document.getElementById('optD').innerText = q.optionD;
+        document.getElementById('questionTitle').innerText = q.questionText || q.QuestionText;
+        document.getElementById('optA').innerText = q.optionA || q.OptionA;
+        document.getElementById('optB').innerText = q.optionB || q.OptionB;
+        document.getElementById('optC').innerText = q.optionC || q.OptionC;
+        document.getElementById('optD').innerText = q.optionD || q.OptionD;
         document.getElementById('currentQuestionNum').innerText = currentIndex + 1;
-        document.getElementById('categoryText').innerText = q.category;
+        document.getElementById('categoryText').innerText = q.category || q.Category;
 
         // Reset buttons
         document.querySelectorAll('.option-btn').forEach(btn => btn.className = 'option-btn');
@@ -231,7 +231,10 @@
             selectedBtn = Array.from(buttons).find(b => b.querySelector('.option-label').innerText === answer);
         }
 
-        if (answer === q.correctAnswer) {
+        const correctAnswer = q.correctAnswer || q.CorrectAnswer;
+        const category = q.category || q.Category;
+
+        if (answer === correctAnswer) {
             selectedBtn.classList.add('correct');
             score += (100 + timer * 5); // Faster answer = more points
             correctCount++;
@@ -239,10 +242,10 @@
         } else {
             if (selectedBtn) selectedBtn.classList.add('wrong');
             wrongCount++;
-            if (q.category && !weakAreas.includes(q.category)) weakAreas.push(q.category);
+            if (category && !weakAreas.includes(category)) weakAreas.push(category);
             
             // Show correct answer
-            const correctBtn = Array.from(buttons).find(b => b.querySelector('.option-label').innerText === q.correctAnswer);
+            const correctBtn = Array.from(buttons).find(b => b.querySelector('.option-label').innerText === correctAnswer);
             correctBtn.classList.add('correct');
         }
 

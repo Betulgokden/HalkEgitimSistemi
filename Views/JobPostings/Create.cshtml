@@ -76,15 +76,32 @@
 
                         <div class="col-md-6">
                             <div class="form-group mb-4">
-                                <label asp-for="ContactEmail" class="form-label gold-text fw-700 small ms-2 mb-2"></label>
-                                <input asp-for="ContactEmail" class="form-control modern-control" placeholder="ik@sirket.com">
-                                <span asp-validation-for="ContactEmail" class="text-danger small"></span>
+                                <label asp-for="RequiredCategory" class="form-label gold-text fw-700 small ms-2 mb-2"></label>
+                                <select asp-for="RequiredCategory" class="form-control modern-control py-3">
+                                    <option value="">Kategori Seçin...</option>
+                                    <option value="Bilişim Teknolojileri">Bilişim Teknolojileri</option>
+                                    <option value="Aşçılık ve Pastacılık">Aşçılık ve Pastacılık</option>
+                                    <option value="El Sanatları">El Sanatları</option>
+                                    <option value="Turizm">Turizm</option>
+                                    <option value="Tarım">Tarım</option>
+                                    <option value="Yazılım">Yazılım</option>
+                                    <option value="Finans">Finans</option>
+                                    <option value="Diğer">Diğer</option>
+                                </select>
+                                <span asp-validation-for="RequiredCategory" class="text-danger small"></span>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group mb-4">
+                                <label asp-for="ContactEmail" class="form-label gold-text fw-700 small ms-2 mb-2"></label>
+                                <input asp-for="ContactEmail" class="form-control modern-control py-3" placeholder="ik@sirket.com">
+                                <span asp-validation-for="ContactEmail" class="text-danger small"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group mb-4">
                                 <label asp-for="Deadline" class="form-label gold-text fw-700 small ms-2 mb-2"></label>
-                                <input asp-for="Deadline" type="date" class="form-control modern-control">
+                                <input asp-for="Deadline" type="date" class="form-control modern-control py-3">
                             </div>
                         </div>
                     </div>

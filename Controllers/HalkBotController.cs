@@ -56,8 +56,40 @@ namespace HalkEgitimSistemi.Controllers
 
             try
             {
-                // 1. Yetkilendirme Duyarlı Sorgular (Örn: "Puanlarım kaç?")
-                if (message.Contains("puan") || message.Contains("halkpoint") || message.Contains("bakiyem"))
+                // 1. Kurs Ücreti, Müfredat ve Tarih Sorguları (Zeki Eşleştirme)
+                if (message.Contains("ücret") || message.Contains("fiyat") || message.Contains("kaç para") || message.Contains("müfredat") || message.Contains("ne zaman") || message.Contains("tarih"))
+                {
+                    var allCourses = await _context.Courses.Where(c => c.IsActive && !c.IsDeleted).ToListAsync();
+                    var targetedCourse = allCourses.FirstOrDefault(c => message.Contains(c.CourseName.ToLower()));
+
+                    if (targetedCourse != null)
+                    {
+                        if (message.Contains("ücret") || message.Contains("fiyat") || message.Contains("kaç para"))
+                        {
+                            botResponse.Text = $"<b>{targetedCourse.CourseName}</b> eğitimimizin ücreti <b>{targetedCourse.Price:N0} ₺</b> olarak belirlenmiştir. HalkPoint biriktirerek indirim kazanabileceğinizi unutmayın!";
+                            botResponse.VoiceText = $"{targetedCourse.CourseName} kursu ücreti {targetedCourse.Price:N0} liradır.";
+                        }
+                        else if (message.Contains("müfredat") || message.Contains("ne işe yarar") || message.Contains("neler öğreneceğim"))
+                        {
+                            botResponse.Text = $"<b>{targetedCourse.CourseName}</b> müfredatı şunları içerir: <br><br><i>{targetedCourse.Curriculum}</i><br><br><b>Öğrenim Kazanımları:</b> {targetedCourse.LearningOutcomes}";
+                            botResponse.VoiceText = $"{targetedCourse.CourseName} müfredatı hakkında bilgiler ekranda listeleniyor.";
+                        }
+                        else
+                        {
+                            botResponse.Text = $"<b>{targetedCourse.CourseName}</b> eğitimi <b>{targetedCourse.StartDate:dd.MM.yyyy}</b> tarihinde başlayacak ve <b>{targetedCourse.EndDate:dd.MM.yyyy}</b> tarihinde sona erecektir.";
+                            botResponse.VoiceText = $"{targetedCourse.CourseName} eğitimi {targetedCourse.StartDate:dd MMMM} tarihinde başlıyor.";
+                        }
+                        botResponse.Data = targetedCourse;
+                        botResponse.Action = "HighlightCourse";
+                    }
+                    else
+                    {
+                        botResponse.Text = "Hangi kursun ücretini veya müfredatını öğrenmek istersiniz? Örn: 'Robotik Kodlama ücreti ne kadar?' veya 'Arıcılık müfredatı nedir?'";
+                        botResponse.VoiceText = "Hangi kurs hakkında bilgi istersiniz?";
+                    }
+                }
+                // 2. Yetkilendirme Duyarlı Sorgular (Örn: "Puanlarım kaç?")
+                else if (message.Contains("puan") || message.Contains("halkpoint") || message.Contains("bakiyem"))
                 {
                     if (userRole == "Guest")
                     {
@@ -78,12 +110,6 @@ namespace HalkEgitimSistemi.Controllers
                             botResponse.VoiceText = $"{userName}, {totalPoints} Halk point bakiyeniz var.";
                         }
                     }
-                }
-                // 2. Gizlilik Kontrolü (Başka öğrencinin verisi?)
-                else if (message.Contains("notu") || message.Contains("sınav sonucu"))
-                {
-                    botResponse.Text = "Gizlilik politikası gereği sadece kendi sınav sonuçlarınızı görebilirsiniz. Lütfen Kursiyer Paneli -> Notlarım sekmesini ziyaret edin.";
-                    botResponse.Action = "OpenStudentPanel";
                 }
                 // 3. Admin Özel Sorgular (Örn: "Kaç başvuru var?")
                 else if (message.Contains("başvuru") && userRole == "Admin")
@@ -109,14 +135,14 @@ namespace HalkEgitimSistemi.Controllers
                         topCoursesObj = topCoursesList;
                     }
 
-                    botResponse.Text = "Sistemimizdeki en popüler eğitimler şunlardır: <br>" + string.Join("<br>", ((IEnumerable<dynamic>)topCoursesObj!).Select(c => $"• {c.CourseName}"));
+                    botResponse.Text = "Sistemimizdeki en popüler eğitimler şunlardır: <br>" + string.Join("<br>", ((IEnumerable<dynamic>)topCoursesObj!).Select(c => $"• {c.CourseName} ({c.Price:N0} ₺)"));
                     botResponse.Data = topCoursesObj;
                     botResponse.VoiceText = "Şu an en popüler kurslarımız listeleniyor.";
                 }
                 // Varsayılan Yanıt (Her şeye hakim vizyon)
                 else
                 {
-                    botResponse.Text = "HalkBot Pro olarak tüm sisteme hakimim. Kurslar, eğitmenler, ısı haritası, puanlarınız ve kariyer fırsatları hakkında bana soru sorabilirsiniz.";
+                    botResponse.Text = "HalkBot Pro olarak tüm sisteme hakimim. Kurs ücretleri, müfredatlar, ders tarihleri, HalkPoint puanlarınız ve Isı Haritası hakkında bana dilediğinizi sorabilirsiniz.";
                     botResponse.VoiceText = "Nasıl yardımcı olabilirim?";
                 }
             }

@@ -1,42 +1,39 @@
 @model IEnumerable<HalkEgitimSistemi.Models.JobPosting>
 @{
-    ViewData["Title"] = "İş İlanları";
+    ViewData["Title"] = "İş İlanları | Kariyer Kapısı";
 }
 
-<div class="page-header animate-fadeIn">
-    <div class="container-fluid px-4">
-        <div class="page-header-content py-5" style="background: linear-gradient(135deg, rgba(88, 28, 28, 0.1), rgba(197, 160, 89, 0.1)); border-radius: 30px; border: 1px solid var(--theme-card-border);">
-            <div class="text-center w-100">
-                <h1 class="display-4 fw-900 gold-text mb-2" style="font-family: 'Outfit'; letter-spacing: -1px;" data-i18n="nav_jobs">
-                    <i class="bi bi-briefcase-fill me-3"></i>İş İlanları
-                </h1>
-                <p class="lead text-white-50 fw-600 mb-0" data-i18n="home_jobs_text">Borçka ve çevresindeki en güncel iş fırsatlarını keşfedin.</p>
-                
-                @if (User.IsInRole("Admin") || User.IsInRole("Employer"))
-                {
-                    <div class="mt-4">
-                        <a asp-action="Create" class="btn btn-premium px-4 py-2">
-                            <i class="bi bi-plus-circle me-2"></i><span data-i18n="login_ql_register">İLAN YAYINLA</span>
-                        </a>
-                        <a asp-action="Manage" class="btn btn-outline-gold px-4 py-2 ms-2">
-                            <i class="bi bi-gear-fill me-2"></i><span data-i18n="nav_dashboard">İLANLARIMI YÖNET</span>
-                        </a>
-                    </div>
-                }
-            </div>
+<div class="page-header-premium animate-fadeInDown">
+    <div class="container py-5">
+        <div class="job-hero-box p-5 text-center">
+            <span class="badge-premium mb-3"><i class="bi bi-briefcase"></i> KARİYER FIRSATLARI</span>
+            <h1 class="display-3 fw-black mb-2 job-main-title">İş <span class="gold-text-glow">İlanları</span></h1>
+            <p class="job-hero-subtitle mx-auto">Sertifikalı kursiyerlerimiz için en güncel ve güvenilir yerel iş fırsatları.</p>
+            
+            @if (User.IsInRole("Admin") || User.IsInRole("Employer"))
+            {
+                <div class="mt-4 d-flex justify-content-center gap-3">
+                    <a asp-action="Create" class="btn btn-gold-pulse px-4 py-2">
+                        <i class="bi bi-plus-circle me-2"></i> İLAN YAYINLA
+                    </a>
+                    <a asp-action="Manage" class="btn btn-outline-gold px-4 py-2">
+                        <i class="bi bi-gear-fill me-2"></i> YÖNET
+                    </a>
+                </div>
+            }
         </div>
     </div>
 </div>
 
-<div class="container-fluid px-4 py-5">
+<div class="container py-5">
     <div class="row g-4">
         @if (!Model.Any())
         {
             <div class="col-12 text-center py-5">
-                <div class="glass-card p-5 animate-bounce-slow" style="border-radius: 30px;">
-                    <i class="bi bi-search display-1 gold-text opacity-25 mb-4"></i>
-                    <h3 class="text-white-50 fw-700" data-i18n="no_jobs_title">Şu an aktif ilan bulunmuyor.</h3>
-                    <p class="text-white-25" data-i18n="no_jobs_subtitle">Yeni ilanlar için takipte kalın.</p>
+                <div class="empty-state-boxy p-5">
+                    <i class="bi bi-search display-1 mb-4 opacity-20"></i>
+                    <h3>Şu an aktif ilan bulunmuyor.</h3>
+                    <p>Yeni ilanlar için lütfen daha sonra tekrar kontrol edin.</p>
                 </div>
             </div>
         }
@@ -44,27 +41,34 @@
         {
             @foreach (var job in Model)
             {
-                <div class="col-md-6 col-xl-4 animate-scaleIn">
-                    <div class="glass-card-static job-card h-100 p-4 shadow-xl transition-all hover-translate-y" 
-                         style="border-radius: 25px; border: 1.5px solid var(--theme-card-border); background: rgba(255,255,255,0.03);">
-                        <div class="d-flex justify-content-between align-start mb-3">
-                            <div class="company-badge bg-maroon-theme px-3 py-1 rounded-pill border border-gold-20">
-                                <span class="gold-text x-small fw-900">@job.CompanyName.ToUpper()</span>
+                <div class="col-md-6 col-xl-4 animate-fadeInUp">
+                    <div class="job-card-boxy h-100 p-4">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <div class="company-tag">
+                                <i class="bi bi-building me-1"></i> @job.CompanyName.ToUpper()
                             </div>
-                            <span class="text-white-50 x-small"><i class="bi bi-clock me-1"></i>@job.CreatedAt.ToString("dd MMM")</span>
+                            <div class="date-tag">
+                                <i class="bi bi-calendar3 me-1"></i> @job.CreatedAt.ToString("dd MMM")
+                            </div>
                         </div>
                         
-                        <h4 class="text-white fw-900 mb-2" style="font-family: 'Outfit';">@job.Title</h4>
-                        <div class="d-flex gap-2 mb-4">
-                            <span class="badge bg-gold-glass text-gold x-small"><i class="bi bi-geo-alt me-1"></i>@job.Location</span>
-                            <span class="badge bg-maroon-glass gold-text x-small"><i class="bi bi-briefcase me-1"></i>@job.JobType</span>
+                        <h4 class="job-title-theme fw-black mb-3">@job.Title</h4>
+                        
+                        <div class="d-flex flex-wrap gap-2 mb-4">
+                            <span class="info-pill info-pill-gold"><i class="bi bi-geo-alt-fill"></i> @job.Location</span>
+                            <span class="info-pill info-pill-maroon"><i class="bi bi-clock-fill"></i> @job.JobType</span>
                         </div>
                         
-                        <p class="text-white-50 small mb-4 line-clamp-3">@job.Description</p>
+                        <p class="job-desc-theme mb-4">@job.Description</p>
                         
-                        <div class="mt-auto pt-3 border-top border-white-10 d-flex justify-content-between align-items-center">
-                            <span class="gold-text fw-800">@job.SalaryRange</span>
-                            <a asp-action="Details" asp-route-id="@job.Id" class="btn btn-sm btn-outline-gold rounded-pill px-4" data-i18n="job_examine">İncele</a>
+                        <div class="mt-auto pt-4 border-top border-glass d-flex justify-content-between align-items-center">
+                            <div class="salary-box">
+                                <div class="salary-label">MAAŞ ARALIĞI</div>
+                                <div class="salary-value">@job.SalaryRange</div>
+                            </div>
+                            <a asp-action="Details" asp-route-id="@job.Id" class="btn btn-gold-outline-sm rounded-pill">
+                                İncele
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -74,9 +78,63 @@
 </div>
 
 <style>
-    .job-card:hover { border-color: var(--gold) !important; box-shadow: 0 15px 40px rgba(197, 160, 89, 0.15) !important; }
-    .bg-gold-glass { background: rgba(197, 160, 89, 0.1); border: 1px solid rgba(197, 160, 89, 0.2); }
-    .bg-maroon-glass { background: rgba(88, 28, 28, 0.1); border: 1px solid rgba(88, 28, 28, 0.2); }
-    .line-clamp-3 { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
-    .x-small { font-size: 0.7rem; }
+    /* Hero Section */
+    .job-hero-box {
+        background: #0f172a !important;
+        border: 2px solid #C5A059;
+        border-radius: 40px;
+        box-shadow: 0 30px 60px rgba(0,0,0,0.4);
+    }
+    .job-main-title { color: white; font-family: 'Outfit'; }
+    .job-hero-subtitle { color: rgba(255,255,255,0.6); max-width: 600px; font-size: 1.1rem; }
+
+    /* Job Card Boxy Design */
+    .job-card-boxy {
+        background: rgba(15, 23, 42, 0.6) !important;
+        border: 1px solid rgba(197, 160, 89, 0.2) !important;
+        border-radius: 30px;
+        display: flex;
+        flex-direction: column;
+        transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+    .job-card-boxy:hover {
+        transform: translateY(-10px);
+        border-color: #C5A059 !important;
+        box-shadow: 0 20px 50px rgba(197, 160, 89, 0.15);
+    }
+
+    .company-tag { background: #581C1C; color: #C5A059; padding: 6px 15px; border-radius: 12px; font-weight: 800; font-size: 0.75rem; border: 1px solid rgba(197, 160, 89, 0.3); }
+    .date-tag { color: rgba(255,255,255,0.4); font-size: 0.75rem; font-weight: 700; }
+    .job-title-theme { color: white; font-size: 1.4rem; }
+    .job-desc-theme { color: rgba(255,255,255,0.5); font-size: 0.95rem; line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+
+    .info-pill { padding: 6px 12px; border-radius: 10px; font-size: 0.75rem; font-weight: 800; display: inline-flex; align-items: center; gap: 5px; }
+    .info-pill-gold { background: rgba(197, 160, 89, 0.1); color: #C5A059; border: 1px solid rgba(197, 160, 89, 0.2); }
+    .info-pill-maroon { background: rgba(88, 28, 28, 0.2); color: #8b2d2d; border: 1px solid rgba(88, 28, 28, 0.3); }
+
+    .salary-label { font-size: 0.65rem; color: rgba(255,255,255,0.3); font-weight: 800; letter-spacing: 1px; }
+    .salary-value { font-size: 1.1rem; color: #C5A059; font-weight: 900; }
+
+    .btn-gold-outline-sm { border: 1.5px solid #C5A059; color: #C5A059; padding: 8px 25px; font-weight: 800; font-size: 0.85rem; text-decoration: none; transition: 0.3s; }
+    .btn-gold-outline-sm:hover { background: #C5A059; color: #581C1C; }
+
+    /* Gündüz Modu - Bej Kutucuklar */
+    [data-theme="light"] .job-hero-box { background: white !important; border-color: #581C1C; box-shadow: 0 20px 40px rgba(88, 28, 28, 0.1); }
+    [data-theme="light"] .job-main-title { color: #581C1C; }
+    [data-theme="light"] .job-hero-subtitle { color: rgba(88, 28, 28, 0.6); }
+    
+    [data-theme="light"] .job-card-boxy {
+        background: #fdfaf1 !important; /* BEJ KUTUCUK */
+        border: 1px solid rgba(88, 28, 28, 0.1) !important;
+        box-shadow: 0 15px 30px rgba(88, 28, 28, 0.05);
+    }
+    [data-theme="light"] .job-card-boxy:hover { border-color: #581C1C !important; }
+    [data-theme="light"] .job-title-theme { color: #581C1C; }
+    [data-theme="light"] .job-desc-theme { color: rgba(88, 28, 28, 0.6); }
+    [data-theme="light"] .date-tag { color: rgba(88, 28, 28, 0.4); }
+    [data-theme="light"] .salary-label { color: rgba(88, 28, 28, 0.4); }
+    [data-theme="light"] .info-pill-gold { background: rgba(197, 160, 89, 0.05); }
+
+    .fw-black { font-weight: 900 !important; }
 </style>

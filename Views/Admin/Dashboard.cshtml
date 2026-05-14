@@ -20,7 +20,7 @@
     <div class="row g-4 mb-5 stagger-children">
         <div class="col-md-3">
             <a asp-controller="Applications" asp-action="Index" class="text-decoration-none">
-                <div class="action-card-modern warning-theme">
+                <div class="action-card-modern gold-glass-theme">
                     <div class="d-flex align-items-center gap-3">
                         <div class="action-icon">
                             <i class="bi bi-clipboard-check"></i>
@@ -35,7 +35,7 @@
         </div>
         <div class="col-md-3">
             <a asp-controller="Admin" asp-action="InstructorApplications" class="text-decoration-none">
-                <div class="action-card-modern primary-theme">
+                <div class="action-card-modern gold-glass-theme">
                     <div class="d-flex align-items-center gap-3">
                         <div class="action-icon">
                             <i class="bi bi-person-badge"></i>
@@ -50,7 +50,7 @@
         </div>
         <div class="col-md-3">
             <a asp-controller="JobPostings" asp-action="Manage" class="text-decoration-none">
-                <div class="action-card-modern info-theme">
+                <div class="action-card-modern gold-glass-theme">
                     <div class="d-flex align-items-center gap-3">
                         <div class="action-icon">
                             <i class="bi bi-briefcase"></i>
@@ -65,7 +65,7 @@
         </div>
         <div class="col-md-3">
             <a asp-controller="Employer" asp-action="ManageEmployers" class="text-decoration-none">
-                <div class="action-card-modern vibrant-purple-theme">
+                <div class="action-card-modern gold-glass-theme">
                     <div class="d-flex align-items-center gap-3">
                         <div class="action-icon">
                             <i class="bi bi-shield-check"></i>
@@ -80,7 +80,7 @@
         </div>
         <div class="col-md-3">
             <a asp-controller="Employer" asp-action="Dashboard" class="text-decoration-none">
-                <div class="action-card-modern success-theme">
+                <div class="action-card-modern gold-glass-theme">
                     <div class="d-flex align-items-center gap-3">
                         <div class="action-icon">
                             <i class="bi bi-buildings-fill"></i>
@@ -95,7 +95,7 @@
         </div>
         <div class="col-md-3">
             <a asp-controller="Admin" asp-action="GlobalSettings" class="text-decoration-none">
-                <div class="action-card-modern primary-theme">
+                <div class="action-card-modern gold-glass-theme">
                     <div class="d-flex align-items-center gap-3">
                         <div class="action-icon">
                             <i class="bi bi-gear-wide-connected"></i>
@@ -140,10 +140,12 @@
             </div>
         </div>
         <div class="col-6 col-lg-3">
-            <div class="stat-box-modern" style="--box-glow: rgba(239, 68, 68, 0.4);" onclick="showDetails('apps', 'Bekleyen Kurs Başvuruları')">
-                <div class="stat-icon-wrap bg-danger-glow" style="background: rgba(239, 68, 68, 0.2); color: #ef4444;">
+            <div class="stat-box-modern" style="--box-glow: rgba(197, 160, 89, 0.4);" onclick="showDetails('apps', 'Bekleyen Kurs Başvuruları')">
+                <div class="stat-icon-wrap bg-warning-glow" style="background: rgba(197, 160, 89, 0.2); color: #C5A059;">
                     <i class="bi bi-hourglass-split"></i>
                 </div>
+                <div class="stat-number-modern text-warning" style="color: #C5A059 !important;">@ViewBag.PendingCount</div>
+                <div class="stat-label-modern">BEKLEYEN</div>
             </div>
         </div>
         <div class="col-6 col-md-4 col-lg-2">
@@ -333,12 +335,21 @@
             margin-bottom: 0;
             flex-shrink: 0;
         }
-        .warning-theme .action-icon { background: #f59e0b; color: #fff; box-shadow: 0 0 15px rgba(245, 158, 11, 0.4); }
-        .primary-theme .action-icon { background: #581C1C; color: #fff; box-shadow: 0 0 15px rgba(88, 28, 28, 0.4); }
-        .success-theme .action-icon { background: #10b981; color: #fff; box-shadow: 0 0 15px rgba(16, 185, 129, 0.4); }
-        .info-theme .action-icon { background: #06b6d4; color: #fff; box-shadow: 0 0 15px rgba(6, 182, 212, 0.4); }
-        .vibrant-purple-theme .action-icon { background: #8b5cf6; color: #fff; box-shadow: 0 0 15px rgba(139, 92, 246, 0.4); }
-        .vibrant-red-theme .action-icon { background: #ef4444; color: #fff; box-shadow: 0 0 15px rgba(239, 68, 68, 0.4); }
+        .gold-glass-theme {
+            background: rgba(197, 160, 89, 0.05) !important;
+            border: 1px solid rgba(197, 160, 89, 0.2) !important;
+        }
+        .gold-glass-theme .action-icon {
+            background: #581C1C;
+            color: #C5A059;
+            box-shadow: 0 8px 20px rgba(88, 28, 28, 0.3);
+            border: 1px solid #C5A059;
+        }
+        .gold-glass-theme:hover {
+            background: rgba(197, 160, 89, 0.1) !important;
+            border-color: #C5A059 !important;
+            box-shadow: 0 15px 40px rgba(197, 160, 89, 0.2) !important;
+        }
 
         .badge-modern {
             padding: 0.5rem 1rem;
@@ -425,13 +436,13 @@
             </a>
         </div>
         <div class="table-responsive">
-            <table class="table-premium w-100">
+            <table class="table-modern-premium w-100">
                 <thead>
                     <tr>
-                        <th>Başvuran</th>
-                        <th>Kurs</th>
-                        <th>Tarih</th>
-                        <th>Durum</th>
+                        <th class="ps-4">BAŞVURAN</th>
+                        <th>KURS</th>
+                        <th>TARİH</th>
+                        <th class="pe-4">DURUM</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -468,6 +479,51 @@
             </table>
         </div>
     </div>
+    
+    <!-- Geliştirme Notları & Kayıtlar -->
+    <div class="glass-card-static p-4 mt-4 animate-fadeInUp delay-600 border-gold-glow shadow-gold">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h5 style="color: var(--text-primary); font-weight: 900; margin: 0;">
+                <i class="bi bi-journal-text me-2 gold-text"></i>SİSTEM GELİŞTİRME GÜNLÜĞÜ
+            </h5>
+            <span class="badge bg-maroon-theme gold-text px-3 py-2" style="border: 1px solid var(--gold);">Son Güncelleme: @DateTime.Now.ToString("dd.MM.yyyy")</span>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-6">
+                <div class="p-3 rounded-4 bg-glass-sm border-glass h-100">
+                    <h6 class="gold-text fw-900 mb-3"><i class="bi bi-palette2 me-2"></i>Tasarım & Kimlik</h6>
+                    <ul class="list-unstyled small text-white-50 lh-lg">
+                        <li><i class="bi bi-check2-circle gold-text me-2"></i>Bordo-Gold Premium Tasarım Dili</li>
+                        <li><i class="bi bi-check2-circle gold-text me-2"></i>Gece/Gündüz Modu Tam Uyumluluk</li>
+                        <li><i class="bi bi-check2-circle gold-text me-2"></i>Şeffaf "Gold-Glass" Kart Yapıları</li>
+                        <li><i class="bi bi-check2-circle gold-text me-2"></i>Modern Beyaz "Boxy" Tablo Sistemi</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="p-3 rounded-4 bg-glass-sm border-glass h-100">
+                    <h6 class="gold-text fw-900 mb-3"><i class="bi bi-lightning-charge me-2"></i>Fonksiyonel İyileştirmeler</h6>
+                    <ul class="list-unstyled small text-white-50 lh-lg">
+                        <li><i class="bi bi-check2-circle gold-text me-2"></i>Web Speech API Sayfa Seslendirme</li>
+                        <li><i class="bi bi-check2-circle gold-text me-2"></i>HalkBot V2: Kurs Ücreti & Müfredat Bilgisi</li>
+                        <li><i class="bi bi-check2-circle gold-text me-2"></i>Dinamik Eğitim Takvimi Sistemi</li>
+                        <li><i class="bi bi-check2-circle gold-text me-2"></i>Erişilebilirlik ve Gece Modu Metin Fixleri</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="p-3 rounded-4 bg-glass-sm border-glass h-100">
+                    <h6 class="gold-text fw-900 mb-3"><i class="bi bi-brush me-2"></i>Görsel Modernizasyon (Bugün)</h6>
+                    <ul class="list-unstyled small text-white-50 lh-lg">
+                        <li><i class="bi bi-check2-circle gold-text me-2"></i>"Boxy-Beige" Premium Tasarım Dili Geçişi</li>
+                        <li><i class="bi bi-check2-circle gold-text me-2"></i>HalkBot Tema-Duyarlı (Bordo/Bej) Body Stili</li>
+                        <li><i class="bi bi-check2-circle gold-text me-2"></i>"Borçka 3D Earth" ve İstatistik Bej Kart Tasarımı</li>
+                        <li><i class="bi bi-check2-circle gold-text me-2"></i>Gereksiz Bölüm Temizliği (Minimalist Home)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 @section Scripts {
@@ -487,13 +543,15 @@
                 datasets: [{
                     label: 'Günlük Başvuru',
                     data: trendData.map(d => d.Count),
-                    borderColor: '#581C1C',
-                    backgroundColor: 'rgba(88, 28, 28, 0.1)',
-                    borderWidth: 3,
+                    borderColor: '#C5A059',
+                    backgroundColor: 'rgba(197, 160, 89, 0.15)',
+                    borderWidth: 4,
                     fill: true,
                     tension: 0.4,
-                    pointRadius: 4,
-                    pointBackgroundColor: '#581C1C'
+                    pointRadius: 6,
+                    pointBackgroundColor: '#581C1C',
+                    pointBorderColor: '#C5A059',
+                    pointBorderWidth: 2
                 }]
             },
             options: {

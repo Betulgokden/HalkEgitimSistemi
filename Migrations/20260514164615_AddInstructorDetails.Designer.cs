@@ -4,6 +4,7 @@ using HalkEgitimSistemi.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HalkEgitimSistemi.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260514164615_AddInstructorDetails")]
+    partial class AddInstructorDetails
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1096,7 +1099,7 @@ namespace HalkEgitimSistemi.Migrations
                             Curriculum = "",
                             Description = "2D ve 3D oyunlar yapmayı öğrenin. C# programlama ve Unity arayüzü.",
                             DurationHours = 80,
-                            EndDate = new DateTime(2026, 8, 14, 19, 48, 41, 174, DateTimeKind.Local).AddTicks(534),
+                            EndDate = new DateTime(2026, 8, 14, 19, 46, 4, 392, DateTimeKind.Local).AddTicks(6736),
                             EndTime = new TimeSpan(0, 12, 0, 0, 0),
                             ImageUrl = "https://images.unsplash.com/photo-1552824236-41102881ad24?w=600",
                             IsActive = true,
@@ -1107,7 +1110,7 @@ namespace HalkEgitimSistemi.Migrations
                             Price = 750m,
                             Quota = 20,
                             Requirements = "Temel bilgisayar kullanımı.",
-                            StartDate = new DateTime(2026, 6, 13, 19, 48, 41, 174, DateTimeKind.Local).AddTicks(1160),
+                            StartDate = new DateTime(2026, 6, 13, 19, 46, 4, 392, DateTimeKind.Local).AddTicks(7295),
                             StartTime = new TimeSpan(0, 9, 0, 0, 0),
                             WeeklySyllabus = "Pazartesi: 09:00-12:00\nSalı: 09:00-12:00\nÇarşamba: 09:00-12:00",
                             WhoIsItFor = "Kendini geliştirmek isteyen herkes."
@@ -1120,7 +1123,7 @@ namespace HalkEgitimSistemi.Migrations
                             Curriculum = "",
                             Description = "Nota okuma ve temel piyano teknikleri. Müziğin büyülü dünyasına adım atın.",
                             DurationHours = 48,
-                            EndDate = new DateTime(2026, 8, 14, 19, 48, 41, 174, DateTimeKind.Local).AddTicks(1317),
+                            EndDate = new DateTime(2026, 8, 14, 19, 46, 4, 392, DateTimeKind.Local).AddTicks(7411),
                             EndTime = new TimeSpan(0, 12, 0, 0, 0),
                             ImageUrl = "https://images.unsplash.com/photo-1520529611442-eaf5f228497b?w=600",
                             IsActive = true,
@@ -1131,7 +1134,7 @@ namespace HalkEgitimSistemi.Migrations
                             Price = 750m,
                             Quota = 10,
                             Requirements = "Temel bilgisayar kullanımı.",
-                            StartDate = new DateTime(2026, 5, 19, 19, 48, 41, 174, DateTimeKind.Local).AddTicks(1321),
+                            StartDate = new DateTime(2026, 5, 19, 19, 46, 4, 392, DateTimeKind.Local).AddTicks(7418),
                             StartTime = new TimeSpan(0, 9, 0, 0, 0),
                             WeeklySyllabus = "Pazartesi: 09:00-12:00\nSalı: 09:00-12:00\nÇarşamba: 09:00-12:00",
                             WhoIsItFor = "Kendini geliştirmek isteyen herkes."
@@ -1144,7 +1147,7 @@ namespace HalkEgitimSistemi.Migrations
                             Curriculum = "",
                             Description = "İşinizi dijital dünyada büyütmenin yollarını öğrenin. Google Ads, Meta Ads ve SEO teknikleri.",
                             DurationHours = 40,
-                            EndDate = new DateTime(2026, 8, 14, 19, 48, 41, 174, DateTimeKind.Local).AddTicks(1329),
+                            EndDate = new DateTime(2026, 8, 14, 19, 46, 4, 392, DateTimeKind.Local).AddTicks(7428),
                             EndTime = new TimeSpan(0, 12, 0, 0, 0),
                             ImageUrl = "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600",
                             IsActive = true,
@@ -1155,7 +1158,7 @@ namespace HalkEgitimSistemi.Migrations
                             Price = 500m,
                             Quota = 30,
                             Requirements = "Temel bilgisayar kullanımı.",
-                            StartDate = new DateTime(2026, 5, 29, 19, 48, 41, 174, DateTimeKind.Local).AddTicks(1331),
+                            StartDate = new DateTime(2026, 5, 29, 19, 46, 4, 392, DateTimeKind.Local).AddTicks(7431),
                             StartTime = new TimeSpan(0, 9, 0, 0, 0),
                             WeeklySyllabus = "Pazartesi: 09:00-12:00\nSalı: 09:00-12:00\nÇarşamba: 09:00-12:00",
                             WhoIsItFor = "Kendini geliştirmek isteyen herkes."
@@ -1168,7 +1171,7 @@ namespace HalkEgitimSistemi.Migrations
                             Curriculum = "",
                             Description = "Pandas, Numpy ve Matplotlib kütüphaneleri ile veriden anlamlı sonuçlar çıkarın.",
                             DurationHours = 60,
-                            EndDate = new DateTime(2026, 8, 14, 19, 48, 41, 174, DateTimeKind.Local).AddTicks(1335),
+                            EndDate = new DateTime(2026, 8, 14, 19, 46, 4, 392, DateTimeKind.Local).AddTicks(7436),
                             EndTime = new TimeSpan(0, 12, 0, 0, 0),
                             ImageUrl = "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600",
                             IsActive = true,
@@ -1179,7 +1182,7 @@ namespace HalkEgitimSistemi.Migrations
                             Price = 600m,
                             Quota = 25,
                             Requirements = "Temel bilgisayar kullanımı.",
-                            StartDate = new DateTime(2026, 6, 3, 19, 48, 41, 174, DateTimeKind.Local).AddTicks(1338),
+                            StartDate = new DateTime(2026, 6, 3, 19, 46, 4, 392, DateTimeKind.Local).AddTicks(7439),
                             StartTime = new TimeSpan(0, 9, 0, 0, 0),
                             WeeklySyllabus = "Pazartesi: 09:00-12:00\nSalı: 09:00-12:00\nÇarşamba: 09:00-12:00",
                             WhoIsItFor = "Kendini geliştirmek isteyen herkes."
@@ -1192,7 +1195,7 @@ namespace HalkEgitimSistemi.Migrations
                             Curriculum = "",
                             Description = "Kendi hikayenizi yazmaya başlayın. Karakter gelişimi ve kurgu teknikleri.",
                             DurationHours = 24,
-                            EndDate = new DateTime(2026, 8, 14, 19, 48, 41, 174, DateTimeKind.Local).AddTicks(1341),
+                            EndDate = new DateTime(2026, 8, 14, 19, 46, 4, 392, DateTimeKind.Local).AddTicks(7470),
                             EndTime = new TimeSpan(0, 12, 0, 0, 0),
                             ImageUrl = "https://images.unsplash.com/photo-1455390582262-044cdead277a?w=600",
                             IsActive = true,
@@ -1203,7 +1206,7 @@ namespace HalkEgitimSistemi.Migrations
                             Price = 400m,
                             Quota = 15,
                             Requirements = "Temel bilgisayar kullanımı.",
-                            StartDate = new DateTime(2026, 5, 24, 19, 48, 41, 174, DateTimeKind.Local).AddTicks(1344),
+                            StartDate = new DateTime(2026, 5, 24, 19, 46, 4, 392, DateTimeKind.Local).AddTicks(7473),
                             StartTime = new TimeSpan(0, 9, 0, 0, 0),
                             WeeklySyllabus = "Pazartesi: 09:00-12:00\nSalı: 09:00-12:00\nÇarşamba: 09:00-12:00",
                             WhoIsItFor = "Kendini geliştirmek isteyen herkes."
@@ -1216,7 +1219,7 @@ namespace HalkEgitimSistemi.Migrations
                             Curriculum = "",
                             Description = "Işık, kompozisyon ve teknik ayarlar. Makinenizi tanıyın ve harika kareler yakalayın.",
                             DurationHours = 32,
-                            EndDate = new DateTime(2026, 8, 14, 19, 48, 41, 174, DateTimeKind.Local).AddTicks(1348),
+                            EndDate = new DateTime(2026, 8, 14, 19, 46, 4, 392, DateTimeKind.Local).AddTicks(7478),
                             EndTime = new TimeSpan(0, 12, 0, 0, 0),
                             ImageUrl = "https://images.unsplash.com/photo-1452784444945-3f422708fe5e?w=600",
                             IsActive = true,
@@ -1227,7 +1230,7 @@ namespace HalkEgitimSistemi.Migrations
                             Price = 450m,
                             Quota = 20,
                             Requirements = "Temel bilgisayar kullanımı.",
-                            StartDate = new DateTime(2026, 6, 8, 19, 48, 41, 174, DateTimeKind.Local).AddTicks(1350),
+                            StartDate = new DateTime(2026, 6, 8, 19, 46, 4, 392, DateTimeKind.Local).AddTicks(7481),
                             StartTime = new TimeSpan(0, 9, 0, 0, 0),
                             WeeklySyllabus = "Pazartesi: 09:00-12:00\nSalı: 09:00-12:00\nÇarşamba: 09:00-12:00",
                             WhoIsItFor = "Kendini geliştirmek isteyen herkes."
@@ -1498,7 +1501,7 @@ namespace HalkEgitimSistemi.Migrations
                             Id = 1,
                             ArtistName = "Emine Yılmaz",
                             CourseId = 6,
-                            CreatedAt = new DateTime(2026, 5, 14, 19, 48, 41, 185, DateTimeKind.Local).AddTicks(6282),
+                            CreatedAt = new DateTime(2026, 5, 14, 19, 46, 4, 400, DateTimeKind.Local).AddTicks(3075),
                             ImageUrl = "/images/exhibition/lace.png",
                             PositionX = 0f,
                             PositionY = 1.6f,
@@ -1512,7 +1515,7 @@ namespace HalkEgitimSistemi.Migrations
                             Id = 2,
                             ArtistName = "Fatma Demir",
                             CourseId = 7,
-                            CreatedAt = new DateTime(2026, 5, 14, 19, 48, 41, 186, DateTimeKind.Local).AddTicks(3480),
+                            CreatedAt = new DateTime(2026, 5, 14, 19, 46, 4, 401, DateTimeKind.Local).AddTicks(760),
                             ImageUrl = "/images/exhibition/cini.png",
                             PositionX = 5.2f,
                             PositionY = 1.6f,
@@ -1526,7 +1529,7 @@ namespace HalkEgitimSistemi.Migrations
                             Id = 3,
                             ArtistName = "Zeynep Kaya",
                             CourseId = 6,
-                            CreatedAt = new DateTime(2026, 5, 14, 19, 48, 41, 186, DateTimeKind.Local).AddTicks(3495),
+                            CreatedAt = new DateTime(2026, 5, 14, 19, 46, 4, 401, DateTimeKind.Local).AddTicks(794),
                             ImageUrl = "/images/exhibition/jewelry.png",
                             PositionX = 5.2f,
                             PositionY = 1.6f,
@@ -1540,7 +1543,7 @@ namespace HalkEgitimSistemi.Migrations
                             Id = 4,
                             ArtistName = "Ömer Çelik",
                             CourseId = 7,
-                            CreatedAt = new DateTime(2026, 5, 14, 19, 48, 41, 186, DateTimeKind.Local).AddTicks(3500),
+                            CreatedAt = new DateTime(2026, 5, 14, 19, 46, 4, 401, DateTimeKind.Local).AddTicks(1028),
                             ImageUrl = "/images/exhibition/wood_carving.png",
                             PositionX = 0f,
                             PositionY = 1.6f,
@@ -1554,7 +1557,7 @@ namespace HalkEgitimSistemi.Migrations
                             Id = 5,
                             ArtistName = "Ayşe Yıldız",
                             CourseId = 6,
-                            CreatedAt = new DateTime(2026, 5, 14, 19, 48, 41, 186, DateTimeKind.Local).AddTicks(3505),
+                            CreatedAt = new DateTime(2026, 5, 14, 19, 46, 4, 401, DateTimeKind.Local).AddTicks(1037),
                             ImageUrl = "/images/exhibition/jewelry.png",
                             PositionX = -5.2f,
                             PositionY = 1.6f,
@@ -1568,7 +1571,7 @@ namespace HalkEgitimSistemi.Migrations
                             Id = 6,
                             ArtistName = "Mehmet Aydın",
                             CourseId = 7,
-                            CreatedAt = new DateTime(2026, 5, 14, 19, 48, 41, 186, DateTimeKind.Local).AddTicks(3509),
+                            CreatedAt = new DateTime(2026, 5, 14, 19, 46, 4, 401, DateTimeKind.Local).AddTicks(1043),
                             ImageUrl = "/images/exhibition/ebru.png",
                             PositionX = -5.2f,
                             PositionY = 1.6f,
@@ -1646,7 +1649,7 @@ namespace HalkEgitimSistemi.Migrations
                         {
                             Id = 1,
                             Content = "Mükemmel bir eser!",
-                            CreatedAt = new DateTime(2026, 5, 11, 19, 48, 41, 201, DateTimeKind.Local).AddTicks(7932),
+                            CreatedAt = new DateTime(2026, 5, 11, 19, 46, 4, 413, DateTimeKind.Local).AddTicks(65),
                             GalleryItemId = 1,
                             IsApproved = true,
                             IsInstructorResponse = false,
@@ -1656,7 +1659,7 @@ namespace HalkEgitimSistemi.Migrations
                         {
                             Id = 2,
                             Content = "Görülmeye değer.",
-                            CreatedAt = new DateTime(2026, 5, 13, 19, 48, 41, 201, DateTimeKind.Local).AddTicks(8733),
+                            CreatedAt = new DateTime(2026, 5, 13, 19, 46, 4, 413, DateTimeKind.Local).AddTicks(731),
                             GalleryItemId = 1,
                             IsApproved = true,
                             IsInstructorResponse = false,
@@ -1716,7 +1719,7 @@ namespace HalkEgitimSistemi.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2026, 5, 14, 19, 48, 41, 178, DateTimeKind.Local).AddTicks(8775),
+                            CreatedAt = new DateTime(2026, 5, 14, 19, 46, 4, 397, DateTimeKind.Local).AddTicks(1202),
                             Description = "Temel bilişim eğitimlerimiz.",
                             ImageUrl = "/images/news/python_course.png",
                             IsDeleted = false,
@@ -1726,7 +1729,7 @@ namespace HalkEgitimSistemi.Migrations
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2026, 5, 14, 19, 48, 41, 179, DateTimeKind.Local).AddTicks(6606),
+                            CreatedAt = new DateTime(2026, 5, 14, 19, 46, 4, 397, DateTimeKind.Local).AddTicks(3480),
                             Description = "Grup çalışmaları.",
                             ImageUrl = "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800",
                             IsDeleted = false,
@@ -1736,7 +1739,7 @@ namespace HalkEgitimSistemi.Migrations
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2026, 5, 14, 19, 48, 41, 179, DateTimeKind.Local).AddTicks(6662),
+                            CreatedAt = new DateTime(2026, 5, 14, 19, 46, 4, 397, DateTimeKind.Local).AddTicks(3494),
                             Description = "İleri seviye kodlama.",
                             ImageUrl = "https://images.unsplash.com/photo-1542831371-29b0f74f9713?w=800",
                             IsDeleted = false,
@@ -1746,7 +1749,7 @@ namespace HalkEgitimSistemi.Migrations
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2026, 5, 14, 19, 48, 41, 179, DateTimeKind.Local).AddTicks(6668),
+                            CreatedAt = new DateTime(2026, 5, 14, 19, 46, 4, 397, DateTimeKind.Local).AddTicks(3499),
                             Description = "Sanat atölyeleri.",
                             ImageUrl = "/images/exhibition/ebru.png",
                             IsDeleted = false,
@@ -1756,7 +1759,7 @@ namespace HalkEgitimSistemi.Migrations
                         new
                         {
                             Id = 5,
-                            CreatedAt = new DateTime(2026, 5, 14, 19, 48, 41, 179, DateTimeKind.Local).AddTicks(6671),
+                            CreatedAt = new DateTime(2026, 5, 14, 19, 46, 4, 397, DateTimeKind.Local).AddTicks(3503),
                             Description = "Gurme lezzetler.",
                             ImageUrl = "/images/news/gastronomy.png",
                             IsDeleted = false,
@@ -1766,7 +1769,7 @@ namespace HalkEgitimSistemi.Migrations
                         new
                         {
                             Id = 6,
-                            CreatedAt = new DateTime(2026, 5, 14, 19, 48, 41, 179, DateTimeKind.Local).AddTicks(6675),
+                            CreatedAt = new DateTime(2026, 5, 14, 19, 46, 4, 397, DateTimeKind.Local).AddTicks(3507),
                             Description = "Konuşma etkinliği.",
                             ImageUrl = "/images/news/speaking_club.png",
                             IsDeleted = false,
@@ -1776,7 +1779,7 @@ namespace HalkEgitimSistemi.Migrations
                         new
                         {
                             Id = 7,
-                            CreatedAt = new DateTime(2026, 5, 14, 19, 48, 41, 179, DateTimeKind.Local).AddTicks(6679),
+                            CreatedAt = new DateTime(2026, 5, 14, 19, 46, 4, 397, DateTimeKind.Local).AddTicks(3606),
                             Description = "Müziğin ritmi.",
                             ImageUrl = "/images/news/certificate_ceremony.png",
                             IsDeleted = false,
@@ -1786,7 +1789,7 @@ namespace HalkEgitimSistemi.Migrations
                         new
                         {
                             Id = 8,
-                            CreatedAt = new DateTime(2026, 5, 14, 19, 48, 41, 179, DateTimeKind.Local).AddTicks(6683),
+                            CreatedAt = new DateTime(2026, 5, 14, 19, 46, 4, 397, DateTimeKind.Local).AddTicks(3611),
                             Description = "Klasik müzik yetenekleri.",
                             ImageUrl = "/images/exhibition/ebru.png",
                             IsDeleted = false,
@@ -1796,7 +1799,7 @@ namespace HalkEgitimSistemi.Migrations
                         new
                         {
                             Id = 9,
-                            CreatedAt = new DateTime(2026, 5, 14, 19, 48, 41, 179, DateTimeKind.Local).AddTicks(6687),
+                            CreatedAt = new DateTime(2026, 5, 14, 19, 46, 4, 397, DateTimeKind.Local).AddTicks(3616),
                             Description = "Zihin ve beden bütünlüğü.",
                             ImageUrl = "https://images.unsplash.com/photo-1518611012118-696072aa579a?w=800",
                             IsDeleted = false,
@@ -1806,7 +1809,7 @@ namespace HalkEgitimSistemi.Migrations
                         new
                         {
                             Id = 10,
-                            CreatedAt = new DateTime(2026, 5, 14, 19, 48, 41, 179, DateTimeKind.Local).AddTicks(6691),
+                            CreatedAt = new DateTime(2026, 5, 14, 19, 46, 4, 397, DateTimeKind.Local).AddTicks(3620),
                             Description = "Proje fikirleri.",
                             ImageUrl = "/images/news/entrepreneurship.png",
                             IsDeleted = false,
@@ -1816,7 +1819,7 @@ namespace HalkEgitimSistemi.Migrations
                         new
                         {
                             Id = 11,
-                            CreatedAt = new DateTime(2026, 5, 14, 19, 48, 41, 179, DateTimeKind.Local).AddTicks(6694),
+                            CreatedAt = new DateTime(2026, 5, 14, 19, 46, 4, 397, DateTimeKind.Local).AddTicks(3625),
                             Description = "Mucitler iş başında.",
                             ImageUrl = "/images/exhibition/robotics.png",
                             IsDeleted = false,
@@ -1826,7 +1829,7 @@ namespace HalkEgitimSistemi.Migrations
                         new
                         {
                             Id = 12,
-                            CreatedAt = new DateTime(2026, 5, 14, 19, 48, 41, 179, DateTimeKind.Local).AddTicks(6696),
+                            CreatedAt = new DateTime(2026, 5, 14, 19, 46, 4, 397, DateTimeKind.Local).AddTicks(3630),
                             Description = "Dünya mutfakları.",
                             ImageUrl = "/images/news/gastronomy.png",
                             IsDeleted = false,
@@ -1948,7 +1951,7 @@ namespace HalkEgitimSistemi.Migrations
                             Id = 1,
                             AuthorName = "Betül Gökden",
                             Category = "Dijitalleşme",
-                            CreatedAt = new DateTime(2026, 5, 4, 19, 48, 41, 202, DateTimeKind.Local).AddTicks(6692),
+                            CreatedAt = new DateTime(2026, 5, 4, 19, 46, 4, 413, DateTimeKind.Local).AddTicks(7245),
                             Description = "Kursiyerlerin ödevlerini takip edebileceği bir mobil uygulama.",
                             Likes = 45,
                             Title = "Dijital Kurs Asistanı"
@@ -1958,7 +1961,7 @@ namespace HalkEgitimSistemi.Migrations
                             Id = 2,
                             AuthorName = "Mehmet Demir",
                             Category = "Sanat & Kültür",
-                            CreatedAt = new DateTime(2026, 5, 9, 19, 48, 41, 202, DateTimeKind.Local).AddTicks(9948),
+                            CreatedAt = new DateTime(2026, 5, 9, 19, 46, 4, 413, DateTimeKind.Local).AddTicks(8534),
                             Description = "Köy okullarına gidip çocuklara ebru sanatı öğretecek bir minibüs.",
                             Likes = 120,
                             Title = "Gezici Sanat Atölyesi"
@@ -1968,7 +1971,7 @@ namespace HalkEgitimSistemi.Migrations
                             Id = 3,
                             AuthorName = "Fatma Çelik",
                             Category = "Sosyal Sorumluluk",
-                            CreatedAt = new DateTime(2026, 5, 12, 19, 48, 41, 202, DateTimeKind.Local).AddTicks(9957),
+                            CreatedAt = new DateTime(2026, 5, 12, 19, 46, 4, 413, DateTimeKind.Local).AddTicks(8543),
                             Description = "Dikiş nakış kurslarındaki atık kumaşlardan oyuncak yapıp bağışlama.",
                             Likes = 88,
                             Title = "Atık Kumaş Dönüşümü"
@@ -2385,7 +2388,7 @@ namespace HalkEgitimSistemi.Migrations
                             Id = 1,
                             CompanyName = "",
                             ContactEmail = "",
-                            CreatedAt = new DateTime(2026, 5, 14, 19, 48, 41, 206, DateTimeKind.Local).AddTicks(2921),
+                            CreatedAt = new DateTime(2026, 5, 14, 19, 46, 4, 418, DateTimeKind.Local).AddTicks(6656),
                             Description = "Borçka Teknoloji Köyü projesinde görevlendirilmek üzere tecrübeli yazılımcılar aranıyor.",
                             EmployerId = 1,
                             IsActive = true,
@@ -2402,7 +2405,7 @@ namespace HalkEgitimSistemi.Migrations
                             Id = 2,
                             CompanyName = "",
                             ContactEmail = "",
-                            CreatedAt = new DateTime(2026, 5, 14, 19, 48, 41, 207, DateTimeKind.Local).AddTicks(9033),
+                            CreatedAt = new DateTime(2026, 5, 14, 19, 46, 4, 419, DateTimeKind.Local).AddTicks(1699),
                             Description = "Yerel lezzetlerin modern sunumuyla ilgilenecek şef arayışımız bulunmaktadır.",
                             EmployerId = 1,
                             IsActive = true,
@@ -2419,7 +2422,7 @@ namespace HalkEgitimSistemi.Migrations
                             Id = 3,
                             CompanyName = "",
                             ContactEmail = "",
-                            CreatedAt = new DateTime(2026, 5, 14, 19, 48, 41, 207, DateTimeKind.Local).AddTicks(9077),
+                            CreatedAt = new DateTime(2026, 5, 14, 19, 46, 4, 419, DateTimeKind.Local).AddTicks(1711),
                             Description = "Halk Eğitim Merkezimizde usta öğretici olarak görev yapacak sanatçılar.",
                             EmployerId = 1,
                             IsActive = true,
@@ -3000,7 +3003,7 @@ namespace HalkEgitimSistemi.Migrations
                         {
                             Id = 1,
                             Content = "Harika haber!",
-                            CreatedAt = new DateTime(2026, 5, 9, 19, 48, 41, 199, DateTimeKind.Local).AddTicks(7983),
+                            CreatedAt = new DateTime(2026, 5, 9, 19, 46, 4, 412, DateTimeKind.Local).AddTicks(3363),
                             IsApproved = true,
                             NewsId = 1,
                             UserEmail = "ali@mail.com"
@@ -3009,7 +3012,7 @@ namespace HalkEgitimSistemi.Migrations
                         {
                             Id = 2,
                             Content = "Takipteyiz, çok başarılı.",
-                            CreatedAt = new DateTime(2026, 5, 10, 19, 48, 41, 200, DateTimeKind.Local).AddTicks(3438),
+                            CreatedAt = new DateTime(2026, 5, 10, 19, 46, 4, 412, DateTimeKind.Local).AddTicks(4175),
                             IsApproved = true,
                             NewsId = 1,
                             UserEmail = "ayse@mail.com"
@@ -3228,7 +3231,7 @@ namespace HalkEgitimSistemi.Migrations
                             Id = 1,
                             Category = "Yazılım",
                             CorrectAnswer = "C",
-                            CreatedAt = new DateTime(2026, 5, 14, 19, 48, 41, 203, DateTimeKind.Local).AddTicks(4746),
+                            CreatedAt = new DateTime(2026, 5, 14, 19, 46, 4, 414, DateTimeKind.Local).AddTicks(6614),
                             Difficulty = 1,
                             OptionA = "add()",
                             OptionB = "insert()",
@@ -3241,7 +3244,7 @@ namespace HalkEgitimSistemi.Migrations
                             Id = 2,
                             Category = "Ağ Teknolojileri",
                             CorrectAnswer = "C",
-                            CreatedAt = new DateTime(2026, 5, 14, 19, 48, 41, 204, DateTimeKind.Local).AddTicks(398),
+                            CreatedAt = new DateTime(2026, 5, 14, 19, 46, 4, 416, DateTimeKind.Local).AddTicks(919),
                             Difficulty = 1,
                             OptionA = "Star",
                             OptionB = "Bus",
@@ -3254,7 +3257,7 @@ namespace HalkEgitimSistemi.Migrations
                             Id = 3,
                             Category = "El Sanatları",
                             CorrectAnswer = "A",
-                            CreatedAt = new DateTime(2026, 5, 14, 19, 48, 41, 204, DateTimeKind.Local).AddTicks(411),
+                            CreatedAt = new DateTime(2026, 5, 14, 19, 46, 4, 416, DateTimeKind.Local).AddTicks(960),
                             Difficulty = 2,
                             OptionA = "Kitre",
                             OptionB = "Nişasta",
@@ -3267,7 +3270,7 @@ namespace HalkEgitimSistemi.Migrations
                             Id = 4,
                             Category = "Yazılım",
                             CorrectAnswer = "B",
-                            CreatedAt = new DateTime(2026, 5, 14, 19, 48, 41, 204, DateTimeKind.Local).AddTicks(416),
+                            CreatedAt = new DateTime(2026, 5, 14, 19, 46, 4, 416, DateTimeKind.Local).AddTicks(969),
                             Difficulty = 1,
                             OptionA = "Biyoloji",
                             OptionB = "Bilgisayar Bilimi",
@@ -3280,7 +3283,7 @@ namespace HalkEgitimSistemi.Migrations
                             Id = 5,
                             Category = "Ağ Teknolojileri",
                             CorrectAnswer = "C",
-                            CreatedAt = new DateTime(2026, 5, 14, 19, 48, 41, 204, DateTimeKind.Local).AddTicks(420),
+                            CreatedAt = new DateTime(2026, 5, 14, 19, 46, 4, 416, DateTimeKind.Local).AddTicks(975),
                             Difficulty = 2,
                             OptionA = "Ana Sunucu",
                             OptionB = "Dış Ağ",
@@ -3356,7 +3359,7 @@ namespace HalkEgitimSistemi.Migrations
                             Id = 1,
                             Group = "SocialResponsibility",
                             Key = "KaragolGoalProgress",
-                            LastUpdated = new DateTime(2026, 5, 14, 19, 48, 41, 205, DateTimeKind.Local).AddTicks(7145),
+                            LastUpdated = new DateTime(2026, 5, 14, 19, 46, 4, 418, DateTimeKind.Local).AddTicks(1672),
                             UpdatedBy = "System",
                             Value = "342"
                         },
@@ -3365,7 +3368,7 @@ namespace HalkEgitimSistemi.Migrations
                             Id = 2,
                             Group = "SocialResponsibility",
                             Key = "KaragolGoalTarget",
-                            LastUpdated = new DateTime(2026, 5, 14, 19, 48, 41, 205, DateTimeKind.Local).AddTicks(7948),
+                            LastUpdated = new DateTime(2026, 5, 14, 19, 46, 4, 418, DateTimeKind.Local).AddTicks(2423),
                             UpdatedBy = "System",
                             Value = "500"
                         },
@@ -3374,7 +3377,7 @@ namespace HalkEgitimSistemi.Migrations
                             Id = 3,
                             Group = "Stats",
                             Key = "LeaderNeighborhood",
-                            LastUpdated = new DateTime(2026, 5, 14, 19, 48, 41, 205, DateTimeKind.Local).AddTicks(7953),
+                            LastUpdated = new DateTime(2026, 5, 14, 19, 46, 4, 418, DateTimeKind.Local).AddTicks(2430),
                             UpdatedBy = "System",
                             Value = "Gündoğdu Mahallesi"
                         });

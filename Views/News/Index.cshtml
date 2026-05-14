@@ -1,223 +1,155 @@
-﻿@model IEnumerable<HalkEgitimSistemi.Models.News>
+@model IEnumerable<HalkEgitimSistemi.Models.News>
 
 @{
-    ViewData["Title"] = "Haberler & Duyurular";
+    ViewData["Title"] = "Haberler & Duyurular | Medya Merkezi";
     var stories = ViewBag.Stories as IEnumerable<HalkEgitimSistemi.Models.NewsStory>;
 }
 
 <div class="container py-5">
-    <!-- Instagram Style Stories (Görsel Åov) -->
+    <!-- Premium Header -->
+    <div class="news-hero-box animate-fadeInDown mb-5 p-5">
+        <div class="row align-items-center">
+            <div class="col-lg-8 text-center text-lg-start">
+                <span class="badge-premium mb-3"><i class="bi bi-megaphone"></i> GÜNCEL HABERLER</span>
+                <h1 class="display-3 fw-black mb-2 news-main-title">Haberler & <span class="gold-text-glow">Duyurular</span></h1>
+                <p class="news-hero-subtitle mx-auto ms-lg-0">Halk Eğitim Merkezimizdeki tüm etkinlikler, duyurular ve başarı hikayelerinden anında haberdar olun.</p>
+            </div>
+            <div class="col-lg-4 text-center mt-4 mt-lg-0">
+                @if (User.IsInRole("Admin") || User.IsInRole("Instructor"))
+                {
+                    <a asp-action="Create" class="btn btn-gold-pulse px-4 py-3 w-100">
+                        <i class="bi bi-plus-circle me-2"></i> YENİ HABER YAYINLA
+                    </a>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Instagram Style Stories (Modernized) -->
     @if (stories != null && stories.Any())
     {
-        <div class="stories-container mb-5 animate-fadeInDown">
-            <div class="d-flex gap-4 overflow-auto pb-3 no-scrollbar">
+        <div class="stories-wrapper mb-5 animate-fadeInUp">
+            <h5 class="fw-black text-gold mb-4 ms-2"><i class="bi bi-collection-play me-2"></i> Öne Çıkan Hikayeler</h5>
+            <div class="d-flex gap-4 overflow-auto pb-3 no-scrollbar ps-2">
                 @foreach (var story in stories)
                 {
-                    <div class="story-item" onclick="viewStory('@story.ImageUrl', '@story.Title')">
-                        <div class="story-ring">
+                    <div class="story-box" onclick="viewStory('@story.ImageUrl', '@story.Title')">
+                        <div class="story-ring-premium">
                             <img src="@story.ImageUrl" alt="@story.Title" />
+                            <div class="story-play-icon"><i class="bi bi-play-fill"></i></div>
                         </div>
-                        <span class="story-name">@story.Title</span>
+                        <span class="story-box-name">@story.Title</span>
                     </div>
                 }
             </div>
         </div>
     }
 
-    <div class="d-flex justify-content-between align-items-center mb-5">
-        <div>
-            <h2 class="section-title-gradient h1 fw-bold">Haberler & Duyurular</h2>
-            <p class="text-white-50">Halk Eğitim Merkezimizden en güncel haberler ve önemli duyurular.</p>
-        </div>
-        @if (User.IsInRole("Admin") || User.IsInRole("Instructor"))
-        {
-            <a asp-action="Create" class="btn btn-premium btn-success-glow" style="background: linear-gradient(135deg, #C5A059, #34d399); color: white; border: none; padding: 12px 28px; border-radius: 16px; font-weight: 800; letter-spacing: 0.5px; box-shadow: 0 10px 25px rgba(16, 185, 129, 0.4);">
-                <i class="bi bi-plus-circle-fill me-2"></i> YENİ HABER EKLE
-            </a>
-        }
-    </div>
-
-    <!-- Haberler Grid -->
+    <!-- Haberler Grid (Gold Boxy Transparent Design) -->
     <div class="row g-4">
         @foreach (var item in Model)
         {
-            <div class="col-md-4 animate-scaleIn">
-                <div class="glass-card-static h-100 overflow-hidden news-card">
-                    <div class="position-relative">
-                        <img src="@(item.ImageUrl ?? "https://images.unsplash.com/photo-1504711432869-5d39a130f48b?w=600")" class="img-fluid w-100" style="height: 220px; object-fit: cover;" alt="@item.Title">
-                        <div class="news-date-badge">
-                            <i class="bi bi-calendar3 me-1"></i> @item.PublishDate.ToString("dd MMM")
+            <div class="col-md-6 col-lg-4 animate-fadeInUp">
+                <div class="news-card-premium h-100">
+                    <div class="news-img-box">
+                        <img src="@(item.ImageUrl ?? "https://images.unsplash.com/photo-1504711432869-5d39a130f48b?w=600")" class="news-img" alt="@item.Title">
+                        <div class="news-date-pill">
+                            <i class="bi bi-calendar-event me-1"></i> @item.PublishDate.ToString("dd MMM")
                         </div>
                     </div>
-                    <div class="p-4">
-                        <h4 class="h5 fw-bold text-primary-theme mb-3">@item.Title</h4>
-                        <p class="text-white-50 small">@(item.Content.Length > 120 ? item.Content.Substring(0, 120) + "..." : item.Content)</p>
+                    <div class="p-4 news-body">
+                        <h4 class="news-title-theme fw-black mb-3">@item.Title</h4>
+                        <p class="news-desc-theme mb-4">@(item.Content.Length > 110 ? item.Content.Substring(0, 110) + "..." : item.Content)</p>
                         
-                        <div class="d-flex justify-content-between align-items-center mt-4">
-                            <div class="d-flex gap-3 text-muted small">
-                                <span><i class="bi bi-heart-fill text-danger me-1"></i> @item.Likes.Count</span>
-                                <span><i class="bi bi-chat-fill text-primary me-1"></i> @item.Comments.Count</span>
+                        <div class="d-flex justify-content-between align-items-center mt-auto pt-3 border-top border-glass">
+                            <div class="d-flex gap-3">
+                                <span class="news-stat"><i class="bi bi-heart-fill me-1 text-danger"></i> @item.Likes.Count</span>
+                                <span class="news-stat"><i class="bi bi-chat-dots-fill me-1 text-gold"></i> @item.Comments.Count</span>
                             </div>
-                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-premium btn-read-news btn-sm">Haberi Oku</a>
+                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-gold-vibrant-sm rounded-pill">
+                                Haberi Oku
+                            </a>
                         </div>
                     </div>
                 </div>
             </div>
         }
-    </div>
-</div>
-
-<!-- Story Viewer Modal -->
-<div class="modal fade" id="storyModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-fullscreen">
-        <div class="modal-content bg-dark border-0">
-            <div class="modal-body d-flex align-items-center justify-content-center position-relative">
-                <button type="button" class="btn-close btn-close-white position-absolute top-0 end-0 m-4" data-bs-dismiss="modal"></button>
-                
-                <div class="story-viewer-container">
-                    <div class="story-progress">
-                        <div class="story-progress-bar" id="storyProgress"></div>
-                    </div>
-                    <div class="story-header p-3 d-flex align-items-center">
-                        <div class="story-header-avatar me-2"></div>
-                        <span class="text-white fw-bold" id="storyTitle">Halk Eğitim</span>
-                    </div>
-                    <img src="" id="storyImg" class="img-fluid rounded-4" />
-                </div>
-            </div>
-        </div>
     </div>
 </div>
 
 <style>
-    /* Stories UI */
-    .stories-container {
-        padding: 10px 0;
+    /* Hero Section */
+    .news-hero-box {
+        background: #581C1C !important;
+        border: 2px solid #C5A059;
+        border-radius: 40px;
+        box-shadow: 0 30px 60px rgba(88, 28, 28, 0.4);
     }
-    .no-scrollbar::-webkit-scrollbar { display: none; }
-    .story-item {
-        cursor: pointer;
-        text-align: center;
-        min-width: 85px;
+    .news-main-title { color: white; font-family: 'Outfit'; }
+    .gold-text-glow { color: #C5A059; text-shadow: 0 0 20px rgba(197, 160, 89, 0.4); }
+    .news-hero-subtitle { color: rgba(255,255,255,0.7); max-width: 600px; font-size: 1.1rem; }
+
+    /* News Card - Transparent Maroon Boxy Design */
+    .news-card-premium {
+        background: rgba(88, 28, 28, 0.15) !important; /* ŞEFFAF BORDO */
+        border: 1.5px solid rgba(197, 160, 89, 0.3) !important;
+        border-radius: 35px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        backdrop-filter: blur(15px);
     }
-    .story-ring {
-        width: 75px;
-        height: 75px;
-        padding: 3px;
-        border: 3px solid #d62976;
-        border-radius: 50%;
-        margin-bottom: 8px;
-        transition: transform 0.2s ease;
+    .news-card-premium:hover {
+        transform: translateY(-12px);
+        border-color: #C5A059 !important;
+        background: rgba(88, 28, 28, 0.3) !important; /* DAHA KOYU ŞEFFAF BORDO HOVER */
+        box-shadow: 0 25px 50px rgba(197, 160, 89, 0.2);
     }
-    .story-ring img {
-        width: 100%;
-        height: 100%;
-        border-radius: 50%;
-        object-fit: cover;
-        border: 2px solid var(--bg-dark);
+
+    .news-img-box { height: 240px; position: relative; overflow: hidden; }
+    .news-img { width: 100%; height: 100%; object-fit: cover; transition: 0.6s; }
+    .news-card-premium:hover .news-img { transform: scale(1.1); }
+    
+    .news-date-pill {
+        position: absolute; top: 20px; left: 20px;
+        background: #581C1C; color: #C5A059;
+        padding: 6px 16px; border-radius: 12px; font-weight: 900;
+        font-size: 0.75rem; border: 1px solid #C5A059;
     }
-    .story-item:hover .story-ring {
+
+    .news-title-theme { color: white !important; font-size: 1.35rem; line-height: 1.3; }
+    .news-desc-theme { color: rgba(255,255,255,0.6) !important; font-size: 0.9rem; line-height: 1.6; }
+    .news-stat { font-size: 0.8rem; font-weight: 700; color: rgba(255,255,255,0.6); }
+
+    /* High Visibility Gold Button */
+    .btn-gold-vibrant-sm {
+        background: transparent;
+        border: 2px solid #C5A059 !important;
+        color: #C5A059 !important;
+        padding: 8px 25px;
+        font-weight: 900;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transition: 0.3s;
+        text-decoration: none;
+        display: inline-block;
+        box-shadow: 0 5px 15px rgba(197, 160, 89, 0.1);
+    }
+    .btn-gold-vibrant-sm:hover {
+        background: #C5A059 !important;
+        color: #581C1C !important;
+        box-shadow: 0 10px 25px rgba(197, 160, 89, 0.4);
         transform: scale(1.05);
     }
-    .story-name {
-        color: white;
-        font-size: 0.75rem;
-        font-weight: 500;
-        display: block;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
 
-    /* News Card */
-    .news-card { transition: all 0.3s ease; }
-    .news-card:hover { transform: translateY(-10px); box-shadow: 0 15px 30px rgba(197, 160, 89, 0.2); }
-    .news-date-badge {
-        position: absolute;
-        top: 15px;
-        right: 15px;
-        background: var(--primary);
-        color: white;
-        padding: 5px 12px;
-        border-radius: 20px;
-        font-size: 0.75rem;
-        font-weight: bold;
+    /* Light Mode Support */
+    [data-theme="light"] .news-card-premium {
+        background: #ffffff !important;
+        border-color: rgba(88, 28, 28, 0.1) !important;
     }
-
-    /* Story Viewer */
-    .story-viewer-container {
-        max-width: 450px;
-        width: 90%;
-        height: 80vh;
-        background: #000;
-        border-radius: 15px;
-        position: relative;
-        overflow: hidden;
-    }
-    .story-progress {
-        position: absolute;
-        top: 10px;
-        left: 10px;
-        right: 10px;
-        height: 3px;
-        background: rgba(255,255,255,0.3);
-        z-index: 10;
-        border-radius: 5px;
-    }
-    .story-progress-bar {
-        height: 100%;
-        background: white;
-        width: 0%;
-        border-radius: 5px;
-    }
-    .story-header {
-        position: absolute;
-        top: 20px;
-        left: 0;
-        width: 100%;
-        z-index: 10;
-    }
-    .story-header-avatar {
-        width: 32px;
-        height: 32px;
-        border-radius: 50%;
-        background: var(--primary);
-    }
-    #storyImg {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
+    [data-theme="light"] .news-title-theme { color: #581C1C !important; }
+    [data-theme="light"] .news-desc-theme { color: rgba(88, 28, 28, 0.6) !important; }
+    [data-theme="light"] .news-stat { color: #581C1C; }
 </style>
-
-<script>
-    let storyTimer;
-    function viewStory(img, title) {
-        document.getElementById('storyImg').src = img;
-        document.getElementById('storyTitle').innerText = title;
-        const modal = new bootstrap.Modal(document.getElementById('storyModal'));
-        modal.show();
-
-        // Progress animation
-        let progress = 0;
-        const bar = document.getElementById('storyProgress');
-        bar.style.width = '0%';
-        
-        clearInterval(storyTimer);
-        storyTimer = setInterval(() => {
-            progress += 1;
-            bar.style.width = progress + '%';
-            if (progress >= 100) {
-                clearInterval(storyTimer);
-                modal.hide();
-            }
-        }, 50); // 5 seconds total
-    }
-
-    document.getElementById('storyModal').addEventListener('hidden.bs.modal', function () {
-        clearInterval(storyTimer);
-    });
-</script>
-</div>
-</div>
-

@@ -78,26 +78,6 @@ namespace HalkEgitimSistemi.Controllers
             ViewBag.CurrentSearch = search;
             ViewBag.TotalCourses = await _context.Courses.AsNoTracking().CountAsync(c => c.IsActive && !c.IsDeleted);
 
-            // Mock Courses to "multiply" the catalog
-            var mockCourses = new List<Course>
-            {
-                new Course { Id = 1001, CourseName = "Dijital Pazarlama ve SEO", CategoryId = categoryId ?? 1, Description = "İşinizi dijital dünyada büyütmenin yollarını öğrenin. Google Ads, Meta Ads ve SEO teknikleri.", ImageUrl = "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600", IsActive = true, StartDate = DateTime.Now.AddDays(15), DurationHours = 40, Quota = 30 },
-                new Course { Id = 1002, CourseName = "Python ile Veri Analizi", CategoryId = categoryId ?? 1, Description = "Pandas, Numpy ve Matplotlib kütüphaneleri ile veriden anlamlı sonuçlar çıkarın.", ImageUrl = "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600", IsActive = true, StartDate = DateTime.Now.AddDays(20), DurationHours = 60, Quota = 25 },
-                new Course { Id = 1003, CourseName = "Yaratıcı Yazarlık Atölyesi", CategoryId = categoryId ?? 2, Description = "Kendi hikayenizi yazmaya başlayın. Karakter gelişimi ve kurgu teknikleri.", ImageUrl = "https://images.unsplash.com/photo-1455390582262-044cdead277a?w=600", IsActive = true, StartDate = DateTime.Now.AddDays(10), DurationHours = 24, Quota = 15 },
-                new Course { Id = 1004, CourseName = "Temel Fotoğrafçılık", CategoryId = categoryId ?? 2, Description = "Işık, kompozisyon ve teknik ayarlar. Makinenizi tanıyın ve harika kareler yakalayın.", ImageUrl = "https://images.unsplash.com/photo-1452784444945-3f422708fe5e?w=600", IsActive = true, StartDate = DateTime.Now.AddDays(25), DurationHours = 32, Quota = 20 },
-                new Course { Id = 1005, CourseName = "Unity ile Oyun Geliştirme", CategoryId = categoryId ?? 1, Description = "2D ve 3D oyunlar yapmayı öğrenin. C# programlama ve Unity arayüzü.", ImageUrl = "https://images.unsplash.com/photo-1552824236-41102881ad24?w=600", IsActive = true, StartDate = DateTime.Now.AddDays(30), DurationHours = 80, Quota = 20 },
-                new Course { Id = 1006, CourseName = "Mobil Uygulama (Flutter)", CategoryId = categoryId ?? 1, Description = "Tek kod tabanı ile hem iOS hem Android uygulamaları geliştirin.", ImageUrl = "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=600", IsActive = true, StartDate = DateTime.Now.AddDays(12), DurationHours = 72, Quota = 25 },
-                new Course { Id = 1007, CourseName = "Piyano Eğitimi (Başlangıç)", CategoryId = categoryId ?? 2, Description = "Nota okuma ve temel piyano teknikleri. Müziğin büyülü dünyasına adım atın.", ImageUrl = "https://images.unsplash.com/photo-1520529611442-eaf5f228497b?w=600", IsActive = true, StartDate = DateTime.Now.AddDays(5), DurationHours = 48, Quota = 10 },
-                new Course { Id = 1008, CourseName = "Aşçılık ve Pastacılık", CategoryId = categoryId ?? 3, Description = "Dünya mutfağından seçmeler ve lezzetli tatlı yapımı teknikleri.", ImageUrl = "https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=600", IsActive = true, StartDate = DateTime.Now.AddDays(18), DurationHours = 120, Quota = 15 }
-            };
-
-            // Eğer arama yapılıyorsa mock verileri de filtreleyelim
-            if (!string.IsNullOrEmpty(search))
-            {
-                mockCourses = mockCourses.Where(c => c.CourseName.Contains(search, StringComparison.OrdinalIgnoreCase) || c.Description.Contains(search, StringComparison.OrdinalIgnoreCase)).ToList();
-            }
-
-            dbCourses.AddRange(mockCourses);
             return View(dbCourses);
         }
 
@@ -165,10 +145,25 @@ namespace HalkEgitimSistemi.Controllers
         [HttpPost]
         [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,CourseName,Description,ImageUrl,CategoryId,Quota,StartDate,EndDate,IsActive,DurationHours,MaxAbsenceLimit,LearningOutcomes,Curriculum,Requirements,WhoIsItFor,ExamDate")] Course course)
+        public async Task<IActionResult> Create([Bind("Id,CourseName,Description,ImageUrl,CategoryId,Quota,StartDate,EndDate,IsActive,DurationHours,MaxAbsenceLimit,LearningOutcomes,Curriculum,Requirements,WhoIsItFor,ExamDate")] Course course, IFormFile? courseImage)
         {
             if (ModelState.IsValid)
             {
+                if (courseImage != null && courseImage.Length > 0)
+                {
+                    var fileName = Guid.NewGuid().ToString() + Path.GetExtension(courseImage.FileName);
+                    var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads/courses", fileName);
+
+                    var dir = Path.GetDirectoryName(filePath);
+                    if (!Directory.Exists(dir)) Directory.CreateDirectory(dir!);
+
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await courseImage.CopyToAsync(stream);
+                    }
+                    course.ImageUrl = "/uploads/courses/" + fileName;
+                }
+
                 _context.Add(course);
                 await _context.SaveChangesAsync();
                 await _auditService.LogActionAsync("Kurs Oluşturuldu", $"{course.CourseName} kursu sisteme eklendi.", "Courses");
@@ -193,7 +188,7 @@ namespace HalkEgitimSistemi.Controllers
         [HttpPost]
         [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,CourseName,Description,ImageUrl,CategoryId,Quota,StartDate,EndDate,IsActive,DurationHours,MaxAbsenceLimit,LearningOutcomes,Curriculum,Requirements,WhoIsItFor,ExamDate")] Course course)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,CourseName,Description,ImageUrl,CategoryId,Quota,StartDate,EndDate,IsActive,DurationHours,MaxAbsenceLimit,LearningOutcomes,Curriculum,Requirements,WhoIsItFor,ExamDate")] Course course, IFormFile? courseImage)
         {
             if (id != course.Id) return NotFound();
 
@@ -201,6 +196,21 @@ namespace HalkEgitimSistemi.Controllers
             {
                 try
                 {
+                    if (courseImage != null && courseImage.Length > 0)
+                    {
+                        var fileName = Guid.NewGuid().ToString() + Path.GetExtension(courseImage.FileName);
+                        var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads/courses", fileName);
+
+                        var dir = Path.GetDirectoryName(filePath);
+                        if (!Directory.Exists(dir)) Directory.CreateDirectory(dir!);
+
+                        using (var stream = new FileStream(filePath, FileMode.Create))
+                        {
+                            await courseImage.CopyToAsync(stream);
+                        }
+                        course.ImageUrl = "/uploads/courses/" + fileName;
+                    }
+
                     _context.Update(course);
                     await _context.SaveChangesAsync();
                     await _auditService.LogActionAsync("Kurs Düzenlendi", $"{course.CourseName} kursu bilgileri güncellendi.", "Courses");

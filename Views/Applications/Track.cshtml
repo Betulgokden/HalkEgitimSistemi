@@ -3,24 +3,23 @@
     ViewData["Title"] = "Başvuru Takip";
 }
 
-<div class="container py-5" style="min-height: 80vh; display: flex; align-items: center; justify-content: center;">
+<div class="container py-5" style="min-height: 85vh; display: flex; align-items: center; justify-content: center;">
     <div class="row w-100 justify-content-center">
         <div class="col-lg-6 col-md-8">
-            <div class="glass-card-static animate-scaleIn overflow-hidden p-4 p-md-5 text-center" 
-                 style="border-radius: 40px; border: 2px solid var(--theme-card-border);">
+            <div class="glass-card-static track-container animate-scaleIn p-5 text-center">
                 
-                <div class="tracking-icon-wrapper mb-4">
-                    <div class="tracking-pulse"></div>
-                    <div class="tracking-icon">
+                <!-- Icon Section -->
+                <div class="track-icon-wrapper mb-4">
+                    <div class="track-icon-bg">
                         <i class="bi bi-search"></i>
                     </div>
                 </div>
                 
-                <h2 class="fw-900 mb-2" style="font-family: 'Outfit', sans-serif; font-size: 2.5rem; letter-spacing: -1px;">
+                <h2 class="fw-black mb-3 track-title">
                     Başvuru <span class="gold-text">Sorgula</span>
                 </h2>
                 
-                <p class="text-white-50 mb-4 px-lg-5" style="font-size: 1.1rem;">
+                <p class="track-subtitle mb-5">
                     Başvuru durumunuzu anlık olarak öğrenmek için lütfen 11 haneli T.C. Kimlik Numaranızı giriniz.
                 </p>
 
@@ -32,25 +31,27 @@
                 }
 
                 <form asp-action="Track" method="post" class="mt-4">
-                    <div class="form-premium-group mb-4">
-                        <div class="input-glow-wrapper">
-                            <i class="bi bi-person-vcard input-icon-gold"></i>
-                            <input type="text" name="tcNo" 
-                                   class="form-premium-control text-center tracking-input" 
-                                   placeholder="11 HANELİ T.C. NO" 
-                                   maxlength="11" 
-                                   required 
-                                   autocomplete="off" />
+                    <!-- Input Box -->
+                    <div class="input-modern-group mb-4">
+                        <div class="input-icon-box">
+                            <i class="bi bi-person-vcard-fill"></i>
                         </div>
+                        <input type="text" name="tcNo" 
+                               class="form-control modern-track-input" 
+                               placeholder="11 HANELİ T.C. NO" 
+                               maxlength="11" 
+                               required 
+                               autocomplete="off" />
                     </div>
                     
-                    <button type="submit" class="btn-vibrant-glow w-100 py-4 rounded-20" style="font-size: 1.2rem !important;">
+                    <!-- Submit Button -->
+                    <button type="submit" class="btn btn-track-submit w-100 py-3 mb-5">
                         <i class="bi bi-shield-check me-2"></i> DURUMU SORGULA
                     </button>
                 </form>
 
-                <div class="mt-5 pt-3 border-top border-white-10">
-                    <a asp-controller="Home" asp-action="Index" class="text-white-50 text-decoration-none hover-gold small">
+                <div class="track-footer pt-4 border-top border-glass">
+                    <a asp-controller="Home" asp-action="Index" class="track-footer-link">
                         <i class="bi bi-house-door me-1"></i> Ana Sayfaya Dön
                     </a>
                 </div>
@@ -59,85 +60,119 @@
     </div>
 </div>
 
-@section Scripts {
-    <style>
-        .tracking-icon-wrapper {
-            position: relative;
-            width: 100px;
-            height: 100px;
-            margin: 0 auto;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .tracking-icon {
-            width: 80px;
-            height: 80px;
-            background: linear-gradient(135deg, var(--gold), var(--maroon));
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2.5rem;
-            color: white;
-            z-index: 2;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-        }
-        .tracking-pulse {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background: var(--gold);
-            border-radius: 50%;
-            opacity: 0.3;
-            animation: tracking-ping 2s infinite;
-        }
-        @@keyframes tracking-ping {
-            0% { transform: scale(1); opacity: 0.3; }
-            100% { transform: scale(1.5); opacity: 0; }
-        }
+<style>
+    .track-container {
+        border-radius: 40px;
+        border: 1px solid var(--border-glass) !important;
+        box-shadow: 0 25px 50px rgba(0,0,0,0.3) !important;
+    }
 
-        .input-glow-wrapper {
-            position: relative;
-        }
-        .input-icon-gold {
-            position: absolute;
-            left: 1.5rem;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--gold);
-            font-size: 1.5rem;
-            z-index: 10;
-        }
-        .tracking-input {
-            padding-left: 4rem !important;
-            font-size: 1.4rem !important;
-            letter-spacing: 0.2rem !important;
-            font-family: 'Outfit', sans-serif !important;
-            height: 70px !important;
-            border-radius: 20px !important;
-        }
-        .alert-premium {
-            background: rgba(239, 68, 68, 0.1);
-            border: 1px solid rgba(239, 68, 68, 0.2);
-            color: #ef4444;
-            padding: 1rem;
-            border-radius: 15px;
-            font-weight: 600;
-            font-size: 0.9rem;
-        }
+    .track-icon-bg {
+        width: 100px;
+        height: 100px;
+        background: radial-gradient(circle at center, #C5A059 0%, #581C1C 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto;
+        font-size: 2.5rem;
+        color: white;
+        box-shadow: 0 10px 25px rgba(197, 160, 89, 0.3);
+    }
 
-        /* Theme awareness */
-        [data-theme="light"] .glass-card-static {
-            background: white !important;
-            box-shadow: 0 20px 60px rgba(88, 28, 28, 0.08) !important;
-        }
-        [data-theme="light"] .text-white-50 {
-            color: rgba(88, 28, 28, 0.6) !important;
-        }
-        [data-theme="light"] .tracking-input {
-            background: rgba(88, 28, 28, 0.03) !important;
-            color: #581C1C !important;
-        }
-    </style>
-}
+    .track-title {
+        font-family: 'Outfit', sans-serif;
+        font-size: 2.8rem;
+        letter-spacing: -1px;
+        color: white;
+    }
+    .track-subtitle {
+        color: rgba(255, 255, 255, 0.6);
+        font-size: 1.1rem;
+        line-height: 1.6;
+    }
+
+    /* Input Styling */
+    .input-modern-group {
+        display: flex;
+        align-items: center;
+        position: relative;
+    }
+    .input-icon-box {
+        position: absolute;
+        left: 20px;
+        color: #C5A059;
+        font-size: 1.5rem;
+        z-index: 5;
+    }
+    .modern-track-input {
+        background: rgba(255, 255, 255, 0.05) !important;
+        border: 2px solid rgba(197, 160, 89, 0.3) !important;
+        color: white !important;
+        height: 70px;
+        border-radius: 20px;
+        padding-left: 60px !important;
+        font-size: 1.2rem;
+        letter-spacing: 2px;
+        text-align: center;
+        transition: all 0.3s;
+    }
+    .modern-track-input:focus {
+        border-color: #C5A059 !important;
+        box-shadow: 0 0 20px rgba(197, 160, 89, 0.2);
+        background: rgba(255, 255, 255, 0.08) !important;
+    }
+    .modern-track-input::placeholder { color: rgba(255, 255, 255, 0.3); }
+
+    /* Button Styling */
+    .btn-track-submit {
+        background: transparent;
+        color: #fdfaf1;
+        border: 2px solid #fdfaf1;
+        border-radius: 15px;
+        font-weight: 700;
+        letter-spacing: 1px;
+        transition: all 0.3s;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .btn-track-submit:hover {
+        background: #fdfaf1;
+        color: #581C1C;
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(255, 255, 255, 0.1);
+    }
+
+    .track-footer-link {
+        color: rgba(255, 255, 255, 0.5);
+        text-decoration: none;
+        transition: 0.3s;
+    }
+    .track-footer-link:hover { color: #C5A059; }
+
+    /* Light Mode Overrides */
+    [data-theme="light"] .track-container {
+        background: #ffffff !important;
+        box-shadow: 0 30px 60px rgba(88, 28, 28, 0.1) !important;
+    }
+    [data-theme="light"] .track-title { color: #581C1C; }
+    [data-theme="light"] .track-subtitle { color: rgba(88, 28, 28, 0.6); }
+    [data-theme="light"] .modern-track-input {
+        background: #fdfaf1 !important;
+        border-color: rgba(88, 28, 28, 0.1) !important;
+        color: #581C1C !important;
+    }
+    [data-theme="light"] .modern-track-input::placeholder { color: rgba(88, 28, 28, 0.3); }
+    [data-theme="light"] .btn-track-submit {
+        border-color: #581C1C;
+        color: #581C1C;
+    }
+    [data-theme="light"] .btn-track-submit:hover {
+        background: #581C1C;
+        color: #ffffff;
+    }
+    [data-theme="light"] .track-footer-link { color: rgba(88, 28, 28, 0.5); }
+</style>

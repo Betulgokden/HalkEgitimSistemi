@@ -1,4 +1,4 @@
-﻿@model List<HalkEgitimSistemi.Models.QuizQuestion>
+@model List<HalkEgitimSistemi.Models.QuizQuestion>
 @{
     ViewData["Title"] = "Quiz Soruları Yönetimi";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -76,7 +76,7 @@
                         </div>
                         <div class="col-md-4">
                             <label class="form-label small text-muted">Kategori</label>
-                            <select name="Category" class="form-select bg-glass border-glass text-white">
+                            <select name="Category" class="form-select bg-glass border-glass">
                                 <option>Yazılım</option>
                                 <option>Ağ Teknolojileri</option>
                                 <option>El Sanatları</option>
@@ -84,7 +84,7 @@
                                 <option>Genel Kültür</option>
                             </select>
                             <label class="form-label small text-muted mt-3">Zorluk Seviyesi</label>
-                            <select name="Difficulty" class="form-select bg-glass border-glass text-white">
+                            <select name="Difficulty" class="form-select bg-glass border-glass">
                                 <option value="1">Kolay</option>
                                 <option value="2">Orta</option>
                                 <option value="3">Zor</option>

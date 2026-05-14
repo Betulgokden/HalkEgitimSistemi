@@ -1,4 +1,4 @@
-﻿@model List<HalkEgitimSistemi.Models.AcademicTest>
+@model List<HalkEgitimSistemi.Models.AcademicTest>
 @{
     ViewData["Title"] = "Test Soruları";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -92,7 +92,7 @@
                 <div class="modal-body p-4">
                     <div class="mb-3">
                         <label class="form-label small text-muted">Ders Seçimi</label>
-                        <select name="CourseId" class="form-select bg-glass border-glass text-white" required>
+                        <select name="CourseId" class="form-select bg-glass border-glass" required>
                             @foreach (var c in courses) { <option value="@c.Id">@c.CourseName</option> }
                         </select>
                     </div>

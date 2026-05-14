@@ -66,25 +66,34 @@ namespace HalkEgitimSistemi.Controllers
 
             if (ModelState.IsValid)
             {
-                // ÇÖZÜM 1: String olan claim değerini int'e çeviriyoruz (Satır 59 hatası çözümü)
                 var empIdClaim = User.FindFirstValue("EmployerId");
 
-                // Eğer adminse 0 veya özel bir ID atayabilirsin, iş verense int'e parse et
                 if (int.TryParse(empIdClaim, out int parsedId))
                 {
                     job.EmployerId = parsedId;
                 }
                 else
                 {
-                    job.EmployerId = 0; // Veya Admin için varsayılan bir ID
+                    // Admin için sistemdeki ilk işvereni bul veya 0 bırak
+                    var firstEmp = await _context.Employers.FirstOrDefaultAsync();
+                    job.EmployerId = firstEmp?.Id ?? 1; 
                 }
 
                 job.CreatedAt = DateTime.Now;
+                job.IsActive = true;
+                job.IsDeleted = false;
 
-                _context.Add(job);
-                await _context.SaveChangesAsync();
-                TempData["Success"] = "İş ilanınız başarıyla yayınlandı!";
-                return RedirectToAction(nameof(Index));
+                try 
+                {
+                    _context.Add(job);
+                    await _context.SaveChangesAsync();
+                    TempData["Success"] = "İş ilanınız başarıyla yayınlandı!";
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError("", "Veritabanına kaydedilirken bir hata oluştu: " + ex.Message);
+                }
             }
             return View(job);
         }

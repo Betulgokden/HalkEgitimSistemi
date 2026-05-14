@@ -41,9 +41,9 @@
 
         [data-theme='light'] {
             --bg-dark: #FDFCFB;
-            --bg-glass: rgba(245, 240, 225, 0.7);
-            --bg-glass-strong: rgba(245, 240, 225, 0.9);
-            --border-glass: rgba(88, 28, 28, 0.1);
+            --bg-glass: rgba(245, 240, 225, 0.85); /* More visible beige */
+            --bg-glass-strong: #F5F0E1; /* Solid beige */
+            --border-glass: rgba(197, 160, 89, 0.4);
             --text-primary: #581C1C;
             --text-secondary: #712D2D;
             --text-muted: #8E5A5A;
@@ -164,6 +164,35 @@
             }
             localStorage.setItem('language', lang);
             setTimeout(() => { location.reload(); }, 300);
+        }
+
+        // Text-to-Speech Logic
+        let isReading = false;
+        let speechInstance = null;
+
+        window.toggleReadAloud = function() {
+            if (isReading) {
+                window.speechSynthesis.cancel();
+                isReading = false;
+                document.getElementById('readAloudBtn').querySelector('i').className = 'bi bi-megaphone';
+                return;
+            }
+
+            const mainContent = document.querySelector('main') || document.body;
+            const textToRead = mainContent.innerText;
+            
+            speechInstance = new SpeechSynthesisUtterance(textToRead);
+            speechInstance.lang = 'tr-TR';
+            speechInstance.rate = 1.0;
+            
+            speechInstance.onend = () => {
+                isReading = false;
+                document.getElementById('readAloudBtn').querySelector('i').className = 'bi bi-megaphone';
+            };
+
+            window.speechSynthesis.speak(speechInstance);
+            isReading = true;
+            document.getElementById('readAloudBtn').querySelector('i').className = 'bi bi-stop-circle-fill text-danger';
         }
     </script>
     <script>
@@ -347,8 +376,12 @@
 
         /* Rain effects visibility fix */
         [data-theme="light"] .rain-icon {
-            color: rgba(88, 28, 28, 0.2) !important;
-            opacity: 1 !important;
+            color: #C5A059 !important;
+            opacity: 0.6 !important;
+            font-size: 1.5rem !important;
+            pointer-events: none;
+            position: fixed;
+            z-index: -1;
         }
         body {
             padding-top: 170px !important;
@@ -360,20 +393,13 @@
             width: 100%;
         }
         [data-theme="dark"] .rain-icon {
-            color: rgba(255, 255, 255, 0.2) !important;
+            color: rgba(197, 160, 89, 0.25) !important;
             opacity: 1 !important;
             font-size: 1.5rem !important; /* Larger icons as requested */
             pointer-events: none;
             position: fixed;
             z-index: -1;
         }
-        [data-theme="light"] .rain-icon {
-            color: rgba(88, 28, 28, 0.1) !important;
-            opacity: 1 !important;
-            font-size: 1.5rem !important;
-            pointer-events: none;
-            position: fixed;
-            z-index: -1;
         }
 
         /* Theme overrides for visibility */
@@ -604,7 +630,7 @@
             cursor: pointer !important;
             width: 75px !important;
             height: 75px !important;
-            background: linear-gradient(135deg, #C5A059, #581C1C) !important;
+            background: #C5A059 !important;
             border-radius: 50% !important;
             display: flex !important;
             align-items: center !important;
@@ -613,6 +639,11 @@
             border: 2px solid rgba(255,255,255,0.4) !important;
             transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             position: relative;
+        }
+        [data-theme="light"] .robot-body {
+            background: #581C1C !important;
+            box-shadow: 0 10px 40px rgba(88, 28, 28, 0.3) !important;
+            border: 2px solid rgba(197, 160, 89, 0.4) !important;
         }
         .robot-body::after {
             content: ''; position: absolute; width: 110%; height: 110%; border-radius: 50%;
@@ -641,6 +672,28 @@
             display: none;
             pointer-events: none;
             cursor: default !important;
+            color: #ffffff !important;
+        }
+        [data-theme="light"] .robot-chat-bubble {
+            background: rgba(253, 252, 251, 0.98) !important;
+            border: 1px solid rgba(88, 28, 28, 0.2) !important;
+            box-shadow: 0 30px 80px rgba(88, 28, 28, 0.15) !important;
+            color: #581C1C !important;
+        }
+        [data-theme="light"] .robot-chat-bubble h5 {
+            color: #581C1C !important;
+        }
+        [data-theme="light"] .robot-chat-bubble strong {
+            color: #C5A059 !important;
+        }
+        [data-theme="light"] .robot-chat-bubble #robotMessage {
+            color: #581C1C !important;
+        }
+        [data-theme="light"] .robot-chat-bubble .text-white-50 {
+            color: rgba(88, 28, 28, 0.6) !important;
+        }
+        [data-theme="light"] .robot-chat-bubble .border-white-10 {
+            border-color: rgba(88, 28, 28, 0.1) !important;
         }
         .robot-chat-bubble.open {
             display: block;
@@ -666,10 +719,20 @@
             display: block !important;
             pointer-events: all !important;
         }
+        [data-theme="light"] #robotInput {
+            background: rgba(88, 28, 28, 0.03) !important;
+            border: 1px solid rgba(88, 28, 28, 0.2) !important;
+            color: #581C1C !important;
+        }
         #robotInput:focus {
             background: rgba(255,255,255,0.15) !important;
             border-color: var(--primary) !important;
             box-shadow: 0 0 15px var(--primary-glow) !important;
+        }
+        [data-theme="light"] #robotInput:focus {
+            background: rgba(88, 28, 28, 0.05) !important;
+            border-color: #581C1C !important;
+            box-shadow: 0 0 15px rgba(88, 28, 28, 0.1) !important;
         }
         /* Fix for native dropdown (select option) visibility */
         select option {
@@ -750,6 +813,34 @@
         .btn-icon-sm { background: transparent; border: none; color: white; opacity: 0.8; transition: 0.3s; padding: 2px 5px; }
         .btn-icon-sm:hover { opacity: 1; transform: scale(1.2); color: #C5A059 !important; }
 
+        /* User Role Button Vibrancy Fix */
+        .btn-user-role-premium {
+            background: #581C1C !important;
+            color: #C5A059 !important;
+            border: 2px solid #C5A059 !important;
+            border-radius: 14px !important;
+            padding: 8px 18px !important;
+            font-weight: 900 !important;
+            font-family: 'Outfit', sans-serif !important;
+            box-shadow: 0 0 15px rgba(197, 160, 89, 0.3) !important;
+            transition: 0.3s ease !important;
+        }
+        .btn-user-role-premium:hover {
+            transform: translateY(-2px) !important;
+            box-shadow: 0 0 25px rgba(197, 160, 89, 0.5) !important;
+            color: white !important;
+        }
+        [data-theme="light"] .btn-user-role-premium {
+            background: #C5A059 !important;
+            color: #581C1C !important;
+            border: 2px solid #581C1C !important;
+            box-shadow: 0 5px 15px rgba(88, 28, 28, 0.15) !important;
+        }
+        [data-theme="light"] .btn-user-role-premium:hover {
+            background: #581C1C !important;
+            color: #C5A059 !important;
+        }
+
 
     </style>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
@@ -759,8 +850,7 @@
 </head>
 <body class="bg-vibrant-dark @ViewData["BodyClass"]">
     <!-- GLOBAL ICON RAIN -->
-    <div class="rain-container" id="globalRainContainer"></div>
-    <!-- Background icons removed for cleaner institutional look -->
+    <div class="particles-bg rain-container" id="globalRainContainer" style="z-index: 100; pointer-events: none;"></div>
 
     <!-- Jet Speed Loading Indicator -->
     <div id="globalLoader" style="position:fixed; top:0; left:0; width:0%; height:3px; background:linear-gradient(90deg, #C5A059, #581C1C); z-index:9999; transition: width 0.3s ease;"></div>
@@ -815,7 +905,7 @@
                         <button class="btn-icon-sm lang-btn" id="lang-btn-TR" title="Turkish" onclick="changeLanguage('TR')"><img src="https://flagcdn.com/w20/tr.png" width="16" alt="TR"></button>
                         <div class="vr mx-1 opacity-25"></div>
                         <button class="btn-icon-sm" title="High Contrast" onclick="toggleContrast()"><i class="bi bi-eye"></i></button>
-                        <button class="btn-icon-sm" title="Dyslexia Mode" onclick="toggleDyslexia()"><i class="bi bi-fonts"></i></button>
+                        <button class="btn-icon-sm" id="readAloudBtn" title="Sayfayı Sesli Dinle" onclick="toggleReadAloud()"><i class="bi bi-megaphone"></i></button>
                     </div>
                     <div class="login-wrapper">
                         @if (!User.Identity!.IsAuthenticated)
@@ -843,9 +933,9 @@
                                 }
                                 else
                                 {
-                                    <button class="btn btn-premium dropdown-toggle d-flex align-items-center gap-2" type="button" data-bs-toggle="dropdown" style="background: rgba(255,255,255,0.05); border: 1.5px solid rgba(197, 160, 89, 0.4); border-radius: 12px; padding: 8px 16px;">
-                                        <i class="bi bi-person-circle" style="background: linear-gradient(135deg, #C5A059, #581C1C); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 1.2rem;"></i>
-                                        <span style="background: linear-gradient(135deg, #C5A059, #581C1C); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 800; font-family: 'Outfit';">
+                                    <button class="btn btn-user-role-premium dropdown-toggle d-flex align-items-center gap-2" type="button" data-bs-toggle="dropdown">
+                                        <i class="bi bi-person-circle-fill"></i>
+                                        <span class="fw-bold">
                                             @if(User.IsInRole("Admin")) { <span data-i18n="role_admin">Yönetici</span> }
                                             else if(User.IsInRole("Instructor")) { <span data-i18n="role_instructor">Eğitmen</span> }
                                             else { <span data-i18n="role_student">Kursiyer</span> }
@@ -853,7 +943,7 @@
                                     </button>
                                 }
                                 
-                                <ul class="dropdown-menu dropdown-menu-end animate-fadeIn border-glass bg-glass-strong shadow-2xl p-2" style="min-width: 280px; border-radius: 20px; backdrop-filter: blur(10px);">
+                                <ul class="dropdown-menu dropdown-menu-end animate-fadeIn border-glass bg-glass-strong shadow-2xl p-2" style="min-width: 280px; border-radius: 20px; backdrop-filter: blur(10px); max-height: 80vh; overflow-y: auto;">
                                     <li><h6 class="dropdown-header text-white-50 small fw-bold px-3 pt-2 mb-2" style="letter-spacing: 1px;">HESAP YÖNETİMİ</h6></li>
                                     <li>
                                         <a class="dropdown-item rounded-12 p-2 d-flex align-items-center gap-3" asp-controller="@(User.IsInRole("Admin") ? "Admin" : (User.IsInRole("Instructor") ? "Teacher" : "Student"))" asp-action="Dashboard">
@@ -1029,6 +1119,30 @@
                                         </li>
                                     }
                                     
+                                    @if (User.IsInRole("Admin"))
+                                    {
+                                        <li><hr class="dropdown-divider border-white-10 my-2"></li>
+                                        <li><h6 class="dropdown-header text-white-50 small fw-bold px-3 pt-1 mb-2" style="letter-spacing: 1px; color: #C5A059 !important;">PANEL ERİŞİMİ</h6></li>
+                                        <li>
+                                            <a class="dropdown-item rounded-12 p-2 d-flex align-items-center gap-3" asp-controller="Student" asp-action="Dashboard">
+                                                <div class="icon-box-sm" style="color: #38bdf8; background: rgba(56, 189, 248, 0.1); width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center;"><i class="bi bi-mortarboard"></i></div>
+                                                <span class="fw-bold">Kursiyer Paneli</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item rounded-12 p-2 d-flex align-items-center gap-3" asp-controller="Teacher" asp-action="Dashboard">
+                                                <div class="icon-box-sm" style="color: #f59e0b; background: rgba(245, 158, 11, 0.1); width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center;"><i class="bi bi-person-workspace"></i></div>
+                                                <span class="fw-bold">Eğitmen Paneli</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item rounded-12 p-2 d-flex align-items-center gap-3" asp-controller="Employer" asp-action="Dashboard">
+                                                <div class="icon-box-sm" style="color: #10b981; background: rgba(16, 185, 129, 0.1); width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center;"><i class="bi bi-buildings"></i></div>
+                                                <span class="fw-bold">İşveren Paneli</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    
                                     <li><hr class="dropdown-divider border-white-10 my-2"></li>
                                     <li>
                                         <form asp-controller="Account" asp-action="Logout" method="post">
@@ -1129,16 +1243,16 @@
     <!-- DYNAMIC CYBER-TICKER: Real-time Job & Neighborhood Pulse -->
     @if (ViewData["Title"]?.ToString() == "Ana Sayfa")
     {
-        <div class="cyber-ticker-wrapper" style="position: sticky; top: 0; left: 0; width: 100%; z-index: 1000; background: #581C1C; backdrop-filter: blur(15px); border-bottom: 2px solid #C5A059; height: 45px; display: flex; align-items: center; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
-            <div class="ticker-label" style="background: #C5A059; color: #581C1C; height: 100%; display: flex; align-items: center; padding: 0 20px; font-weight: 900; font-size: 0.75rem; z-index: 10; clip-path: polygon(0 0, 85% 0, 100% 100%, 0% 100%); letter-spacing: 1px;">
+        <div class="cyber-ticker-wrapper" style="position: relative; width: 100%; z-index: 1000; background: #581C1C; border-bottom: 2px solid #C5A059; height: 40px; display: flex; align-items: center; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+            <div class="ticker-label" style="background: #C5A059; color: #581C1C; height: 100%; display: flex; align-items: center; padding: 0 20px; font-weight: 900; font-size: 0.8rem; z-index: 10; white-space: nowrap; box-shadow: 5px 0 10px rgba(0,0,0,0.3);">
                 <i class="bi bi-broadcast-pin me-2 animate-pulse"></i> CANLI AKIŞ
             </div>
-            <div class="ticker-content" style="display: flex; white-space: nowrap; animation: ticker-scroll 45s linear infinite; align-items: center;">
+            <marquee class="ticker-content w-100" behavior="scroll" direction="left" scrollamount="6" style="padding-top: 3px;" onmouseover="this.stop();" onmouseout="this.start();">
                 @if (ViewBag.JobPostings != null)
                 {
                     @foreach (var job in (List<HalkEgitimSistemi.Models.JobPosting>)ViewBag.JobPostings)
                     {
-                        <span class="ticker-item" style="color: #ffffff; font-weight: 700; font-size: 0.85rem; padding: 0 60px; font-family: 'Outfit';">
+                        <span class="ticker-item" style="color: #ffffff; font-weight: 700; font-size: 0.85rem; padding: 0 30px; font-family: 'Outfit';">
                             <i class="bi bi-briefcase-fill text-warning me-2"></i> YENİ İLAN: <span style="color: #C5A059;">@job.Title</span> - @job.Location - @job.SalaryRange 💼
                         </span>
                     }
@@ -1147,27 +1261,19 @@
                 {
                     @foreach (var course in (List<HalkEgitimSistemi.Models.Course>)ViewBag.NewestCourses)
                     {
-                        <span class="ticker-item" style="color: #ffffff; font-weight: 700; font-size: 0.85rem; padding: 0 60px; font-family: 'Outfit';">
+                        <span class="ticker-item" style="color: #ffffff; font-weight: 700; font-size: 0.85rem; padding: 0 30px; font-family: 'Outfit';">
                             <i class="bi bi-mortarboard-fill text-info me-2"></i> YENİ KURS: <span style="color: #C5A059;">@course.CourseName</span> kayıtları başladı! ⚡
                         </span>
                     }
                 }
-                <span class="ticker-item" style="color: #ffffff; font-weight: 700; font-size: 0.85rem; padding: 0 60px; font-family: 'Outfit';">
+                <span class="ticker-item" style="color: #ffffff; font-weight: 700; font-size: 0.85rem; padding: 0 30px; font-family: 'Outfit';">
                     <i class="bi bi-pin-map-fill text-danger me-2"></i> GÜNDOĞDU MAHALLESİ: <span style="color: #C5A059;">Siber Güvenlik</span> zirvede! 📍
                 </span>
-                <span class="ticker-item" style="color: #ffffff; font-weight: 700; font-size: 0.85rem; padding: 0 60px; font-family: 'Outfit';">
+                <span class="ticker-item" style="color: #ffffff; font-weight: 700; font-size: 0.85rem; padding: 0 30px; font-family: 'Outfit';">
                     <i class="bi bi-tree-fill text-success me-2"></i> KARAGÖL PROJESİ: <span style="color: #C5A059;">342 / 500</span> Fidan Hedefi! 🌲
                 </span>
-            </div>
+            </marquee>
         </div>
-
-        <style>
-            @@keyframes ticker-scroll {
-                0% { transform: translateX(0); }
-                100% { transform: translateX(-100%); }
-            }
-            .cyber-ticker-wrapper:hover .ticker-content { animation-play-state: paused; }
-        </style>
     }
 
     <!-- Ticker moved to Home/Index for dynamic data integration -->

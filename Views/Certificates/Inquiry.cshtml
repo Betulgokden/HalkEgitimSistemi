@@ -7,59 +7,50 @@
 <div class="container py-5">
     <div class="row justify-content-center">
         <div class="col-md-10">
-            <div id="inquiryCard" class="p-5 animate-fadeInUp" style="background: rgba(197, 160, 89, 0.15); border: 2px solid #C5A059; border-radius: 40px; box-shadow: 0 20px 50px rgba(0,0,0,0.1);">
+            <div id="inquiryCard" class="p-5 animate-fadeInUp inquiry-premium-card">
                 <div class="text-center mb-5">
-                    <div class="display-icon mb-3" style="background: rgba(88, 28, 28, 0.1); border-color: rgba(88, 28, 28, 0.2);">
-                        <i class="bi bi-patch-check-fill" style="color: #581C1C;"></i>
+                    <div class="display-icon mb-4">
+                        <i class="bi bi-patch-check-fill cert-icon-gold"></i>
                     </div>
-                    <h1 class="h2 fw-bold" style="color: #581C1C; font-family: 'Outfit', sans-serif;" data-i18n="nav_cert">Sertifika Sorgulama Sistemi</h1>
-                    <p style="color: #581C1C; opacity: 0.8;" data-i18n="inquiry_subtitle">T.C. Kimlik numaranız veya Sertifika kodunuz ile belgenizi doğrulayabilirsiniz.</p>
+                    <h1 class="display-5 fw-black cert-title-gold mb-3" data-i18n="nav_cert">Sertifika Sorgulama Sistemi</h1>
+                    <p class="cert-subtitle-light" data-i18n="inquiry_subtitle">T.C. Kimlik numaranız veya Sertifika kodunuz ile belgenizi doğrulayabilirsiniz.</p>
                 </div>
 
-                <div id="errorAlert" style="display: none; background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3); border-radius: 12px; padding: 1rem; margin-bottom: 2rem; color: #dc2626;">
+                <div id="errorAlert" style="display: none;" class="alert-premium-danger mb-4">
                     <i class="bi bi-exclamation-triangle-fill me-2"></i><span id="errorMessage"></span>
                 </div>
 
-                <div class="e-devlet-badge animate-pulse-glow mb-4 mx-auto" style="width: fit-content;">
-                    <div class="p-2 px-3 rounded-pill d-flex align-items-center gap-2 badge-edevlet-theme" style="border: 2px solid #C5A059;">
-                        <img src="https://cdntr.e-devlet.gov.tr/assets/img/logos/e-devlet-kapisi-logo.png" height="20" alt="E-Devlet" onerror="this.src='/img/e-devlet-fallback.png'; this.onerror=null;">
-                        <span class="edevlet-text" style="font-size: 0.75rem; font-weight: 800; letter-spacing: 1px;">E-DEVLET ENTEGRE SİSTEM</span>
+                <div class="e-devlet-badge animate-pulse-glow mb-5 mx-auto" style="width: fit-content;">
+                    <div class="p-2 px-4 rounded-pill d-flex align-items-center gap-3 badge-edevlet-premium">
+                        <img src="https://cdntr.e-devlet.gov.tr/assets/img/logos/e-devlet-kapisi-logo.png" height="24" alt="E-Devlet">
+                        <span class="edevlet-text-premium">E-DEVLET ENTEGRE SİSTEM</span>
                     </div>
                 </div>
 
-<style>
-    .badge-edevlet-theme { background: #581C1C; }
-    .edevlet-text { color: #C5A059; }
-    
-    [data-theme="light"] .badge-edevlet-theme {
-        background: #ffffff !important;
-        border-color: #581C1C !important;
-        box-shadow: 0 4px 15px rgba(88, 28, 28, 0.1);
-    }
-    [data-theme="light"] .edevlet-text {
-        color: #581C1C !important;
-    }
-</style>
-
                 <form id="inquiryForm" class="mb-4">
-                    <div class="search-box-premium">
-                        <i class="bi bi-search ms-3" style="color: var(--text-muted);"></i>
-                        <input type="text" id="searchTerm" name="searchTerm" class="form-control form-control-lg bg-transparent border-0 text-primary-theme" placeholder="T.C. No veya Sertifika No giriniz..." required data-i18n-placeholder="inquiry_placeholder">
-                        <button type="submit" class="btn btn-premium btn-primary-glow px-4" data-i18n="inquiry_btn">Sorgula</button>
+                    <div class="search-box-premium-xl">
+                        <i class="bi bi-search ms-4 search-icon-gold"></i>
+                        <input type="text" id="searchTerm" name="searchTerm" 
+                               class="form-control form-control-lg search-input-modern" 
+                               placeholder="T.C. No veya Sertifika No giriniz..." 
+                               required data-i18n-placeholder="inquiry_placeholder">
+                        <button type="submit" class="btn btn-gold-action px-5">Sorgula</button>
                     </div>
                 </form>
             </div>
 
             <!-- Terminal Illusion -->
-            <div id="terminalBox" style="display: none; background: #0a0a0a; border: 1px solid #333; border-radius: 12px; padding: 25px; font-family: 'JetBrains Mono', monospace; color: #00ff00; font-size: 0.95rem; min-height: 250px; box-shadow: 0 30px 60px rgba(0,0,0,0.6); position: relative; overflow: hidden; margin: 2rem 0;">
-                <div style="display: flex; gap: 8px; margin-bottom: 20px; border-bottom: 1px solid #222; padding-bottom: 10px;">
-                    <div style="width: 12px; height: 12px; background: #ff5f56; border-radius: 50%;"></div>
-                    <div style="width: 12px; height: 12px; background: #ffbd2e; border-radius: 50%;"></div>
-                    <div style="width: 12px; height: 12px; background: #27c93f; border-radius: 50%;"></div>
-                    <span style="color: #444; font-size: 0.7rem; margin-left: 10px; text-transform: uppercase; letter-spacing: 1px;">SECURE CERTIFICATE VERIFIER V2.0</span>
+            <div id="terminalBox" style="display: none;" class="terminal-modern">
+                <div class="terminal-header">
+                    <div class="terminal-dots">
+                        <div class="dot red"></div>
+                        <div class="dot yellow"></div>
+                        <div class="dot green"></div>
+                    </div>
+                    <span class="terminal-label">SECURE CERTIFICATE VERIFIER V2.0</span>
                 </div>
                 <div id="terminalContent"></div>
-                <div class="cursor" style="display: inline-block; width: 10px; height: 18px; background: #00ff00; margin-left: 5px; animation: blink 1s infinite; vertical-align: middle;"></div>
+                <div class="cursor"></div>
             </div>
 
             <!-- Certificate Result (Hidden initially) -->
@@ -75,52 +66,52 @@
 
                 <div id="printable-certificate" 
                      class="sertifika-karti mx-auto" 
-                     data-tilt data-tilt-glare data-tilt-max-glare="0.3" data-tilt-max="5"
-                     style="background: #fff; border-radius: 8px; border: 25px solid #1e293b; padding: 4rem; position: relative; overflow: hidden; box-shadow: 0 50px 100px rgba(0,0,0,0.3); color: #1a202c; text-align: center; font-family: 'Outfit', serif; transform-style: preserve-3d; max-width: 900px;">
+                     data-tilt data-tilt-glare data-tilt-max-glare="0.3" data-tilt-max="5">
                     
-                    <div style="position: absolute; top: 10px; left: 10px; width: 60px; height: 60px; border-top: 5px solid #d4af37; border-left: 5px solid #d4af37;"></div>
-                    <div style="position: absolute; top: 10px; right: 10px; width: 60px; height: 60px; border-top: 5px solid #d4af37; border-right: 5px solid #d4af37;"></div>
-                    <div style="position: absolute; bottom: 10px; left: 10px; width: 60px; height: 60px; border-bottom: 5px solid #d4af37; border-left: 5px solid #d4af37;"></div>
-                    <div style="position: absolute; bottom: 10px; right: 10px; width: 60px; height: 60px; border-bottom: 5px solid #d4af37; border-right: 5px solid #d4af37;"></div>
+                    <!-- Decorative Corners -->
+                    <div class="cert-corner top-left"></div>
+                    <div class="cert-corner top-right"></div>
+                    <div class="cert-corner bottom-left"></div>
+                    <div class="cert-corner bottom-right"></div>
 
-                    <div style="position: relative; z-index: 1; transform: translateZ(50px);">
+                    <div class="cert-content">
                         <div class="mb-4 d-flex justify-content-between align-items-center">
                             <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cc/Ministry_of_National_Education_Turkey_logo.svg/1200px-Ministry_of_National_Education_Turkey_logo.svg.png" style="height: 80px;" />
                             <div style="text-align: right;">
-                                <div style="font-weight: 800; color: #1e293b; font-size: 0.9rem;">T.C. MİLLİ EÄİTİM BAKANLIÄI</div>
-                                <div style="font-size: 0.8rem; color: #64748b;">Halk Eğitimi Merkezi Müdürlüğü</div>
+                                <div class="cert-header-text">T.C. MİLLİ EĞİTİM BAKANLIĞI</div>
+                                <div class="cert-subheader-text">Halk Eğitimi Merkezi Müdürlüğü</div>
                             </div>
                         </div>
                         
-                        <h1 style="font-size: 3.5rem; font-weight: 900; color: #1e293b; letter-spacing: 0.15em; text-transform: uppercase; margin: 2rem 0; font-family: 'Outfit';">SERTİFİKA</h1>
+                        <h1 class="cert-main-title">SERTİFİKA</h1>
 
-                        <p style="font-size: 1.4rem; color: #475569; margin-bottom: 1.5rem; font-style: italic;">Sayın</p>
-                        <div id="certFullName" style="font-size: 3rem; font-weight: 900; color: #0f172a; margin-bottom: 1.5rem; border-bottom: 3px double #d4af37; display: inline-block; padding: 0 3rem 0.5rem;"></div>
+                        <p class="cert-label-text">Sayın</p>
+                        <div id="certFullName" class="cert-user-name"></div>
 
-                        <p style="font-size: 1.2rem; color: #64748b; margin-bottom: 2rem;">T.C. Kimlik No: <strong id="certTcNo" style="color: #1e293b;"></strong></p>
+                        <p class="cert-info-text">T.C. Kimlik No: <strong id="certTcNo"></strong></p>
 
-                        <p style="font-size: 1.4rem; color: #334155; margin: 2rem auto; line-height: 1.8; max-width: 800px;">
-                            Kurumumuz bünyesinde gerçekleştirilen <strong id="certDuration" style="color: #1e293b;"></strong> teorik ve uygulamalı eğitimleri kapsayan <br/>
-                            <strong id="certCourseName" style="color: #b45309; font-size: 2rem; display: block; margin: 1rem 0; font-weight: 800;"></strong>
+                        <p class="cert-body-text">
+                            Kurumumuz bünyesinde gerçekleştirilen <strong id="certDuration"></strong> teorik ve uygulamalı eğitimleri kapsayan <br/>
+                            <strong id="certCourseName" class="cert-course-highlight"></strong>
                             programını başarıyla tamamlayarak bu sertifikayı almaya hak kazanmıştır.
                         </p>
 
                         <div class="row align-items-end mt-5 pt-4">
                             <div class="col-4 text-center">
-                                <div style="font-size: 0.8rem; color: #64748b; margin-bottom: 0.5rem; text-transform: uppercase;">Belge No</div>
-                                <div id="certNoDisplay" style="font-weight: 800; font-size: 1rem; color: #1e293b;"></div>
-                                <div style="border-top: 1px solid #d4af37; margin-top: 0.5rem; width: 80%; margin-left: 10%;"></div>
+                                <div class="cert-sign-label">Belge No</div>
+                                <div id="certNoDisplay" class="cert-sign-value"></div>
+                                <div class="cert-sign-line"></div>
                             </div>
                             <div class="col-4 text-center">
-                                <div style="width: 110px; height: 110px; margin: 0 auto; border: 4px double #d4af37; padding: 5px; background: white;">
+                                <div class="cert-qr-wrapper">
                                     <img id="certQrCode" src="" width="100%" />
                                 </div>
-                                <div style="font-size: 0.7rem; color: #94a3b8; margin-top: 0.5rem;">Belge Doğrulama Kodu</div>
+                                <div class="cert-qr-label">Belge Doğrulama Kodu</div>
                             </div>
                             <div class="col-4 text-center">
-                                <div style="font-size: 0.8rem; color: #64748b; margin-bottom: 0.5rem; text-transform: uppercase;">Müdür İmza</div>
-                                <div style="font-family: 'Brush Script MT', cursive; font-size: 2.8rem; color: #1e293b; line-height: 1;">Betül Gökden</div>
-                                <div style="border-top: 1px solid #d4af37; margin-top: 0.5rem; width: 80%; margin-left: 10%;"></div>
+                                <div class="cert-sign-label">Müdür İmza</div>
+                                <div class="cert-signature-font">Betül Gökden</div>
+                                <div class="cert-sign-line"></div>
                             </div>
                         </div>
                     </div>
@@ -135,10 +126,10 @@
                 </div>
 
                 <div id="journeyTimeline" class="max-w-700 mx-auto text-start no-print mb-5">
-                    <h4 class="mb-4" style="color: var(--text-primary); font-family: 'Outfit'; font-weight: 700;">
+                    <h4 class="mb-4 journey-title">
                         <i class="bi bi-compass me-2 text-primary"></i> Eğitim Serüveni
                     </h4>
-                    <div id="timelineList" class="timeline-container ps-4 border-start border-2 border-primary-light position-relative ms-3">
+                    <div id="timelineList" class="timeline-container-premium position-relative ms-3">
                         <!-- Timeline items will be injected here -->
                     </div>
                 </div>
@@ -173,21 +164,132 @@
 </div>
 
 <style>
-    @@keyframes blink { 0%, 100% { opacity: 0; } 50% { opacity: 1; } }
-    .terminal-line { margin-bottom: 12px; display: block; line-height: 1.4; }
-    .terminal-hash { color: #888; font-size: 0.8rem; word-break: break-all; font-style: italic; background: rgba(255,255,255,0.05); padding: 5px; border-radius: 4px; margin: 5px 0; }
-    .display-icon { width: 80px; height: 80px; background: rgba(197, 160, 89, 0.1); border-radius: 20px; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; margin: 0 auto; border: 1px solid rgba(197, 160, 89, 0.2); }
-    .search-box-premium { display: flex; align-items: center; background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border-glass); border-radius: var(--radius-lg); padding: 5px; transition: all 0.3s ease; }
-    .search-box-premium:focus-within { border-color: var(--primary-light); box-shadow: 0 0 20px rgba(197, 160, 89, 0.2); background: rgba(255, 255, 255, 0.08); }
-    .search-box-premium input::placeholder { color: var(--text-muted) !important; opacity: 1; }
-    .btn-linkedin { background: #0077b5; color: white; border: none; transition: all 0.3s; }
-    .animate-pulse-glow { animation: pulse-red-glow 2s infinite; }
-    @@keyframes pulse-red-glow { 0% { filter: drop-shadow(0 0 2px rgba(220, 38, 38, 0.4)); } 50% { filter: drop-shadow(0 0 10px rgba(220, 38, 38, 0.8)); } 100% { filter: drop-shadow(0 0 2px rgba(220, 38, 38, 0.4)); } }
-    .btn-linkedin:hover { background: #005582; color: white; transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,119,181,0.3); }
-    .timeline-dot { position: absolute; left: -33px; top: 5px; width: 14px; height: 14px; background: #0f0f23; border: 2px solid var(--primary-light); border-radius: 50%; z-index: 2; }
-    .timeline-container { border-color: rgba(255,255,255,0.1) !important; }
-    .timeline-item { margin-bottom: 1.5rem; position: relative; }
-    @@media print { .no-print { display: none !important; } body * { visibility: hidden; } #printable-certificate, #printable-certificate * { visibility: visible; } #printable-certificate { position: absolute; left: 0; top: 0; width: 100%; height: auto; box-shadow: none !important; border: 5px solid #1a202c !important; transform: none !important; } }
+    .inquiry-premium-card {
+        background: rgba(88, 28, 28, 0.1);
+        border: 2px solid #C5A059;
+        border-radius: 50px;
+        box-shadow: 0 30px 60px rgba(0,0,0,0.4);
+    }
+    .cert-icon-gold { color: #C5A059; }
+    .cert-title-gold { 
+        color: #C5A059; 
+        font-family: 'Outfit', sans-serif; 
+        text-shadow: 0 4px 15px rgba(197, 160, 89, 0.3);
+    }
+    .cert-subtitle-light { 
+        color: rgba(255, 255, 255, 0.7); 
+        font-size: 1.1rem;
+    }
+    [data-theme="light"] .cert-subtitle-light { color: rgba(88, 28, 28, 0.7); }
+    [data-theme="light"] .inquiry-premium-card { background: #ffffff; border-color: #581C1C; }
+    [data-theme="light"] .cert-title-gold { color: #581C1C; text-shadow: none; }
+    [data-theme="light"] .cert-icon-gold { color: #581C1C; }
+
+    .display-icon { 
+        width: 100px; height: 100px; 
+        background: rgba(197, 160, 89, 0.1); 
+        border: 2px solid #C5A059; 
+        border-radius: 30px; 
+        display: flex; align-items: center; justify-content: center; 
+        font-size: 3rem; margin: 0 auto; 
+    }
+
+    .badge-edevlet-premium { 
+        background: #581C1C; 
+        border: 2px solid #C5A059;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    }
+    .edevlet-text-premium { 
+        color: #C5A059; 
+        font-weight: 900; 
+        font-size: 0.85rem; 
+        letter-spacing: 1.5px; 
+    }
+
+    .search-box-premium-xl { 
+        display: flex; align-items: center; 
+        background: rgba(255, 255, 255, 0.05); 
+        border: 2px solid rgba(197, 160, 89, 0.4); 
+        border-radius: 25px; padding: 10px; 
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+    }
+    .search-box-premium-xl:focus-within { 
+        border-color: #C5A059; 
+        box-shadow: 0 0 40px rgba(197, 160, 89, 0.3); 
+        background: rgba(255, 255, 255, 0.1); 
+    }
+    .search-input-modern { 
+        background: transparent !important; 
+        border: none !important; 
+        color: white !important; 
+        font-size: 1.3rem !important; 
+        padding-left: 20px !important; 
+    }
+    [data-theme="light"] .search-input-modern { color: #581C1C !important; }
+    .search-input-modern::placeholder { color: rgba(255,255,255,0.3); }
+    [data-theme="light"] .search-input-modern::placeholder { color: rgba(88,28,28,0.3); }
+
+    .btn-gold-action { 
+        background: #C5A059; 
+        color: #581C1C; 
+        border: none; 
+        border-radius: 18px; 
+        font-weight: 900; 
+        height: 60px; 
+        transition: 0.3s; 
+    }
+    .btn-gold-action:hover { 
+        background: #d4b57e; 
+        transform: translateY(-2px); 
+        box-shadow: 0 10px 20px rgba(197, 160, 89, 0.4); 
+    }
+
+    /* Terminal */
+    .terminal-modern { 
+        background: #0a0a0a; border: 1px solid #C5A059; border-radius: 20px; 
+        padding: 30px; font-family: 'JetBrains Mono', monospace; color: #C5A059; 
+        min-height: 250px; box-shadow: 0 40px 80px rgba(0,0,0,0.8); margin: 3rem 0; 
+    }
+    .terminal-header { display: flex; align-items: center; gap: 15px; margin-bottom: 25px; border-bottom: 1px solid rgba(197,160,89,0.2); padding-bottom: 15px; }
+    .terminal-dots { display: flex; gap: 8px; }
+    .dot { width: 12px; height: 12px; border-radius: 50%; }
+    .red { background: #ff5f56; } .yellow { background: #ffbd2e; } .green { background: #27c93f; }
+    .terminal-label { font-size: 0.75rem; letter-spacing: 1px; opacity: 0.6; }
+
+    /* Certificate Card Styling */
+    .sertifika-karti { 
+        background: #fff; border-radius: 15px; border: 30px solid #1e293b; 
+        padding: 5rem; position: relative; box-shadow: 0 60px 120px rgba(0,0,0,0.4); 
+        color: #1a202c; text-align: center; font-family: 'Outfit', sans-serif; 
+        max-width: 950px; 
+    }
+    .cert-corner { position: absolute; width: 80px; height: 80px; border-color: #C5A059; border-style: solid; }
+    .top-left { top: 15px; left: 15px; border-width: 6px 0 0 6px; }
+    .top-right { top: 15px; right: 15px; border-width: 6px 6px 0 0; }
+    .bottom-left { bottom: 15px; left: 15px; border-width: 0 0 6px 6px; }
+    .bottom-right { bottom: 15px; right: 15px; border-width: 0 6px 6px 0; }
+
+    .cert-user-name { font-size: 3.2rem; font-weight: 900; color: #0f172a; border-bottom: 4px double #C5A059; display: inline-block; padding: 0 4rem 0.5rem; margin-bottom: 1.5rem; }
+    .cert-course-highlight { color: #581C1C; font-size: 2.2rem; display: block; margin: 1.5rem 0; font-weight: 900; }
+    .cert-signature-font { font-family: 'Brush Script MT', cursive; font-size: 3.2rem; color: #1e293b; line-height: 1; }
+    .cert-sign-line { border-top: 2px solid #C5A059; margin-top: 0.5rem; width: 80%; margin-left: 10%; }
+
+    .journey-title { color: white; font-weight: 900; font-size: 1.5rem; }
+    [data-theme="light"] .journey-title { color: #581C1C; }
+
+    .timeline-container-premium { border-left: 3px solid rgba(197, 160, 89, 0.3); padding-left: 30px; }
+    .timeline-item { position: relative; margin-bottom: 2rem; }
+    .timeline-item::before { 
+        content: ''; position: absolute; left: -39px; top: 5px; 
+        width: 16px; height: 16px; background: #0a0a12; 
+        border: 3px solid #C5A059; border-radius: 50%; z-index: 2; 
+    }
+    
+    @@media print { 
+        .no-print { display: none !important; } 
+        body { background: white !important; }
+        .sertifika-karti { border: 10px solid #1e293b !important; box-shadow: none !important; }
+    }
 </style>
 
 @section Scripts {
@@ -202,7 +304,7 @@
                 const btn = $(this).find('button');
                 const originalText = btn.text();
                 
-                btn.html('<span class="spinner-border spinner-border-sm me-2"></span> Sorgulanıyor...').prop('disabled', true);
+                btn.html('<span class="spinner-border spinner-border-sm"></span>').prop('disabled', true);
 
                 $.ajax({
                     url: '/Certificates/Inquiry',
@@ -230,45 +332,6 @@
                 });
             });
 
-            async function runTerminal(term) {
-                const content = $('#terminalContent');
-                const addLine = (text, cls = '') => { content.append(`<span class="terminal-line ${cls}">${text}</span>`); };
-                addLine("> SYSTEM BOOT: OK"); await sleep(50);
-                addLine("> REQUESTING ACCESS TO NATIONAL EDUCATION DATABASE..."); await sleep(50);
-                addLine("> SEARCHING RECORDS FOR: " + term + "...");
-                
-                $.ajax({
-                    url: '/Certificates/Inquiry',
-                    type: 'POST',
-                    data: { searchTerm: term },
-                    headers: { "X-Requested-With": "XMLHttpRequest" },
-                    success: async function(response) {
-                        if (response.success) {
-                            currentCertCode = response.data.certCode;
-                            await sleep(50);
-                            addLine("> RECORD IDENTIFIED. VERIFYING DIGITAL INTEGRITY..."); await sleep(50);
-                            addLine("> GENERATING SHA-256 HASH PROOF:", "text-info");
-                            addLine(response.hash, "terminal-hash"); await sleep(50);
-                            addLine("> CRYPTOGRAPHIC SIGNATURE: VALID", "text-success fw-bold"); await sleep(50);
-                            addLine("> LOADING CERTIFICATE CARD...", "text-warning"); await sleep(50);
-                            
-                            populateCertificate(response);
-                            $('#terminalBox').fadeOut(400, function() {
-                                $('#certificateResult').fadeIn(600);
-                            });
-                        } else {
-                            addLine("> ALERT: NO MATCHING RECORD FOUND.", "text-danger");
-                            await sleep(2000);
-                            resetForm(response.message);
-                        }
-                    },
-                    error: function() {
-                        addLine("> CRITICAL ERROR: DATABASE TIMEOUT.", "text-danger");
-                        sleep(2000).then(() => resetForm("Bağlantı hatası oluştu."));
-                    }
-                });
-            }
-
             function populateCertificate(res) {
                 const d = res.data;
                 $('#certFullName').text(d.fullName.toUpperCase());
@@ -284,28 +347,17 @@
                     const timeline = $('#timelineList');
                     timeline.empty();
                     timeline.append(`
-                        <div class="timeline-item"><div class="timeline-dot"></div><div class="small text-muted">${d.applyDate}</div><div class="fw-bold">Eğitime Başladı</div></div>
-                        <div class="timeline-item"><div class="timeline-dot"></div><div class="small text-muted">Devam Durumu</div><div class="fw-bold">Katılım: %${Math.round(d.presentCount * 100 / d.attendanceCount)}</div></div>
+                        <div class="timeline-item"><div class="small opacity-50 text-gold">${d.applyDate}</div><div class="fw-bold">Eğitime Başladı</div></div>
+                        <div class="timeline-item"><div class="small opacity-50 text-gold">Devam Durumu</div><div class="fw-bold">Katılım: %${Math.round(d.presentCount * 100 / d.attendanceCount)}</div></div>
                     `);
                     if (d.examGrade) {
-                        timeline.append(`<div class="timeline-item"><div class="timeline-dot"></div><div class="small text-muted">Başarı Puanı</div><div class="fw-bold">Sınav: ${d.examGrade} / 100</div></div>`);
+                        timeline.append(`<div class="timeline-item"><div class="small opacity-50 text-gold">Başarı Puanı</div><div class="fw-bold">Sınav: ${d.examGrade} / 100</div></div>`);
                     }
-                    timeline.append(`<div class="timeline-item"><div class="timeline-dot bg-success border-success"></div><div class="small text-muted">Tamamlandı</div><div class="fw-bold text-success">Sertifika Hak Edildi</div></div>`);
+                    timeline.append(`<div class="timeline-item"><div class="small text-success">Tamamlandı</div><div class="fw-bold text-success">Sertifika Hak Edildi</div></div>`);
                 } else {
                     $('#certDuration').text("");
                     $('#journeyTimeline').hide();
                 }
-            }
-
-            function sleep(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
-
-            function resetForm(error) {
-                $('#terminalBox').fadeOut(400, function() {
-                    $('#terminalContent').empty();
-                    $('#errorMessage').text(error);
-                    $('#errorAlert').show();
-                    $('#inquiryCard').fadeIn(400);
-                });
             }
 
             $('#btnShare').on('click', function() {
@@ -326,5 +378,3 @@
         }
     </script>
 }
-
-

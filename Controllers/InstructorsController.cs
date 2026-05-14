@@ -66,8 +66,12 @@ namespace HalkEgitimSistemi.Controllers
             var instructor = await _context.Instructors
                 .AsNoTracking()
                 .Include(i => i.Course)
+                    .ThenInclude(c => c!.Applications)
+                .Include(i => i.Course)
+                    .ThenInclude(c => c!.Comments)
                 .Include(i => i.Schedules)
                 .FirstOrDefaultAsync(m => m.Id == id && !m.IsDeleted);
+
             if (instructor == null) return NotFound();
 
             // Müsaitlik Durumu Kontrolü
@@ -78,6 +82,22 @@ namespace HalkEgitimSistemi.Controllers
                 s.Day.Equals(today, StringComparison.OrdinalIgnoreCase) && 
                 s.StartTime <= now && 
                 s.EndTime >= now);
+
+            // İstatistikler (Kurs üzerinden)
+            if (instructor.Course != null)
+            {
+                ViewBag.StudentCount = instructor.Course.Applications?.Count(a => a.Status == ApplicationStatus.Approved) ?? 0;
+                ViewBag.AverageRating = instructor.Course.Comments?.Any() == true 
+                    ? instructor.Course.Comments.Average(c => c.Rating) 
+                    : 0;
+                ViewBag.TotalReviews = instructor.Course.Comments?.Count ?? 0;
+            }
+            else
+            {
+                ViewBag.StudentCount = 0;
+                ViewBag.AverageRating = 0;
+                ViewBag.TotalReviews = 0;
+            }
 
             return View(instructor);
         }

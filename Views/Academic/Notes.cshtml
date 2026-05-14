@@ -17,7 +17,7 @@
         
         <div class="d-flex gap-3 align-items-center">
             <form method="get" class="d-flex gap-2">
-                <select name="courseId" class="form-select bg-glass border-glass text-white rounded-pill px-4" onchange="this.form.submit()">
+                <select name="courseId" class="form-select bg-glass border-glass rounded-pill px-4" onchange="this.form.submit()">
                     <option value="">Tüm Dersler</option>
                     @foreach (var c in courses)
                     {
@@ -102,7 +102,7 @@
                     <div class="row g-3">
                         <div class="col-md-6">
                             <label class="form-label small text-muted">Ders Seçimi</label>
-                            <select name="CourseId" class="form-select bg-glass border-glass text-white" required>
+                            <select name="CourseId" class="form-select bg-glass border-glass" required>
                                 @foreach (var c in courses) { <option value="@c.Id">@c.CourseName</option> }
                             </select>
                         </div>

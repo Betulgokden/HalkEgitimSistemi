@@ -372,23 +372,23 @@
         }
         else
         {
-            <div class="table-responsive" style="background: transparent !important; border: none !important;">
-                <table class="table table-premium mb-0" style="background: transparent !important; color: white !important; border-collapse: separate; border-spacing: 0;">
-                    <thead style="background: rgba(197, 160, 89, 0.1) !important;">
-                        <tr style="background: transparent !important;">
-                            <th class="ps-4 border-0 text-primary-light small fw-bold">Öğrenci</th>
-                            <th class="border-0 text-primary-light small fw-bold">T.C. No</th>
-                            <th class="border-0 text-primary-light small fw-bold">Telefon</th>
-                            <th class="border-0 text-primary-light small fw-bold">Tarih</th>
-                            <th class="border-0 text-primary-light small fw-bold">Devamsızlık</th>
-                            <th class="border-0 text-primary-light small fw-bold">Durum</th>
-                            <th class="text-end pe-4 border-0 text-primary-light small fw-bold">İşlem</th>
+            <div class="table-responsive p-3">
+                <table class="table-modern-premium mb-0">
+                    <thead>
+                        <tr>
+                            <th class="ps-4">Öğrenci</th>
+                            <th>T.C. No</th>
+                            <th>Telefon</th>
+                            <th>Tarih</th>
+                            <th>Devamsızlık</th>
+                            <th>Durum</th>
+                            <th class="text-end pe-4">İşlem</th>
                         </tr>
                     </thead>
-                    <tbody style="background: transparent !important;">
+                    <tbody>
                         @foreach (var item in Model)
                         {
-                            <tr class="align-middle border-bottom border-white-5 transition-all hover-bg-glass" style="background: rgba(255,255,255,0.03) !important; color: white !important;">
+                            <tr class="align-middle border-bottom border-white-5 transition-all hover-bg-glass">
                                 <td class="ps-4 py-3">
                                     <div class="d-flex align-items-center gap-3">
                                         <div class="avatar-sm rounded-circle d-flex align-items-center justify-content-center" style="width:40px; height:40px; background: rgba(197, 160, 89, 0.1); border: 1px solid rgba(197, 160, 89, 0.2);">

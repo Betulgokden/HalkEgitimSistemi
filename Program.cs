@@ -129,6 +129,30 @@ using (var scope = app.Services.CreateScope())
             IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID(N'[dbo].[Students]') AND name = 'Points')
             ALTER TABLE [dbo].[Students] ADD [Points] int NOT NULL DEFAULT 0;
 
+            -- 🛠️ INDEX HAZIRLIĞI: Email sütunlarını nvarchar(450) yap (Index için şart)
+            ALTER TABLE [dbo].[Students] ALTER COLUMN [Email] nvarchar(450) NULL;
+            IF EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID(N'[dbo].[Instructors]') AND name = 'Email')
+                ALTER TABLE [dbo].[Instructors] ALTER COLUMN [Email] nvarchar(450) NULL;
+            
+            -- Instructors tablosu için eksik sütunlar
+            IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID(N'[dbo].[Instructors]') AND name = 'Bio')
+            ALTER TABLE [dbo].[Instructors] ADD [Bio] nvarchar(max) NULL;
+
+            IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID(N'[dbo].[Instructors]') AND name = 'Education')
+            ALTER TABLE [dbo].[Instructors] ADD [Education] nvarchar(max) NULL;
+
+            IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID(N'[dbo].[Instructors]') AND name = 'LinkedInUrl')
+            ALTER TABLE [dbo].[Instructors] ADD [LinkedInUrl] nvarchar(max) NULL;
+
+            IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID(N'[dbo].[Instructors]') AND name = 'PortfolioUrl')
+            ALTER TABLE [dbo].[Instructors] ADD [PortfolioUrl] nvarchar(max) NULL;
+
+            IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID(N'[dbo].[Instructors]') AND name = 'DribbbleUrl')
+            ALTER TABLE [dbo].[Instructors] ADD [DribbbleUrl] nvarchar(max) NULL;
+
+            IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID(N'[dbo].[Instructors]') AND name = 'Skills')
+            ALTER TABLE [dbo].[Instructors] ADD [Skills] nvarchar(max) NULL;
+
             -- ⚡ PERFORMANCE INDEXES (Speed up Dashboard & Logins)
             IF NOT EXISTS (SELECT name FROM sys.indexes WHERE name = N'IX_Students_Email')
                 CREATE INDEX IX_Students_Email ON [dbo].[Students] ([Email]);

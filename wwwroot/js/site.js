@@ -1,4 +1,4 @@
-﻿// ============================================
+// ============================================
 // HALK EÄİTİM SİSTEMİ - PREMIUM INTERACTIONS
 // ============================================
 
@@ -185,9 +185,17 @@ document.addEventListener('DOMContentLoaded', function () {
     });
     // Theme Toggle logic removed from JS - handled in Layout for reliability
     
-    // Rain logic removed from JS - handled in Layout for consistency
-    
-    // ---- FOMO (Social Proof) Toasts ----
+    // ---- Global Icon Rain ----
+    const rainContainer = document.getElementById('globalRainContainer');
+    if (rainContainer) {
+        const icons = ['bi-mortarboard-fill', 'bi-book-half', 'bi-award-fill', 'bi-laptop', 'bi-pencil-fill', 'bi-brush', 'bi-calculator', 'bi-code-slash'];
+        for (let i = 1; i <= 12; i++) {
+            const icon = document.createElement('i');
+            const randomIcon = icons[Math.floor(Math.random() * icons.length)];
+            icon.className = `bi ${randomIcon} rain-icon particle p-${i}`;
+            rainContainer.appendChild(icon);
+        }
+    }
     const fomoData = [
         { icon: 'bi-fire', text: 'Mehmet, Ağ Teknolojileri sınıfındaki son kontenjanı kaptı!', color: '#C5A059' },
         { icon: 'bi-eye', text: 'Şu an sizinle birlikte 8 kişi bu kursu inceliyor.', color: '#C5A059' },

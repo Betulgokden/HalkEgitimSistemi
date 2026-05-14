@@ -41,6 +41,24 @@ namespace HalkEgitimSistemi.Models
         [Display(Name = "CV Dosyası (PDF)")]
         public string? CvFilePath { get; set; }
 
+        [Display(Name = "Hakkında / Biyografi")]
+        public string? Bio { get; set; } = "Halk Eğitim bünyesinde uzman eğitmen olarak görev yapmaktadır.";
+
+        [Display(Name = "Eğitim Geçmişi")]
+        public string? Education { get; set; }
+
+        [Display(Name = "LinkedIn Profili")]
+        public string? LinkedInUrl { get; set; }
+
+        [Display(Name = "Portfolyo / Kişisel Web Sitesi")]
+        public string? PortfolioUrl { get; set; }
+
+        [Display(Name = "Behance / Dribbble")]
+        public string? DribbbleUrl { get; set; }
+
+        [Display(Name = "Uzmanlık Alanları (Virgülle ayırın)")]
+        public string? Skills { get; set; } // Örn: Figma, UI/UX, HTML, CSS
+
         public List<Message> ReceivedMessages { get; set; } = new();
         public List<InstructorSchedule> Schedules { get; set; } = new();
 

@@ -150,12 +150,31 @@ namespace HalkEgitimSistemi.Data
                 new Course { Id = 15, CourseName = "E-Ticaret Atölyesi", CategoryId = 8, Quota = 25, DurationHours = 40, StartDate = new DateTime(2026, 6, 15), EndDate = new DateTime(2026, 8, 15), IsActive = true, MaxAbsenceLimit = 4, Price = 590, ImageUrl = "https://images.unsplash.com/photo-1559136555-9303baea8ebd?w=600&fm=webp" },
                 new Course { Id = 16, CourseName = "Siber Güvenlik", CategoryId = 1, Quota = 20, DurationHours = 64, StartDate = new DateTime(2026, 9, 1), EndDate = new DateTime(2026, 11, 1), IsActive = true, MaxAbsenceLimit = 6, Price = 0, ImageUrl = "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=600&fm=webp" },
                 new Course { Id = 17, CourseName = "Profesyonel Arıcılık ve Bal Üretimi", CategoryId = 8, Quota = 30, DurationHours = 40, StartDate = new DateTime(2026, 5, 20), EndDate = new DateTime(2026, 6, 30), IsActive = true, MaxAbsenceLimit = 4, Price = 300, ImageUrl = "https://images.unsplash.com/photo-1587334206571-3390ccc205df?w=600&fm=webp" },
-                new Course { Id = 18, CourseName = "Modern Seralarda Organik Tarım", CategoryId = 8, Quota = 25, DurationHours = 60, StartDate = new DateTime(2026, 5, 25), EndDate = new DateTime(2026, 7, 25), IsActive = true, MaxAbsenceLimit = 4, Price = 450, ImageUrl = "https://images.unsplash.com/photo-1592419044706-39796d40f98c?w=600&fm=webp" }
+                new Course { Id = 18, CourseName = "Modern Seralarda Organik Tarım", CategoryId = 8, Quota = 25, DurationHours = 60, StartDate = new DateTime(2026, 5, 25), EndDate = new DateTime(2026, 7, 25), IsActive = true, MaxAbsenceLimit = 4, Price = 450, ImageUrl = "https://images.unsplash.com/photo-1592419044706-39796d40f98c?w=600&fm=webp" },
+                new Course { Id = 19, CourseName = "Unity ile Oyun Geliştirme", CategoryId = 1, Description = "2D ve 3D oyunlar yapmayı öğrenin. C# programlama ve Unity arayüzü.", ImageUrl = "https://images.unsplash.com/photo-1552824236-41102881ad24?w=600", IsActive = true, StartDate = DateTime.Now.AddDays(30), DurationHours = 80, Quota = 20, Price = 750 },
+                new Course { Id = 20, CourseName = "Piyano Eğitimi (Başlangıç)", CategoryId = 4, Description = "Nota okuma ve temel piyano teknikleri. Müziğin büyülü dünyasına adım atın.", ImageUrl = "https://images.unsplash.com/photo-1520529611442-eaf5f228497b?w=600", IsActive = true, StartDate = DateTime.Now.AddDays(5), DurationHours = 48, Quota = 10, Price = 750 },
+                new Course { Id = 21, CourseName = "Dijital Pazarlama ve SEO", CategoryId = 1, Description = "İşinizi dijital dünyada büyütmenin yollarını öğrenin. Google Ads, Meta Ads ve SEO teknikleri.", ImageUrl = "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600", IsActive = true, StartDate = DateTime.Now.AddDays(15), DurationHours = 40, Quota = 30, Price = 500 },
+                new Course { Id = 22, CourseName = "Python ile Veri Analizi", CategoryId = 1, Description = "Pandas, Numpy ve Matplotlib kütüphaneleri ile veriden anlamlı sonuçlar çıkarın.", ImageUrl = "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600", IsActive = true, StartDate = DateTime.Now.AddDays(20), DurationHours = 60, Quota = 25, Price = 600 },
+                new Course { Id = 23, CourseName = "Yaratıcı Yazarlık Atölyesi", CategoryId = 3, Description = "Kendi hikayenizi yazmaya başlayın. Karakter gelişimi ve kurgu teknikleri.", ImageUrl = "https://images.unsplash.com/photo-1455390582262-044cdead277a?w=600", IsActive = true, StartDate = DateTime.Now.AddDays(10), DurationHours = 24, Quota = 15, Price = 400 },
+                new Course { Id = 24, CourseName = "Temel Fotoğrafçılık", CategoryId = 3, Description = "Işık, kompozisyon ve teknik ayarlar. Makinenizi tanıyın ve harika kareler yakalayın.", ImageUrl = "https://images.unsplash.com/photo-1452784444945-3f422708fe5e?w=600", IsActive = true, StartDate = DateTime.Now.AddDays(25), DurationHours = 32, Quota = 20, Price = 450 }
             );
 
             modelBuilder.Entity<Instructor>().HasData(
                 new Instructor { Id = 1, FullName = "Ahmet Yılmaz", Title = "Bilişim Teknolojileri Öğretmeni", CourseId = 1, Username = "ahmet", Password = "123", IsApproved = false, Address = "Borçka, Artvin", BirthYear = 1985 },
-                new Instructor { Id = 2, FullName = "Elif Kaya", Title = "Web Tasarım Uzmanı", CourseId = 2 },
+                new Instructor 
+                { 
+                    Id = 2, 
+                    FullName = "Elif Kaya", 
+                    Title = "Web Tasarım Uzmanı", 
+                    CourseId = 2,
+                    Bio = "10 yılı aşkın süredir sektörde aktif olarak UI/UX tasarım ve ön yüz geliştirme projelerinde yer almaktadır. Figma, Adobe Creative Cloud ve modern web teknolojileri (HTML5, CSS3, JavaScript) konusunda uzmanlaşmıştır. Öğrencilerine sadece teknik bilgi değil, aynı zamanda tasarım odaklı düşünme yetisini de kazandırmayı amaçlar.",
+                    Education = "İstanbul Teknik Üniversitesi - Endüstriyel Tasarım (Lisans)\nMarmara Üniversitesi - Grafik Tasarım (Yüksek Lisans)",
+                    Skills = "UI/UX Design, Figma, HTML/CSS, Responsive Design, Adobe XD, Prototyping",
+                    LinkedInUrl = "https://linkedin.com/in/elifkaya",
+                    PortfolioUrl = "https://elifkaya.design",
+                    DribbbleUrl = "https://behance.net/elifkaya",
+                    ImageUrl = "/img/instructors/elif_kaya.png"
+                },
                 new Instructor { Id = 3, FullName = "Mehmet Demir", Title = "Bilgisayar Eğitmeni", CourseId = 3 },
                 new Instructor { Id = 4, FullName = "Sarah Johnson", Title = "İngilizce Öğretmeni", CourseId = 4 },
                 new Instructor { Id = 5, FullName = "Hans Weber", Title = "Almanca Öğretmeni", CourseId = 5 },
