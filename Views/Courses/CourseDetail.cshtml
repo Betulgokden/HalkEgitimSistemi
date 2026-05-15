@@ -335,17 +335,17 @@
 
                 @if (isFull)
                 {
-                    <button type="button" data-bs-toggle="modal" data-bs-target="#applicationModal" class="btn btn-premium btn-secondary-glass btn-lg w-100 mb-2">
-                        <i class="bi bi-hourglass-split me-1"></i> <span data-i18n="join_waiting_list">Yedek Listesine Katıl</span>
+                    <button type="button" data-bs-toggle="modal" data-bs-target="#applicationModal" class="btn btn-lg w-100 mb-2 fw-900" style="background: #DFBF8E; color: #3A0F0F; border: 2px solid #C5A059; border-radius: 16px; padding: 18px; box-shadow: 0 8px 25px rgba(223, 191, 142, 0.3); font-size: 1.2rem; letter-spacing: 1px; transition: all 0.3s ease;">
+                        <i class="bi bi-hourglass-split me-2 fs-4"></i> <span data-i18n="join_waiting_list">Yedek Listesine Katıl</span>
                     </button>
-                    <p class="small text-center text-warning mt-2">
+                    <p class="small text-center text-warning mt-2 fw-bold">
                         <i class="bi bi-info-circle"></i> <span data-i18n="quota_full_info">Kontenjan dolmuştur. Başvurunuz yedek listesine alınacaktır.</span>
                     </p>
                 }
                 else
                 {
-                    <button type="button" data-bs-toggle="modal" data-bs-target="#applicationModal" class="btn btn-premium btn-primary-glow btn-lg w-100" style="box-shadow: 0 5px 20px rgba(245,158,11,0.4);">
-                        <i class="bi bi-rocket-takeoff flex-shrink-0"></i> <span data-i18n="apply_now">Hemen Başvur</span>
+                    <button type="button" data-bs-toggle="modal" data-bs-target="#applicationModal" class="btn btn-lg w-100 fw-900" style="background: #C5A059; color: #1a0808; border: 2px solid #DFBF8E; border-radius: 16px; padding: 18px; box-shadow: 0 8px 30px rgba(197, 160, 89, 0.4); font-size: 1.3rem; letter-spacing: 1.5px; transition: all 0.3s ease;">
+                        <i class="bi bi-rocket-takeoff-fill flex-shrink-0 fs-3 me-2"></i> <span data-i18n="apply_now">HEMEN BAŞVUR</span>
                     </button>
                 }
                 
