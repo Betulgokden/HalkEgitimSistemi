@@ -1,20 +1,327 @@
 @model HalkEgitimSistemi.Models.Student
 @{
-    ViewData["Title"] = "Halk Point Sistemi";
+    ViewData["Title"] = "Halk Point Dashboard";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    
+    // Level Calculation (Example: Every 500 HP is a new level)
+    int hpPerLevel = 500;
+    int currentLevel = (Model.Points / hpPerLevel) + 1;
+    int currentLevelProgress = Model.Points % hpPerLevel;
+    int neededForNext = hpPerLevel - currentLevelProgress;
+    double progressPercent = (double)currentLevelProgress / hpPerLevel * 100;
+    
+    string levelTitle = currentLevel switch {
+        1 => "Bronz Üye",
+        2 => "Gümüş Üye",
+        3 => "Altın Üye",
+        4 => "Platin Üye",
+        _ => "Efsanevi Üye"
+    };
 }
 
-<div class="container py-4">
-    <h1 class="gold-text">Halk Point Dünyası</h1>
-    <p class="text-white-50">Puanınız: @Model.Points</p>
+<div class="container py-5">
+    <!-- Header Section -->
+    <div class="row align-items-center mb-5 animate-fadeIn">
+        <div class="col-lg-8">
+            <h1 class="display-4 fw-900 gold-text mb-2" style="font-family: 'Outfit';">Halk Point Dünyası</h1>
+            <p class="text-white-50 fs-5">Eğitim alırken kazanın, puanlarınızı özel avantajlara dönüştürün!</p>
+        </div>
+        <div class="col-lg-4 text-end">
+            <div class="rank-badge-premium p-3 rounded-4 shadow-gold d-inline-block text-center" style="background: #581C1C; border: 2px solid #C5A059; min-width: 200px;">
+                <div class="small text-white-50 uppercase fw-bold mb-1">BORÇKA SIRALAMANIZ</div>
+                <div class="display-5 fw-900 gold-text">#@ViewBag.UserRank</div>
+                <div class="small text-white-50">Toplam @ViewBag.TotalStudents Kursiyer Arasından</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- 1. DİNAMİK İLERLEME VE ROZETLER -->
+        <div class="col-lg-8">
+            <div class="glass-card-premium p-4 mb-4 h-100">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h3 class="gold-text m-0 fw-bold"><i class="bi bi-graph-up-arrow me-2"></i> İlerleme ve Seviye</h3>
+                    <span class="badge bg-gold text-maroon px-3 py-2 rounded-pill fw-bold">LEVEL @currentLevel</span>
+                </div>
+                
+                <!-- Level Progress -->
+                <div class="level-tracking-wrapper mb-5">
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-white fw-bold">@levelTitle</span>
+                        <span class="gold-text fw-bold">Next: @(currentLevel + 1). Seviye</span>
+                    </div>
+                    <div class="progress" style="height: 35px; background: rgba(197, 160, 89, 0.1); border-radius: 17px; border: 1px solid rgba(197, 160, 89, 0.2); overflow: hidden; position: relative;">
+                        <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" 
+                             style="width: @progressPercent%; background: linear-gradient(90deg, #C5A059, #581C1C); border-radius: 17px;">
+                        </div>
+                        <div class="progress-text-overlay w-100 h-100 position-absolute d-flex align-items-center justify-content-center text-white fw-bold" style="text-shadow: 0 0 10px rgba(0,0,0,0.5);">
+                            @Model.Points / @(currentLevel * hpPerLevel) HP (@neededForNext HP kaldı)
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Rozet Koleksiyonu (Badges) -->
+                <h5 class="text-white mb-4"><i class="bi bi-award-fill me-2 gold-text"></i> Rozet Koleksiyonu</h5>
+                <div class="row g-3">
+                    @{
+                        var badges = new[] {
+                            new { Icon = "bi-mortarboard", Title = "İlk Adım", Desc = "İlk kursuna başvurdun", Earned = true },
+                            new { Icon = "bi-fire", Title = "Azimli", Desc = "5 gün üst üste giriş", Earned = true },
+                            new { Icon = "bi-star-fill", Title = "Yıldız Kursiyer", Desc = "1000 HP limitini aş", Earned = (bool)(Model.Points >= 1000) },
+                            new { Icon = "bi-chat-heart", Title = "Sosyal Kelebek", Desc = "10 yorum yap", Earned = false },
+                            new { Icon = "bi-cloud-upload", Title = "Bilgi Kaynağı", Desc = "5 ders notu paylaş", Earned = false },
+                            new { Icon = "bi-trophy", Title = "Şampiyon", Desc = "Sıralamada ilk 3'e gir", Earned = (bool)(ViewBag.UserRank <= 3) }
+                        };
+                    }
+                    @foreach (var badge in badges)
+                    {
+                        <div class="col-md-4 col-6">
+                            <div class="badge-item @(badge.Earned ? "earned" : "locked") p-3 text-center rounded-4 border transition-all h-100">
+                                <i class="bi @badge.Icon display-6 mb-2"></i>
+                                <h6 class="fw-bold mb-1">@badge.Title</h6>
+                                <p class="x-small m-0 opacity-75">@badge.Desc</p>
+                                @if (!badge.Earned) { <div class="locked-icon"><i class="bi bi-lock-fill"></i></div> }
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. GÜNLÜK VE HAFTALIK GÖREVLER -->
+        <div class="col-lg-4">
+            <div class="glass-card-premium p-4 h-100">
+                <h3 class="gold-text mb-4 fw-bold"><i class="bi bi-check2-square me-2"></i> Görevler</h3>
+                
+                <div class="task-list d-grid gap-3">
+                    <div class="task-item p-3 rounded-4 border border-glass d-flex justify-content-between align-items-center animate-fadeInRight" style="animation-delay: 0.1s;">
+                        <div>
+                            <h6 class="text-white fw-bold m-0">Günlük Giriş</h6>
+                            <small class="text-white-50">+10 HP • Her Gün</small>
+                        </div>
+                        <button class="btn btn-success btn-sm rounded-pill px-3 py-1" disabled><i class="bi bi-check-circle-fill"></i> Alındı</button>
+                    </div>
+
+                    <div class="task-item p-3 rounded-4 border border-glass d-flex justify-content-between align-items-center animate-fadeInRight" style="animation-delay: 0.2s;">
+                        <div>
+                            <h6 class="text-white fw-bold m-0">Günün Sorusu</h6>
+                            <small class="text-white-50">+20 HP • Tek Seferlik</small>
+                        </div>
+                        <a asp-controller="Quiz" asp-action="Index" class="btn btn-premium-sm btn-sm rounded-pill px-3 py-1">Çöz</a>
+                    </div>
+
+                    <div class="task-item p-3 rounded-4 border border-glass d-flex justify-content-between align-items-center animate-fadeInRight" style="animation-delay: 0.3s;">
+                        <div>
+                            <h6 class="text-white fw-bold m-0">Kütüphaneye Not Ekle</h6>
+                            <small class="text-white-50">+50 HP • Haftalık</small>
+                        </div>
+                        <a asp-controller="Student" asp-action="UploadNote" class="btn btn-outline-gold btn-sm rounded-pill px-3 py-1">Yükle</a>
+                    </div>
+
+                    <div class="task-item p-3 rounded-4 border border-glass d-flex justify-content-between align-items-center animate-fadeInRight" style="animation-delay: 0.4s;">
+                        <div>
+                            <h6 class="text-white fw-bold m-0">Kurs Paylaş</h6>
+                            <small class="text-white-50">+30 HP • 3 Arkadaş</small>
+                        </div>
+                        <button class="btn btn-outline-info btn-sm rounded-pill px-3 py-1" onclick="shareCourse()"><i class="bi bi-share-fill"></i></button>
+                    </div>
+                </div>
+
+                <div class="mt-4 p-3 rounded-4 bg-glass-sm border border-glass text-center">
+                    <h2 class="gold-text fw-900 m-0">@(Model.Points) HP</h2>
+                    <p class="text-white-50 small fw-bold uppercase mt-1">GÜNCEL BAKİYE</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. HALK POINT MARKET & 4. LİDERLİK TABLOSU -->
+    <div class="row g-4 mt-2">
+        <!-- Market Section -->
+        <div class="col-lg-8">
+            <div class="glass-card-premium p-4">
+                <h3 class="gold-text mb-4 fw-bold"><i class="bi bi-cart-check-fill me-2"></i> Puan Market (Redeem)</h3>
+                <div class="row g-3">
+                    @{
+                        var shopItems = new[] {
+                            new { Title = "Özel Tasarım Sertifika", Desc = "Kurs katılım belgeniz için premium altın varaklı tasarım.", Cost = 500, Icon = "bi-patch-check" },
+                            new { Title = "Kütüphane Uzatımı", Desc = "Kütüphane kitap kiralama süresinde +1 hafta ek süre.", Cost = 250, Icon = "bi-book" },
+                            new { Title = "Öncelikli Kayıt Hakkı", Desc = "Sıradaki dönemde istediğiniz kurs için kontenjan garantisi.", Cost = 1500, Icon = "bi-lightning-charge" },
+                            new { Title = "Kariyer Danışmanlığı", Desc = "Eğitmenlerimizden 30 dakikalık birebir kariyer sohbeti.", Cost = 2000, Icon = "bi-person-badge" }
+                        };
+                    }
+                    @foreach (var item in shopItems)
+                    {
+                        <div class="col-md-6">
+                            <div class="shop-item p-3 rounded-4 border border-glass transition-all h-100 d-flex gap-3">
+                                <div class="shop-icon-box bg-maroon text-gold rounded-circle d-flex align-items-center justify-content-center" style="width: 60px; height: 60px; flex-shrink: 0; border: 1px solid #C5A059;">
+                                    <i class="bi @item.Icon fs-4"></i>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <h6 class="text-white fw-bold mb-1">@item.Title</h6>
+                                    <p class="x-small text-white-50 mb-2">@item.Desc</p>
+                                    <button class="btn btn-premium-sm btn-sm px-3 rounded-pill @(Model.Points < item.Cost ? "disabled opacity-50" : "")">
+                                        @item.Cost HP Satın Al
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Leaderboard Sidebar -->
+        <div class="col-lg-4">
+            <div class="glass-card-premium p-4 h-100">
+                <h4 class="gold-text mb-4 fw-bold text-center"><i class="bi bi-stars me-2"></i> Haftanın Yıldızları</h4>
+                <div class="leaderboard-mini d-grid gap-2">
+                    @if (ViewBag.Leaderboard != null)
+                    {
+                        int rank = 1;
+                        foreach (var lead in ViewBag.Leaderboard)
+                        {
+                            <div class="lead-item-mini p-2 rounded-3 border @(rank == 1 ? "border-gold" : "border-glass") d-flex align-items-center gap-3" 
+                                 style="background: @(rank == 1 ? "rgba(197, 160, 89, 0.1)" : "rgba(255,255,255,0.03)");">
+                                <div class="rank-circle @(rank == 1 ? "rank-gold" : "rank-normal")">@rank</div>
+                                <div class="flex-grow-1">
+                                    <div class="small fw-bold text-white">@lead.FirstName @lead.LastName</div>
+                                    <div class="x-small gold-text">@lead.Points HP</div>
+                                </div>
+                                @if (rank == 1) { <i class="bi bi-crown-fill text-gold"></i> }
+                            </div>
+                            rank++;
+                        }
+                    }
+                </div>
+                <div class="mt-4 text-center">
+                    <p class="x-small text-white-50 mb-0">Genel sıralamada %5'lik dilimdesiniz!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 5. AKTİVİTE GEÇMİŞİ -->
+    <div class="row mt-4 animate-fadeIn">
+        <div class="col-12">
+            <div class="glass-card-premium p-4">
+                <h4 class="gold-text mb-4 fw-bold"><i class="bi bi-clock-history me-2"></i> Aktivite Geçmişi</h4>
+                <div class="activity-log-wrapper overflow-auto" style="max-height: 400px; padding: 10px;">
+                    <table class="table-modern-premium m-0">
+                        <thead>
+                            <tr class="text-white-50 x-small fw-bold uppercase">
+                                <th>TARİH</th>
+                                <th>AKTİVİTE</th>
+                                <th>KAZANILAN</th>
+                                <th class="text-end">DURUM</th>
+                            </tr>
+                        </thead>
+                        <tbody class="small">
+                            @if (ViewBag.RecentActivities != null && ((IEnumerable<HalkEgitimSistemi.Models.HalkPointActivity>)ViewBag.RecentActivities).Any())
+                            {
+                                foreach (var activity in (IEnumerable<HalkEgitimSistemi.Models.HalkPointActivity>)ViewBag.RecentActivities)
+                                {
+                                    <tr>
+                                        <td>@activity.Date.ToString("dd.MM.yyyy HH:mm")</td>
+                                        <td class="fw-bold">@activity.ActivityType</td>
+                                        <td class="gold-text fw-bold">@activity.PointAmount HP</td>
+                                        <td class="text-end"><span class="badge bg-success-glow rounded-pill px-2 py-1" style="font-size: 0.6rem;">TAMAMLANDI</span></td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <!-- Placeholder data for demonstration -->
+                                <tr>
+                                    <td>@DateTime.Now.AddHours(-2).ToString("dd.MM.yyyy HH:mm")</td>
+                                    <td class="fw-bold">Profil Güncelleme</td>
+                                    <td class="gold-text fw-bold">+10 HP</td>
+                                    <td class="text-end"><span class="badge bg-success-glow rounded-pill px-2 py-1" style="font-size: 0.6rem;">TAMAMLANDI</span></td>
+                                </tr>
+                                <tr>
+                                    <td>@DateTime.Now.AddDays(-1).ToString("dd.MM.yyyy HH:mm")</td>
+                                    <td class="fw-bold">'Web Tasarım' Dersi Katılımı</td>
+                                    <td class="gold-text fw-bold">+50 HP</td>
+                                    <td class="text-end"><span class="badge bg-success-glow rounded-pill px-2 py-1" style="font-size: 0.6rem;">TAMAMLANDI</span></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
-@section Styles {
-    <link rel="stylesheet" href="~/css/halkpoints.css" asp-append-version="true" />
-}
+<style>
+    .fw-900 { font-weight: 900 !important; }
+    .gold-text { color: #C5A059 !important; }
+    .text-maroon { color: #581C1C !important; }
+    .bg-gold { background-color: #C5A059 !important; }
+    
+    .glass-card-premium {
+        background: rgba(15, 23, 42, 0.7) !important;
+        backdrop-filter: blur(15px);
+        border: 2px solid rgba(197, 160, 89, 0.3) !important;
+        border-radius: 30px;
+        box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        transition: transform 0.3s ease, border-color 0.3s ease;
+    }
+    
+    [data-theme="light"] .glass-card-premium {
+        background: #fdfaf1 !important;
+        border-color: #581C1C !important;
+        box-shadow: 0 15px 40px rgba(88, 28, 28, 0.08);
+    }
+
+    .glass-card-premium:hover {
+        transform: translateY(-5px);
+        border-color: #C5A059 !important;
+    }
+
+    .badge-item { background: rgba(15, 23, 42, 0.4); border: 1px solid rgba(197, 160, 89, 0.1); position: relative; color: white; }
+    .badge-item.earned { color: #C5A059; border-color: #C5A059; background: rgba(197, 160, 89, 0.1); }
+    .badge-item.locked { color: rgba(255,255,255,0.3); opacity: 0.6; filter: grayscale(1); }
+    
+    [data-theme="light"] .badge-item { background: #ffffff; border-color: rgba(88, 28, 28, 0.1); color: #581C1C; }
+    [data-theme="light"] .badge-item.earned { background: #fdfaf1; border-color: #C5A059; color: #C5A059; }
+    [data-theme="light"] .badge-item.locked { color: rgba(88, 28, 28, 0.3); }
+    
+    .locked-icon { position: absolute; top: 10px; right: 10px; font-size: 0.7rem; }
+
+    .task-item, .shop-item { background: rgba(15, 23, 42, 0.3); border: 1px solid rgba(197, 160, 89, 0.1) !important; transition: 0.3s; }
+    .task-item:hover, .shop-item:hover { background: rgba(197, 160, 89, 0.1); border-color: #C5A059 !important; }
+    
+    [data-theme="light"] .task-item, [data-theme="light"] .shop-item { background: #ffffff; border-color: rgba(88, 28, 28, 0.1) !important; }
+    [data-theme="light"] .task-item:hover, [data-theme="light"] .shop-item:hover { background: #fdfaf1; border-color: #581C1C !important; }
+
+    .rank-circle { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 0.8rem; }
+    .rank-gold { background: #C5A059; color: #581C1C; box-shadow: 0 0 10px #C5A059; }
+    .rank-normal { background: rgba(255,255,255,0.1); color: white; }
+    
+    [data-theme="light"] .rank-normal { background: rgba(88, 28, 28, 0.1); color: #581C1C; }
+
+    .border-gold { border-color: #C5A059 !important; }
+    .border-glass { border-color: rgba(255,255,255,0.1) !important; }
+    [data-theme="light"] .border-glass { border-color: rgba(88, 28, 28, 0.1) !important; }
+
+    .activity-log-wrapper::-webkit-scrollbar { width: 4px; }
+    .activity-log-wrapper::-webkit-scrollbar-thumb { background: #C5A059; border-radius: 10px; }
+    
+    @@keyframes shadow-pulse-gold {
+        0% { box-shadow: 0 0 15px rgba(197, 160, 89, 0.3); }
+        50% { box-shadow: 0 0 25px rgba(197, 160, 89, 0.5); }
+        100% { box-shadow: 0 0 15px rgba(197, 160, 89, 0.3); }
+    }
+    .shadow-gold { animation: shadow-pulse-gold 3s infinite; }
+</style>
+    
 
 @section Scripts {
     <script>
-        console.log("Halk Points loaded");
+        function shareCourse() {
+            alert("Kurs bağlantısı kopyalandı! Paylaşarak 30 HP kazanabilirsiniz.");
+        }
+        console.log("Gamified Halk Points loaded");
     </script>
 }

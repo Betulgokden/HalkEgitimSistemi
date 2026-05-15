@@ -6,36 +6,33 @@
 
 <div class="container py-5">
     <!-- Welcome Header -->
-    <div class="p-5 mb-5 animate-fadeInDown">
+    <div class="welcome-banner glass-card-main p-5 mb-5 animate-fadeInDown" style="border-radius: 35px; background: linear-gradient(135deg, rgba(88, 28, 28, 0.4) 0%, rgba(15, 23, 42, 0.4) 100%);">
         <div class="row align-items-center">
-            <div class="col-md-auto text-center mb-3 mb-md-0">
-                <div class="avatar-large">
+            <div class="col-md-auto text-center mb-4 mb-md-0">
+                <div class="modern-avatar-xl">
                     @if (string.IsNullOrEmpty(Model.ProfilePicture))
                     {
-                        <i class="bi bi-person-circle display-1 text-primary-light"></i>
+                        <div class="avatar-placeholder">@Model.FirstName[0]@Model.LastName[0]</div>
                     }
                     else
                     {
-                        <img src="@Model.ProfilePicture" alt="Profile" class="img-fluid rounded-circle shadow-lg" style="width: 120px; height: 120px; object-fit: cover;">
+                        <img src="@Model.ProfilePicture" alt="Profile" class="img-fluid rounded-circle shadow-lg border border-3 border-gold" style="width: 120px; height: 120px; object-fit: cover;">
                     }
                 </div>
             </div>
             <div class="col-md">
-                <h1 class="display-5 fw-bold mb-1">Hoş Geldin, <span class="section-title-gradient">@Model.FirstName!</span></h1>
-                <p class="text-white-50 mb-0">Eğitim yolculuğundaki gelişimini buradan takip edebilirsin.</p>
+                <h1 class="display-4 fw-black mb-1">Hoş Geldin, <span class="gold-text">@Model.FirstName!</span></h1>
+                <p class="lead text-white-70 mb-0">Eğitim yolculuğundaki gelişimini buradan takip edebilirsin.</p>
             </div>
             <div class="col-md-auto text-end mt-4 mt-md-0">
-                    <div class="stat-badge animate-pulse-slow">
-                        <span class="stat-value text-info">@Model.SuccessScore</span>
-                        <span class="stat-label">Yetenek Skoru</span>
+                <div class="d-flex gap-3">
+                    <div class="stat-card-mini border-gold-glow">
+                        <div class="stat-mini-value text-gold">@Model.Points</div>
+                        <div class="stat-mini-label">PUAN</div>
                     </div>
-                    <div class="stat-badge border-gold-glow">
-                        <span class="stat-value text-gold">@Model.Points</span>
-                        <span class="stat-label">Toplam Puan</span>
-                    </div>
-                    <div class="stat-badge">
-                        <span class="stat-value">@Model.Applications.Count</span>
-                        <span class="stat-label">Toplam Kurs</span>
+                    <div class="stat-card-mini bg-vibrant-purple">
+                        <div class="stat-mini-value text-white">@Model.SuccessScore</div>
+                        <div class="stat-mini-label text-white-50">SKOR</div>
                     </div>
                 </div>
             </div>
@@ -99,39 +96,42 @@
 </div>
 
 <style>
-    .stat-badge {
+    .stat-card-mini {
         background: rgba(255,255,255,0.03);
         border: 1px solid var(--border-glass);
-        padding: 10px 20px;
-        border-radius: 16px;
+        padding: 15px 25px;
+        border-radius: 20px;
         text-align: center;
-        min-width: 100px;
+        min-width: 110px;
+        transition: all 0.3s ease;
     }
+    .stat-card-mini:hover { transform: translateY(-5px); border-color: #C5A059; }
+    .stat-mini-value { display: block; font-size: 1.8rem; font-weight: 900; line-height: 1; margin-bottom: 5px; }
+    .stat-mini-label { font-size: 0.7rem; font-weight: 800; letter-spacing: 1px; color: rgba(255,255,255,0.4); text-transform: uppercase; }
 
-    .stat-value {
-        display: block;
-        font-size: 1.5rem;
-        font-weight: 800;
-        line-height: 1;
-        margin-bottom: 5px;
+    .modern-avatar-xl {
+        width: 120px; height: 120px; margin: 0 auto;
     }
-
-    .stat-label {
-        font-size: 0.7rem;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        color: var(--text-muted);
+    .avatar-placeholder {
+        width: 100%; height: 100%; background: linear-gradient(135deg, #C5A059, #581C1C);
+        border-radius: 50%; display: flex; align-items: center; justify-content: center;
+        font-size: 3rem; font-weight: 900; color: white; border: 3px solid #C5A059;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
     }
 
     .course-panel-card {
         padding: 1.5rem;
-        transition: all 0.3s ease;
+        transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        border-radius: 24px;
+        background: rgba(255,255,255,0.02) !important;
+        border: 1px solid rgba(255,255,255,0.05) !important;
     }
 
     .course-panel-card:hover {
-        transform: translateY(-5px);
-        border-color: var(--primary-light);
-        background: rgba(255,255,255,0.05);
+        transform: translateY(-10px);
+        border-color: #C5A059 !important;
+        background: rgba(255,255,255,0.05) !important;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.3) !important;
     }
 
     .bg-success-glass { background: rgba(16, 185, 129, 0.1); color: #C5A059; border: 1px solid rgba(16, 185, 129, 0.2); }
@@ -140,25 +140,12 @@
     .bg-primary-glass { background: rgba(197, 160, 89, 0.1); color: #C5A059; border: 1px solid rgba(197, 160, 89, 0.2); }
 
     .bg-primary-glow {
-        background: var(--primary-light);
-        box-shadow: 0 0 10px var(--primary-light);
+        background: #C5A059;
+        box-shadow: 0 0 15px rgba(197, 160, 89, 0.4);
     }
     
     .text-gold { color: #C5A059 !important; }
     .border-gold-glow { border: 1px solid rgba(197, 160, 89, 0.4) !important; box-shadow: 0 0 15px rgba(197, 160, 89, 0.1); }
-    
-    .icon-box-md {
-        width: 50px;
-        height: 50px;
-        border-radius: 15px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    .bg-vibrant-purple { background: linear-gradient(135deg, #C5A059, #581C1C) !important; }
-    
-    .bg-white-5 { background: rgba(255, 255, 255, 0.05); }
-    .border-white-10 { border: 1px solid rgba(255, 255, 255, 0.1) !important; }
     
     .animate-pulse-slow {
         animation: pulse-slow 3s infinite;
@@ -168,5 +155,13 @@
         50% { opacity: 0.7; }
         100% { opacity: 1; }
     }
+
+    .fw-black { font-weight: 900 !important; }
+    .gold-text {
+        background: linear-gradient(90deg, #C5A059, #F5E0A0);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    .text-white-70 { color: rgba(255,255,255,0.7) !important; }
 </style>
 

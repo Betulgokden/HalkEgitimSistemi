@@ -36,8 +36,8 @@
         <!-- CTA Buttons -->
         <div class="hero-cta animate-fadeInUp mt-5" style="animation-delay: 0.6s;">
             <div class="d-flex flex-wrap justify-content-center gap-3">
-                <a asp-controller="Courses" asp-action="Browse" class="btn btn-lg px-5 py-3 rounded-pill shadow-lg" style="background: #581C1C !important; border: 1px solid #C5A059 !important; font-weight: 800 !important; box-shadow: 0 10px 30px rgba(88, 28, 28, 0.4) !important;">
-                    <i class="bi bi-rocket-takeoff me-2" style="color: #C5A059 !important;"></i> <span data-i18n="hero_btn_start" style="color: #C5A059 !important;">Hemen Başla</span>
+                <a asp-controller="Courses" asp-action="Browse" class="btn btn-lg px-5 py-3 rounded-pill shadow-lg" style="background: #C5A059 !important; border: 2px solid #581C1C !important; font-weight: 800 !important; box-shadow: 0 10px 30px rgba(197, 160, 89, 0.4) !important;">
+                    <i class="bi bi-rocket-takeoff me-2" style="color: #581C1C !important;"></i> <span data-i18n="hero_btn_start" style="color: #581C1C !important;">Hemen Başla</span>
                 </a>
                 <a href="#about" class="btn btn-lg px-5 py-3 rounded-pill" style="border: 2px solid #C5A059 !important; color: #C5A059 !important; background: rgba(197, 160, 89, 0.05) !important; font-weight: 700 !important; backdrop-filter: blur(10px);">
                     <i class="bi bi-info-circle me-2"></i> <span data-i18n="hero_btn_about">Kurumsal Güvence</span>
@@ -132,7 +132,9 @@
                                             <span class="badge" style="background: #581C1C; color: #C5A059; font-size: 0.7rem;">@job.RequiredCategory</span>
                                         </div>
                                         <div class="text-white-50" style="font-size: 0.8rem; margin-bottom: 1rem;"><i class="bi bi-geo-alt me-1"></i> @job.Location | <i class="bi bi-cash-stack me-1"></i> @job.SalaryRange</div>
-                                        <button class="btn w-100 rounded-pill" style="background: #581C1C; color: #C5A059; font-weight: 800; font-size: 0.85rem;" onclick="openJobModal(@job.Id, '@job.Title', '@job.Requirements.Replace("'", "\\'")', '@job.SalaryRange')" data-i18n="home_examine_btn">İncele</button>
+                                        <button class="btn w-100 rounded-pill" style="background: #581C1C; color: #C5A059; font-weight: 800; font-size: 0.85rem;" 
+                                                onclick="openJobModal(@job.Id, '@(Html.Raw(System.Web.HttpUtility.JavaScriptStringEncode(job.Title)))', '@(Html.Raw(System.Web.HttpUtility.JavaScriptStringEncode(job.Requirements ?? "")))', '@(Html.Raw(System.Web.HttpUtility.JavaScriptStringEncode(job.SalaryRange ?? "")))')" 
+                                                data-i18n="home_examine_btn">İncele</button>
                                     </div>
                                 </div>
                             }
@@ -147,7 +149,7 @@
                                         <span class="badge" style="background: #581C1C; color: #C5A059; font-size: 0.7rem;">REKLAM</span>
                                     </div>
                                     <div class="text-white-50" style="font-size: 0.8rem; margin-bottom: 0.5rem;">Borçka Merkez | 35.000 TL - 45.000 TL</div>
-                                    <button class="btn w-100 rounded-pill disabled" style="background: rgba(197, 160, 89, 0.1); color: #C5A059; font-weight: 700; border: 1px dashed #C5A059;">Sistem Kaydı Bekleniyor</button>
+                                    <button class="btn w-100 rounded-pill disabled" style="background: #C5A059 !important; color: #581C1C !important; font-weight: 900 !important; border: 2px solid #581C1C !important; opacity: 0.9;">Sistem Kaydı Bekleniyor</button>
                                 </div>
                             </div>
                         }

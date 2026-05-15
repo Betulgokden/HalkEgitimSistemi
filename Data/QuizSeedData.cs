@@ -46,6 +46,37 @@ namespace HalkEgitimSistemi.Data
                 new QuizQuestion { QuestionText = "Hangisi bir yenilenebilir enerji kaynağıdır?", OptionA = "Kömür", OptionB = "Petrol", OptionC = "Güneş", OptionD = "Doğalgaz", CorrectAnswer = "C", Category = "Genel Kültür", Difficulty = 1 }
             });
 
+            // Siber Güvenlik
+            questions.AddRange(new List<QuizQuestion> {
+                new QuizQuestion { QuestionText = "Hangisi bir 'Phishing' (Oltalama) saldırısı türüdür?", OptionA = "DDoS", OptionB = "E-posta sahteciliği", OptionC = "SQL Injection", OptionD = "Brute Force", CorrectAnswer = "B", Category = "Siber Güvenlik", Difficulty = 2 },
+                new QuizQuestion { QuestionText = "En güvenli şifreleme protokolü hangisidir?", OptionA = "WPA", OptionB = "WEP", OptionC = "WPA3", OptionD = "WPA2", CorrectAnswer = "C", Category = "Siber Güvenlik", Difficulty = 3 },
+                new QuizQuestion { QuestionText = "İki faktörlü kimlik doğrulama (2FA) neyi amaçlar?", OptionA = "İnternet hızını artırmak", OptionB = "Ek bir güvenlik katmanı sağlamak", OptionC = "Bilgisayarı soğutmak", OptionD = "Reklamları engellemek", CorrectAnswer = "B", Category = "Siber Güvenlik", Difficulty = 1 },
+            });
+
+            // Yapay Zeka
+            questions.AddRange(new List<QuizQuestion> {
+                new QuizQuestion { QuestionText = "Hangisi bir makine öğrenmesi algoritmasıdır?", OptionA = "HTTP", OptionB = "Random Forest", OptionC = "HTML", OptionD = "FTP", CorrectAnswer = "B", Category = "Yapay Zeka", Difficulty = 2 },
+                new QuizQuestion { QuestionText = "Yapay zekada 'NLP'nin açılımı nedir?", OptionA = "Natural Language Processing", OptionB = "Neural Logic Program", OptionC = "Next Level Process", OptionD = "Network Layer Protocol", CorrectAnswer = "A", Category = "Yapay Zeka", Difficulty = 2 },
+            });
+
+            // Grafik Tasarım
+            questions.AddRange(new List<QuizQuestion> {
+                new QuizQuestion { QuestionText = "Hangisi bir 'Vektörel' tasarım programıdır?", OptionA = "Photoshop", OptionB = "Adobe Illustrator", OptionC = "Paint", OptionD = "Excel", CorrectAnswer = "B", Category = "Grafik Tasarım", Difficulty = 1 },
+                new QuizQuestion { QuestionText = "Renk uzayında 'CMYK' hangi amaçla kullanılır?", OptionA = "Dijital ekranlar için", OptionB = "Baskı ve matbaa için", OptionC = "Video düzenleme için", OptionD = "Web tasarımı için", CorrectAnswer = "B", Category = "Grafik Tasarım", Difficulty = 2 },
+            });
+
+            // Dijital Pazarlama
+            questions.AddRange(new List<QuizQuestion> {
+                new QuizQuestion { QuestionText = "SEO'nun açılımı nedir?", OptionA = "Search Engine Optimization", OptionB = "Social Email Operation", OptionC = "Secure Exchange Option", OptionD = "Site Entrance Order", CorrectAnswer = "A", Category = "Dijital Pazarlama", Difficulty = 1 },
+                new QuizQuestion { QuestionText = "Hangisi bir 'Sosyal Medya Reklamcılığı' platformudur?", OptionA = "Slack", OptionB = "Meta Ads", OptionC = "Zoom", OptionD = "Trello", CorrectAnswer = "B", Category = "Dijital Pazarlama", Difficulty = 1 },
+            });
+
+            // Gastronomi
+            questions.AddRange(new List<QuizQuestion> {
+                new QuizQuestion { QuestionText = "Türk mutfağında 'Karnıyarık' yemeğinin ana malzemesi hangisidir?", OptionA = "Kabak", OptionB = "Patlıcan", OptionC = "Patates", OptionD = "Biber", CorrectAnswer = "B", Category = "Aşçılık ve Gastronomi", Difficulty = 1 },
+                new QuizQuestion { QuestionText = "Un, tereyağı ve sütün pişirilmesiyle elde edilen temel sos hangisidir?", OptionA = "Marinara", OptionB = "Beşamel", OptionC = "Pesto", OptionD = "Barbekü", CorrectAnswer = "B", Category = "Aşçılık ve Gastronomi", Difficulty = 2 },
+            });
+
             return questions;
         }
     }

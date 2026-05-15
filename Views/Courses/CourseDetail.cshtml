@@ -11,7 +11,7 @@
     <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; z-index: -2;">
         <img src="@(string.IsNullOrEmpty(Model.ImageUrl) ? "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1920&q=80" : Model.ImageUrl)" alt="@Model.CourseName" style="width: 100%; height: 100%; object-fit: cover;" />
     </div>
-    <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; z-index: -1; background: linear-gradient(180deg, rgba(10,10,18,0.5) 0%, rgba(10,10,18,0.95) 100%);"></div>
+    <div class="hero-overlay-theme" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; z-index: -1;"></div>
 
     <div class="container animate-fadeInUp">
         <div class="row">
@@ -430,29 +430,35 @@
                     <form asp-controller="Comments" asp-action="AddComment" method="post">
                         <input type="hidden" name="CourseId" value="@Model.Id" />
                         
-                        <div class="row g-3">
-                            <div class="col-md-6">
-                                <label class="form-label small fw-bold text-muted" data-i18n="your_email">E-POSTA ADRESİNİZ</label>
-                                <input type="email" name="UserEmail" class="form-premium-control" placeholder="Örn: ahmet@mail.com" required 
-                                       value="@(User.Identity?.IsAuthenticated == true ? User.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value : "")" />
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label small fw-bold text-muted-theme" data-i18n="your_rating">PUANINIZ</label>
-                                 <div class="rating-input-modern">
-                                     <input type="hidden" name="Rating" id="ratingValue" value="0" />
-                                     @for (int i = 1; i <= 5; i++)
-                                     {
-                                         <i class="bi star-icon" data-value="@i" onclick="setRating(@i)"></i>
-                                     }
-                                 </div>
+                        <div class="row g-4">
+                            <div class="col-12">
+                                <div class="glass-input-wrapper mb-3">
+                                    <label class="form-label small fw-bold text-gold mb-2"><i class="bi bi-envelope me-2"></i>E-POSTA ADRESİNİZ</label>
+                                    <input type="email" name="UserEmail" class="form-premium-control" placeholder="Örn: ahmet@mail.com" required 
+                                           value="@(User.Identity?.IsAuthenticated == true ? User.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value : "")" />
+                                </div>
                             </div>
                             <div class="col-12">
-                                <label class="form-label small fw-bold text-muted" data-i18n="your_message">MESAJINIZ</label>
-                                <textarea name="Content" class="form-premium-control" rows="3" data-i18n-placeholder="message_placeholder" placeholder="Eğitim kalitesi, hoca ilgisi ve içerik hakkındaki düşünceleriniz..." required></textarea>
+                                <div class="glass-input-wrapper mb-3">
+                                    <label class="form-label small fw-bold text-gold mb-2"><i class="bi bi-star me-2"></i>DEĞERLENDİRMENİZ</label>
+                                    <div class="rating-input-modern">
+                                        <input type="hidden" name="Rating" id="ratingValue" value="0" />
+                                        @for (int i = 1; i <= 5; i++)
+                                        {
+                                            <i class="bi bi-star star-icon" data-value="@i" onclick="setRating(@i)"></i>
+                                        }
+                                    </div>
+                                </div>
                             </div>
                             <div class="col-12">
-                                <button type="submit" class="btn btn-premium btn-primary-glow px-5 py-3 w-100 w-md-auto">
-                                    <span data-i18n="send_comment">Yorumu Gönder</span> <i class="bi bi-send-fill ms-2"></i>
+                                <div class="glass-input-wrapper mb-4">
+                                    <label class="form-label small fw-bold text-gold mb-2"><i class="bi bi-chat-left-text me-2"></i>MESAJINIZ</label>
+                                    <textarea name="Content" class="form-premium-control" rows="4" style="min-height: 120px;" placeholder="Eğitim kalitesi, hoca ilgisi ve içerik hakkındaki düşünceleriniz..." required></textarea>
+                                </div>
+                            </div>
+                            <div class="col-12 text-center">
+                                <button type="submit" class="btn btn-premium btn-primary-glow px-5 py-3 w-100 fw-900 fs-5 rounded-pill" style="background: #C5A059 !important; color: #581C1C !important; border: none; box-shadow: 0 10px 30px rgba(197, 160, 89, 0.2);">
+                                    YORUMU GÖNDER <i class="bi bi-send-fill ms-2"></i>
                                 </button>
                             </div>
                         </div>
@@ -502,17 +508,21 @@
 
 <!-- Başvuru Modalı (Hemen Başvur Ekranı) - Z-index çakışmasını önlemek için konteyner dışına taşındı -->
 <div class="modal fade" id="applicationModal" tabindex="-1" aria-hidden="true" style="z-index: 1060;">
-    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
-        <div class="modal-content" style="background: #0f172a; border: 1px solid rgba(197, 160, 89, 0.4); border-radius: 28px; overflow: hidden; box-shadow: 0 25px 70px rgba(0,0,0,0.5);">
-            <div class="modal-header border-bottom-0 pb-0 pt-4 px-4 text-center d-block position-relative">
-                <button type="button" class="btn-close btn-close-white position-absolute" data-bs-dismiss="modal" aria-label="Close" style="top: 30px; right: 30px; z-index: 1100; opacity: 1; cursor: pointer; background-color: rgba(197, 160, 89, 0.2); border-radius: 50%; padding: 10px;"></button>
-                <div class="icon-box-md bg-gold-pulse text-maroon rounded-circle mx-auto mb-3" style="width: 65px; height: 65px; display: flex; align-items: center; justify-content: center; background: #C5A059; color: #581C1C;">
+    <div class="modal-dialog modal-dialog-scrollable modal-xl modal-fullscreen-sm-down" style="margin-top: 1rem; margin-bottom: 1rem;">
+        <div class="modal-content" style="background: #0f172a; border: 1px solid rgba(197, 160, 89, 0.4); border-radius: 28px; box-shadow: 0 25px 70px rgba(0,0,0,0.8); height: auto; max-height: 95vh; overflow: hidden; position: relative;">
+            <!-- Close Button -->
+            <button type="button" class="btn-close-custom" data-bs-dismiss="modal" aria-label="Close">
+                <i class="bi bi-x-lg"></i>
+            </button>
+
+            <div class="modal-header border-bottom-0 pb-0 pt-5 px-4 text-center d-block">
+                <div class="icon-box-md bg-gold-pulse text-maroon rounded-circle mx-auto mb-3" style="width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; background: #C5A059; color: #581C1C;">
                     <i class="bi bi-rocket-takeoff-fill fs-3"></i>
                 </div>
                 <h3 class="modal-title fw-900 gold-text" style="letter-spacing: 2px; font-family: 'Outfit';">KURSA BAŞVURU FORMU</h3>
                 <p class="text-white-50 small mt-2">Borçka Halk Eğitim Merkezi - Dijital Kayıt Sistemi</p>
             </div>
-            <div class="modal-body p-4 p-md-5" style="position: relative; z-index: 1070;">
+            <div class="modal-body p-4 p-md-5 custom-scrollbar" style="position: relative; z-index: 1070; overflow-y: auto; overflow-x: hidden;">
                 @if (User.Identity.IsAuthenticated && User.IsInRole("Student"))
                 {
                     <p class="text-white-50 mb-4 text-center">
@@ -679,8 +689,12 @@
         stars.forEach((star, index) => {
             if (index < val) {
                 star.classList.add('active');
+                star.classList.remove('bi-star');
+                star.classList.add('bi-star-fill');
             } else {
                 star.classList.remove('active');
+                star.classList.add('bi-star');
+                star.classList.remove('bi-star-fill');
             }
         });
     }
@@ -730,10 +744,24 @@
         stars.forEach(star => {
             star.addEventListener('mouseover', function() {
                 const val = this.getAttribute('data-value');
-                stars.forEach((s, i) => { if (i < val) s.style.color = '#f59e0b'; });
+                stars.forEach((s, i) => { 
+                    if (i < val) {
+                        s.classList.remove('bi-star');
+                        s.classList.add('bi-star-fill');
+                        s.style.color = '#f59e0b'; 
+                    }
+                });
             });
             star.addEventListener('mouseout', function() {
-                stars.forEach((s, i) => { if (!s.classList.contains('active')) s.style.color = ''; });
+                stars.forEach((s, i) => { 
+                    if (!s.classList.contains('active')) {
+                        s.classList.add('bi-star');
+                        s.classList.remove('bi-star-fill');
+                        s.style.color = ''; 
+                    } else {
+                        s.style.color = ''; // Reset hover color but keep active state
+                    }
+                });
             });
         });
     });
@@ -750,13 +778,22 @@
     }
     .rating-input-modern { display: flex; gap: 8px; }
     .rating-input-modern .star-icon { 
-        color: var(--text-muted); 
-        opacity: 0.6;
+        color: #C5A059; 
+        opacity: 0.3;
         transition: all 0.3s ease; 
         cursor: pointer; 
-        font-size: 2.5rem;
+        font-size: 2rem;
+        margin-right: 5px;
     }
-    .rating-input-modern .star-icon.active { color: #f59e0b !important; opacity: 1; }
+    .rating-input-modern .star-icon.active { 
+        color: #f59e0b !important; 
+        opacity: 1;
+        transform: scale(1.2);
+    }
+    .rating-input-modern .star-icon:hover {
+        transform: scale(1.1);
+        opacity: 0.8;
+    }
     .avatar-circle {
         width: 45px; height: 45px; border-radius: 50%;
         background: linear-gradient(135deg, #C5A059 0%, #581C1C 100%);
@@ -778,6 +815,100 @@
     }
     .modal-input-fix::placeholder {
         color: rgba(255, 255, 255, 0.3) !important;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+        width: 8px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 10px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: #C5A059;
+        border-radius: 10px;
+        border: 2px solid #0f172a;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+        background: #DFBF8E;
+    }
+    
+    .btn-close-custom {
+        position: absolute;
+        top: 25px;
+        right: 25px;
+        z-index: 1200;
+        background: rgba(197, 160, 89, 0.15);
+        border: 1px solid rgba(197, 160, 89, 0.3);
+        color: #C5A059;
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+    .btn-close-custom:hover {
+        background: #C5A059;
+        color: #581C1C;
+        transform: rotate(90deg) scale(1.1);
+    }
+    
+    #applicationModal .modal-body {
+        padding-bottom: 80px !important;
+        touch-action: pan-y; /* Mobil kaydırma düzeltmesi */
+        scrollbar-width: thin;
+        scrollbar-color: #C5A059 rgba(255,255,255,0.05);
+    }
+
+    /* Feedback Form Enhancements */
+    .form-premium-control {
+        background: rgba(255, 255, 255, 0.03) !important;
+        border: 1px solid rgba(197, 160, 89, 0.2) !important;
+        color: #ffffff !important;
+        border-radius: 12px !important;
+        padding: 15px !important;
+        width: 100%;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    }
+
+    .form-premium-control:focus {
+        background: rgba(255, 255, 255, 0.08) !important;
+        border-color: #C5A059 !important;
+        box-shadow: 0 0 20px rgba(197, 160, 89, 0.15) !important;
+        outline: none !important;
+        transform: translateY(-2px);
+    }
+
+    .text-gold {
+        color: #C5A059 !important;
+    }
+
+    .glass-input-wrapper {
+        position: relative;
+        transition: all 0.3s ease;
+    }
+
+    .glass-input-wrapper:focus-within label {
+        color: #f59e0b !important;
+        transform: translateX(5px);
+    }
+
+    .glass-input-wrapper label {
+        transition: all 0.3s ease;
+        display: inline-block;
+    }
+
+    [data-theme="light"] .form-premium-control {
+        background: rgba(88, 28, 28, 0.03) !important;
+        border: 1px solid rgba(88, 28, 28, 0.1) !important;
+        color: #581C1C !important;
+    }
+    
+    [data-theme="light"] .form-premium-control:focus {
+        border-color: #581C1C !important;
+        background: rgba(88, 28, 28, 0.06) !important;
     }
 </style>
 

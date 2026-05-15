@@ -41,13 +41,24 @@
                 <div class="row g-4">
                     @foreach (var cat in ViewBag.Categories as List<string>)
                     {
-                        <div class="col-md-6">
+                        <div class="col-lg-4 col-md-6">
                             <div class="category-card p-4 rounded-4 text-center h-100 transition-base cursor-pointer" onclick="selectMode('@cat')">
                                 <div class="category-icon mb-3">
-                                    <i class="bi @(cat switch { "Bilişim Teknolojileri" => "bi-pc-display", "Yazılım Geliştirme" => "bi-code-slash", "Siber Güvenlik" => "bi-shield-lock", "Yapay Zeka" => "bi-cpu", _ => "bi-lightbulb" }) fs-1 gold-text"></i>
+                                    <i class="bi @(cat switch { 
+                                        "Bilişim Teknolojileri" => "bi-pc-display", 
+                                        "Yazılım Geliştirme" => "bi-code-slash", 
+                                        "Siber Güvenlik" => "bi-shield-lock", 
+                                        "Yapay Zeka" => "bi-cpu", 
+                                        "Grafik Tasarım" => "bi-palette2",
+                                        "Dijital Pazarlama" => "bi-megaphone",
+                                        "Aşçılık ve Gastronomi" => "bi-egg-fried",
+                                        "Genel Kültür" => "bi-globe-europe-africa",
+                                        _ => "bi-lightbulb" 
+                                    }) fs-1 gold-text"></i>
                                 </div>
-                                <h5 class="text-white fw-bold mb-0">@cat</h5>
-                                <p class="small text-white-50 mt-2">100+ Zorlu Soru</p>
+                                <h5 class="text-white fw-bold mb-2">@cat</h5>
+                                <p class="small text-white-50 mb-3">100+ Zorlu Soru</p>
+                                <button class="btn btn-sm btn-outline-gold rounded-pill px-4">Seç ve Başla</button>
                             </div>
                         </div>
                     }
@@ -93,11 +104,25 @@
 
 <script>
     function selectMode(category) {
-        bootstrap.Modal.getInstance(document.getElementById('categoryModal')).hide();
-        document.getElementById('selectedCatTitle').innerText = category;
-        document.getElementById('soloLink').href = '@Url.Action("StartMatch")?category=' + encodeURIComponent(category);
-        document.getElementById('versusLink').href = '@Url.Action("Versus")?category=' + encodeURIComponent(category);
-        new bootstrap.Modal(document.getElementById('modeModal')).show();
+        // Modal kapatma ve açma işlemini daha sağlam yapalım
+        const categoryModalEl = document.getElementById('categoryModal');
+        const modeModalEl = document.getElementById('modeModal');
+        
+        const catModal = bootstrap.Modal.getInstance(categoryModalEl);
+        if(catModal) catModal.hide();
+        
+        // Modal tamamen kapandıktan sonra yenisini açalım
+        categoryModalEl.addEventListener('hidden.bs.modal', function onHidden() {
+            document.getElementById('selectedCatTitle').innerText = category;
+            document.getElementById('soloLink').href = '@Url.Action("StartMatch")?category=' + encodeURIComponent(category);
+            document.getElementById('versusLink').href = '@Url.Action("Versus")?category=' + encodeURIComponent(category);
+            
+            const mModal = new bootstrap.Modal(modeModalEl);
+            mModal.show();
+            
+            // Listener'ı temizle
+            categoryModalEl.removeEventListener('hidden.bs.modal', onHidden);
+        }, { once: true });
     }
 </script>
 

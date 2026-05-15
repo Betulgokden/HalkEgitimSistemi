@@ -22,6 +22,7 @@
                     </div>
                 </div>
 
+
                 <div class="row g-3 mb-5">
                     <div class="col-md-4">
                         <div class="p-3 bg-white-5 rounded-4 border border-white-10">
@@ -50,19 +51,69 @@
 
                 @if (!string.IsNullOrEmpty(Model.Requirements))
                 {
-                    <div class="mb-5">
-                        <h5 class="gold-text fw-900 mb-3 border-bottom border-white-10 pb-2">Aranan Nitelikler</h5>
-                        <div class="text-white-50" style="line-height: 1.8; white-space: pre-line;">@Model.Requirements</div>
+                    <div class="mb-4 p-4 rounded-4" style="background: rgba(197, 160, 89, 0.05); border: 1px solid rgba(197, 160, 89, 0.15);">
+                        <h5 class="gold-text fw-900 mb-3 d-flex align-items-center">
+                            <i class="bi bi-award-fill me-2 fs-4"></i> Aranan Nitelikler
+                        </h5>
+                        <div class="text-white-50 job-requirements-list small" style="line-height: 1.8; white-space: pre-line;">
+                            @Model.Requirements
+                        </div>
+                    </div>
+                }
+
+                @if (!string.IsNullOrEmpty(Model.ExaminationText))
+                {
+                    <div class="mb-5 p-0 rounded-4 overflow-hidden" style="background: rgba(15, 23, 42, 0.4); border: 2px solid #C5A059; box-shadow: 0 15px 40px rgba(0,0,0,0.3);">
+                        <div class="p-4 d-flex align-items-center gap-3" style="background: linear-gradient(90deg, #581C1C 0%, #3A0F0F 100%); border-bottom: 2px solid #C5A059;">
+                            <div class="icon-circle bg-gold-soft d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; border-radius: 12px;">
+                                <i class="bi bi-search gold-text fs-4"></i>
+                            </div>
+                            <div>
+                                <h4 class="gold-text fw-900 mb-0" style="font-family: 'Outfit';">TEKNİK İNCELEME METNİ</h4>
+                                <div class="text-white-50 x-small fw-700">İşçiden Beklenen Teknik Yetkinlikler</div>
+                            </div>
+                        </div>
+                        <div class="p-5">
+                            <div class="expertise-box p-4 rounded-3" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05);">
+                                <div class="text-white expertise-content" style="line-height: 2.2; white-space: pre-line; font-size: 1.1rem; font-weight: 500;">
+                                    @Model.ExaminationText
+                                </div>
+                            </div>
+                            <div class="mt-4 p-3 rounded-3 d-flex align-items-start gap-3" style="background: rgba(197, 160, 89, 0.1); border-left: 4px solid #C5A059;">
+                                <i class="bi bi-info-circle-fill gold-text fs-5"></i>
+                                <div class="text-white small" style="opacity: 0.8;">
+                                    Bu bölüm <strong>işveren</strong> ve <strong>yönetici</strong> tarafından, personelin teknik yetkinliklerini ve bölgeye olan uyumunu ölçmek amacıyla özel olarak hazırlanmıştır. Lütfen başvurunuz öncesinde bu maddeleri dikkatle inceleyiniz.
+                                </div>
+                            </div>
+                        </div>
+                        
+                        @if (User.IsInRole("Admin") || User.IsInRole("Employer"))
+                        {
+                            <div class="p-3 bg-white-5 text-center border-top border-white-10">
+                                <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-premium-sm btn-secondary-glass">
+                                    <i class="bi bi-pencil-square me-2"></i>BU METNİ DÜZENLE
+                                </a>
+                            </div>
+                        }
                     </div>
                 }
 
                 @if (Model.Deadline.HasValue)
                 {
-                    <div class="alert alert-warning bg-maroon-glass border-gold-20 text-white small rounded-4">
+                    <div class="alert alert-warning bg-maroon-glass border-gold-20 text-white small rounded-4 mb-4">
                         <i class="bi bi-exclamation-triangle me-2 gold-text"></i>
                         Son Başvuru Tarihi: <strong>@Model.Deadline.Value.ToString("dd.MM.yyyy")</strong>
                     </div>
                 }
+
+                <div class="mt-5 d-flex gap-3">
+                    <a asp-action="Index" class="btn btn-outline-white px-4 py-3 rounded-4 fw-700 flex-grow-1 text-center">
+                        <i class="bi bi-arrow-left me-2"></i>Tüm İlanlar
+                    </a>
+                    <button class="btn btn-gold-premium px-5 py-3 rounded-4 fw-900 shadow-lg animate-pulse flex-grow-1">
+                        <i class="bi bi-send-fill me-2"></i>İş İlanına Başvur
+                    </button>
+                </div>
             </div>
         </div>
 

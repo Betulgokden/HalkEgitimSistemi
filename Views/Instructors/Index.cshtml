@@ -90,73 +90,87 @@
 <style>
     /* ORTAK KART STİLLERİ */
     .instructor-card {
-        border-radius: 20px;
-        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        border-radius: 30px;
+        transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255,255,255,0.1) !important;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.2) !important;
     }
     .instructor-card:hover {
-        transform: translateY(-10px);
+        transform: translateY(-15px) scale(1.02);
+        box-shadow: 0 30px 60px rgba(0,0,0,0.4) !important;
     }
     .instructor-name {
         font-family: 'Outfit', sans-serif;
         font-weight: 900;
         margin-bottom: 0.5rem;
-        font-size: 1.8rem;
+        font-size: 2rem;
         text-align: center;
+        letter-spacing: -0.5px;
     }
     .instructor-title {
         text-transform: uppercase;
-        letter-spacing: 1.5px;
-        font-size: 0.85rem;
+        letter-spacing: 2px;
+        font-size: 0.75rem;
         font-weight: 800;
         text-align: center;
-        margin-bottom: 1.5rem;
+        margin-bottom: 2rem;
+        opacity: 0.8;
     }
     .instructor-avatar-modern {
-        width: 80px; height: 80px; margin: 0 auto;
-        border-radius: 20px; display: flex; align-items: center;
-        justify-content: center; font-size: 2rem;
+        width: 100px; height: 100px; margin: 0 auto 1.5rem;
+        border-radius: 28px; display: flex; align-items: center;
+        justify-content: center; font-size: 2.5rem;
+        transition: all 0.5s ease;
+    }
+    .instructor-card:hover .instructor-avatar-modern {
+        transform: rotate(-5deg) scale(1.1);
     }
 
-    /* GÜNDÜZ MODU (BEJ KUTU) */
+    /* GÜNDÜZ MODU (Modern Bej Cam) */
     [data-theme="light"] .instructor-card {
-        background-color: #fdfaf1 !important; /* Bej */
-        border: 2px solid #e2d3b3 !important;
-        box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        background: rgba(253, 250, 241, 0.8) !important;
+        border: 1px solid rgba(88, 28, 28, 0.1) !important;
     }
     [data-theme="light"] .instructor-name { color: #581C1C !important; }
     [data-theme="light"] .instructor-title { color: #8a2e2e !important; }
     [data-theme="light"] .instructor-avatar-modern {
-        background: linear-gradient(135deg, #C5A059, #581C1C);
-        color: white; box-shadow: 0 10px 20px rgba(197, 160, 89, 0.3);
+        background: linear-gradient(135deg, #f5f0e1, #e2d3b3);
+        color: #581C1C; 
+        box-shadow: 0 10px 20px rgba(88, 28, 28, 0.05);
+        border: 1px solid rgba(88, 28, 28, 0.1);
     }
     [data-theme="light"] .instructor-badge-default {
-        background: rgba(88,28,28,0.05); color: #581C1C; border: 1px solid rgba(88,28,28,0.2); border-radius: 12px; font-weight: 700;
+        background: rgba(88,28,28,0.05); color: #581C1C; border: 1px solid rgba(88,28,28,0.1); border-radius: 12px; font-weight: 700;
     }
     [data-theme="light"] .instructor-badge-busy {
-        background: rgba(239, 68, 68, 0.1); color: #dc3545; border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 12px; font-weight: 700;
+        background: rgba(239, 68, 68, 0.1); color: #dc3545; border: 1px solid rgba(239, 68, 68, 0.2); border-radius: 12px; font-weight: 700;
     }
     [data-theme="light"] .instructor-badge-available {
-        background: rgba(16, 185, 129, 0.1); color: #198754; border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 12px; font-weight: 700;
+        background: rgba(16, 185, 129, 0.1); color: #198754; border: 1px solid rgba(16, 185, 129, 0.2); border-radius: 12px; font-weight: 700;
     }
-    [data-theme="light"] .instructor-actions-border { border-top: 1px solid rgba(88,28,28,0.1); }
+    [data-theme="light"] .instructor-actions-border { border-top: 1px solid rgba(88,28,28,0.05); }
     [data-theme="light"] .instructor-btn-details {
-        background: #581C1C !important; color: #fff !important; font-weight: 800; border-radius: 15px; box-shadow: 0 10px 20px rgba(88, 28, 28, 0.2); display: flex; align-items: center; justify-content: center; gap: 10px;
+        background: linear-gradient(135deg, #581C1C, #3B0F0F) !important; 
+        color: #C5A059 !important; 
+        font-weight: 800; 
+        border-radius: 18px; 
+        box-shadow: 0 10px 20px rgba(88, 28, 28, 0.2);
     }
     [data-theme="light"] .instructor-btn-edit {
-        width: 55px; height: 55px; background: rgba(88,28,28,0.05); border: 1px solid rgba(88,28,28,0.2); border-radius: 15px; display: flex; align-items: center; justify-content: center; color: #581C1C;
+        width: 55px; height: 55px; background: #fff; border: 1px solid rgba(88,28,28,0.1); border-radius: 18px; display: flex; align-items: center; justify-content: center; color: #581C1C;
     }
 
-    /* GECE MODU (BORDO KUTU) */
+    /* GECE MODU (Lüks Bordo Cam) */
     [data-theme="dark"] .instructor-card {
-        background-color: #3b0f0f !important; /* Koyu Bordo */
-        border: 2px solid #C5A059 !important;
-        box-shadow: 0 10px 30px rgba(197, 160, 89, 0.15);
+        background: linear-gradient(145deg, rgba(88, 28, 28, 0.4), rgba(59, 15, 15, 0.6)) !important;
+        border: 1px solid rgba(197, 160, 89, 0.2) !important;
     }
-    [data-theme="dark"] .instructor-name { color: #fdfaf1 !important; } /* Görünür bej yazı */
-    [data-theme="dark"] .instructor-title { color: #C5A059 !important; } /* Gold yazı */
+    [data-theme="dark"] .instructor-name { color: #ffffff !important; }
+    [data-theme="dark"] .instructor-title { color: #C5A059 !important; }
     [data-theme="dark"] .instructor-avatar-modern {
-        background: rgba(197, 160, 89, 0.2);
-        color: #C5A059; border: 1px solid #C5A059;
+        background: rgba(197, 160, 89, 0.15);
+        color: #C5A059; border: 1px solid rgba(197, 160, 89, 0.3);
     }
     [data-theme="dark"] .instructor-badge-default {
         background: rgba(255,255,255,0.05); color: #fdfaf1; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; font-weight: 700;
@@ -165,14 +179,18 @@
         background: rgba(239, 68, 68, 0.2); color: #ff8787; border: 1px solid rgba(239, 68, 68, 0.4); border-radius: 12px; font-weight: 700;
     }
     [data-theme="dark"] .instructor-badge-available {
-        background: rgba(197, 160, 89, 0.2); color: #C5A059; border: 1px solid rgba(197, 160, 89, 0.4); border-radius: 12px; font-weight: 700;
+        background: rgba(197, 160, 89, 0.1); color: #C5A059; border: 1px solid rgba(197, 160, 89, 0.3); border-radius: 12px; font-weight: 700;
     }
-    [data-theme="dark"] .instructor-actions-border { border-top: 1px dashed rgba(197, 160, 89, 0.3); }
+    [data-theme="dark"] .instructor-actions-border { border-top: 1px solid rgba(197, 160, 89, 0.1); }
     [data-theme="dark"] .instructor-btn-details {
-        background: #C5A059 !important; color: #3b0f0f !important; font-weight: 900; border-radius: 15px; box-shadow: 0 10px 20px rgba(197, 160, 89, 0.2); display: flex; align-items: center; justify-content: center; gap: 10px;
+        background: linear-gradient(135deg, #C5A059, #A68041) !important; 
+        color: #3B0F0F !important; 
+        font-weight: 900; 
+        border-radius: 18px; 
+        box-shadow: 0 10px 20px rgba(197, 160, 89, 0.2);
     }
     [data-theme="dark"] .instructor-btn-edit {
-        width: 55px; height: 55px; background: rgba(197, 160, 89, 0.1); border: 1px solid rgba(197, 160, 89, 0.3); border-radius: 15px; display: flex; align-items: center; justify-content: center; color: #C5A059;
+        width: 55px; height: 55px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 18px; display: flex; align-items: center; justify-content: center; color: #C5A059;
     }
 </style>
 

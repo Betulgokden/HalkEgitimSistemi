@@ -1,141 +1,182 @@
 @model HalkEgitimSistemi.Models.Student
 @{
     ViewData["Title"] = "Kursiyer Paneli";
-    Layout = "_Layout";
 }
 
-<div class="container py-5 student-dashboard">
-    <!-- Header Section -->
-    <div class="row align-items-center mb-5 animate-fadeInDown">
-        <div class="col-md-8">
-            <h1 class="fw-black m-0" style="font-family: 'Outfit', sans-serif; font-size: 3.2rem; color: var(--text-primary);">Hoş Geldin, @Model.FirstName!</h1>
-            <p class="text-muted-premium fs-5">Eğitim yolculuğunu buradan yönetebilirsin.</p>
-            <a asp-action="Profile" class="btn btn-premium-sm btn-secondary-glass rounded-pill px-4 mt-2">
-                <i class="bi bi-person-gear me-2"></i> Profil Düzenle
-            </a>
-        </div>
-    </div>
-
-    <!-- Quick Access Icons Row -->
-    <div class="row g-4 mb-5 justify-content-center text-center animate-fadeInUp" style="animation-delay: 0.1s;">
-        <div class="col-4 col-md-2">
-            <a asp-action="MyCourses" class="dashboard-icon-link">
-                <div class="icon-circle-premium bg-maroon-soft"><i class="bi bi-folder2-open"></i></div>
-                <span class="d-block mt-2 fw-bold">Kurslarım</span>
-            </a>
-        </div>
-        <div class="col-4 col-md-2">
-            <a asp-action="MyAttendance" class="dashboard-icon-link">
-                <div class="icon-circle-premium bg-green-soft"><i class="bi bi-clock-history"></i></div>
-                <span class="d-block mt-2 fw-bold">Devamsızlık</span>
-            </a>
-        </div>
-        <div class="col-4 col-md-2">
-            <a asp-action="MyCertificates" class="dashboard-icon-link">
-                <div class="icon-circle-premium bg-gold-soft"><i class="bi bi-lightbulb"></i></div>
-                <span class="d-block mt-2 fw-bold">Sertifikalar</span>
-            </a>
-        </div>
-        <div class="col-4 col-md-2">
-            <a asp-action="MyCV" class="dashboard-icon-link">
-                <div class="icon-circle-premium bg-blue-soft"><i class="bi bi-file-earmark-person"></i></div>
-                <span class="d-block mt-2 fw-bold">Dijital CV</span>
-            </a>
-        </div>
-        <div class="col-4 col-md-2">
-            <a asp-action="SkillTree" class="dashboard-icon-link">
-                <div class="icon-circle-premium bg-maroon-soft-alt"><i class="bi bi-diagram-3"></i></div>
-                <span class="d-block mt-2 fw-bold">Yetenek Ağacı</span>
-            </a>
-        </div>
-        <div class="col-4 col-md-2">
-            <a asp-action="Messages" class="dashboard-icon-link">
-                <div class="icon-circle-premium bg-gray-soft"><i class="bi bi-chat-dots"></i></div>
-                <span class="d-block mt-2 fw-bold">Mesajlarım</span>
-            </a>
-        </div>
-    </div>
-
-    <!-- Announcement Banner -->
-    <div class="campaign-banner-modern p-4 mb-5 animate-fadeInUp" style="animation-delay: 0.2s;">
-        <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
-            <div class="d-flex align-items-center">
-                <div class="banner-icon-bg me-3"><i class="bi bi-journal-text"></i></div>
-                <div>
-                    <h5 class="m-0 fw-bold gold-text">Büyük Konu Anlatımı Yarışması!</h5>
-                    <p class="m-0 small text-white-75">Ayın en çok yıldızını alan not sahibine 1 Adet Ücretsiz Kurs Hediyeli <span class="badge bg-gold-premium text-dark ms-1">KAÇIRMA</span></p>
+<div class="container-fluid student-dashboard px-4 py-5">
+    <!-- Welcome Section -->
+    <div class="welcome-banner glass-card-main p-5 mb-5 animate-fadeInDown" style="border-radius: 35px; background: linear-gradient(135deg, rgba(88, 28, 28, 0.4) 0%, rgba(15, 23, 42, 0.4) 100%);">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <div class="d-flex align-items-center mb-3">
+                    <span class="badge bg-gold-soft text-gold px-3 py-2 rounded-pill fw-bold animate-pulse-slow">AKTİF ÖĞRENCİ</span>
+                    <span class="ms-3 text-white-50"><i class="bi bi-calendar3 me-2"></i> @DateTime.Now.ToString("dd MMMM yyyy")</span>
+                </div>
+                <h1 class="display-3 fw-black mb-3">Hoş Geldin, <span class="gold-text">@Model.FirstName!</span></h1>
+                <p class="lead text-white-70 mb-0">Eğitim yolculuğunda yeni başarılar elde etmeye hazır mısın? Bugün 3 yeni ders notu paylaşıldı.</p>
+            </div>
+            <div class="col-lg-4 text-center text-lg-end mt-4 mt-lg-0">
+                <div class="points-circle-lg">
+                    <div class="points-value">@Model.Points</div>
+                    <div class="points-label">HALK PUAN</div>
                 </div>
             </div>
-            <a asp-action="UploadNote" class="btn btn-gold-premium px-4 py-2 fw-bold rounded-pill">HEMEN NOT YÜKLE</a>
         </div>
     </div>
 
-    <!-- Stat Cards Row -->
-    <div class="row g-4 mb-5 animate-fadeInUp" style="animation-delay: 0.3s;">
+    <!-- Quick Stats Grid -->
+    <div class="row g-4 mb-5">
         <div class="col-md-3">
-            <div class="stat-card-modern">
-                <div class="stat-card-glow-bar bg-gold"></div>
-                <div class="stat-icon-small"><i class="bi bi-star-fill"></i></div>
-                <div class="stat-value gold-text">@Model.Points</div>
-                <div class="stat-label">Halk Point (HP)</div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="stat-card-modern">
-                <div class="stat-icon-small"><i class="bi bi-calendar-check"></i></div>
+            <div class="stat-card-modern animate-fadeInUp" style="animation-delay: 0.1s;">
+                <div class="stat-card-glow-bar bg-maroon-soft"></div>
+                <i class="bi bi-journal-check stat-icon-small"></i>
                 <div class="stat-value">@ViewBag.ApprovedCount</div>
                 <div class="stat-label">Aktif Kurslar</div>
             </div>
         </div>
         <div class="col-md-3">
-            <div class="stat-card-modern">
-                <div class="stat-icon-small"><i class="bi bi-award"></i></div>
+            <div class="stat-card-modern animate-fadeInUp" style="animation-delay: 0.2s;">
+                <div class="stat-card-glow-bar bg-green-soft"></div>
+                <i class="bi bi-patch-check stat-icon-small"></i>
                 <div class="stat-value">@ViewBag.CompletedCount</div>
                 <div class="stat-label">Sertifikalar</div>
             </div>
         </div>
         <div class="col-md-3">
-            <div class="stat-card-modern">
-                <div class="stat-icon-small"><i class="bi bi-hourglass-split"></i></div>
+            <div class="stat-card-modern animate-fadeInUp" style="animation-delay: 0.3s;">
+                <div class="stat-card-glow-bar bg-gold-soft"></div>
+                <i class="bi bi-star stat-icon-small"></i>
+                <div class="stat-value">@Model.SuccessScore</div>
+                <div class="stat-label">Yetenek Skoru</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card-modern animate-fadeInUp" style="animation-delay: 0.4s;">
+                <div class="stat-card-glow-bar bg-blue-soft"></div>
+                <i class="bi bi-hourglass-split stat-icon-small"></i>
                 <div class="stat-value">@ViewBag.PendingCount</div>
-                <div class="stat-label">Bekleyen Başvurular</div>
+                <div class="stat-label">Bekleyenler</div>
             </div>
         </div>
     </div>
 
-    <div class="row g-4">
-        <!-- Applications Table -->
+    <!-- Quick Navigation Box -->
+    <div class="glass-card-static p-4 mb-5 animate-fadeInUp" style="border-radius: 30px; animation-delay: 0.5s; background: rgba(88, 28, 28, 0.1); border: 1px solid rgba(197, 160, 89, 0.2) !important;">
+        <div class="row g-4 text-center justify-content-center">
+            <div class="col-4 col-md-2">
+                <a asp-action="MyCourses" class="dashboard-icon-link text-decoration-none">
+                    <div class="icon-circle-premium bg-maroon-soft-alt"><i class="bi bi-folder2-open"></i></div>
+                    <div class="mt-2 small fw-bold text-white-70">Kurslarım</div>
+                </a>
+            </div>
+            <div class="col-4 col-md-2">
+                <a asp-action="MyAttendance" class="dashboard-icon-link text-decoration-none">
+                    <div class="icon-circle-premium bg-green-soft"><i class="bi bi-clock-history"></i></div>
+                    <div class="mt-2 small fw-bold text-white-70">Devamsızlık</div>
+                </a>
+            </div>
+            <div class="col-4 col-md-2">
+                <a asp-action="MyCertificates" class="dashboard-icon-link text-decoration-none">
+                    <div class="icon-circle-premium bg-gold-soft"><i class="bi bi-patch-check"></i></div>
+                    <div class="mt-2 small fw-bold text-white-70">Sertifikalar</div>
+                </a>
+            </div>
+            <div class="col-4 col-md-2">
+                <a asp-action="MyCV" class="dashboard-icon-link text-decoration-none">
+                    <div class="icon-circle-premium bg-blue-soft"><i class="bi bi-file-earmark-person"></i></div>
+                    <div class="mt-2 small fw-bold text-white-70">Dijital CV</div>
+                </a>
+            </div>
+            <div class="col-4 col-md-2">
+                <a asp-action="SkillTree" class="dashboard-icon-link text-decoration-none">
+                    <div class="icon-circle-premium bg-maroon-soft"><i class="bi bi-tree"></i></div>
+                    <div class="mt-2 small fw-bold text-white-70">Yetenek Ağacı</div>
+                </a>
+            </div>
+            <div class="col-4 col-md-2">
+                <a asp-action="Messages" class="dashboard-icon-link text-decoration-none">
+                    <div class="icon-circle-premium bg-gray-soft"><i class="bi bi-chat-dots"></i></div>
+                    <div class="mt-2 small fw-bold text-white-70">Mesajlarım</div>
+                </a>
+            </div>
+        </div>
+    </div>
+        <!-- Main Content Area -->
         <div class="col-lg-8">
-            <div class="glass-card-static p-4 h-100 animate-fadeInUp" style="animation-delay: 0.4s;">
+            <!-- Modern Action Cards -->
+            <div class="row g-4 mb-5">
+                <div class="col-md-6">
+                    <div class="glass-card p-4 h-100 border-0 shadow-lg animate-fadeInLeft" style="background: rgba(255, 255, 255, 0.03); border-radius: 24px; border: 1px solid rgba(255,255,255,0.05) !important;">
+                        <div class="d-flex align-items-center mb-4">
+                            <div class="icon-box-lg bg-vibrant-orange me-3 rounded-4 shadow-sm">
+                                <i class="bi bi-controller fs-3 text-white"></i>
+                            </div>
+                            <div>
+                                <h4 class="fw-black mb-0">ÖDEVLER VE SINAVLAR</h4>
+                                <p class="text-white-50 small mb-0">Kurs başarılarını takip et</p>
+                            </div>
+                        </div>
+                        <p class="text-white-50 mb-4">Eğitim sürecindeki aktif ödevlerini gör, sınav tarihlerini kaçırma ve başarı puanlarını takip et.</p>
+                        <div class="mt-auto">
+                            <a asp-action="MyAssignments" class="btn btn-gold-premium rounded-pill px-5 py-3 fw-bold w-100">
+                                <i class="bi bi-lightning-charge-fill me-2"></i> HEMEN BAŞLA
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="glass-card p-4 h-100 border-0 shadow-lg animate-fadeInRight" style="background: rgba(255, 255, 255, 0.03); border-radius: 24px; border: 1px solid rgba(255,255,255,0.05) !important;">
+                        <div class="d-flex align-items-center mb-4">
+                            <div class="icon-box-lg bg-vibrant-purple me-3 rounded-4 shadow-sm">
+                                <i class="bi bi-book-half fs-3 text-white"></i>
+                            </div>
+                            <div>
+                                <h4 class="fw-black mb-0">SANAL KÜTÜPHANE</h4>
+                                <p class="text-white-50 small mb-0">Notlarını paylaş, puan kazan</p>
+                            </div>
+                        </div>
+                        <p class="text-white-50 mb-4">Hazırladığın ders notlarını sisteme yükleyerek diğer öğrencilerle paylaşabilir ve Halk Puan kazanabilirsin.</p>
+                        <div class="mt-auto">
+                            <a asp-action="UploadNote" class="btn btn-gold-premium rounded-pill px-5 py-3 fw-bold w-100">
+                                <i class="bi bi-cloud-arrow-up-fill me-2"></i> HEMEN NOT YÜKLE
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Courses Table -->
+            <div class="glass-card-static p-5 mb-5 animate-fadeInUp" style="border-radius: 30px; background: rgba(15, 23, 42, 0.4); border: 1px solid rgba(255,255,255,0.05);">
                 <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h5 class="fw-bold m-0"><i class="bi bi-list-task me-2 gold-text"></i> Başvurularım</h5>
-                    <a asp-controller="Courses" asp-action="Browse" class="btn btn-premium-sm btn-secondary-glass rounded-pill px-3">
-                        <i class="bi bi-plus me-1"></i> Yeni Kurs Bul
-                    </a>
+                    <h4 class="fw-black m-0"><i class="bi bi-play-circle me-2 gold-text"></i> SON AKTİVİTELER</h4>
+                    <a asp-action="MyCourses" class="btn btn-premium-sm btn-secondary-glass">Hepsini Gör</a>
                 </div>
                 <div class="table-responsive">
-                    <table class="table-modern-premium w-100">
+                    <table class="table table-dashboard-modern">
                         <thead>
                             <tr>
                                 <th>KURS ADI</th>
-                                <th>TARİH</th>
+                                <th>BAŞVURU TARİHİ</th>
                                 <th>DURUM</th>
                                 <th>İŞLEM</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var app in Model.Applications.OrderByDescending(a => a.ApplyDate))
+                            @foreach (var app in Model.Applications.OrderByDescending(a => a.ApplyDate).Take(3))
                             {
                                 <tr>
-                                    <td class="fw-bold">@app.Course?.CourseName</td>
-                                    <td class="text-muted small">@app.ApplyDate.ToShortDateString()</td>
                                     <td>
-                                        @if (app.Status == ApplicationStatus.Approved) { <span class="badge-status bg-success-soft">Onaylandı</span> }
-                                        else if (app.Status == ApplicationStatus.Waiting) { <span class="badge-status bg-warning-soft">Yedek</span> }
-                                        else { <span class="badge-status bg-blue-soft">Bekliyor</span> }
+                                        <div class="fw-bold text-white">@app.Course?.CourseName</div>
+                                        <div class="small text-white-50">@app.Course?.Category?.CategoryName</div>
+                                    </td>
+                                    <td class="text-white-50">@app.ApplyDate.ToString("dd.MM.yyyy")</td>
+                                    <td>
+                                        <span class="badge-status @(app.Status == ApplicationStatus.Approved ? "bg-green-soft text-success" : "bg-gold-soft text-gold")">
+                                            @(app.Status == ApplicationStatus.Approved ? "AKTİF" : "BEKLEMEDE")
+                                        </span>
                                     </td>
                                     <td>
-                                        <a asp-controller="Courses" asp-action="CourseDetail" asp-route-id="@app.CourseId" class="text-gold-hover"><i class="bi bi-eye-fill"></i></a>
+                                        <a asp-controller="Courses" asp-action="Details" asp-route-id="@app.CourseId" class="btn btn-icon-glass btn-sm"><i class="bi bi-chevron-right"></i></a>
                                     </td>
                                 </tr>
                             }
@@ -143,47 +184,70 @@
                     </table>
                 </div>
             </div>
+
+            <!-- Career Opportunities Section (NEW) -->
+            <div class="career-opportunities-box glass-card-static p-5 animate-fadeInUp" style="border-radius: 30px; background: linear-gradient(135deg, rgba(197, 160, 89, 0.05) 0%, rgba(88, 28, 28, 0.1) 100%); border: 1.5px solid rgba(197, 160, 89, 0.3);">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <h4 class="fw-black m-0"><i class="bi bi-briefcase me-2 gold-text"></i> SANA ÖZEL İŞ İLANLARI</h4>
+                        <p class="text-white-50 small mb-0">Yeteneklerine uygun en yeni kariyer fırsatları</p>
+                    </div>
+                    <a asp-controller="JobPostings" asp-action="Index" class="btn btn-gold-premium rounded-pill px-4">Tümünü Gör</a>
+                </div>
+                
+                <div class="row g-3">
+                    <div class="col-12">
+                        <div class="job-item-mini p-3 rounded-4 mb-2 d-flex align-items-center justify-content-between" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05);">
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="job-icon-sm bg-maroon-soft-alt rounded-3 p-2"><i class="bi bi-laptop fs-5"></i></div>
+                                <div>
+                                    <div class="fw-bold text-white small">Mobilya Tasarım Ustası</div>
+                                    <div class="text-white-50 x-small">Artvin Ahşap Dünyası • 35.000₺ - 45.000₺</div>
+                                </div>
+                            </div>
+                            <a asp-controller="JobPostings" asp-action="Details" asp-route-id="-1" class="btn btn-premium-sm btn-secondary-glass py-2 px-3">İncele</a>
+                        </div>
+                        <div class="job-item-mini p-3 rounded-4 mb-2 d-flex align-items-center justify-content-between" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05);">
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="job-icon-sm bg-green-soft rounded-3 p-2"><i class="bi bi-code-slash fs-5"></i></div>
+                                <div>
+                                    <div class="fw-bold text-white small">Full Stack Web Geliştirici</div>
+                                    <div class="text-white-50 x-small">Borçka Yazılım • 45.000₺ - 65.000₺</div>
+                                </div>
+                            </div>
+                            <a asp-controller="JobPostings" asp-action="Details" asp-route-id="-2" class="btn btn-premium-sm btn-secondary-glass py-2 px-3">İncele</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <!-- Digital CV Card -->
+        <!-- Sidebar Area -->
         <div class="col-lg-4">
-            <div class="glass-card-static p-4 h-100 animate-fadeInUp" style="animation-delay: 0.5s;">
+            <!-- CV Profile Card -->
+            <div class="glass-card-static p-4 mb-4 animate-fadeInUp" style="border-radius: 30px; animation-delay: 0.5s;">
                 <h5 class="fw-bold mb-4"><i class="bi bi-file-person me-2 gold-text"></i> Dijital CV</h5>
                 <div class="cv-preview-box p-4 text-center mb-4">
                     <div class="cv-initials">@Model.FirstName[0]@Model.LastName[0]</div>
                     <h5 class="fw-bold mt-3 mb-1">@Model.FirstName @Model.LastName</h5>
                     <p class="text-muted-premium small">@Model.Email</p>
                 </div>
-                <p class="small text-muted-premium mb-4">Sistemdeki eğitimlerinizi ve sertifikalarınızı tek bir dökümanda birleştirin.</p>
-                <a asp-action="MyCV" class="btn btn-premium-sm btn-secondary-glass w-100 py-2 rounded-pill">
-                    <i class="bi bi-eye me-2"></i> CV'mi Görüntüle
+                <p class="small text-muted-premium mb-4 text-center">Sistemdeki eğitimlerinizi ve sertifikalarınızı profesyonel bir portfolyoda birleştirin.</p>
+                <a asp-action="MyCV" class="btn btn-premium-sm btn-secondary-glass w-100 py-3 rounded-pill fw-bold">
+                    <i class="bi bi-eye me-2"></i> CV'Mİ GÖRÜNTÜLE
                 </a>
             </div>
-        </div>
-    </div>
 
-    <!-- Bottom Actions Row -->
-    <div class="row g-4 mt-2">
-        <div class="col-md-6">
-            <div class="glass-card-static p-4 animate-fadeInUp" style="animation-delay: 0.6s;">
+            <!-- Sanal Sergi Link -->
+            <div class="glass-card-static p-4 animate-fadeInUp" style="border-radius: 30px; animation-delay: 0.6s; background: linear-gradient(135deg, rgba(197, 160, 89, 0.05) 0%, rgba(0,0,0,0.2) 100%);">
                 <div class="d-flex align-items-center mb-3">
-                    <div class="action-icon-circle"><i class="bi bi-palette"></i></div>
-                    <h5 class="fw-bold m-0 ms-3">Sanal Sergiye Eser Yükle</h5>
+                    <div class="action-icon-circle bg-gold-soft"><i class="bi bi-palette text-gold"></i></div>
+                    <h5 class="fw-bold m-0 ms-3">Sanal Sergi</h5>
                 </div>
-                <p class="small text-muted-premium mb-4">Eserlerinizi veya videolarınızı sanal galerimize yükleyin, isminize tıklandığında CV'niz görünsün.</p>
-                <a asp-action="UploadArtwork" class="btn btn-premium-sm btn-secondary-glass w-100 rounded-pill py-2">
-                    <i class="bi bi-eye me-2"></i> Eser Paylaş
+                <p class="small text-muted-premium mb-4">Ürettiğiniz eserleri galerimizde sergileyin, yeteneğinizi dünyaya gösterin.</p>
+                <a asp-action="UploadArtwork" class="btn btn-premium-sm btn-gold-premium w-100 rounded-pill py-3 fw-bold">
+                    <i class="bi bi-plus-circle me-2"></i> ESER YÜKLE
                 </a>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="cta-card-modern p-4 animate-fadeInUp" style="animation-delay: 0.7s;">
-                <div class="text-center">
-                    <div class="cta-icon-float"><i class="bi bi-cloud-upload-fill"></i></div>
-                    <h4 class="fw-black mt-3 mb-2">NOT YÜKLE</h4>
-                    <p class="small text-white-50 mb-4">En çok yıldızı topla, ücretsiz kursu kap!</p>
-                    <a asp-action="UploadNote" class="btn btn-gold-premium rounded-pill px-5 py-2 fw-black">HEMEN BAŞLA</a>
-                </div>
             </div>
         </div>
     </div>
@@ -191,99 +255,98 @@
 
 <style>
     .student-dashboard {
-        --icon-size: 64px;
-        --card-radius: 24px;
+        --card-radius: 30px;
     }
 
-    /* Icon Styles */
-    .icon-circle-premium {
-        width: var(--icon-size);
-        height: var(--icon-size);
-        border-radius: 20px;
+    .icon-box-lg {
+        width: 60px;
+        height: 60px;
         display: flex;
         align-items: center;
         justify-content: center;
-        margin: 0 auto;
-        font-size: 1.5rem;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        border: 1px solid rgba(197, 160, 89, 0.1);
-    }
-    .bg-maroon-soft { background: rgba(88, 28, 28, 0.08); color: #581C1C; }
-    .bg-green-soft { background: rgba(16, 185, 129, 0.08); color: #10b981; }
-    .bg-gold-soft { background: rgba(197, 160, 89, 0.08); color: #C5A059; }
-    .bg-blue-soft { background: rgba(6, 182, 212, 0.08); color: #06b6d4; }
-    .bg-maroon-soft-alt { background: rgba(88, 28, 28, 0.05); color: #882b2b; }
-    .bg-gray-soft { background: rgba(107, 114, 128, 0.08); color: #6b7280; }
-
-    .dashboard-icon-link:hover .icon-circle-premium {
-        transform: translateY(-8px) scale(1.05);
-        box-shadow: 0 10px 20px rgba(197, 160, 89, 0.1);
-        background: var(--primary);
-        color: white;
+        border-radius: 18px;
     }
 
-    /* Banner */
-    .campaign-banner-modern {
-        background: #0a0a0a;
-        border-radius: var(--card-radius);
-        border: 1px solid rgba(197, 160, 89, 0.3);
-        box-shadow: 0 0 30px rgba(197, 160, 89, 0.1);
+    .bg-vibrant-orange { background: linear-gradient(135deg, #FF8C00, #FF4500); }
+    .bg-vibrant-purple { background: linear-gradient(135deg, #8A2BE2, #4B0082); }
+
+    .points-circle-lg {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        border: 4px solid #C5A059;
+        display: inline-flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: rgba(197, 160, 89, 0.1);
+        box-shadow: 0 0 30px rgba(197, 160, 89, 0.2);
     }
-    .banner-icon-bg {
-        width: 48px; height: 48px; border-radius: 12px;
-        background: rgba(197, 160, 89, 0.2);
+    .points-value { font-size: 3rem; font-weight: 900; color: #C5A059; line-height: 1; }
+    .points-label { font-size: 0.7rem; font-weight: 800; letter-spacing: 2px; color: #ffffff; margin-top: 5px; }
+
+    .cv-initials {
+        width: 80px; height: 80px; margin: 0 auto;
+        background: linear-gradient(135deg, #C5A059, #581C1C);
+        border-radius: 50%; display: flex; align-items: center;
+        justify-content: center; font-size: 2rem; font-weight: 900; color: white;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+    }
+
+    .action-icon-circle {
+        width: 45px; height: 45px; border-radius: 12px;
         display: flex; align-items: center; justify-content: center;
-        color: #C5A059; font-size: 1.3rem;
+        font-size: 1.2rem;
     }
 
-    /* Stat Cards */
     .stat-card-modern {
-        background: var(--bg-glass);
-        padding: 2rem 1.5rem;
+        background: rgba(15, 23, 42, 0.6);
+        padding: 2.5rem 1.5rem;
         border-radius: var(--card-radius);
-        border: 1px solid var(--border-glass);
+        border: 1px solid rgba(255,255,255,0.05);
         text-align: center;
         position: relative;
         overflow: hidden;
         transition: all 0.3s ease;
     }
-    .stat-card-modern:hover { transform: translateY(-5px); border-color: var(--primary); }
-    .stat-card-glow-bar { position: absolute; top: 0; left: 15%; right: 15%; height: 3px; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px; }
-    .stat-icon-small { font-size: 1.2rem; color: var(--text-muted); margin-bottom: 0.5rem; }
-    .stat-value { font-size: 2.8rem; font-weight: 900; line-height: 1; margin-bottom: 0.5rem; }
-    .stat-label { font-size: 0.85rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+    .stat-card-modern:hover { transform: translateY(-8px); border-color: #C5A059; }
+    .stat-card-glow-bar { position: absolute; top: 0; left: 15%; right: 15%; height: 4px; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px; }
+    .stat-value { font-size: 2.5rem; font-weight: 900; margin-bottom: 0.2rem; }
+    .stat-label { font-size: 0.75rem; font-weight: 800; letter-spacing: 1px; color: rgba(255,255,255,0.4); text-transform: uppercase; }
 
-    /* Table */
-    .table-dashboard-modern th { font-size: 0.75rem; color: var(--text-muted); padding: 12px 0; border-bottom: 1px solid var(--border-glass); }
-    .table-dashboard-modern td { padding: 16px 0; border-bottom: 1px solid rgba(255,255,255,0.02); }
-    .badge-status { padding: 6px 12px; border-radius: 10px; font-size: 0.75rem; font-weight: 700; }
+    [data-theme="light"] .stat-card-modern {
+        background: white;
+        box-shadow: 0 10px 30px rgba(88,28,28,0.05);
+    }
+    [data-theme="light"] .stat-value { color: #581C1C; }
+    [data-theme="light"] .stat-label { color: #8a2e2e; }
 
-    /* CV Box */
-    .cv-preview-box { background: rgba(197, 160, 89, 0.03); border-radius: 20px; }
-    .cv-initials {
-        width: 100px; height: 100px; border-radius: 50%;
-        background: #fdfaf1; color: #581C1C;
-        display: flex; align-items: center; justify-content: center;
-        margin: 0 auto; font-size: 2.5rem; font-weight: 900;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+    .badge-status { padding: 6px 12px; border-radius: 10px; font-size: 0.7rem; font-weight: 800; }
+
+    .icon-circle-premium {
+        width: 55px;
+        height: 55px;
+        border-radius: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto;
+        font-size: 1.4rem;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        border: 1px solid rgba(255,255,255,0.05);
+    }
+    
+    .dashboard-icon-link:hover .icon-circle-premium {
+        transform: translateY(-8px) scale(1.1);
+        box-shadow: 0 10px 20px rgba(197, 160, 89, 0.2);
+        background: #C5A059 !important;
+        color: #3B0F0F !important;
     }
 
-    /* CTA Card */
-    .cta-card-modern {
-        background: #0a0a0a;
-        border-radius: var(--card-radius);
-        border: 1px solid rgba(197, 160, 89, 0.2);
-        display: flex; align-items: center; justify-content: center;
-    }
-    .cta-icon-float { font-size: 3rem; color: #C5A059; animation: float 3s ease-in-out infinite; }
-    @@keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-
-    /* Theme Adaptation */
-    [data-theme="dark"] .stat-card-modern, [data-theme="dark"] .glass-card-static {
-        background: rgba(15, 15, 20, 0.7) !important;
-        box-shadow: 0 10px 40px rgba(0,0,0,0.5);
-    }
-    [data-theme="light"] .cv-initials { background: #581C1C; color: #fdfaf1; }
-    [data-theme="light"] .stat-card-modern { background: #ffffff !important; box-shadow: 0 10px 30px rgba(88,28,28,0.05) !important; }
-    [data-theme="light"] .campaign-banner-modern, [data-theme="light"] .cta-card-modern { background: #fdfaf1; border-color: #C5A059; }
+    .bg-maroon-soft { background: rgba(88, 28, 28, 0.15); color: #FF8787; }
+    .bg-maroon-soft-alt { background: rgba(88, 28, 28, 0.1); color: #ff5555; }
+    .bg-green-soft { background: rgba(16, 185, 129, 0.1); color: #10b981; }
+    .bg-gold-soft { background: rgba(197, 160, 89, 0.1); color: #C5A059; }
+    .bg-blue-soft { background: rgba(6, 182, 212, 0.1); color: #06b6d4; }
+    .bg-gray-soft { background: rgba(255, 255, 255, 0.05); color: #cbd5e1; }
 </style>

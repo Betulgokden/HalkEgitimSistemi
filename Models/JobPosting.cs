@@ -42,6 +42,9 @@ namespace HalkEgitimSistemi.Models
         [Display(Name = "İş Veren ID")]
         public int EmployerId { get; set; }
 
+        [Display(Name = "İnceleme Metni (İşçinin Bilmesi Gerekenler)")]
+        public string ExaminationText { get; set; } = string.Empty;
+
         [Display(Name = "Aranan Kategori")]
         public string RequiredCategory { get; set; } = string.Empty;
 

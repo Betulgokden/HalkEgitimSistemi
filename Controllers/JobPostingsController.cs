@@ -28,11 +28,11 @@ namespace HalkEgitimSistemi.Controllers
             {
                 jobs = new List<JobPosting>
                 {
-                    new JobPosting { Id = -1, Title = "Mobilya Tasarım Ustası", CompanyName = "Artvin Ahşap Dünyası", Location = "Artvin Merkez", SalaryRange = "35.000₺ - 45.000₺", RequiredCategory = "ZANAAT", Description = "Artvin merkezdeki atölyemizde çalışacak deneyimli mobilya ustaları aranıyor.", CreatedAt = DateTime.Now.AddDays(-2), JobType = "Tam Zamanlı" },
-                    new JobPosting { Id = -2, Title = "Full Stack Web Geliştirici", CompanyName = "Borçka Yazılım", Location = "Borçka", SalaryRange = "45.000₺ - 65.000₺", RequiredCategory = "YAZILIM", Description = "Borçka dijital kampüs projemizde yer alacak yazılımcılar arıyoruz.", CreatedAt = DateTime.Now.AddDays(-1), JobType = "Uzaktan / Hibrit" },
-                    new JobPosting { Id = -3, Title = "Balistik ve Arıcılık Teknikeri", CompanyName = "Arhavi Doğal Üretim", Location = "Arhavi", SalaryRange = "28.000₺ - 38.000₺", RequiredCategory = "TARIM", Description = "Modern arıcılık teknikleri konusunda uzman kursiyerlerimiz için iş fırsatı.", CreatedAt = DateTime.Now.AddDays(-3), JobType = "Tam Zamanlı" },
-                    new JobPosting { Id = -4, Title = "Turizm ve Doğa Rehberi", CompanyName = "Şavşat Turizm", Location = "Şavşat", SalaryRange = "30.000₺ - 42.000₺", RequiredCategory = "TURİZM", Description = "Şavşat Karagöl çevresinde yabancı turistlere rehberlik edecek çalışma arkadaşları.", CreatedAt = DateTime.Now.AddDays(-5), JobType = "Proje Bazlı" },
-                    new JobPosting { Id = -5, Title = "Ön Muhasebe Elemanı", CompanyName = "Hopa Lojistik", Location = "Hopa", SalaryRange = "22.000₺ - 28.000₺", RequiredCategory = "FİNANS", Description = "Hopa liman bölgesindeki ofisimizde görevlendirilmek üzere muhasebe bilgisi olan eleman aranıyor.", CreatedAt = DateTime.Now.AddDays(-4), JobType = "Tam Zamanlı" }
+                    new JobPosting { Id = -1, Title = "Mobilya Tasarım Ustası", CompanyName = "Artvin Ahşap Dünyası", Location = "Artvin Merkez", SalaryRange = "35.000₺ - 45.000₺", RequiredCategory = "ZANAAT", Description = "Artvin merkezdeki atölyemizde çalışacak deneyimli mobilya ustaları aranıyor.", CreatedAt = DateTime.Now.AddDays(-2), JobType = "Tam Zamanlı", ExaminationText = "• Ahşap türlerini ve işleme tekniklerini bilmeli\n• CNC kesim makinelerini kullanabilmeli\n• Tasarım programlarına (AutoCAD vb.) hakim olmalı\n• İş güvenliği kurallarına uymalı" },
+                    new JobPosting { Id = -2, Title = "Full Stack Web Geliştirici", CompanyName = "Borçka Yazılım", Location = "Borçka", SalaryRange = "45.000₺ - 65.000₺", RequiredCategory = "YAZILIM", Description = "Borçka dijital kampüs projemizde yer alacak yazılımcılar arıyoruz.", CreatedAt = DateTime.Now.AddDays(-1), JobType = "Uzaktan / Hibrit", ExaminationText = "• .NET Core ve EF Core konusunda deneyimli\n• Modern JavaScript frameworklerinden (React/Vue) en az birini bilmeli\n• API tasarımı ve SQL veritabanı yönetimine hakim\n• Git versiyon kontrol sistemini aktif kullanabilen" },
+                    new JobPosting { Id = -3, Title = "Balistik ve Arıcılık Teknikeri", CompanyName = "Arhavi Doğal Üretim", Location = "Arhavi", SalaryRange = "28.000₺ - 38.000₺", RequiredCategory = "TARIM", Description = "Modern arıcılık teknikleri konusunda uzman kursiyerlerimiz için iş fırsatı.", CreatedAt = DateTime.Now.AddDays(-3), JobType = "Tam Zamanlı", ExaminationText = "• Arı hastalıkları ve tedavi yöntemlerini bilmeli\n• Ana arı üretimi konusunda bilgi sahibi\n• Bal sağım ve paketleme standartlarına hakim\n• Arazi şartlarında çalışmaya uygun" },
+                    new JobPosting { Id = -4, Title = "Turizm ve Doğa Rehberi", CompanyName = "Şavşat Turizm", Location = "Şavşat", SalaryRange = "30.000₺ - 42.000₺", RequiredCategory = "TURİZM", Description = "Şavşat Karagöl çevresinde yabancı turistlere rehberlik edecek çalışma arkadaşları.", CreatedAt = DateTime.Now.AddDays(-5), JobType = "Proje Bazlı", ExaminationText = "• En az bir yabancı dili (İngilizce/Rusça) akıcı konuşmalı\n• Bölge coğrafyası ve tarihi hakkında bilgi sahibi\n• İlk yardım sertifikasına sahip olmalı\n• İletişim becerileri yüksek ve çözüm odaklı" },
+                    new JobPosting { Id = -5, Title = "Ön Muhasebe Elemanı", CompanyName = "Hopa Lojistik", Location = "Hopa", SalaryRange = "22.000₺ - 28.000₺", RequiredCategory = "FİNANS", Description = "Hopa liman bölgesindeki ofisimizde görevlendirilmek üzere muhasebe bilgisi olan eleman aranıyor.", CreatedAt = DateTime.Now.AddDays(-4), JobType = "Tam Zamanlı", ExaminationText = "• Temel muhasebe prensiplerine hakim\n• Luca veya Zirve programlarını kullanabilen\n• E-fatura ve e-arşiv süreçlerini bilen\n• Ofis araç gereçlerini ve MS Office programlarını etkin kullanan" }
                 };
             }
             return View(jobs);
@@ -41,6 +41,21 @@ namespace HalkEgitimSistemi.Controllers
         // 2. Detaylar
         public async Task<IActionResult> Details(int id)
         {
+            if (id < 0)
+            {
+                var dummyJobs = new List<JobPosting>
+                {
+                    new JobPosting { Id = -1, Title = "Mobilya Tasarım Ustası", CompanyName = "Artvin Ahşap Dünyası", Location = "Artvin Merkez", SalaryRange = "35.000₺ - 45.000₺", RequiredCategory = "ZANAAT", Description = "Artvin merkezdeki atölyemizde çalışacak deneyimli mobilya ustaları aranıyor.", CreatedAt = DateTime.Now.AddDays(-2), JobType = "Tam Zamanlı", ExaminationText = "• Ahşap türlerini ve işleme tekniklerini bilmeli\n• CNC kesim makinelerini kullanabilmeli\n• Tasarım programlarına (AutoCAD vb.) hakim olmalı\n• İş güvenliği kurallarına uymalı" },
+                    new JobPosting { Id = -2, Title = "Full Stack Web Geliştirici", CompanyName = "Borçka Yazılım", Location = "Borçka", SalaryRange = "45.000₺ - 65.000₺", RequiredCategory = "YAZILIM", Description = "Borçka dijital kampüs projemizde yer alacak yazılımcılar arıyoruz.", CreatedAt = DateTime.Now.AddDays(-1), JobType = "Uzaktan / Hibrit", ExaminationText = "• .NET Core ve EF Core konusunda deneyimli\n• Modern JavaScript frameworklerinden (React/Vue) en az birini bilmeli\n• API tasarımı ve SQL veritabanı yönetimine hakim\n• Git versiyon kontrol sistemini aktif kullanabilen" },
+                    new JobPosting { Id = -3, Title = "Balistik ve Arıcılık Teknikeri", CompanyName = "Arhavi Doğal Üretim", Location = "Arhavi", SalaryRange = "28.000₺ - 38.000₺", RequiredCategory = "TARIM", Description = "Modern arıcılık teknikleri konusunda uzman kursiyerlerimiz için iş fırsatı.", CreatedAt = DateTime.Now.AddDays(-3), JobType = "Tam Zamanlı", ExaminationText = "• Arı hastalıkları ve tedavi yöntemlerini bilmeli\n• Ana arı üretimi konusunda bilgi sahibi\n• Bal sağım ve paketleme standartlarına hakim\n• Arazi şartlarında çalışmaya uygun" },
+                    new JobPosting { Id = -4, Title = "Turizm ve Doğa Rehberi", CompanyName = "Şavşat Turizm", Location = "Şavşat", SalaryRange = "30.000₺ - 42.000₺", RequiredCategory = "TURİZM", Description = "Şavşat Karagöl çevresinde yabancı turistlere rehberlik edecek çalışma arkadaşları.", CreatedAt = DateTime.Now.AddDays(-5), JobType = "Proje Bazlı", ExaminationText = "• En az bir yabancı dili (İngilizce/Rusça) akıcı konuşmalı\n• Bölge coğrafyası ve tarihi hakkında bilgi sahibi\n• İlk yardım sertifikasına sahip olmalı\n• İletişim becerileri yüksek ve çözüm odaklı" },
+                    new JobPosting { Id = -5, Title = "Ön Muhasebe Elemanı", CompanyName = "Hopa Lojistik", Location = "Hopa", SalaryRange = "22.000₺ - 28.000₺", RequiredCategory = "FİNANS", Description = "Hopa liman bölgesindeki ofisimizde görevlendirilmek üzere muhasebe bilgisi olan eleman aranıyor.", CreatedAt = DateTime.Now.AddDays(-4), JobType = "Tam Zamanlı", ExaminationText = "• Temel muhasebe prensiplerine hakim\n• Luca veya Zirve programlarını kullanabilen\n• E-fatura ve e-arşiv süreçlerini bilen\n• Ofis araç gereçlerini ve MS Office programlarını etkin kullanan" }
+                };
+                var dummyJob = dummyJobs.FirstOrDefault(j => j.Id == id);
+                if (dummyJob == null) return NotFound();
+                return View(dummyJob);
+            }
+
             var job = await _context.JobPostings.FindAsync(id);
             if (job == null) return NotFound();
             return View(job);
@@ -96,6 +111,65 @@ namespace HalkEgitimSistemi.Controllers
                 }
             }
             return View(job);
+        }
+
+        // 3.5 İlan Düzenleme
+        [Authorize]
+        public async Task<IActionResult> Edit(int id)
+        {
+            var job = await _context.JobPostings.FindAsync(id);
+            if (job == null) return NotFound();
+
+            var role = User.FindFirstValue(ClaimTypes.Role);
+            var empIdClaim = User.FindFirstValue("EmployerId");
+            int.TryParse(empIdClaim, out int empId);
+
+            if (role != "Admin" && job.EmployerId != empId) return Forbid();
+
+            return View(job);
+        }
+
+        [HttpPost]
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, JobPosting job)
+        {
+            if (id != job.Id) return NotFound();
+
+            var existingJob = await _context.JobPostings.AsNoTracking().FirstOrDefaultAsync(j => j.Id == id);
+            if (existingJob == null) return NotFound();
+
+            var role = User.FindFirstValue(ClaimTypes.Role);
+            var empIdClaim = User.FindFirstValue("EmployerId");
+            int.TryParse(empIdClaim, out int empId);
+
+            if (role != "Admin" && existingJob.EmployerId != empId) return Forbid();
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    job.EmployerId = existingJob.EmployerId;
+                    job.CreatedAt = existingJob.CreatedAt;
+                    job.IsDeleted = existingJob.IsDeleted;
+
+                    _context.Update(job);
+                    await _context.SaveChangesAsync();
+                    TempData["Success"] = "İş ilanı başarıyla güncellendi!";
+                    return RedirectToAction(nameof(Manage));
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!JobPostingExists(job.Id)) return NotFound();
+                    else throw;
+                }
+            }
+            return View(job);
+        }
+
+        private bool JobPostingExists(int id)
+        {
+            return _context.JobPostings.Any(e => e.Id == id);
         }
 
         // 4. İlan Yönetimi (Sadece kendi ilanları veya Admin)

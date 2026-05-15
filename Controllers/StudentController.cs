@@ -340,8 +340,31 @@ namespace HalkEgitimSistemi.Controllers
         public async Task<IActionResult> HalkPoints()
         {
             var studentId = int.Parse(User.FindFirst("StudentId")?.Value ?? "0");
-            var student = await _context.Students.FindAsync(studentId);
+            var student = await _context.Students
+                .Include(s => s.Applications)
+                .FirstOrDefaultAsync(s => s.Id == studentId);
+
             if (student == null) return NotFound();
+
+            // 1. Liderlik Tablosu (Haftalık/Genel en aktifler)
+            ViewBag.Leaderboard = await _context.Students
+                .OrderByDescending(s => s.Points)
+                .Take(5)
+                .Select(s => new { s.FirstName, s.LastName, s.Points })
+                .ToListAsync();
+
+            // 2. Kullanıcının Sıralaması
+            var allStudents = await _context.Students.OrderByDescending(s => s.Points).ToListAsync();
+            ViewBag.UserRank = allStudents.FindIndex(s => s.Id == studentId) + 1;
+            ViewBag.TotalStudents = allStudents.Count;
+
+            // 3. Son Aktiviteler
+            ViewBag.RecentActivities = await _context.HalkPointActivities
+                .Where(a => a.UserId == studentId)
+                .OrderByDescending(a => a.Date)
+                .Take(10)
+                .ToListAsync();
+
             return View(student);
         }
     }
