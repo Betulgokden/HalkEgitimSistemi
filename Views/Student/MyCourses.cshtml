@@ -87,11 +87,14 @@
                                 }
                                 else if (app.Status == ApplicationStatus.Approved && !app.IsPaid)
                                 {
-                                    <a asp-controller="Applications" asp-action="Payment" asp-route-id="@app.Id"
-                                       class="btn btn-premium btn-warning-glow w-100 mt-2 py-2" style="font-size:0.82rem; background: var(--gradient-warm); color: white;">
-                                         <i class="bi bi-credit-card-fill me-1"></i> Kurs Ücretini Öde
-                                    </a>
-                                }
+                                     <a asp-controller="Applications" asp-action="Payment" asp-route-id="@app.Id"
+                                        class="btn btn-premium btn-warning-glow w-100 mt-2 py-2" style="font-size:0.82rem; background: var(--gradient-warm); color: white;">
+                                          <i class="bi bi-credit-card-fill me-1"></i> Kurs Ücretini Öde
+                                     </a>
+                                     <p class="text-center mt-2 small" style="color:var(--primary-light); font-size: 0.75rem;">
+                                         <i class="bi bi-info-circle me-1"></i> Ödemelerinizi Ziraat Bankası üzerinden gerçekleştirebilirsiniz.
+                                     </p>
+                                 }
                                 else if (app.IsCompleted)
                                 {
                                     <a asp-controller="Student" asp-action="Certificate" asp-route-id="@app.Id"

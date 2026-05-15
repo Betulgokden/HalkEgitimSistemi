@@ -1,0 +1,125 @@
+@{
+    ViewData["Title"] = "Düello Bekleniyor";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string category = ViewBag.Category ?? "Genel Kültür";
+}
+
+<div class="match-arena position-fixed top-0 start-0 w-100 h-100 bg-dark d-flex align-items-center justify-content-center" style="z-index: 9999;">
+    <div class="text-center animate-fadeIn" id="waitingScreen">
+        <div class="spinner-border text-gold mb-4" style="width: 4rem; height: 4rem;" role="status"></div>
+        <h2 class="text-white fw-bold mb-2">Rakip Bekleniyor...</h2>
+        <p class="text-white-50">Kategori: <span class="gold-text">@category</span></p>
+        <div class="mt-4">
+            <a asp-action="Index" class="btn btn-outline-light rounded-pill px-4">İptal Et</a>
+        </div>
+    </div>
+
+    <div id="matchScreen" class="d-none w-100 h-100 flex-column align-items-center justify-content-center">
+        <div class="vs-container animate-fadeIn">
+            <div class="vs-side left-side">
+                <div class="player-profile text-center">
+                    <img id="p1Avatar" src="https://ui-avatars.com/api/?name=Sen&background=C5A059&color=fff&size=150" class="rounded-circle shadow-glow-primary mb-3" />
+                    <h3 class="text-white fw-bold" id="p1Name">Sen</h3>
+                    <div id="p1Score" class="h4 gold-text">0</div>
+                </div>
+            </div>
+            <div class="vs-center">
+                <div class="vs-logo">VS</div>
+            </div>
+            <div class="vs-side right-side">
+                <div class="player-profile text-center">
+                    <img id="p2Avatar" src="https://ui-avatars.com/api/?name=Rakip&background=881c1c&color=fff&size=150" class="rounded-circle shadow-glow-secondary mb-3" />
+                    <h3 class="text-white fw-bold" id="p2Name">Rakip</h3>
+                    <div id="p2Score" class="h4 text-danger">0</div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="versusQuizUI" class="container py-4 d-none">
+            <div class="glass-card-static p-5 border-glass shadow-2xl text-center">
+                <h2 id="qText" class="text-white fw-bold mb-5">Soru Yükleniyor...</h2>
+                <div class="row g-3">
+                    <div class="col-6"><button class="option-btn v-btn" onclick="sendAnswer('A')"><span class="option-label">A</span> <span id="vOptA">...</span></button></div>
+                    <div class="col-6"><button class="option-btn v-btn" onclick="sendAnswer('B')"><span class="option-label">B</span> <span id="vOptB">...</span></button></div>
+                    <div class="col-6"><button class="option-btn v-btn" onclick="sendAnswer('C')"><span class="option-label">C</span> <span id="vOptC">...</span></button></div>
+                    <div class="col-6"><button class="option-btn v-btn" onclick="sendAnswer('D')"><span class="option-label">D</span> <span id="vOptD">...</span></button></div>
+                </div>
+                <div id="winnerAnnounce" class="mt-4 h4 gold-text d-none">... kazandı!</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.1/signalr.min.js"></script>
+<script>
+    const connection = new signalR.HubConnectionBuilder().withUrl("/quizHub").build();
+    let currentMatchId = null;
+    let myName = "";
+    let opponentName = "";
+    let questionIndex = 0;
+    const questions = @Html.Raw(Json.Serialize(HalkEgitimSistemi.Data.QuizSeedData.GetQuestions().Where(q => q.Category == category).OrderBy(x => Guid.NewGuid()).Take(10).ToList()));
+
+    connection.on("MatchFound", (matchId, p1, p2) => {
+        currentMatchId = matchId;
+        document.getElementById('waitingScreen').classList.add('d-none');
+        document.getElementById('matchScreen').classList.remove('d-none');
+        document.getElementById('matchScreen').classList.add('d-flex');
+        document.getElementById('p1Name').innerText = p1;
+        document.getElementById('p2Name').innerText = p2;
+        
+        setTimeout(() => {
+            document.querySelector('.vs-container').classList.add('d-none');
+            document.getElementById('versusQuizUI').classList.remove('d-none');
+            loadQuestion();
+        }, 3000);
+    });
+
+    connection.on("QuestionResult", (winnerId, winnerName, answer) => {
+        const announce = document.getElementById('winnerAnnounce');
+        announce.innerText = winnerName + " ÖNCE CEVAP VERDİ!";
+        announce.classList.remove('d-none');
+        
+        // Update score
+        if (winnerName === document.getElementById('p1Name').innerText) {
+            document.getElementById('p1Score').innerText = parseInt(document.getElementById('p1Score').innerText) + 100;
+        } else {
+            document.getElementById('p2Score').innerText = parseInt(document.getElementById('p2Score').innerText) + 100;
+        }
+
+        setTimeout(() => {
+            announce.classList.add('d-none');
+            questionIndex++;
+            if (questionIndex < questions.length) loadQuestion();
+            else alert("Yarışma Bitti! Kazanan: " + (parseInt(document.getElementById('p1Score').innerText) > parseInt(document.getElementById('p2Score').innerText) ? document.getElementById('p1Name').innerText : document.getElementById('p2Name').innerText));
+        }, 2000);
+    });
+
+    function loadQuestion() {
+        const q = questions[questionIndex];
+        document.getElementById('qText').innerText = q.questionText || q.QuestionText;
+        document.getElementById('vOptA').innerText = q.optionA || q.OptionA;
+        document.getElementById('vOptB').innerText = q.optionB || q.OptionB;
+        document.getElementById('vOptC').innerText = q.optionC || q.OptionC;
+        document.getElementById('vOptD').innerText = q.optionD || q.OptionD;
+        document.querySelectorAll('.v-btn').forEach(b => b.disabled = false);
+    }
+
+    function sendAnswer(ans) {
+        document.querySelectorAll('.v-btn').forEach(b => b.disabled = true);
+        connection.invoke("SubmitAnswer", currentMatchId, ans, questionIndex);
+    }
+
+    connection.start().then(() => {
+        connection.invoke("JoinQueue", "@category");
+    });
+</script>
+
+<style>
+    .match-arena { background: #000 !important; color: white; }
+    .vs-logo { font-size: 5rem; font-weight: 900; color: #C5A059; text-shadow: 0 0 30px #C5A059; }
+    .vs-side { flex: 1; display: flex; align-items: center; justify-content: center; height: 100vh; }
+    .gold-text { color: #C5A059; }
+    .option-btn { width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(197,160,89,0.3); border-radius: 15px; padding: 20px; color: white; transition: all 0.2s; }
+    .option-btn:hover:not(:disabled) { background: rgba(197,160,89,0.1); transform: translateY(-3px); }
+    .option-label { width: 35px; height: 35px; background: rgba(197,160,89,0.2); border-radius: 5px; display: inline-flex; align-items: center; justify-content: center; margin-right: 15px; font-weight: 900; }
+</style>

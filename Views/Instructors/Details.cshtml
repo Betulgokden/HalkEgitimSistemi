@@ -101,10 +101,10 @@
             <div class="glass-card-static p-4 mb-4 animate-fadeInRight">
                 <ul class="nav nav-pills nav-premium mb-4" id="pills-tab" role="tablist">
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link active" id="pills-bio-tab" data-bs-toggle="pill" data-bs-target="#pills-bio" type="button" role="tab">Biyografi</button>
+                        <button class="nav-link active" id="pills-bio-tab" data-bs-toggle="pill" data-bs-target="#pills-bio" type="button" role="tab" style="font-family: 'Outfit';">Biyografi</button>
                     </li>
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="pills-edu-tab" data-bs-toggle="pill" data-bs-target="#pills-edu" type="button" role="tab">Eğitim</button>
+                        <button class="nav-link" id="pills-edu-tab" data-bs-toggle="pill" data-bs-target="#pills-edu" type="button" role="tab" style="font-family: 'Outfit';">Eğitim</button>
                     </li>
                 </ul>
                 <div class="tab-content" id="pills-tabContent">
@@ -222,100 +222,99 @@
     </div>
 </div>
 
-<style>
-    /* Gece Modu Tablo Fix - Renksiz / Nötr Glass */
-    [data-theme="dark"] .table-modern-premium {
+    /* Ders Programı Modern Tasarım */
+    .table-modern-premium {
         background: transparent !important;
         border-collapse: separate;
         border-spacing: 0 10px;
     }
-    [data-theme="dark"] .table-modern-premium thead th {
-        background: rgba(255, 255, 255, 0.05) !important;
-        color: #C5A059 !important;
-        border: 1px solid rgba(255, 255, 255, 0.1) !important;
-        border-radius: 10px;
-        padding: 15px;
-    }
-    [data-theme="dark"] .table-modern-premium tbody tr {
-        background: rgba(255, 255, 255, 0.03) !important;
-        border: 1px solid rgba(255, 255, 255, 0.05) !important;
-        transition: all 0.3s ease;
-    }
-    [data-theme="dark"] .table-modern-premium tbody tr:hover {
-        background: rgba(255, 255, 255, 0.08) !important;
-        transform: scale(1.01);
-    }
-    [data-theme="dark"] .table-modern-premium tbody td {
-        color: #ffffff !important;
-        padding: 15px;
+    
+    .table-modern-premium thead th {
+        background: var(--secondary) !important;
+        color: var(--primary) !important;
         border: none !important;
+        padding: 18px 20px;
+        font-family: 'Outfit';
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        border-radius: 12px;
     }
-    [data-theme="dark"] .table-modern-premium .text-white,
-    [data-theme="dark"] .table-modern-premium .text-white-50,
-    [data-theme="dark"] .table-modern-premium .text-white-25 {
+
+    .table-modern-premium tbody tr {
+        background: rgba(255, 255, 255, 0.03) !important;
+        border-radius: 15px;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        border: 1px solid rgba(255, 255, 255, 0.05) !important;
+    }
+
+    [data-theme="light"] .table-modern-premium tbody tr {
+        background: rgba(88, 28, 28, 0.02) !important;
+        border: 1px solid rgba(88, 28, 28, 0.08) !important;
+    }
+
+    .table-modern-premium tbody tr:hover {
+        background: rgba(197, 160, 89, 0.08) !important;
+        transform: translateY(-2px) scale(1.005);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
+
+    .table-modern-premium tbody td {
+        padding: 18px 20px;
+        border: none !important;
+        vertical-align: middle;
+    }
+
+    [data-theme="dark"] .table-modern-premium tbody td {
         color: rgba(255, 255, 255, 0.9) !important;
     }
-    [data-theme="dark"] .table-modern-premium .opacity-50 {
-        color: rgba(255, 255, 255, 0.4) !important;
+
+    [data-theme="light"] .table-modern-premium tbody td {
+        color: #581C1C !important;
     }
-    
-    /* Gündüz Modu Tablo Fix */
-    [data-theme="light"] .table-modern-premium thead th {
-        background: #581C1C !important;
-        color: #fff !important;
+
+    /* Nav Premium / Tablo Fixes */
+    .nav-premium .nav-link {
+        color: rgba(255, 255, 255, 0.6);
+        font-weight: 700;
         border-radius: 10px;
+        padding: 12px 25px;
+        margin-right: 12px;
+        transition: all 0.3s;
+        border: 1px solid transparent;
     }
-    [data-theme="light"] .table-modern-premium tbody tr {
-        background: #fff !important;
-        border: 1px solid #eee !important;
+
+    [data-theme="light"] .nav-premium .nav-link {
+        color: #581C1C !important;
+        background: rgba(88, 28, 28, 0.05);
+    }
+
+    .nav-premium .nav-link.active {
+        background: #C5A059 !important;
+        color: #581C1C !important;
+        box-shadow: 0 4px 20px rgba(197, 160, 89, 0.4);
+        border-color: #C5A059;
+    }
+
+    [data-theme="light"] .nav-premium .nav-link.active {
+        color: #fff !important;
     }
 
     .bg-gold-glass {
         background: rgba(197, 160, 89, 0.1);
         border: 1px solid rgba(197, 160, 89, 0.2);
     }
+    
     .text-gold { color: #C5A059; }
     .text-white-70 { color: rgba(255,255,255,0.7); }
     .text-white-25 { color: rgba(255,255,255,0.25); }
     .border-white-5 { border-color: rgba(255,255,255,0.05) !important; }
     .border-white-20 { border-color: rgba(255,255,255,0.2) !important; }
-    
-    .nav-premium .nav-link {
-        color: rgba(255, 255, 255, 0.6);
-        font-weight: 700;
-        border-radius: 10px;
-        padding: 10px 20px;
-        margin-right: 10px;
-        transition: all 0.3s;
-    }
-    .nav-premium .nav-link.active {
-        background: #C5A059 !important;
-        color: #581C1C !important;
-        box-shadow: 0 4px 15px rgba(197, 160, 89, 0.3);
-    }
-    
+
     [data-theme="light"] .text-white, 
-    [data-theme="light"] .text-white-70 {
+    [data-theme="light"] .text-white-70,
+    [data-theme="light"] .tab-pane h4 {
         color: #581C1C !important;
-    }
-    [data-theme="dark"] .table-modern-premium {
-        background: rgba(255, 255, 255, 0.03) !important;
-        border: 1px solid rgba(197, 160, 89, 0.1) !important;
-    }
-    [data-theme="dark"] .table-modern-premium thead th {
-        background: rgba(197, 160, 89, 0.1) !important;
-        color: #C5A059 !important;
-        border-bottom: 1px solid #C5A059 !important;
-        text-transform: uppercase;
-        font-weight: 800;
-        letter-spacing: 1px;
-    }
-    [data-theme="dark"] .table-modern-premium tbody td {
-        color: rgba(255, 255, 255, 0.9) !important;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
-    }
-    [data-theme="dark"] .table-modern-premium tbody tr:hover {
-        background: rgba(197, 160, 89, 0.05) !important;
     }
 </style>
 

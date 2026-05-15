@@ -16,9 +16,9 @@
         </p>
         
         <div class="d-flex justify-content-center gap-4">
-            <a asp-action="StartMatch" class="btn btn-gold-premium btn-lg px-5 py-3 rounded-pill shadow-lg fw-black">
+            <button class="btn btn-gold-premium btn-lg px-5 py-3 rounded-pill shadow-lg fw-black" data-bs-toggle="modal" data-bs-target="#categoryModal">
                 <i class="bi bi-play-circle-fill me-2"></i> YARIŞMAYA BAŞLA
-            </a>
+            </button>
             <button class="btn btn-outline-gold btn-lg px-5 py-3 rounded-pill fw-bold" onclick="showLeaderboard()">
                 <i class="bi bi-list-ol me-2"></i> LİDERLİK TABLOSU
             </button>
@@ -28,6 +28,78 @@
     <!-- Pattern Overlay -->
     <div class="quiz-pattern-overlay"></div>
 </div>
+
+<!-- Category Selection Modal -->
+<div class="modal fade" id="categoryModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content bg-dark-glass border-glass rounded-4 overflow-hidden">
+            <div class="modal-header border-0 p-4">
+                <h4 class="modal-title text-white fw-bold"><i class="bi bi-grid-fill me-2 gold-text"></i>Ders / Kategori Seçiniz</h4>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                <div class="row g-4">
+                    @foreach (var cat in ViewBag.Categories as List<string>)
+                    {
+                        <div class="col-md-6">
+                            <div class="category-card p-4 rounded-4 text-center h-100 transition-base cursor-pointer" onclick="selectMode('@cat')">
+                                <div class="category-icon mb-3">
+                                    <i class="bi @(cat switch { "Bilişim Teknolojileri" => "bi-pc-display", "Yazılım Geliştirme" => "bi-code-slash", "Siber Güvenlik" => "bi-shield-lock", "Yapay Zeka" => "bi-cpu", _ => "bi-lightbulb" }) fs-1 gold-text"></i>
+                                </div>
+                                <h5 class="text-white fw-bold mb-0">@cat</h5>
+                                <p class="small text-white-50 mt-2">100+ Zorlu Soru</p>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Mode Selection Modal -->
+<div class="modal fade" id="modeModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-dark-glass border-glass rounded-4">
+            <div class="modal-body p-5 text-center">
+                <h3 class="text-white fw-bold mb-4" id="selectedCatTitle">Kategori</h3>
+                <div class="d-grid gap-3">
+                    <a id="soloLink" href="#" class="btn btn-gold-premium py-3 rounded-4 fw-bold">
+                        <i class="bi bi-person-fill me-2"></i> TEKLİ YARIŞMA (SOLO)
+                    </a>
+                    <a id="versusLink" href="#" class="btn btn-outline-gold py-3 rounded-4 fw-bold">
+                        <i class="bi bi-people-fill me-2"></i> KARŞILIKLI DÜELLO (VERSUS)
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .category-card {
+        background: rgba(255,255,255,0.05);
+        border: 1px solid rgba(255,255,255,0.1);
+        cursor: pointer;
+    }
+    .category-card:hover {
+        background: rgba(197, 160, 89, 0.1);
+        border-color: #C5A059;
+        transform: translateY(-5px);
+    }
+    .cursor-pointer { cursor: pointer; }
+    .transition-base { transition: all 0.3s ease; }
+</style>
+
+<script>
+    function selectMode(category) {
+        bootstrap.Modal.getInstance(document.getElementById('categoryModal')).hide();
+        document.getElementById('selectedCatTitle').innerText = category;
+        document.getElementById('soloLink').href = '@Url.Action("StartMatch")?category=' + encodeURIComponent(category);
+        document.getElementById('versusLink').href = '@Url.Action("Versus")?category=' + encodeURIComponent(category);
+        new bootstrap.Modal(document.getElementById('modeModal')).show();
+    }
+</script>
 
 <div class="container py-5">
     <div class="row g-5">

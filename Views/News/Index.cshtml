@@ -80,14 +80,24 @@
 <style>
     /* Hero Section */
     .news-hero-box {
-        background: #581C1C !important;
+        background: #581C1C;
         border: 2px solid #C5A059;
         border-radius: 40px;
         box-shadow: 0 30px 60px rgba(88, 28, 28, 0.4);
+        transition: all 0.3s ease;
     }
     .news-main-title { color: white; font-family: 'Outfit'; }
-    .gold-text-glow { color: #C5A059; text-shadow: 0 0 20px rgba(197, 160, 89, 0.4); }
+    .gold-text-glow { color: #C5A059; }
     .news-hero-subtitle { color: rgba(255,255,255,0.7); max-width: 600px; font-size: 1.1rem; }
+
+    [data-theme="light"] .news-hero-box {
+        background: #fdfaf1;
+        border-color: #581C1C;
+        box-shadow: 0 15px 40px rgba(88, 28, 28, 0.1);
+    }
+    [data-theme="light"] .news-main-title { color: #581C1C; }
+    [data-theme="light"] .news-hero-subtitle { color: rgba(88, 28, 28, 0.7); }
+    [data-theme="light"] .gold-text-glow { color: #C5A059; }
 
     /* News Card - Transparent Maroon Boxy Design */
     .news-card-premium {

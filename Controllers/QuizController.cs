@@ -25,9 +25,11 @@ namespace HalkEgitimSistemi.Controllers
         {
             var topStudents = await _context.Students
                 .Where(s => !s.IsDeleted)
-                .OrderByDescending(s => s.Points)
+                .OrderByDescending(s => s.EloRating)
                 .Take(10)
                 .ToListAsync();
+
+            ViewBag.Categories = QuizSeedData.GetQuestions().Select(q => q.Category).Distinct().ToList();
 
             ViewBag.RecentMatches = await _context.QuizMatches
                 .Include(m => m.Student)
@@ -38,28 +40,34 @@ namespace HalkEgitimSistemi.Controllers
             return View(topStudents);
         }
 
-        // Yeni Bir Maç Başlat
-        public async Task<IActionResult> StartMatch()
+        // Yeni Bir Maç Başlat (Kategori Seçimli)
+        public async Task<IActionResult> StartMatch(string category = "Genel Kültür")
         {
-            // Veritabanından rastgele 5 soru çekelim
+            // Veritabanında soru yoksa SeedData'dan çek
             var questions = await _context.QuizQuestions
+                .Where(q => q.Category == category)
                 .OrderBy(r => Guid.NewGuid())
-                .Take(5)
+                .Take(10)
                 .ToListAsync();
 
             if (!questions.Any())
             {
-                questions = new List<QuizQuestion>
-                {
-                    new QuizQuestion { Id = 1, QuestionText = "Aşağıdakilerden hangisi bir programlama dili DEĞİLDİR?", OptionA = "Python", OptionB = "Java", OptionC = "HTML", OptionD = "C#", CorrectAnswer = "C", Category = "Yazılım" },
-                    new QuizQuestion { Id = 2, QuestionText = "Hangisi bir işletim sistemi türüdür?", OptionA = "Linux", OptionB = "Google Chrome", OptionC = "Microsoft Word", OptionD = "Photoshop", CorrectAnswer = "A", Category = "Bilişim" },
-                    new QuizQuestion { Id = 3, QuestionText = "İnternet bağlantısı için hangisi gereklidir?", OptionA = "Yazıcı", OptionB = "Modem", OptionC = "Tarayıcı (Scanner)", OptionD = "Hoparlör", CorrectAnswer = "B", Category = "Donanım" },
-                    new QuizQuestion { Id = 4, QuestionText = "Halk Eğitim sistemimizde kaç farklı eğitim modeli bulunmaktadır?", OptionA = "1", OptionB = "2", OptionC = "3", OptionD = "4", CorrectAnswer = "C", Category = "Genel" },
-                    new QuizQuestion { Id = 5, QuestionText = "Yapay zeka modellerini eğitmek için kullanılan veri kümesine ne ad verilir?", OptionA = "Dataset", OptionB = "Software", OptionC = "Hardware", OptionD = "Network", CorrectAnswer = "A", Category = "Yapay Zeka" }
-                };
+                questions = QuizSeedData.GetQuestions()
+                    .Where(q => q.Category == category)
+                    .OrderBy(r => Guid.NewGuid())
+                    .Take(10)
+                    .ToList();
             }
 
+            ViewBag.Category = category;
             return View("Match", questions);
+        }
+
+        // Karşılıklı Yarışma (Versus) Giriş Sayfası
+        public IActionResult Versus(string category)
+        {
+            ViewBag.Category = category;
+            return View();
         }
 
         // Maç Sonucunu Kaydet (AI Geri Bildirimli)

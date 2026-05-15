@@ -280,9 +280,9 @@ namespace HalkEgitimSistemi.Controllers
                     string subject = $"Kurs Başvurusu Alındı: {course?.CourseName}";
                     string body = $@"
                         <h3>Sayın {application.FirstName} {application.LastName},</h3>
-                        <p><b>{course?.CourseName}</b> kursu için başvurunuz başarıyla alınmıştır.</p>
                         <p>Başvuru Durumu: {(application.Status == ApplicationStatus.Waiting ? "Yedek Listesi" : "Onay Bekliyor")}</p>
                         <p>T.C. Kimlik Numaranız ile sitemiz üzerinden başvurunuzu takip edebilirsiniz.</p>
+                        <p><b>Not:</b> Başvurunuz onaylandığında ödemelerinizi Ziraat Bankası üzerinden gerçekleştirebilirsiniz.</p>
                         <br>
                         <p>Saygılarımızla,<br>Halk Eğitim Merkezi Müdürlüğü</p>";
                     

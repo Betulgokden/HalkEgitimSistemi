@@ -503,7 +503,7 @@
     <div class="modal fade" id="applicationModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="true">
         <div class="modal-dialog modal-dialog-centered modal-xl">
             <div class="modal-content" style="background: #111827; border: 1px solid rgba(197, 160, 89, 0.3); border-radius: 20px; overflow: hidden;">
-                <div class="modal-header border-bottom-0 pb-0 pt-4 px-4 text-center d-block position-relative" style="z-index: 1051;">
+                <div class="modal-header border-bottom-0 pb-0 pt-4 px-4 text-center d-block position-relative">
                     <button type="button" class="btn-close btn-close-white position-absolute" data-bs-dismiss="modal" aria-label="Close" style="top: 25px; right: 25px; z-index: 1100; opacity: 1; filter: invert(1) grayscale(100%) brightness(200%); cursor: pointer;"></button>
                     <div class="icon-box-md bg-gold text-maroon rounded-circle mx-auto mb-3" style="width: 60px; height: 60px; display: flex; align-items: center; justify-content: center;">
                         <i class="bi bi-rocket-takeoff-fill fs-3"></i>
@@ -529,27 +529,27 @@
                                     <div class="row g-3">
                                         <div class="col-md-6">
                                             <label class="form-label small fw-bold text-muted">ADINIZ</label>
-                                            <input type="text" name="FirstName" class="form-premium-control" required />
+                                             <input type="text" id="firstName" name="FirstName" class="form-premium-control" required />
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label small fw-bold text-muted">SOYADINIZ</label>
-                                            <input type="text" name="LastName" class="form-premium-control" required />
+                                             <input type="text" id="lastName" name="LastName" class="form-premium-control" required />
                                         </div>
                                         <div class="col-12">
                                             <label class="form-label small fw-bold text-muted">T.C. KİMLİK NO</label>
-                                            <input type="text" name="TcNo" class="form-premium-control" maxlength="11" required />
+                                             <input type="text" id="tcNo" name="TcNo" class="form-premium-control" maxlength="11" required />
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label small fw-bold text-muted">TELEFON</label>
-                                            <input type="tel" name="PhoneNumber" class="form-premium-control" required />
+                                             <input type="tel" id="phoneNumber" name="PhoneNumber" class="form-premium-control" required />
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label small fw-bold text-muted">E-POSTA</label>
-                                            <input type="email" name="Email" class="form-premium-control" required />
+                                             <input type="email" id="email" name="Email" class="form-premium-control" required />
                                         </div>
                                         <div class="col-12">
                                             <label class="form-label small fw-bold text-muted">BAŞVURU NOTUNUZ</label>
-                                            <textarea name="Notes" class="form-premium-control" rows="3" placeholder="Eklemek istediğiniz notlar (opsiyonel)..."></textarea>
+                                             <textarea id="notes" name="Notes" class="form-premium-control" rows="3" placeholder="Eklemek istediğiniz notlar (opsiyonel)..."></textarea>
                                         </div>
                                         <div class="col-12 mt-4">
                                             <div class="p-3 mb-4 rounded-4" style="background: rgba(16, 185, 129, 0.05); border: 1px dashed rgba(16, 185, 129, 0.3);">

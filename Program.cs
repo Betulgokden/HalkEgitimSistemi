@@ -256,5 +256,6 @@ app.MapHub<HalkEgitimSistemi.Hubs.CourseChatHub>("/courseChatHub");
 app.MapHub<HalkEgitimSistemi.Hubs.LiveLessonHub>("/liveLessonHub");
 app.MapHub<HalkEgitimSistemi.Hubs.PrivateChatHub>("/privateChatHub");
 app.MapHub<HalkEgitimSistemi.Hubs.AdminHub>("/adminHub");
+app.MapHub<HalkEgitimSistemi.Hubs.QuizHub>("/quizHub");
 
 app.Run();
