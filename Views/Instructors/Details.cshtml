@@ -151,7 +151,7 @@
                             @foreach (var day in turkishDays)
                             {
                                 var schedule = Model.Schedules.FirstOrDefault(s => s.Day == day.Key);
-                                <tr style="background: @(schedule != null ? "rgba(197, 160, 89, 0.05)" : "transparent");">
+                                <tr class="schedule-row-premium">
                                     <td class="fw-bold text-white py-3">@day.Value</td>
                                     <td>
                                         @if (schedule != null) {
@@ -222,51 +222,59 @@
     </div>
 </div>
 
-    /* Ders Programı Modern Tasarım */
+    /* Ders Programı Modern Tasarım - BEYAZ KUTUCUKLAR TAMAMEN KALDIRILDI */
     .table-modern-premium {
         background: transparent !important;
         border-collapse: separate;
-        border-spacing: 0 10px;
+        border-spacing: 0 12px;
     }
     
     .table-modern-premium thead th {
-        background: var(--secondary) !important;
-        color: var(--primary) !important;
-        border: none !important;
+        background: rgba(197, 160, 89, 0.1) !important;
+        color: #C5A059 !important;
+        border: 1px solid rgba(197, 160, 89, 0.2) !important;
         padding: 18px 20px;
         font-family: 'Outfit';
         font-weight: 800;
         text-transform: uppercase;
-        letter-spacing: 1px;
         border-radius: 12px;
     }
 
+    .schedule-row-premium {
+        background: transparent !important; /* KESİN ÇÖZÜM: Arka plan şeffaf */
+        transition: all 0.3s ease;
+        border: 1px solid rgba(197, 160, 89, 0.2) !important;
+    }
+
     .table-modern-premium tbody tr {
-        background: rgba(255, 255, 255, 0.03) !important;
+        background: transparent !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
         border-radius: 15px;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        border: 1px solid rgba(255, 255, 255, 0.05) !important;
+    }
+
+    [data-theme="dark"] .table-modern-premium tbody tr {
+        background: rgba(255, 255, 255, 0.02) !important;
+        border: 1px solid rgba(197, 160, 89, 0.15) !important;
     }
 
     [data-theme="light"] .table-modern-premium tbody tr {
         background: rgba(88, 28, 28, 0.02) !important;
-        border: 1px solid rgba(88, 28, 28, 0.08) !important;
+        border: 1px solid rgba(88, 28, 28, 0.1) !important;
     }
 
     .table-modern-premium tbody tr:hover {
         background: rgba(197, 160, 89, 0.08) !important;
-        transform: translateY(-2px) scale(1.005);
-        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        transform: translateY(-2px);
     }
 
     .table-modern-premium tbody td {
         padding: 18px 20px;
         border: none !important;
-        vertical-align: middle;
+        background: transparent !important; /* Hücrelerdeki beyazlığı da öldür */
     }
 
     [data-theme="dark"] .table-modern-premium tbody td {
-        color: rgba(255, 255, 255, 0.9) !important;
+        color: #ffffff !important;
     }
 
     [data-theme="light"] .table-modern-premium tbody td {
@@ -275,29 +283,26 @@
 
     /* Nav Premium / Tablo Fixes */
     .nav-premium .nav-link {
-        color: rgba(255, 255, 255, 0.6);
+        color: rgba(255, 255, 255, 0.5) !important;
         font-weight: 700;
-        border-radius: 10px;
+        border-radius: 12px;
         padding: 12px 25px;
         margin-right: 12px;
         transition: all 0.3s;
-        border: 1px solid transparent;
+        border: 1px solid rgba(255, 255, 255, 0.1);
     }
 
     [data-theme="light"] .nav-premium .nav-link {
         color: #581C1C !important;
-        background: rgba(88, 28, 28, 0.05);
+        background: rgba(88, 28, 28, 0.05) !important;
+        border-color: rgba(88, 28, 28, 0.1) !important;
     }
 
     .nav-premium .nav-link.active {
         background: #C5A059 !important;
         color: #581C1C !important;
-        box-shadow: 0 4px 20px rgba(197, 160, 89, 0.4);
-        border-color: #C5A059;
-    }
-
-    [data-theme="light"] .nav-premium .nav-link.active {
-        color: #fff !important;
+        box-shadow: 0 8px 25px rgba(197, 160, 89, 0.3);
+        border-color: #C5A059 !important;
     }
 
     .bg-gold-glass {
@@ -308,12 +313,11 @@
     .text-gold { color: #C5A059; }
     .text-white-70 { color: rgba(255,255,255,0.7); }
     .text-white-25 { color: rgba(255,255,255,0.25); }
-    .border-white-5 { border-color: rgba(255,255,255,0.05) !important; }
-    .border-white-20 { border-color: rgba(255,255,255,0.2) !important; }
-
+    
     [data-theme="light"] .text-white, 
     [data-theme="light"] .text-white-70,
-    [data-theme="light"] .tab-pane h4 {
+    [data-theme="light"] .tab-pane h4,
+    [data-theme="light"] .glass-card-static h4 {
         color: #581C1C !important;
     }
 </style>
