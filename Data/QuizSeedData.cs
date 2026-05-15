@@ -43,7 +43,7 @@ namespace HalkEgitimSistemi.Data
                 new QuizQuestion { QuestionText = "İstiklal Marşı'nın yazarı kimdir?", OptionA = "Ziya Gökalp", OptionB = "Namık Kemal", OptionC = "Mehmet Akif Ersoy", OptionD = "Yahya Kemal", CorrectAnswer = "C", Category = "Genel Kültür", Difficulty = 1 },
                 new QuizQuestion { QuestionText = "Dünyanın en büyük okyanusu hangisidir?", OptionA = "Atlas Okyanusu", OptionB = "Hint Okyanusu", OptionC = "Büyük Okyanus (Pasifik)", OptionD = "Arktik Okyanusu", CorrectAnswer = "C", Category = "Genel Kültür", Difficulty = 2 },
                 new QuizQuestion { QuestionText = "Hangi gezegen 'Kızıl Gezegen' olarak bilinir?", OptionA = "Venüs", OptionB = "Mars", OptionC = "Jüpiter", OptionD = "Satürn", CorrectAnswer = "B", Category = "Genel Kültür", Difficulty = 1 },
-            });nebilir enerji kaynağıdır?", OptionA = "Kömür", OptionB = "Petrol", OptionC = "Güneş", OptionD = "Doğalgaz", CorrectAnswer = "C", Category = "Genel Kültür", Difficulty = 1 },
+                new QuizQuestion { QuestionText = "Hangisi bir yenilenebilir enerji kaynağıdır?", OptionA = "Kömür", OptionB = "Petrol", OptionC = "Güneş", OptionD = "Doğalgaz", CorrectAnswer = "C", Category = "Genel Kültür", Difficulty = 1 }
             });
 
             return questions;
