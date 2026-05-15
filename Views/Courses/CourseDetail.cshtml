@@ -505,7 +505,7 @@
     <div class="modal-dialog modal-dialog-centered modal-xl">
         <div class="modal-content" style="background: #0f172a; border: 1px solid rgba(197, 160, 89, 0.4); border-radius: 28px; overflow: hidden; box-shadow: 0 25px 70px rgba(0,0,0,0.5);">
             <div class="modal-header border-bottom-0 pb-0 pt-4 px-4 text-center d-block position-relative">
-                <button type="button" class="btn-close btn-close-white position-absolute" data-bs-dismiss="modal" aria-label="Close" style="top: 25px; right: 25px; z-index: 1100; opacity: 1; filter: invert(1) grayscale(100%) brightness(200%); cursor: pointer;"></button>
+                <button type="button" class="btn-close btn-close-white position-absolute" data-bs-dismiss="modal" aria-label="Close" style="top: 30px; right: 30px; z-index: 1100; opacity: 1; cursor: pointer; background-color: rgba(197, 160, 89, 0.2); border-radius: 50%; padding: 10px;"></button>
                 <div class="icon-box-md bg-gold-pulse text-maroon rounded-circle mx-auto mb-3" style="width: 65px; height: 65px; display: flex; align-items: center; justify-content: center; background: #C5A059; color: #581C1C;">
                     <i class="bi bi-rocket-takeoff-fill fs-3"></i>
                 </div>
@@ -530,27 +530,27 @@
                                 <div class="row g-4">
                                     <div class="col-md-6">
                                         <label class="form-label small fw-bold text-gold">ADINIZ</label>
-                                         <input type="text" id="firstName" name="FirstName" class="form-premium-control" placeholder="Adınız" required />
+                                         <input type="text" id="firstName" name="FirstName" class="form-premium-control modal-input-fix" placeholder="Adınız" required />
                                     </div>
                                     <div class="col-md-6">
                                         <label class="form-label small fw-bold text-gold">SOYADINIZ</label>
-                                         <input type="text" id="lastName" name="LastName" class="form-premium-control" placeholder="Soyadınız" required />
+                                         <input type="text" id="lastName" name="LastName" class="form-premium-control modal-input-fix" placeholder="Soyadınız" required />
                                     </div>
                                     <div class="col-12">
                                         <label class="form-label small fw-bold text-gold">T.C. KİMLİK NO</label>
-                                         <input type="text" id="tcNo" name="TcNo" class="form-premium-control" maxlength="11" placeholder="11 Haneli TC No" required />
+                                         <input type="text" id="tcNo" name="TcNo" class="form-premium-control modal-input-fix" maxlength="11" placeholder="11 Haneli TC No" required />
                                     </div>
                                     <div class="col-md-6">
                                         <label class="form-label small fw-bold text-gold">TELEFON</label>
-                                         <input type="tel" id="phoneNumber" name="PhoneNumber" class="form-premium-control" placeholder="05XX XXX XX XX" required />
+                                         <input type="tel" id="phoneNumber" name="PhoneNumber" class="form-premium-control modal-input-fix" placeholder="05XX XXX XX XX" required />
                                     </div>
                                     <div class="col-md-6">
                                         <label class="form-label small fw-bold text-gold">E-POSTA</label>
-                                         <input type="email" id="email" name="Email" class="form-premium-control" placeholder="E-posta adresiniz" required />
+                                         <input type="email" id="email" name="Email" class="form-premium-control modal-input-fix" placeholder="E-posta adresiniz" required />
                                     </div>
                                     <div class="col-12">
                                         <label class="form-label small fw-bold text-gold">BAŞVURU NOTUNUZ</label>
-                                         <textarea id="notes" name="Notes" class="form-premium-control" rows="3" placeholder="Eklemek istediğiniz notlar (opsiyonel)..."></textarea>
+                                         <textarea id="notes" name="Notes" class="form-premium-control modal-input-fix" rows="3" placeholder="Eklemek istediğiniz notlar (opsiyonel)..."></textarea>
                                     </div>
                                     <div class="col-12 mt-4">
                                         <div class="p-3 mb-4 rounded-4" style="background: rgba(197, 160, 89, 0.05); border: 1px dashed rgba(197, 160, 89, 0.3);">
@@ -561,7 +561,7 @@
                                                 </label>
                                             </div>
                                         </div>
-                                        <button type="submit" class="btn btn-premium btn-primary-glow btn-lg w-100 py-3 rounded-pill fs-5 fw-900">
+                                        <button type="submit" class="btn btn-premium btn-primary-glow btn-lg w-100 py-3 rounded-pill fs-5 fw-900" style="background: #C5A059 !important; color: #581C1C !important;">
                                             <i class="bi bi-check2-circle me-2"></i> BAŞVURUYU TAMAMLA
                                         </button>
                                     </div>
@@ -584,7 +584,7 @@
                                 <div class="mb-4">
                                     <label class="form-label small fw-bold text-gold">HALKBOT KODU (VARSA)</label>
                                     <div class="input-group">
-                                        <input type="text" id="uiHalkbotCode" class="form-premium-control" style="border-radius: 12px 0 0 12px !important;" placeholder="HALKBOT-XXX" />
+                                        <input type="text" id="uiHalkbotCode" class="form-premium-control modal-input-fix" style="border-radius: 12px 0 0 12px !important;" placeholder="HALKBOT-XXX" />
                                         <button type="button" class="btn btn-gold-vibrant" style="border-radius: 0 12px 12px 0; background: #C5A059; color: #581C1C; font-weight: 800; border: none; padding: 0 15px;" onclick="applyHalkbotCode()">Uygula</button>
                                     </div>
                                     <small class="text-gold opacity-75 mt-2 d-block" style="font-size: 0.75rem;">
@@ -613,7 +613,7 @@
                         <p class="text-white-50 mb-5 px-md-5 fs-5">Halk Eğitim portalımız üzerinden kurs başvurusu yapabilmek için öğrenci profilinizle oturum açmanız gerekmektedir.</p>
                         
                         <div class="d-grid gap-4 col-md-7 mx-auto">
-                            <a asp-controller="Account" asp-action="Login" class="btn btn-premium btn-primary-glow rounded-pill py-3 fs-4 fw-black shadow-lg" style="background: #C5A059; color: #581C1C !important; letter-spacing: 2px;">
+                            <a asp-controller="Account" asp-action="Login" class="btn btn-premium btn-primary-glow rounded-pill py-3 fs-4 fw-black shadow-lg" style="background: #C5A059 !important; color: #581C1C !important; letter-spacing: 2px;">
                                 <i class="bi bi-box-arrow-in-right me-2"></i> OTURUM AÇ
                             </a>
                             <a asp-controller="Account" asp-action="Register" class="btn btn-outline-gold rounded-pill py-3 fw-bold opacity-80" style="border: 2px solid #C5A059; color: #C5A059;">
@@ -755,6 +755,21 @@
         color: white !important; font-weight: 800;
     }
     .form-check-input:checked { background-color: #C5A059; border-color: #C5A059; }
+    
+    /* Modal İçi Giriş Alanları Fix */
+    .modal-input-fix {
+        background: rgba(255, 255, 255, 0.05) !important;
+        border: 1px solid rgba(197, 160, 89, 0.3) !important;
+        color: #ffffff !important;
+    }
+    .modal-input-fix:focus {
+        background: rgba(255, 255, 255, 0.1) !important;
+        border-color: #C5A059 !important;
+        box-shadow: 0 0 15px rgba(197, 160, 89, 0.2) !important;
+    }
+    .modal-input-fix::placeholder {
+        color: rgba(255, 255, 255, 0.3) !important;
+    }
 </style>
 
 
